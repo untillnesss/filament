@@ -7,22 +7,33 @@ use Closure;
 trait HasContainerGridLayout
 {
     /**
-     * @var array<string, int | string | null> | int | string | Closure | null
+     * @var array<string, int | string | null> | int | string | null
      */
-    protected array | int | string | Closure | null $gridColumns = null;
+    protected array | int | string | null $gridColumns = null;
+
+    protected ?Closure $gridClosure = null;
 
     /**
      * @param  array<string, int | string | null> | int | string | Closure | null  $columns
      */
     public function grid(array | int | string | Closure | null $columns = 2): static
     {
-        if (is_string($columns) && $columns === 'auto') {
-            $this->gridColumns = fn ($component) => count($component->getState());
+        if ($columns instanceof Closure) {
+            $this->gridClosure = $columns;
 
             return $this;
         }
 
-        $this->gridColumns = $columns;
+        if (! is_array($columns)) {
+            $columns = [
+                'lg' => $columns,
+            ];
+        }
+
+        $this->gridColumns = [
+            ...($this->gridColumns ?? []),
+            ...$columns,
+        ];
 
         return $this;
     }
@@ -32,15 +43,7 @@ trait HasContainerGridLayout
      */
     public function getGridColumns(?string $breakpoint = null): array | int | string | null
     {
-        $gridColumns = $this->evaluate($this->gridColumns);
-
-        if (isset($gridColumns) && ! is_array($gridColumns)) {
-            $gridColumns = [
-                'lg' => $gridColumns,
-            ];
-        }
-
-        $columns = $gridColumns ?? [
+        $columns = $this->gridColumns ?? [
             'default' => 1,
             'sm' => null,
             'md' => null,
@@ -48,6 +51,21 @@ trait HasContainerGridLayout
             'xl' => null,
             '2xl' => null,
         ];
+
+        if (isset($this->gridClosure)) {
+            $result = $this->evaluate($this->gridClosure) ?? [];
+
+            if (! is_array($result)) {
+                $result = [
+                    'lg' => $result,
+                ];
+            }
+
+            $columns = [
+                ...$columns,
+                ...$result,
+            ];
+        }
 
         if ($breakpoint !== null) {
             return $columns[$breakpoint] ?? null;
