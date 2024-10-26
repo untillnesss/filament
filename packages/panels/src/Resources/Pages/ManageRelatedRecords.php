@@ -147,6 +147,11 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
     protected function configureAction(Action $action): void
     {
         $this->configureActionRecord($action);
+
+        match (true) {
+            $action instanceof CreateAction => $this->configureCreateAction($action),
+            default => null,
+        };
     }
 
     protected function configureTableAction(Action $action): void
@@ -188,6 +193,12 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
                 return $form;
             });
+
+        $relatedResource = static::getRelatedResource();
+
+        if ($relatedResource && $relatedResource::hasPage('create')) {
+            $action->url(fn (): string => $relatedResource::getUrl('create', [$relatedResource::getParentResourceRegistration()->getParentRouteParameterName() => $this->getRecord()]));
+        }
     }
 
     protected function configureDeleteAction(DeleteAction $action): void
@@ -217,6 +228,12 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
                 return $form;
             });
+
+        $relatedResource = static::getRelatedResource();
+
+        if ($relatedResource && $relatedResource::hasPage('edit')) {
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('edit', ['record' => $record]));
+        }
     }
 
     protected function configureForceDeleteAction(ForceDeleteAction $action): void
@@ -251,6 +268,12 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
                 return $form;
             });
+
+        $relatedResource = static::getRelatedResource();
+
+        if ($relatedResource && $relatedResource::hasPage('view')) {
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('view', ['record' => $record]));
+        }
     }
 
     protected function configureTableBulkAction(BulkAction $action): void
