@@ -19,6 +19,7 @@ use Filament\Tables\Table;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -348,6 +349,14 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
             return true;
         }
 
+        if ($relatedResource = static::getRelatedResource()) {
+            $method = 'can' . Str::lcfirst($action);
+
+            return method_exists($relatedResource, $method)
+                ? $relatedResource::{$method}($action, $record)
+                : $relatedResource::can($action, $record);
+        }
+
         $model = $this->getTable()->getModel();
 
         try {
@@ -523,6 +532,10 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
     {
         if (static::shouldSkipAuthorization()) {
             return true;
+        }
+
+        if ($relatedResource = static::getRelatedResource()) {
+            return $relatedResource::canAccess();
         }
 
         $model = $ownerRecord->{static::getRelationshipName()}()->getQuery()->getModel()::class;

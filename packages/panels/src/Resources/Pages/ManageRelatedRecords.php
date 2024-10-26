@@ -30,6 +30,7 @@ use Filament\Tables;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Url;
 
 use function Filament\authorize;
@@ -107,6 +108,10 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
      */
     public static function canAccess(array $parameters = []): bool
     {
+        if ($relatedResource = static::getRelatedResource()) {
+            return $relatedResource::canAccess();
+        }
+
         $record = $parameters['record'] ?? null;
 
         if (! $record) {
@@ -147,6 +152,11 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
     protected function configureAction(Action $action): void
     {
         $this->configureActionRecord($action);
+
+        match (true) {
+            $action instanceof CreateAction => $this->configureCreateAction($action),
+            default => null,
+        };
     }
 
     protected function configureTableAction(Action $action): void
@@ -188,6 +198,12 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
                 return $form;
             });
+
+        $relatedResource = static::getRelatedResource();
+
+        if ($relatedResource && $relatedResource::hasPage('create')) {
+            $action->url(fn (): string => $relatedResource::getUrl('create', [$relatedResource::getParentResourceRegistration()->getParentRouteParameterName() => $this->getRecord()]));
+        }
     }
 
     protected function configureDeleteAction(DeleteAction $action): void
@@ -217,6 +233,12 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
                 return $form;
             });
+
+        $relatedResource = static::getRelatedResource();
+
+        if ($relatedResource && $relatedResource::hasPage('edit')) {
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('edit', ['record' => $record]));
+        }
     }
 
     protected function configureForceDeleteAction(ForceDeleteAction $action): void
@@ -251,6 +273,12 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
                 return $form;
             });
+
+        $relatedResource = static::getRelatedResource();
+
+        if ($relatedResource && $relatedResource::hasPage('view')) {
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('view', ['record' => $record]));
+        }
     }
 
     protected function configureTableBulkAction(BulkAction $action): void
@@ -299,6 +327,14 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
     {
         if (static::shouldSkipAuthorization()) {
             return true;
+        }
+
+        if ($relatedResource = static::getRelatedResource()) {
+            $method = 'can' . Str::lcfirst($action);
+
+            return method_exists($relatedResource, $method)
+                ? $relatedResource::{$method}($action, $record)
+                : $relatedResource::can($action, $record);
         }
 
         $model = $this->getTable()->getModel();
@@ -382,10 +418,6 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
     protected function canReorder(): bool
     {
-        if ($relatedResource = static::getRelatedResource()) {
-            return $relatedResource::canReorder();
-        }
-
         return $this->can('reorder');
     }
 
