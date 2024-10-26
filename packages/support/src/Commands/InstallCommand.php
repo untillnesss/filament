@@ -19,7 +19,7 @@ class InstallCommand extends Command
     use CanGeneratePanels;
     use CanManipulateFiles;
 
-    protected $signature = 'filament:install {--scaffold} {--notifications} {--F|force}';
+    protected $signature = 'filament:install {--panels} {--scaffold} {--notifications} {--F|force}';
 
     protected $description = 'Install Filament';
 
