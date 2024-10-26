@@ -108,8 +108,8 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
      */
     public static function canAccess(array $parameters = []): bool
     {
-        if ($parentResource = static::getParentResource()) {
-            return $parentResource::canAccess();
+        if ($relatedResource = static::getRelatedResource()) {
+            return $relatedResource::canAccess();
         }
 
         $record = $parameters['record'] ?? null;
@@ -329,12 +329,12 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
             return true;
         }
 
-        if ($parentResource = static::getParentResource()) {
+        if ($relatedResource = static::getRelatedResource()) {
             $method = 'can' . Str::lcfirst($action);
 
-            return method_exists($parentResource, $method)
-                ? $parentResource::{$method}($action, $record)
-                : $parentResource::can($action, $record);
+            return method_exists($relatedResource, $method)
+                ? $relatedResource::{$method}($action, $record)
+                : $relatedResource::can($action, $record);
         }
 
         $model = $this->getTable()->getModel();

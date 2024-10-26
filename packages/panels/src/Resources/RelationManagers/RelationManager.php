@@ -349,12 +349,12 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
             return true;
         }
 
-        if ($parentResource = static::getParentResource()) {
+        if ($relatedResource = static::getRelatedResource()) {
             $method = 'can' . Str::lcfirst($action);
 
-            return method_exists($parentResource, $method)
-                ? $parentResource::{$method}($action, $record)
-                : $parentResource::can($action, $record);
+            return method_exists($relatedResource, $method)
+                ? $relatedResource::{$method}($action, $record)
+                : $relatedResource::can($action, $record);
         }
 
         $model = $this->getTable()->getModel();
@@ -534,8 +534,8 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
             return true;
         }
 
-        if ($parentResource = static::getParentResource()) {
-            return $parentResource::canAccess();
+        if ($relatedResource = static::getRelatedResource()) {
+            return $relatedResource::canAccess();
         }
 
         $model = $ownerRecord->{static::getRelationshipName()}()->getQuery()->getModel()::class;
