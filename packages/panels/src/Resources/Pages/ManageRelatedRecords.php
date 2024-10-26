@@ -30,6 +30,7 @@ use Filament\Tables;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Url;
 
 use function Filament\authorize;
@@ -107,6 +108,10 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
      */
     public static function canAccess(array $parameters = []): bool
     {
+        if ($parentResource = static::getParentResource()) {
+            return $parentResource::canAccess();
+        }
+
         $record = $parameters['record'] ?? null;
 
         if (! $record) {
@@ -324,6 +329,14 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
             return true;
         }
 
+        if ($parentResource = static::getParentResource()) {
+            $method = 'can' . Str::lcfirst($action);
+
+            return method_exists($parentResource, $method)
+                ? $parentResource::{$method}($action, $record)
+                : $parentResource::can($action, $record);
+        }
+
         $model = $this->getTable()->getModel();
 
         try {
@@ -405,10 +418,6 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
     protected function canReorder(): bool
     {
-        if ($relatedResource = static::getRelatedResource()) {
-            return $relatedResource::canReorder();
-        }
-
         return $this->can('reorder');
     }
 
