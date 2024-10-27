@@ -202,7 +202,7 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('create')) {
-            $action->url(fn (): string => $relatedResource::getUrl('create', [$relatedResource::getParentResourceRegistration()->getParentRouteParameterName() => $this->getRecord()], shouldGuessMissingParameters: true));
+            $action->url(fn (): string => $relatedResource::getUrl('create', shouldGuessMissingParameters: true));
         }
     }
 

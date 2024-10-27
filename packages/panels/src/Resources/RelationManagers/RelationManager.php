@@ -222,7 +222,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('create')) {
-            $action->url(fn (): string => $relatedResource::getUrl('create', [$relatedResource::getParentResourceRegistration()->getParentRouteParameterName() => $this->getOwnerRecord()], shouldGuessMissingParameters: true));
+            $action->url(fn (): string => $relatedResource::getUrl('create', shouldGuessMissingParameters: true));
         }
     }
 

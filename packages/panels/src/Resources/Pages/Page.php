@@ -30,17 +30,13 @@ abstract class Page extends BasePage
     /**
      * @param  array<string, mixed>  $parameters
      */
-    public function getResourceUrl(?string $name = null, array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null): string
+    public function getResourceUrl(?string $name = null, array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = true): string
     {
         if (method_exists($this, 'getRecord')) {
             $parameters['record'] ??= $this->getRecord();
         }
 
-        if ($parentResourceRegistration = static::getResource()::getParentResourceRegistration()) {
-            $parameters[$parentResourceRegistration->getParentRouteParameterName()] ??= $this->getParentRecord();
-        }
-
-        return static::getResource()::getUrl($name, $parameters, $isAbsolute, $panel, $tenant, shouldGuessMissingParameters: true);
+        return static::getResource()::getUrl($name, $parameters, $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
     }
 
     public static function getRouteName(?string $panel = null): string
