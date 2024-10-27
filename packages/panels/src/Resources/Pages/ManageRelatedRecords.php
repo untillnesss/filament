@@ -136,6 +136,19 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
         return static::$breadcrumb ?? static::getTitle();
     }
 
+    public function getTitle(): string | Htmlable
+    {
+        if (filled(static::$title)) {
+            return static::$title;
+        }
+
+        if ($relatedResource = static::getRelatedResource()) {
+            return $relatedResource::getTitleCasePluralModelLabel();
+        }
+
+        return parent::getTitle();
+    }
+
     /**
      * @return class-string<Page>
      */
