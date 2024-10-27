@@ -101,7 +101,7 @@ trait CanGenerateUrls
         }
 
         if (! static::hasPage('index')) {
-            throw new Exception('The resource [' . static::class . '] does not have an [index] page or define [getIndexUrl()] for alternative routing.');
+            throw new Exception('The resource [' . static::class . '] does not have an [index] page. Define [getIndexUrl()] for alternative routing.');
         }
 
         return static::getUrl('index', $parameters, $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);

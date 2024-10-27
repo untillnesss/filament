@@ -39,6 +39,20 @@ class ParentResourceRegistration
             );
     }
 
+    public function relationship(string $name): static
+    {
+        $this->relationshipName = $name;
+
+        return $this;
+    }
+
+    public function inverseRelationship(string $name): static
+    {
+        $this->inverseRelationshipName = $name;
+
+        return $this;
+    }
+
     public function getParentResource(): string
     {
         return $this->parentResource;
