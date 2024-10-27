@@ -1,7 +1,7 @@
 <div
     {{
         $attributes->class([
-            'fi-topbar sticky top-0 z-20 overflow-x-clip',
+            'fi-topbar',
             'fi-topbar-with-navigation' => filament()->hasTopNavigation(),
         ])
     }}
