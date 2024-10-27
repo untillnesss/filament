@@ -63,7 +63,7 @@ trait CanGenerateUrls
      */
     public static function getIndexUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = false): string
     {
-        $parentResourceRegistration = static::getParentResource();
+        $parentResourceRegistration = static::getParentResourceRegistration();
 
         if ($parentResourceRegistration) {
             $parentResource = $parentResourceRegistration->getParentResource();

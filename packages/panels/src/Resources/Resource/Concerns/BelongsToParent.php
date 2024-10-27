@@ -21,9 +21,9 @@ trait BelongsToParent
         return static::$parentResource;
     }
 
-    public static function asParent(): ParentResourceRegistration
+    public static function asParent(?string $childResource = null): ParentResourceRegistration
     {
-        return new ParentResourceRegistration(static::class);
+        return new ParentResourceRegistration(static::class, $childResource);
     }
 
     public static function getParentResourceRegistration(): ?ParentResourceRegistration
@@ -31,7 +31,7 @@ trait BelongsToParent
         $parentResource = static::getParentResource();
 
         if (is_string($parentResource)) {
-            $parentResource = $parentResource::asParent();
+            $parentResource = $parentResource::asParent(childResource: static::class);
         }
 
         return $parentResource;
