@@ -5,6 +5,10 @@ namespace Filament\Resources\Resource\Concerns;
 use Exception;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
+
+use function Filament\Support\original_request;
 
 trait CanGenerateUrls
 {
@@ -15,13 +19,48 @@ trait CanGenerateUrls
     {
         $record = $parameters['record'] ?? null;
         $parentResource = static::getParentResourceRegistration();
+        $isFirstParentResource = true;
+        $originalRequest = null;
 
         while (filled($parentResource)) {
-            $record = $parameters[$parentResource->getParentRouteParameterName()] ?? $record?->{$parentResource->getInverseRelationshipName()};
+            if ($record instanceof Collection) {
+                throw new Exception("Attempted to generate a URL for the [{$name}] route on the [" . static::class . "] resource, but the [{$parentResourceInverseRelationshipName}] parameter was missing and its value cannot be guessed since it relies on a multiple relationship.");
+            }
+
+            $parentResourceInverseRelationshipName = $parentResource->getInverseRelationshipName();
+
+            if ($parameters[$parentResource->getParentRouteParameterName()] ?? null) {
+                $record = $parameters[$parentResource->getParentRouteParameterName()] ?? null;
+            } elseif (
+                $record &&
+                method_exists($record, $parentResourceInverseRelationshipName) &&
+                ($record->{$parentResourceInverseRelationshipName}() instanceof BelongsToMany)
+            ) {
+                $originalRequest ??= original_request();
+
+                $recordKey = $isFirstParentResource
+                    ? $originalRequest->route()->parameter('record')
+                    : $originalRequest->route()->parameter($parentResource->getParentRouteParameterName());
+
+                if (blank($recordKey)) {
+                    throw new Exception("Attempted to generate a URL for the [{$name}] route on the [" . static::class . "] resource, but the [{$parentResourceInverseRelationshipName}] parameter was missing and its value cannot be guessed since it relies on a multiple relationship.");
+                }
+
+                $record = $parentResource->getParentResource()::resolveRecordRouteBinding($recordKey);
+
+                if (! $record) {
+                    throw new Exception("Attempted to generate a URL for the [{$name}] route on the [" . static::class . "] resource, but the [{$parentResourceInverseRelationshipName}] parameter was missing and its value cannot be guessed since it relies on a multiple relationship.");
+                }
+            } else {
+                $record = $record?->{$parentResourceInverseRelationshipName};
+            }
+
             $parameters[$parentResource->getParentRouteParameterName()] ??= $record;
             $parameters['record'] ??= $record;
 
             $parentResource = $parentResource->getParentResource()::getParentResourceRegistration();
+
+            $isFirstParentResource = false;
         }
 
         if (blank($name)) {

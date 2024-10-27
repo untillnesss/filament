@@ -333,7 +333,7 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
             $method = 'can' . Str::lcfirst($action);
 
             return method_exists($relatedResource, $method)
-                ? $relatedResource::{$method}($action, $record)
+                ? $relatedResource::{$method}($record)
                 : $relatedResource::can($action, $record);
         }
 

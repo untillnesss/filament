@@ -353,7 +353,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
             $method = 'can' . Str::lcfirst($action);
 
             return method_exists($relatedResource, $method)
-                ? $relatedResource::{$method}($action, $record)
+                ? $relatedResource::{$method}($record)
                 : $relatedResource::can($action, $record);
         }
 
