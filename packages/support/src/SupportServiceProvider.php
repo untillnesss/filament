@@ -218,6 +218,13 @@ class SupportServiceProvider extends PackageServiceProvider
             $this->publishes([
                 $this->package->basePath('/../config/filament.php') => config_path('filament.php'),
             ], 'filament-config');
+
+            if (method_exists($this, 'optimizes')) {
+                $this->optimizes(
+                    optimize: 'filament:optimize', /** @phpstan-ignore-line */
+                    clear: 'filament:optimize-clear', /** @phpstan-ignore-line */
+                );
+            }
         }
     }
 }
