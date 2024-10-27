@@ -202,7 +202,7 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('create')) {
-            $action->url(fn (): string => $relatedResource::getUrl('create', [$relatedResource::getParentResourceRegistration()->getParentRouteParameterName() => $this->getRecord()]));
+            $action->url(fn (): string => $relatedResource::getUrl('create', shouldGuessMissingParameters: true));
         }
     }
 
@@ -237,7 +237,7 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('edit')) {
-            $action->url(fn (Model $record): string => $relatedResource::getUrl('edit', ['record' => $record]));
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('edit', ['record' => $record], shouldGuessMissingParameters: true));
         }
     }
 
@@ -277,7 +277,7 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('view')) {
-            $action->url(fn (Model $record): string => $relatedResource::getUrl('view', ['record' => $record]));
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('view', ['record' => $record], shouldGuessMissingParameters: true));
         }
     }
 
@@ -333,7 +333,7 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
             $method = 'can' . Str::lcfirst($action);
 
             return method_exists($relatedResource, $method)
-                ? $relatedResource::{$method}($action, $record)
+                ? $relatedResource::{$method}($record)
                 : $relatedResource::can($action, $record);
         }
 

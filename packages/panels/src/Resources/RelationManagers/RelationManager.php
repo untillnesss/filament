@@ -222,7 +222,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('create')) {
-            $action->url(fn (): string => $relatedResource::getUrl('create', [$relatedResource::getParentResourceRegistration()->getParentRouteParameterName() => $this->getOwnerRecord()]));
+            $action->url(fn (): string => $relatedResource::getUrl('create', shouldGuessMissingParameters: true));
         }
     }
 
@@ -257,7 +257,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('edit')) {
-            $action->url(fn (Model $record): string => $relatedResource::getUrl('edit', ['record' => $record]));
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('edit', ['record' => $record], shouldGuessMissingParameters: true));
         }
     }
 
@@ -297,7 +297,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('view')) {
-            $action->url(fn (Model $record): string => $relatedResource::getUrl('view', ['record' => $record]));
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('view', ['record' => $record], shouldGuessMissingParameters: true));
         }
     }
 
@@ -353,7 +353,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
             $method = 'can' . Str::lcfirst($action);
 
             return method_exists($relatedResource, $method)
-                ? $relatedResource::{$method}($action, $record)
+                ? $relatedResource::{$method}($record)
                 : $relatedResource::can($action, $record);
         }
 
