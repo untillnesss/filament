@@ -5,8 +5,6 @@ namespace Filament\Resources\Resource\Concerns;
 use Exception;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Collection;
 
 use function Filament\Support\original_request;
 
@@ -15,56 +13,40 @@ trait CanGenerateUrls
     /**
      * @param  array<mixed>  $parameters
      */
-    public static function getUrl(?string $name = null, array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null): string
+    public static function getUrl(?string $name = null, array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = false): string
     {
-        $record = $parameters['record'] ?? null;
-        $parentResource = static::getParentResourceRegistration();
-        $isFirstParentResource = true;
-        $originalRequest = null;
+        if ($shouldGuessMissingParameters) {
+            $originalRequestRoute = null;
+            $parentResources = [];
+            $parentResource = static::getParentResourceRegistration();
 
-        while (filled($parentResource)) {
-            if ($record instanceof Collection) {
-                throw new Exception("Attempted to generate a URL for the [{$name}] route on the [" . static::class . "] resource, but the [{$parentResourceInverseRelationshipName}] parameter was missing and its value cannot be guessed since it relies on a multiple relationship.");
+            while (filled($parentResource)) {
+                array_unshift($parentResources, $parentResource);
+
+                $parentResource = $parentResource->getParentResource()::getParentResourceRegistration();
             }
 
-            $parentResourceInverseRelationshipName = $parentResource->getInverseRelationshipName();
+            foreach ($parentResources as $parentResource) {
+                $parentRouteParameterName = $parentResource->getParentRouteParameterName();
 
-            if ($parameters[$parentResource->getParentRouteParameterName()] ?? null) {
-                $record = $parameters[$parentResource->getParentRouteParameterName()] ?? null;
-            } elseif (
-                $record &&
-                method_exists($record, $parentResourceInverseRelationshipName) &&
-                ($record->{$parentResourceInverseRelationshipName}() instanceof BelongsToMany)
-            ) {
-                $originalRequest ??= original_request();
-
-                $recordKey = $isFirstParentResource
-                    ? $originalRequest->route()->parameter('record')
-                    : $originalRequest->route()->parameter($parentResource->getParentRouteParameterName());
-
-                if (blank($recordKey)) {
-                    throw new Exception("Attempted to generate a URL for the [{$name}] route on the [" . static::class . "] resource, but the [{$parentResourceInverseRelationshipName}] parameter was missing and its value cannot be guessed since it relies on a multiple relationship.");
+                if (filled($parameters[$parentRouteParameterName] ?? null)) {
+                    continue;
                 }
 
-                $record = $parentResource->getParentResource()::resolveRecordRouteBinding($recordKey);
+                $originalRequestRoute ??= original_request()->route();
 
-                if (! $record) {
-                    throw new Exception("Attempted to generate a URL for the [{$name}] route on the [" . static::class . "] resource, but the [{$parentResourceInverseRelationshipName}] parameter was missing and its value cannot be guessed since it relies on a multiple relationship.");
+                if (! $originalRequestRoute->hasParameter($parentRouteParameterName)) {
+                    $parameters[$parentRouteParameterName] = $originalRequestRoute->parameter('record');
+
+                    break;
                 }
-            } else {
-                $record = $record?->{$parentResourceInverseRelationshipName};
+
+                $parameters[$parentRouteParameterName] = $originalRequestRoute->parameter($parentRouteParameterName);
             }
-
-            $parameters[$parentResource->getParentRouteParameterName()] ??= $record;
-            $parameters['record'] ??= $record;
-
-            $parentResource = $parentResource->getParentResource()::getParentResourceRegistration();
-
-            $isFirstParentResource = false;
         }
 
         if (blank($name)) {
-            return static::getIndexUrl($parameters, $isAbsolute, $panel, $tenant);
+            return static::getIndexUrl($parameters, $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
         }
 
         if (blank($panel) || Filament::getPanel($panel)->hasTenancy()) {
@@ -79,7 +61,7 @@ trait CanGenerateUrls
     /**
      * @param  array<mixed>  $parameters
      */
-    public static function getIndexUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null): string
+    public static function getIndexUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = false): string
     {
         $parentResourceRegistration = static::getParentResource();
 
@@ -94,7 +76,7 @@ trait CanGenerateUrls
                 return $parentResource::getUrl($relationshipPageName, [
                     ...$parameters,
                     'record' => $record,
-                ], $isAbsolute, $panel, $tenant);
+                ], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
             }
 
             if ($parentResource::hasPage('view')) {
@@ -102,7 +84,7 @@ trait CanGenerateUrls
                     'activeRelationManager' => $parentResourceRegistration->getRelationshipName(),
                     ...$parameters,
                     'record' => $record,
-                ], $isAbsolute, $panel, $tenant);
+                ], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
             }
 
             if ($parentResource::hasPage('edit')) {
@@ -110,11 +92,11 @@ trait CanGenerateUrls
                     'activeRelationManager' => $parentResourceRegistration->getRelationshipName(),
                     ...$parameters,
                     'record' => $record,
-                ], $isAbsolute, $panel, $tenant);
+                ], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
             }
 
             if ($parentResource::hasPage('index')) {
-                return $parentResource::getUrl('index', $parameters, $isAbsolute, $panel, $tenant);
+                return $parentResource::getUrl('index', $parameters, $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
             }
         }
 
@@ -122,6 +104,6 @@ trait CanGenerateUrls
             throw new Exception('The resource [' . static::class . '] does not have an [index] page or define [getIndexUrl()] for alternative routing.');
         }
 
-        return static::getUrl('index', $parameters, $isAbsolute, $panel, $tenant);
+        return static::getUrl('index', $parameters, $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
     }
 }

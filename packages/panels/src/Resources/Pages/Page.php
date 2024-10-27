@@ -40,7 +40,7 @@ abstract class Page extends BasePage
             $parameters[$parentResourceRegistration->getParentRouteParameterName()] ??= $this->getParentRecord();
         }
 
-        return static::getResource()::getUrl($name, $parameters, $isAbsolute, $panel, $tenant);
+        return static::getResource()::getUrl($name, $parameters, $isAbsolute, $panel, $tenant, shouldGuessMissingParameters: true);
     }
 
     public static function getRouteName(?string $panel = null): string
@@ -73,15 +73,15 @@ abstract class Page extends BasePage
      */
     public static function getNavigationUrl(array $parameters = []): string
     {
-        return static::getUrl($parameters);
+        return static::getUrl($parameters, shouldGuessMissingParameters: true);
     }
 
     /**
      * @param  array<string, mixed>  $parameters
      */
-    public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null): string
+    public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = false): string
     {
-        return static::getResource()::getUrl(static::getResourcePageName(), $parameters, $isAbsolute, $panel, $tenant);
+        return static::getResource()::getUrl(static::getResourcePageName(), $parameters, $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
     }
 
     public static function getResourcePageName(): string
@@ -160,12 +160,12 @@ abstract class Page extends BasePage
 
                 if ($parentResource::hasPage('view') && $parentResource::canView($parentRecord)) {
                     $breadcrumbs = [
-                        $parentResource::getUrl('view', ['record' => $parentRecord]) => $parentRecordTitle,
+                        $parentResource::getUrl('view', ['record' => $parentRecord], shouldGuessMissingParameters: true) => $parentRecordTitle,
                         ...$breadcrumbs,
                     ];
                 } elseif ($parentResource::hasPage('edit') && $parentResource::canEdit($parentRecord)) {
                     $breadcrumbs = [
-                        $parentResource::getUrl('edit', ['record' => $parentRecord]) => $parentRecordTitle,
+                        $parentResource::getUrl('edit', ['record' => $parentRecord], shouldGuessMissingParameters: true) => $parentRecordTitle,
                         ...$breadcrumbs,
                     ];
                 } else {
@@ -178,7 +178,7 @@ abstract class Page extends BasePage
                 $breadcrumbs = [
                     $parentResource::getUrl(null, [
                         'record' => $parentRecord,
-                    ]) => $parentResource::getBreadcrumb(),
+                    ], shouldGuessMissingParameters: true) => $parentResource::getBreadcrumb(),
                     ...$breadcrumbs,
                 ];
 
