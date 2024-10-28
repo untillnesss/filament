@@ -34,7 +34,9 @@
 ])
 
 @php
+    $hasContent = ! \Filament\Support\is_slot_empty($slot);
     $hasDescription = filled($description);
+    $hasFooter = (! \Filament\Support\is_slot_empty($footer)) || (is_array($footerActions) && count($footerActions)) || (! is_array($footerActions) && (! \Filament\Support\is_slot_empty($footerActions)));
     $hasHeading = filled($heading);
     $hasIcon = filled($icon);
 
@@ -138,7 +140,8 @@
                     {{
                         ($extraModalWindowAttributeBag ?? new \Illuminate\View\ComponentAttributeBag)->class([
                             'fi-modal-window',
-                            'fi-modal-window-has-content' => ! \Filament\Support\is_slot_empty($slot),
+                            'fi-modal-window-has-content' => $hasContent,
+                            'fi-modal-window-has-footer' => $hasFooter,
                             'fi-modal-window-has-icon' => $hasIcon,
                             'fi-modal-window-has-sticky-header' => $stickyHeader,
                             'fi-hidden' => ! $visible,
@@ -210,13 +213,13 @@
                         </div>
                     @endif
 
-                    @if (! \Filament\Support\is_slot_empty($slot))
+                    @if ($hasContent)
                         <div class="fi-modal-content">
                             {{ $slot }}
                         </div>
                     @endif
 
-                    @if ((! \Filament\Support\is_slot_empty($footer)) || (is_array($footerActions) && count($footerActions)) || (! is_array($footerActions) && (! \Filament\Support\is_slot_empty($footerActions))))
+                    @if ($hasFooter)
                         <div
                             @class([
                                 'fi-modal-footer',

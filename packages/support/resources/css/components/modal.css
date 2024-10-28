@@ -276,6 +276,12 @@
                     @apply mt-6;
                 }
             }
+
+            &:not(.fi-modal-window-has-footer) {
+                & .fi-modal-header {
+                    @apply pb-6;
+                }
+            }
         }
 
         &:not(.fi-modal-window-has-icon),
