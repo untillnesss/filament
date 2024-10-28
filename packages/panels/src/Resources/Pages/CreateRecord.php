@@ -4,7 +4,6 @@ namespace Filament\Resources\Pages;
 
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\CanUseDatabaseTransactions;
 use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
@@ -14,7 +13,6 @@ use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Js;
 use Throwable;
 
@@ -188,29 +186,9 @@ class CreateRecord extends Page
             return $this->associateRecordWithParent($record, $parentRecord);
         }
 
-        if (
-            static::getResource()::isScopedToTenant() &&
-            ($tenant = Filament::getTenant())
-        ) {
-            return $this->associateRecordWithTenant($record, $tenant);
-        }
-
         $record->save();
 
         return $record;
-    }
-
-    protected function associateRecordWithTenant(Model $record, Model $tenant): Model
-    {
-        $relationship = static::getResource()::getTenantRelationship($tenant);
-
-        if ($relationship instanceof HasManyThrough) {
-            $record->save();
-
-            return $record;
-        }
-
-        return $relationship->save($record);
     }
 
     protected function associateRecordWithParent(Model $record, Model $parent): Model

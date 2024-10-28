@@ -757,32 +757,22 @@ It's important to understand the security implications of multi-tenancy and how 
 
 Below is a list of features that Filament provides to help you implement multi-tenancy in your application:
 
-- Automatic scoping of resources to the current tenant. The base Eloquent query that is used to fetch records for a resource is automatically scoped to the current tenant. This query is used to render the resource's list table, and is also used to resolve records from the current URL when editing or viewing a record. This means that if a user attempts to view a record that does not belong to the current tenant, they will receive a 404 error.
+- Automatic global scoping of Eloquent model queries for [tenant-aware](#disabling-tenancy-for-a-resource) resources that belong to the panel with tenancy enabled. The query used to fetch records for a resource is automatically scoped to the current tenant. This query is used to render the resource's list table, and is also used to resolve records from the current URL when editing or viewing a record. This means that if a user attempts to view a record that does not belong to the current tenant, they will receive a 404 error.
+  - A [tenant-aware](#disabling-tenancy-for-a-resource) resource has to exist in the panel with tenancy enabled for the resource's model to have the global scope applied. If you want to scope the queries for a model that does not have a corresponding resource, you must [use middleware to apply additional global scopes](#using-tenant-aware-middleware-to-apply-additional-global-scopes) for that model.
+  - The global scopes are applied after the tenant has been identified from the request. This happens during the middleware stack of panel requests. If you make a query before the tenant has been identified, such as from early middleware in the stack or in a service provider, the query will not be scoped to the current tenant. To guarantee that middleware runs after the current tenant is identified, you should register it as [tenant middleware](#applying-middleware-to-tenant-aware-routes).
+  - As per the point above, queries made outside the panel with tenancy enabled do not have access to the current tenant, so are not scoped. If in doubt, please check if your queries are properly scoped or not before deploying your application.
+  - If you need to disable the tenancy global scope for a specific query, you can use the `withoutGlobalScope(filament()->getTenancyScopeName())` method on the query.
+  - If any of your queries disable all global scopes, the tenancy global scope will be disabled as well. You should be careful when using this method, as it can lead to data leakage. If you need to disable all global scopes except the tenancy global scope, you can use the `withoutGlobalScopes()` method passing an array of the global scopes you want to disable.
 
-- Automatic association of new resource records to the current tenant.
+- Automatic association of newly created Eloquent models with the current tenant. When a new record is created for a [tenant-aware](#disabling-tenancy-for-a-resource) resource, the tenant is automatically associated with the record. This means that the record will belong to the current tenant, as the foreign key column is automatically set to the tenant's ID. This is done by Filament registering an event listener for the `creating` and `created` events on the resource's Eloquent model. If you need to disable this feature for a specific model, you can use the `withoutTenancy()` method on the model.
+  - A [tenant-aware](#disabling-tenancy-for-a-resource) resource has to exist in the panel with tenancy enabled for the resource's model to have the automatic association to happen. If you want automatic association for a model that does not have a corresponding resource, you must [register a listener for the `creating` event](https://laravel.com/docs/eloquent#events) for that model, and associate the `filament()->getTenant()` with it.
+  - The events run after the tenant has been identified from the request. This happens during the middleware stack of panel requests. If you create a model before the tenant has been identified, such as from early middleware in the stack or in a service provider, it will not be associated with the current tenant. To guarantee that middleware runs after the current tenant is identified, you should register it as [tenant middleware](#applying-middleware-to-tenant-aware-routes).
+  - As per the point above, models created outside the panel with tenancy enabled do not have access to the current tenant, so are not associated. If in doubt, please check if your models are properly associated or not before deploying your application.
+  - If you need to disable the automatic association for a particular model, you can [mute the events](https://laravel.com/docs/eloquent#muting-events) temporarily while you create it. If any of your code currently does this or removes event listeners permanently, you should check this is not affecting the tenancy feature.
 
-And here are the things that Filament does not currently provide:
+### Using tenant-aware middleware to apply additional global scopes
 
-- Scoping of relation manager records to the current tenant. When using the relation manager, in the vast majority of cases, the query will not need to be scoped to the current tenant, since it is already scoped to the parent record, which is itself scoped to the current tenant. For example, if a `Team` tenant model had an `Author` resource, and that resource had a `posts` relationship and relation manager set up, and posts only belong to one author, there is no need to scope the query. This is because the user will only be able to see authors that belong to the current team anyway, and thus will only be able to see posts that belong to those authors. You can [scope the Eloquent query](resources/relation-managers#customizing-the-relation-manager-eloquent-query) if you wish.
-
-- Form component and filter scoping. When using the `Select`, `CheckboxList` or `Repeater` form components, the `SelectFilter`, or any other similar Filament component which is able to automatically fetch "options" or other data from the database (usually using a `relationship()` method), this data is not scoped. The main reason for this is that these features often don't belong to the Filament Panel Builder package, and have no knowledge that they are being used within that context, and that a tenant even exists. And even if they did have access to the tenant, there is nowhere for the tenant relationship configuration to live. To scope these components, you need to pass in a query function that scopes the query to the current tenant. For example, if you were using the `Select` form component to select an `author` from a relationship, you could do this:
-
-```php
-use Filament\Facades\Filament;
-use Filament\Forms\Components\Select;
-use Illuminate\Database\Eloquent\Builder;
-
-Select::make('author_id')
-    ->relationship(
-        name: 'author',
-        titleAttribute: 'name',
-        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
-    );
-```
-
-### Using tenant-aware middleware to apply global scopes
-
-It might be useful to apply global scopes to your Eloquent models while they are being used in your panel. This would allow you to forget about scoping your queries to the current tenant, and instead have the scoping applied automatically. To do this, you can create a new middleware class like `ApplyTenantScopes`:
+Since only models with resources that exist in the panel are automatically scoped to the current tenant, it might be useful to apply additional tenant scoping to other Eloquent models while they are being used in your panel. This would allow you to forget about scoping your queries to the current tenant, and instead have the scoping applied automatically. To do this, you can create a new middleware class like `ApplyTenantScopes`:
 
 ```bash
 php artisan make:middleware ApplyTenantScopes
@@ -802,6 +792,7 @@ class ApplyTenantScopes
     public function handle(Request $request, Closure $next)
     {
         Author::addGlobalScope(
+            'tenant',
             fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
         );
 
