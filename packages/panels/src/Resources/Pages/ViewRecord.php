@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 /**
- * @property Schema $form
+ * @property-read Schema $form
  */
 class ViewRecord extends Page
 {

@@ -15,7 +15,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Support\Htmlable;
 
 /**
- * @property Schema $form
+ * @property-read Schema $form
  */
 class EmailVerificationPrompt extends SimplePage
 {

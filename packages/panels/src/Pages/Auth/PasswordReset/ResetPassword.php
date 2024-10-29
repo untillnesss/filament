@@ -10,10 +10,14 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Http\Responses\Auth\Contracts\PasswordResetResponse;
 use Filament\Notifications\Notification;
-use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\SimplePage;
 use Filament\Schema\Components\Component;
+use Filament\Schema\Components\Decorations\FormActionsDecorations;
+use Filament\Schema\Components\Form;
+use Filament\Schema\Components\NestedSchema;
+use Filament\Schema\Components\RenderHook;
 use Filament\Schema\Schema;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword;
@@ -26,17 +30,11 @@ use Illuminate\Validation\Rules\Password as PasswordRule;
 use Livewire\Attributes\Locked;
 
 /**
- * @property Schema $form
+ * @property-read Schema $form
  */
 class ResetPassword extends SimplePage
 {
-    use InteractsWithFormActions;
     use WithRateLimiting;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::pages.auth.password-reset.reset-password';
 
     #[Locked]
     public ?string $email = null;
@@ -189,5 +187,26 @@ class ResetPassword extends SimplePage
     protected function hasFullWidthFormActions(): bool
     {
         return true;
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                RenderHook::make(PanelsRenderHook::AUTH_PASSWORD_RESET_RESET_FORM_BEFORE),
+                $this->getFormContentSchemaComponent(),
+                RenderHook::make(PanelsRenderHook::AUTH_PASSWORD_RESET_RESET_FORM_AFTER),
+            ]);
+    }
+
+    public function getFormContentSchemaComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('resetPassword')
+            ->footer(FormActionsDecorations::make($this->getFormActions())
+                ->alignment($this->getFormActionsAlignment())
+                ->fullWidth($this->hasFullWidthFormActions())
+                ->sticky($this->areFormActionsSticky()));
     }
 }

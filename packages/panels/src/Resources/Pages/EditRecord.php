@@ -29,7 +29,7 @@ use Throwable;
 use function Filament\Support\is_app_url;
 
 /**
- * @property Schema $form
+ * @property-read Schema $form
  */
 class EditRecord extends Page
 {

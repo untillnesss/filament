@@ -12,27 +12,26 @@ use Filament\Forms\Components\TextInput;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Notifications\Notification;
-use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\SimplePage;
 use Filament\Schema\Components\Component;
+use Filament\Schema\Components\Decorations\FormActionsDecorations;
+use Filament\Schema\Components\Form;
+use Filament\Schema\Components\NestedSchema;
+use Filament\Schema\Components\RenderHook;
 use Filament\Schema\Schema;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use Illuminate\Validation\ValidationException;
 
 /**
- * @property Schema $form
+ * @property-read Action $registerAction
+ * @property-read Schema $form
  */
 class Login extends SimplePage
 {
-    use InteractsWithFormActions;
     use WithRateLimiting;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::pages.auth.login';
 
     /**
      * @var array<string, mixed> | null
@@ -203,5 +202,35 @@ class Login extends SimplePage
             'email' => $data['email'],
             'password' => $data['password'],
         ];
+    }
+
+    public function getSubheading(): string | Htmlable | null
+    {
+        if (! filament()->hasRegistration()) {
+            return null;
+        }
+
+        return new HtmlString(__('filament-panels::pages/auth/login.actions.register.before') . ' ' . $this->registerAction->toHtml());
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                RenderHook::make(PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE),
+                $this->getFormContentSchemaComponent(),
+                RenderHook::make(PanelsRenderHook::AUTH_LOGIN_FORM_AFTER),
+            ]);
+    }
+
+    public function getFormContentSchemaComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('authenticate')
+            ->footer(FormActionsDecorations::make($this->getFormActions())
+                ->alignment($this->getFormActionsAlignment())
+                ->fullWidth($this->hasFullWidthFormActions())
+                ->sticky($this->areFormActionsSticky()));
     }
 }

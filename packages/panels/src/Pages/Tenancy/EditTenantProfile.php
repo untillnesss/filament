@@ -9,6 +9,10 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Concerns;
 use Filament\Pages\Page;
 use Filament\Panel;
+use Filament\Schema\Components\Component;
+use Filament\Schema\Components\Decorations\FormActionsDecorations;
+use Filament\Schema\Components\Form;
+use Filament\Schema\Components\NestedSchema;
 use Filament\Schema\Schema;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
@@ -22,18 +26,12 @@ use function Filament\authorize;
 use function Filament\Support\is_app_url;
 
 /**
- * @property Schema $form
+ * @property-read Schema $form
  */
 abstract class EditTenantProfile extends Page
 {
     use Concerns\CanUseDatabaseTransactions;
     use Concerns\HasRoutes;
-    use Concerns\InteractsWithFormActions;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::pages.tenancy.edit-tenant-profile';
 
     /**
      * @var array<string, mixed> | null
@@ -234,5 +232,29 @@ abstract class EditTenantProfile extends Page
         } catch (AuthorizationException $exception) {
             return $exception->toResponse()->allowed();
         }
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getFormContentSchemaComponent(),
+            ]);
+    }
+
+    public function getFormContentSchemaComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('save')
+            ->footer(FormActionsDecorations::make($this->getFormActions())
+                ->alignment($this->getFormActionsAlignment())
+                ->fullWidth($this->hasFullWidthFormActions())
+                ->sticky($this->areFormActionsSticky()));
+    }
+
+    protected function hasFullWidthFormActions(): bool
+    {
+        return false;
     }
 }

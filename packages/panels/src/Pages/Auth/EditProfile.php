@@ -12,6 +12,9 @@ use Filament\Pages\Concerns;
 use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\Schema\Components\Component;
+use Filament\Schema\Components\Decorations\FormActionsDecorations;
+use Filament\Schema\Components\Form;
+use Filament\Schema\Components\NestedSchema;
 use Filament\Schema\Components\Utilities\Get;
 use Filament\Schema\Schema;
 use Filament\Support\Enums\Alignment;
@@ -29,14 +32,13 @@ use Throwable;
 use function Filament\Support\is_app_url;
 
 /**
- * @property Schema $form
+ * @property-read Schema $form
  */
 class EditProfile extends Page
 {
     use Concerns\CanUseDatabaseTransactions;
     use Concerns\HasMaxWidth;
     use Concerns\HasTopbar;
-    use Concerns\InteractsWithFormActions;
 
     /**
      * @var array<string, mixed> | null
@@ -360,5 +362,24 @@ class EditProfile extends Page
             'hasTopbar' => $this->hasTopbar(),
             'maxWidth' => $this->getMaxWidth(),
         ];
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getFormContentSchemaComponent(),
+            ]);
+    }
+
+    public function getFormContentSchemaComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('save')
+            ->footer(FormActionsDecorations::make($this->getFormActions())
+                ->alignment($this->getFormActionsAlignment())
+                ->fullWidth($this->hasFullWidthFormActions())
+                ->sticky($this->areFormActionsSticky()));
     }
 }

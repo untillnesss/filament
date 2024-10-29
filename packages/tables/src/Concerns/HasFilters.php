@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 
 /**
- * @property Schema $tableFiltersForm
+ * @property-read Schema $tableFiltersForm
  */
 trait HasFilters
 {

@@ -7,7 +7,7 @@ use Filament\Schema\Schema;
 use Illuminate\Support\Arr;
 
 /**
- * @property Schema $toggleTableColumnForm
+ * @property-read Schema $toggleTableColumnForm
  */
 trait CanToggleColumns
 {
