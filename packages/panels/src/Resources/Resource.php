@@ -2,7 +2,6 @@
 
 namespace Filament\Resources;
 
-use Filament\Facades\Filament;
 use Filament\Panel;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -67,16 +66,7 @@ abstract class Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = static::getModel()::query();
-
-        if (
-            static::isScopedToTenant() &&
-            ($tenant = Filament::getTenant())
-        ) {
-            static::scopeEloquentQueryToTenant($query, $tenant);
-        }
-
-        return $query;
+        return static::getModel()::query();
     }
 
     /**

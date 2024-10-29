@@ -377,4 +377,9 @@ trait HasTenancy
             ->classBasename()
             ->camel();
     }
+
+    public function getTenancyScopeName(): string
+    {
+        return "{$this->getId()}_tenancy";
+    }
 }

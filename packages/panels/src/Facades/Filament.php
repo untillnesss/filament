@@ -83,6 +83,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array getResourceUrl(string | Model $model, string $name = 'index', array $parameters = [], bool $isAbsolute = false, ?Model $tenant = null)
  * @method static string getSidebarWidth()
  * @method static SubNavigationPosition getSubNavigationPosition()
+ * @method static string getTenancyScopeName()
  * @method static Model | null getTenant()
  * @method static string | null getTenantAvatarUrl(Model $tenant)
  * @method static BillingProvider | null getTenantBillingProvider()

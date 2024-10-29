@@ -945,4 +945,9 @@ class FilamentManager
 
         return request()->getHost();
     }
+
+    public function getTenancyScopeName(): string
+    {
+        return $this->getCurrentPanel()->getTenancyScopeName();
+    }
 }
