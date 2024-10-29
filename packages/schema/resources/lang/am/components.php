@@ -7,11 +7,11 @@ return [
         'actions' => [
 
             'previous_step' => [
-                'label' => 'Back',
+                'label' => 'ወደ ኋላ',
             ],
 
             'next_step' => [
-                'label' => 'Next',
+                'label' => 'ቀጣይ',
             ],
 
         ],
