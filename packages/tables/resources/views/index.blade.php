@@ -569,6 +569,7 @@
                         theme: $store.theme,
                     }"
                     wire:click="removeTableFilters"
+                    wire:loading.attr="disabled"
                     wire:target="removeTableFilters,removeTableFilter"
                     class="fi-icon-btn fi-size-sm"
                 >
@@ -1203,6 +1204,7 @@
                                             aria-label="{{ trim(strip_tags($columnLabel)) }}"
                                             type="button"
                                             wire:click="sortTable('{{ $columnName }}')"
+                                            wire:loading.attr="disabled"
                                             class="fi-ta-header-cell-sort-btn"
                                         >
                                             {{ $columnLabel }}
