@@ -14,7 +14,6 @@ use Filament\Actions\ReplicateAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Resources\Concerns\HasTabs;
@@ -124,8 +123,6 @@ class ListRecords extends Page implements Tables\Contracts\HasTable
 
         if ($parentRecord = $this->getParentRecord()) {
             $action->relationship(fn (): Relation => $resource::getParentResourceRegistration()->getRelationship($parentRecord));
-        } elseif (static::getResource()::isScopedToTenant()) {
-            $action->relationship(($tenant = Filament::getTenant()) ? fn (): Relation => static::getResource()::getTenantRelationship($tenant) : null);
         }
 
         if ($resource::hasPage('create')) {
