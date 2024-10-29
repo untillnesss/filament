@@ -7,6 +7,10 @@ use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\CanUseDatabaseTransactions;
 use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
+use Filament\Schema\Components\Component;
+use Filament\Schema\Components\Decorations\FormActionsDecorations;
+use Filament\Schema\Components\Form;
+use Filament\Schema\Components\NestedSchema;
 use Filament\Schema\Schema;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
@@ -20,12 +24,9 @@ use function Filament\Support\is_app_url;
 class SettingsPage extends Page
 {
     use CanUseDatabaseTransactions;
-    use Concerns\InteractsWithFormActions;
     use HasUnsavedDataChangesAlert;
 
     protected static string $settings;
-
-    protected static string $view = 'filament-spatie-laravel-settings-plugin::pages.settings-page';
 
     /**
      * @var array<string, mixed> | null
@@ -188,6 +189,30 @@ class SettingsPage extends Page
                     ->inlineLabel($this->hasInlineLabels()),
             ),
         ];
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getFormContentSchemaComponent(),
+            ]);
+    }
+
+    public function getFormContentSchemaComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('save')
+            ->footer(FormActionsDecorations::make($this->getFormActions())
+                ->alignment($this->getFormActionsAlignment())
+                ->fullWidth($this->hasFullWidthFormActions())
+                ->sticky($this->areFormActionsSticky()));
+    }
+
+    protected function hasFullWidthFormActions(): bool
+    {
+        return false;
     }
 
     public function getRedirectUrl(): ?string

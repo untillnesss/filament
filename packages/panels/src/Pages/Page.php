@@ -6,6 +6,12 @@ use Filament\Clusters\Cluster;
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationItem;
 use Filament\Panel;
+use Filament\Schema\Components\Component;
+use Filament\Schema\Components\Grid;
+use Filament\Schema\Components\Livewire;
+use Filament\Schema\Components\RenderHook;
+use Filament\Schema\Schema;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;
 use Illuminate\Contracts\Support\Htmlable;
@@ -46,6 +52,8 @@ abstract class Page extends BasePage
     protected static ?int $navigationSort = null;
 
     protected static bool $shouldRegisterNavigation = true;
+
+    protected static string $view = 'filament-panels::pages.page';
 
     public function getLayout(): string
     {
@@ -319,5 +327,65 @@ abstract class Page extends BasePage
         }
 
         return $name;
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPageClasses(): array
+    {
+        return [];
+    }
+
+    /**
+     * @param  array<string | WidgetConfiguration>  $widgets
+     * @param  array<string, mixed>  $data
+     * @return array<Component>
+     */
+    public function getWidgetsSchemaComponents(array $widgets, array $data = []): array
+    {
+        return collect($this->filterVisibleWidgets($widgets))
+            ->map(fn (string | WidgetConfiguration $widget, string | int $widgetKey): Livewire => Livewire::make(
+                $widgetClass = $this->normalizeWidgetClass($widget),
+                [
+                    ...$this->getWidgetData(),
+                    ...$data,
+                    ...(property_exists($this, 'filters') ? ['pageFilters' => $this->filters] : []),
+                    ...(($widget instanceof WidgetConfiguration) ? [
+                        ...$widget->widget::getDefaultProperties(),
+                        ...$widget->getProperties(),
+                    ] : $widget::getDefaultProperties()),
+                ],
+            )->key("{$widgetClass}-{$widgetKey}")->liberatedFromContainerGrid())
+            ->all();
+    }
+
+    public function headerWidgets(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                RenderHook::make(PanelsRenderHook::PAGE_HEADER_WIDGETS_BEFORE),
+                Grid::make($this->getHeaderWidgetsColumns())
+                    ->schema($widgets = $this->getWidgetsSchemaComponents($this->getHeaderWidgets())),
+                RenderHook::make(PanelsRenderHook::PAGE_HEADER_WIDGETS_AFTER),
+            ])
+            ->hidden(empty($widgets));
+    }
+
+    public function footerWidgets(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                RenderHook::make(PanelsRenderHook::PAGE_FOOTER_WIDGETS_BEFORE),
+                Grid::make($this->getFooterWidgetsColumns())
+                    ->schema($widgets = $this->getWidgetsSchemaComponents($this->getFooterWidgets())),
+                RenderHook::make(PanelsRenderHook::PAGE_FOOTER_WIDGETS_AFTER),
+            ])
+            ->hidden(empty($widgets));
     }
 }

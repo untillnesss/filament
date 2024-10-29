@@ -11,11 +11,14 @@ use Filament\Infolists;
 use Filament\Pages\Page;
 use Filament\Resources\Concerns\InteractsWithRelationshipTable;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schema\Components\RenderHook;
+use Filament\Schema\Components\TableBuilder;
 use Filament\Schema\Schema;
 use Filament\Support\Concerns\CanBeLazy;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
@@ -573,5 +576,16 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
         }
 
         return $properties;
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getTabsContentSchemaComponent(),
+                RenderHook::make(PanelsRenderHook::RESOURCE_RELATION_MANAGER_BEFORE),
+                TableBuilder::make(),
+                RenderHook::make(PanelsRenderHook::RESOURCE_RELATION_MANAGER_AFTER),
+            ]);
     }
 }

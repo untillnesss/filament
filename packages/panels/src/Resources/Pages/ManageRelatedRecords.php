@@ -24,9 +24,13 @@ use Filament\Resources\Concerns\InteractsWithRelationshipTable;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\RelationManagers\RelationManagerConfiguration;
+use Filament\Schema\Components\Group;
+use Filament\Schema\Components\RenderHook;
+use Filament\Schema\Components\TableBuilder;
 use Filament\Schema\Schema;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -42,11 +46,6 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
         configureAction as configureActionRecord;
     }
     use InteractsWithRelationshipTable;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::resources.pages.manage-related-records';
 
     public ?string $previousUrl = null;
 
@@ -473,5 +472,31 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
     protected function getForms(): array
     {
         return [];
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Group::make([
+                    $this->getTabsContentSchemaComponent(),
+                    RenderHook::make(PanelsRenderHook::RESOURCE_PAGES_MANAGE_RELATED_RECORDS_TABLE_BEFORE),
+                    TableBuilder::make(),
+                    RenderHook::make(PanelsRenderHook::RESOURCE_PAGES_MANAGE_RELATED_RECORDS_TABLE_AFTER),
+                ])->visible(! empty($this->table->getColumns())),
+                $this->getRelationManagersContentSchemaComponent(),
+            ]);
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPageClasses(): array
+    {
+        return [
+            'fi-resource-manage-related-records-page',
+            'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
+            "fi-resource-record-{$this->getRecord()->getKey()}",
+        ];
     }
 }

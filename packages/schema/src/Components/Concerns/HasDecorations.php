@@ -127,14 +127,19 @@ trait HasDecorations
             }
 
             foreach ($decorations->getActions() as $action) {
-                $this->cachedDecorationActions[$action->getName()] = $this->prepareAction(
-                    $action
-                        ->defaultSize(ActionSize::Small)
-                        ->defaultView(Action::LINK_VIEW),
-                );
+                $this->cachedDecorationActions[$action->getName()] = $this->prepareDecorationAction($action);
             }
         }
 
         return $this->cachedDecorationActions;
+    }
+
+    public function prepareDecorationAction(Action $action): Action
+    {
+        return $this->prepareAction(
+            $action
+                ->defaultSize(ActionSize::Small)
+                ->defaultView(Action::LINK_VIEW),
+        );
     }
 }

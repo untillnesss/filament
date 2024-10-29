@@ -1,6 +1,7 @@
 @php
     use Filament\Forms\Components\Actions\Action;
     use Filament\Support\Enums\Alignment;
+    use Illuminate\View\ComponentAttributeBag;
 
     $containers = $getChildComponentContainers();
 

@@ -5,6 +5,7 @@ namespace Filament\Schema\Concerns;
 use Closure;
 use Filament\Forms\Components\Field;
 use Filament\Schema\Components\Component;
+use Illuminate\Support\Collection;
 
 trait HasComponents
 {
@@ -137,7 +138,7 @@ trait HasComponents
     /**
      * @return array<Component>
      */
-    public function getComponents(bool $withHidden = false): array
+    public function getComponents(bool $withHidden = false, bool $withOriginalKeys = false): array
     {
         $components = array_map(function (Component $component): Component {
             $component->container($this);
@@ -151,7 +152,10 @@ trait HasComponents
 
         return collect($components)
             ->filter(fn (Component $component) => $component->isVisible())
-            ->values()
+            ->when(
+                ! $withOriginalKeys,
+                fn (Collection $collection): Collection => $collection->values(),
+            )
             ->all();
     }
 }

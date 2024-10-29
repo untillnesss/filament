@@ -6,6 +6,12 @@ use Filament\Resources\Pages\Enums\ContentTabPosition;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\RelationManagers\RelationManagerConfiguration;
+use Filament\Schema\Components\Component;
+use Filament\Schema\Components\Group;
+use Filament\Schema\Components\Livewire;
+use Filament\Schema\Components\Tabs;
+use Filament\Schema\Components\Tabs\Tab;
+use Illuminate\Support\Arr;
 use Livewire\Attributes\Url;
 
 trait HasRelationManagers
@@ -78,5 +84,110 @@ trait HasRelationManagers
     public function getContentTabPosition(): ?ContentTabPosition
     {
         return null;
+    }
+
+    /**
+     * @return array<Component>
+     */
+    public function getContentComponents(): array
+    {
+        return [];
+    }
+
+    public function getRelationManagersContentSchemaComponent(): Component
+    {
+        $managers = $this->getRelationManagers();
+        $hasCombinedRelationManagerTabsWithContent = $this->hasCombinedRelationManagerTabsWithContent();
+        $ownerRecord = $this->getRecord();
+
+        $managerLivewireData = ['ownerRecord' => $ownerRecord, 'pageClass' => static::class];
+
+        if ($activeLocale = (property_exists($this, 'activeLocale') ? $this->activeLocale : null)) {
+            $managerLivewireData['activeLocale'] = $activeLocale;
+        }
+
+        if ((count($managers) > 1) || $hasCombinedRelationManagerTabsWithContent) {
+            $tabs = $managers;
+
+            if ($hasCombinedRelationManagerTabsWithContent) {
+                match ($this->getContentTabPosition()) {
+                    ContentTabPosition::After => $tabs = array_merge($tabs, [null => null]),
+                    default => $tabs = array_replace([null => null], $tabs),
+                };
+            }
+
+            $tabs = collect($tabs)
+                ->map(function ($manager, string | int $tabKey) use ($hasCombinedRelationManagerTabsWithContent, $managerLivewireData, $ownerRecord): Tab {
+                    $tabKey = strval($tabKey);
+
+                    if (blank($tabKey) && $hasCombinedRelationManagerTabsWithContent) {
+                        return Tab::make($this->getContentTabLabel())
+                            ->icon($this->getContentTabIcon())
+                            ->schema($this->getContentComponents());
+                    }
+
+                    if ($manager instanceof RelationGroup) {
+                        $manager->ownerRecord($ownerRecord);
+                        $manager->pageClass(static::class);
+
+                        return Tab::make($manager->getLabel())
+                            ->badge($manager->getBadge())
+                            ->badgeColor($manager->getBadgeColor())
+                            ->badgeTooltip($manager->getBadgeTooltip())
+                            ->icon($manager->getIcon())
+                            ->iconPosition($manager->getIconPosition())
+                            ->schema(fn (): array => collect($manager->getManagers())
+                                ->map(fn ($groupedManager, $groupedManagerKey): Livewire => Livewire::make(
+                                    $normalizedGroupedManagerClass = $this->normalizeRelationManagerClass($groupedManager),
+                                    [...$managerLivewireData, ...(($groupedManager instanceof RelationManagerConfiguration) ? [...$groupedManager->relationManager::getDefaultProperties(), ...$groupedManager->getProperties()] : $groupedManager::getDefaultProperties())],
+                                )->key("{$normalizedGroupedManagerClass}-{$groupedManagerKey}"))
+                                ->all());
+                    }
+
+                    $normalizedManagerClass = $this->normalizeRelationManagerClass($manager);
+
+                    return Tab::make($normalizedManagerClass::getTitle($ownerRecord, static::class))
+                        ->badge($normalizedManagerClass::getBadge($ownerRecord, static::class))
+                        ->badgeColor($normalizedManagerClass::getBadgeColor($ownerRecord, static::class))
+                        ->badgeTooltip($normalizedManagerClass::getBadgeTooltip($ownerRecord, static::class))
+                        ->icon($normalizedManagerClass::getIcon($ownerRecord, static::class))
+                        ->iconPosition($normalizedManagerClass::getIconPosition($ownerRecord, static::class))
+                        ->schema(fn (): array => [
+                            Livewire::make(
+                                $normalizedManagerClass,
+                                [...$managerLivewireData, ...(($manager instanceof RelationManagerConfiguration) ? [...$manager->relationManager::getDefaultProperties(), ...$manager->getProperties()] : $manager::getDefaultProperties())],
+                            )->key($normalizedManagerClass),
+                        ]);
+                })
+                ->all();
+
+            return Tabs::make()
+                ->livewireProperty('activeRelationManager')
+                ->contained(false)
+                ->tabs($tabs);
+        }
+
+        if (empty($managers)) {
+            return Group::make()->hidden();
+        }
+
+        $manager = Arr::first($managers);
+
+        if ($manager instanceof RelationGroup) {
+            $manager->ownerRecord($ownerRecord);
+            $manager->pageClass(static::class);
+
+            return Group::make(collect($manager->ownerRecord($ownerRecord)->pageClass(static::class)->getManagers())
+                ->map(fn ($groupedManager, $groupedManagerKey): Livewire => Livewire::make(
+                    $normalizedGroupedManagerClass = $this->normalizeRelationManagerClass($groupedManager),
+                    [...$managerLivewireData, ...(($groupedManager instanceof RelationManagerConfiguration) ? [...$groupedManager->relationManager::getDefaultProperties(), ...$groupedManager->getProperties()] : $groupedManager::getDefaultProperties())],
+                )->key("{$normalizedGroupedManagerClass}-{$groupedManagerKey}"))
+                ->all());
+        }
+
+        return Livewire::make(
+            $normalizedManagerClass = $this->normalizeRelationManagerClass($manager),
+            [...$managerLivewireData, ...(($manager instanceof RelationManagerConfiguration) ? [...$manager->relationManager::getDefaultProperties(), ...$manager->getProperties()] : $manager::getDefaultProperties())],
+        )->key($normalizedManagerClass);
     }
 }

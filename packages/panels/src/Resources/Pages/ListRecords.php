@@ -17,10 +17,13 @@ use Filament\Actions\ViewAction;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Resources\Concerns\HasTabs;
+use Filament\Schema\Components\RenderHook;
+use Filament\Schema\Components\TableBuilder;
 use Filament\Schema\Schema;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -33,11 +36,6 @@ class ListRecords extends Page implements Tables\Contracts\HasTable
     use Tables\Concerns\InteractsWithTable {
         makeTable as makeBaseTable;
     }
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::resources.pages.list-records';
 
     #[Url]
     public bool $isTableReordering = false;
@@ -363,5 +361,27 @@ class ListRecords extends Page implements Tables\Contracts\HasTable
         }
 
         return [];
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getTabsContentSchemaComponent(),
+                RenderHook::make(PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABLE_BEFORE),
+                TableBuilder::make(),
+                RenderHook::make(PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABLE_AFTER),
+            ]);
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPageClasses(): array
+    {
+        return [
+            'fi-resource-list-records-page',
+            'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
+        ];
     }
 }

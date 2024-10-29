@@ -7,7 +7,10 @@ use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\CanUseDatabaseTransactions;
 use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
-use Filament\Pages\Concerns\InteractsWithFormActions;
+use Filament\Schema\Components\Component;
+use Filament\Schema\Components\Decorations\FormActionsDecorations;
+use Filament\Schema\Components\Form;
+use Filament\Schema\Components\NestedSchema;
 use Filament\Schema\Schema;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
@@ -25,12 +28,6 @@ class CreateRecord extends Page
 {
     use CanUseDatabaseTransactions;
     use HasUnsavedDataChangesAlert;
-    use InteractsWithFormActions;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::resources.pages.create-record';
 
     public ?Model $record = null;
 
@@ -329,5 +326,40 @@ class CreateRecord extends Page
     public function getRecord(): ?Model
     {
         return $this->record;
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getFormContentSchemaComponent(),
+            ]);
+    }
+
+    public function getFormContentSchemaComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('create')
+            ->footer(FormActionsDecorations::make($this->getFormActions())
+                ->alignment($this->getFormActionsAlignment())
+                ->fullWidth($this->hasFullWidthFormActions())
+                ->sticky($this->areFormActionsSticky()));
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPageClasses(): array
+    {
+        return [
+            'fi-resource-create-record-page',
+            'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
+        ];
+    }
+
+    protected function hasFullWidthFormActions(): bool
+    {
+        return false;
     }
 }

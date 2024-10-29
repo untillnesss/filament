@@ -8,10 +8,15 @@ use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Filament\Support\Contracts\HasLabel as LabelInterface;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\View\ComponentAttributeBag;
+use UnitEnum;
 
 class SelectAction extends Action implements HasEmbeddedView
 {
     use HasId;
+
+    public const SELECT_VIEW = 'filament-actions::select-action';
+
+    protected string $view = self::SELECT_VIEW;
 
     /**
      * @var array<string> | Arrayable | string | Closure
@@ -119,5 +124,10 @@ class SelectAction extends Action implements HasEmbeddedView
         </div>
 
         <?php return ob_get_clean();
+    }
+
+    public function hasView(): bool
+    {
+        return ($this->getView() !== static::SELECT_VIEW) && parent::hasView();
     }
 }

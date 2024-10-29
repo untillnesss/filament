@@ -5,6 +5,7 @@ namespace Filament\Schema\Components;
 use Closure;
 use Filament\Schema\Components\Concerns\CanPersistTab;
 use Filament\Schema\Components\Tabs\Tab;
+use Filament\Schema\Contracts\HasRenderHookScopes;
 use Filament\Support\Concerns;
 use Illuminate\Support\Str;
 
@@ -22,6 +23,18 @@ class Tabs extends Component
     protected int | Closure $activeTab = 1;
 
     protected string | Closure | null $tabQueryStringKey = null;
+
+    /**
+     * @var array<string>
+     */
+    protected array $startRenderHooks = [];
+
+    /**
+     * @var array<string>
+     */
+    protected array $endRenderHooks = [];
+
+    protected string | Closure | null $livewireProperty = null;
 
     final public function __construct(?string $label = null)
     {
@@ -100,5 +113,67 @@ class Tabs extends Component
     public function isTabPersistedInQueryString(): bool
     {
         return filled($this->getTabQueryStringKey());
+    }
+
+    /**
+     * @param  array<string>  $hooks
+     */
+    public function startRenderHooks(array $hooks): static
+    {
+        $this->startRenderHooks = $hooks;
+
+        return $this;
+    }
+
+    /**
+     * @param  array<string>  $hooks
+     */
+    public function endRenderHooks(array $hooks): static
+    {
+        $this->endRenderHooks = $hooks;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getStartRenderHooks(): array
+    {
+        return $this->startRenderHooks;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getEndRenderHooks(): array
+    {
+        return $this->endRenderHooks;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getRenderHookScopes(): array
+    {
+        $livewire = $this->getLivewire();
+
+        if (! ($livewire instanceof HasRenderHookScopes)) {
+            return [];
+        }
+
+        return $livewire->getRenderHookScopes();
+    }
+
+    public function livewireProperty(string | Closure | null $property): static
+    {
+        $this->livewireProperty = $property;
+
+        return $this;
+    }
+
+    public function getLivewireProperty(): ?string
+    {
+        return $this->evaluate($this->livewireProperty);
     }
 }

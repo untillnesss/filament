@@ -7,7 +7,6 @@ use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Component;
-use Livewire\Drawer\Utils;
 
 class Schema extends ViewComponent
 {
@@ -29,11 +28,11 @@ class Schema extends ViewComponent
     use Concerns\HasStateBindingModifiers;
     use HasExtraAttributes;
 
-    protected string $view = 'filament-schema::component-container';
+    protected string $view = 'filament-schema::schema';
 
-    protected string $evaluationIdentifier = 'container';
+    protected string $evaluationIdentifier = 'schema';
 
-    protected string $viewIdentifier = 'container';
+    protected string $viewIdentifier = 'schema';
 
     public static string $defaultCurrency = 'usd';
 
@@ -64,6 +63,7 @@ class Schema extends ViewComponent
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         return match ($parameterName) {
+            'container' => [$this],
             'livewire' => [$this->getLivewire()],
             'model' => [$this->getModel()],
             'record' => [$this->getRecord()],
@@ -79,23 +79,16 @@ class Schema extends ViewComponent
         $record = $this->getRecord();
 
         if (! ($record instanceof Model)) {
-            return parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType);
+            return match ($parameterType) {
+                static::class, self::class => [$this],
+                default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
+            };
         }
 
         return match ($parameterType) {
+            static::class, self::class => [$this],
             Model::class, $record::class => [$record],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
-    }
-
-    public function toHtml(): string
-    {
-        if (! $this->shouldPartiallyRender()) {
-            return parent::toHtml();
-        }
-
-        return Utils::insertAttributesIntoHtmlRoot(parent::toHtml(), [
-            'wire:partial' => "schema.{$this->getKey()}",
-        ]);
     }
 }

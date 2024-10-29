@@ -7,6 +7,7 @@ use Filament\Schema\Components\Concerns\BelongsToModel;
 use Filament\Schema\Components\Concerns\CanBeConcealed;
 use Filament\Schema\Components\Concerns\CanBeDisabled;
 use Filament\Schema\Components\Concerns\CanBeHidden;
+use Filament\Schema\Components\Concerns\CanBeLiberatedFromContainerGrid;
 use Filament\Schema\Components\Concerns\CanBeRepeated;
 use Filament\Schema\Components\Concerns\CanPartiallyRender;
 use Filament\Schema\Components\Concerns\CanSpanColumns;
@@ -30,6 +31,7 @@ use Filament\Support\Concerns\CanGrow;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Drawer\Utils;
+use Livewire\Exceptions\RootTagMissingFromViewException;
 
 class Component extends ViewComponent
 {
@@ -38,6 +40,7 @@ class Component extends ViewComponent
     use CanBeConcealed;
     use CanBeDisabled;
     use CanBeHidden;
+    use CanBeLiberatedFromContainerGrid;
     use CanBeRepeated;
     use CanGrow;
     use CanPartiallyRender;
@@ -100,14 +103,28 @@ class Component extends ViewComponent
 
     public function toHtml(): string
     {
+        if ($this->isLiberatedFromContainerGrid()) {
+            return parent::toHtml();
+        }
+
         $key = $this->getKey();
 
         if (blank($key)) {
             return parent::toHtml();
         }
 
-        return Utils::insertAttributesIntoHtmlRoot(parent::toHtml(), [
-            'wire:partial' => "schema-component::{$key}",
-        ]);
+        $html = parent::toHtml();
+
+        if (blank($html)) {
+            return '';
+        }
+
+        try {
+            return Utils::insertAttributesIntoHtmlRoot($html, [
+                'wire:partial' => "schema-component::{$key}",
+            ]);
+        } catch (RootTagMissingFromViewException) {
+            return $html;
+        }
     }
 }

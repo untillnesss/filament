@@ -3,6 +3,9 @@
 namespace Filament\Pages;
 
 use Filament\Facades\Filament;
+use Filament\Schema\Components\Grid;
+use Filament\Schema\Components\NestedSchema;
+use Filament\Schema\Schema;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;
@@ -13,11 +16,6 @@ class Dashboard extends Page
     protected static string $routePath = '/';
 
     protected static ?int $navigationSort = -2;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::pages.dashboard';
 
     public static function getNavigationLabel(): string
     {
@@ -65,5 +63,15 @@ class Dashboard extends Page
     public function getTitle(): string | Htmlable
     {
         return static::$title ?? __('filament-panels::pages/dashboard.title');
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                ...(method_exists($this, 'getFiltersForm') ? [NestedSchema::make('filtersForm')] : []),
+                Grid::make($this->getColumns())
+                    ->schema($this->getWidgetsSchemaComponents($this->getWidgets())),
+            ]);
     }
 }

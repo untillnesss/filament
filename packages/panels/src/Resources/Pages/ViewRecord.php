@@ -8,7 +8,8 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ReplicateAction;
 use Filament\Actions\RestoreAction;
-use Filament\Pages\Concerns\InteractsWithFormActions;
+use Filament\Schema\Components\Component;
+use Filament\Schema\Components\NestedSchema;
 use Filament\Schema\Schema;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Contracts\Support\Htmlable;
@@ -24,12 +25,6 @@ class ViewRecord extends Page
     use Concerns\InteractsWithRecord {
         configureAction as configureActionRecord;
     }
-    use InteractsWithFormActions;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::resources.pages.view-record';
 
     /**
      * @var array<string, mixed> | null
@@ -228,5 +223,48 @@ class ViewRecord extends Page
     public static function shouldRegisterNavigation(array $parameters = []): bool
     {
         return parent::shouldRegisterNavigation($parameters) && static::getResource()::canView($parameters['record']);
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                ...($this->hasCombinedRelationManagerTabsWithContent() ? [] : $this->getContentComponents()),
+                $this->getRelationManagersContentSchemaComponent(),
+            ]);
+    }
+
+    /**
+     * @return array<Component>
+     */
+    public function getContentComponents(): array
+    {
+        return [
+            $this->hasInfolist()
+                ? $this->getInfolistContentSchemaComponent()
+                : $this->getFormContentSchemaComponent(),
+        ];
+    }
+
+    public function getFormContentSchemaComponent(): Component
+    {
+        return NestedSchema::make('form');
+    }
+
+    public function getInfolistContentSchemaComponent(): Component
+    {
+        return NestedSchema::make('infolist');
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPageClasses(): array
+    {
+        return [
+            'fi-resource-view-record-page',
+            'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
+            "fi-resource-record-{$this->getRecord()->getKey()}",
+        ];
     }
 }

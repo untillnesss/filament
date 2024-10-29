@@ -208,14 +208,15 @@ return static function (RectorConfig $rectorConfig): void {
             'Filament\\Infolists\\Components\\Concerns\\HasWeight' => 'Filament\\Support\\Concerns\\HasWeight',
             'Filament\\Tables\\Columns\\Concerns\\HasFontFamily' => 'Filament\\Support\\Concerns\\HasFontFamily',
             'Filament\\Tables\\Columns\\Concerns\\HasWeight' => 'Filament\\Support\\Concerns\\HasWeight',
+            'Filament\\Resources\\Components\\Tab' => 'Filament\\Schema\\Components\\Tabs\\Tab',
         ],
     );
 
     $rectorConfig->ruleWithConfiguration(
         RenameStringRector::class,
         [
-            'filament-forms::component-container' => 'filament-schema::component-container',
-            'filament-infolists::component-container' => 'filament-schema::component-container',
+            'filament-forms::component-container' => 'filament-schema::schema',
+            'filament-infolists::component-container' => 'filament-schema::schema',
             'filament-forms::components.actions' => 'filament-schema::components.actions',
             'filament-forms::components.actions.action-container' => 'filament-schema::components.actions.action-container',
             'filament-forms::components.tabs' => 'filament-schema::components.tabs',

@@ -102,4 +102,9 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Co
 
         return $this;
     }
+
+    public function prepareDecorationAction(Action $action): Action
+    {
+        return $this->prepareAction($action);
+    }
 }

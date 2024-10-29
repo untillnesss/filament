@@ -53,6 +53,11 @@ trait HasLabel
             $label;
     }
 
+    public function hasCustomLabel(): bool
+    {
+        return $this->label !== null;
+    }
+
     public function isLabelHidden(): bool
     {
         return (bool) $this->evaluate($this->isLabelHidden);

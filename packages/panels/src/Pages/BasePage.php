@@ -9,6 +9,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Infolists\Concerns\InteractsWithInfolists;
 use Filament\Infolists\Contracts\HasInfolists;
+use Filament\Schema\Contracts\HasRenderHookScopes;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Exceptions\Halt;
@@ -17,7 +18,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
-abstract class BasePage extends Component implements HasActions, HasForms, HasInfolists
+abstract class BasePage extends Component implements HasActions, HasForms, HasInfolists, HasRenderHookScopes
 {
     use InteractsWithActions;
     use InteractsWithForms;

@@ -12,8 +12,10 @@ use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\CanUseDatabaseTransactions;
 use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
-use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Schema\Components\Component;
+use Filament\Schema\Components\Decorations\FormActionsDecorations;
+use Filament\Schema\Components\Form;
+use Filament\Schema\Components\NestedSchema;
 use Filament\Schema\Schema;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentIcon;
@@ -37,12 +39,6 @@ class EditRecord extends Page
         configureAction as configureActionRecord;
     }
     use HasUnsavedDataChangesAlert;
-    use InteractsWithFormActions;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::resources.pages.edit-record';
 
     /**
      * @var array<string, mixed> | null
@@ -396,5 +392,52 @@ class EditRecord extends Page
     public static function shouldRegisterNavigation(array $parameters = []): bool
     {
         return parent::shouldRegisterNavigation($parameters) && static::getResource()::canEdit($parameters['record']);
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                ...($this->hasCombinedRelationManagerTabsWithContent() ? [] : $this->getContentComponents()),
+                $this->getRelationManagersContentSchemaComponent(),
+            ]);
+    }
+
+    /**
+     * @return array<Component>
+     */
+    public function getContentComponents(): array
+    {
+        return [
+            $this->getFormContentSchemaComponent(),
+        ];
+    }
+
+    public function getFormContentSchemaComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('save')
+            ->footer(FormActionsDecorations::make($this->getFormActions())
+                ->alignment($this->getFormActionsAlignment())
+                ->fullWidth($this->hasFullWidthFormActions())
+                ->sticky($this->areFormActionsSticky()));
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPageClasses(): array
+    {
+        return [
+            'fi-resource-edit-record-page',
+            'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
+            "fi-resource-record-{$this->getRecord()->getKey()}",
+        ];
+    }
+
+    protected function hasFullWidthFormActions(): bool
+    {
+        return false;
     }
 }
