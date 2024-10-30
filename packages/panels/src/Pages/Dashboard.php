@@ -45,6 +45,8 @@ class Dashboard extends Page
     }
 
     /**
+     * @deprecated Use `getWidgetsSchemaComponents($this->getWidgets())` to transform widgets into schema components instead, which also filters their visibility.
+     *
      * @return array<class-string<Widget> | WidgetConfiguration>
      */
     public function getVisibleWidgets(): array

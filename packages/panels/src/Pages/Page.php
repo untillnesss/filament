@@ -224,6 +224,8 @@ abstract class Page extends BasePage
     }
 
     /**
+     * @deprecated Use `getWidgetsSchemaComponents($this->getHeaderWidgets())` to transform widgets into schema components instead, which also filters their visibility.
+     *
      * @return array<class-string<Widget> | WidgetConfiguration>
      */
     public function getVisibleHeaderWidgets(): array
@@ -248,6 +250,8 @@ abstract class Page extends BasePage
     }
 
     /**
+     * @deprecated Use `getWidgetsSchemaComponents($this->getFooterWidgets())` to transform widgets into schema components instead, which also filters their visibility.
+     *
      * @return array<class-string<Widget> | WidgetConfiguration>
      */
     public function getVisibleFooterWidgets(): array
@@ -256,7 +260,9 @@ abstract class Page extends BasePage
     }
 
     /**
-     * @param  array<class-string<Widget> | WidgetConfiguration>  $widgets
+     * @deprecated Use `getWidgetsSchemaComponents()` to transform widgets into schema components instead, which also filters their visibility.
+     *
+     * @param array<class-string<Widget> | WidgetConfiguration> $widgets
      * @return array<class-string<Widget> | WidgetConfiguration>
      */
     protected function filterVisibleWidgets(array $widgets): array
@@ -349,17 +355,18 @@ abstract class Page extends BasePage
      */
     public function getWidgetsSchemaComponents(array $widgets, array $data = []): array
     {
-        return collect($this->filterVisibleWidgets($widgets))
+        return collect($widgets)
+            ->filter(fn (string | WidgetConfiguration $widget): bool => $this->normalizeWidgetClass($widget)::canView())
             ->map(fn (string | WidgetConfiguration $widget, string | int $widgetKey): Livewire => Livewire::make(
                 $widgetClass = $this->normalizeWidgetClass($widget),
                 [
                     ...$this->getWidgetData(),
                     ...$data,
-                    ...(property_exists($this, 'filters') ? ['pageFilters' => $this->filters] : []),
                     ...(($widget instanceof WidgetConfiguration) ? [
                         ...$widget->widget::getDefaultProperties(),
                         ...$widget->getProperties(),
                     ] : $widget::getDefaultProperties()),
+                    ...(property_exists($this, 'filters') ? ['pageFilters' => $this->filters] : []),
                 ],
             )->key("{$widgetClass}-{$widgetKey}")->liberatedFromContainerGrid())
             ->all();
