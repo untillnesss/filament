@@ -1,3 +1,11 @@
+@props([
+    'navigation',
+])
+
+@php
+    $isRtl = __('filament-panels::layout.direction') === 'rtl';
+@endphp
+
 <div
     {{
         $attributes->class([
@@ -7,7 +15,7 @@
     }}
 >
     <nav
-        class="flex h-16 items-center gap-x-4 bg-white px-4 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 md:px-6 lg:px-8"
+        class="flex h-16 items-center bg-white px-4 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10"
     >
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_START) }}
 
@@ -19,10 +27,11 @@
                 icon-size="lg"
                 :label="__('filament-panels::layout.actions.sidebar.expand.label')"
                 x-cloak
+                x-data="{}"
                 x-on:click="$store.sidebar.open()"
                 x-show="! $store.sidebar.isOpen"
                 @class([
-                    'fi-topbar-open-sidebar-btn',
+                    'fi-topbar-open-sidebar-btn !mx-0',
                     'lg:hidden' => (! filament()->isSidebarFullyCollapsibleOnDesktop()) || filament()->isSidebarCollapsibleOnDesktop(),
                 ])
             />
@@ -34,30 +43,63 @@
                 icon-size="lg"
                 :label="__('filament-panels::layout.actions.sidebar.collapse.label')"
                 x-cloak
+                x-data="{}"
                 x-on:click="$store.sidebar.close()"
                 x-show="$store.sidebar.isOpen"
-                class="fi-topbar-close-sidebar-btn lg:hidden"
+                class="fi-topbar-close-sidebar-btn !mx-0 lg:hidden"
             />
         @endif
 
-        @if (filament()->hasTopNavigation() || (! filament()->hasNavigation()))
-            <div class="me-6 hidden lg:flex">
-                @if ($homeUrl = filament()->getHomeUrl())
-                    <a {{ \Filament\Support\generate_href_html($homeUrl) }}>
-                        <x-filament-panels::logo />
-                    </a>
-                @else
-                    <x-filament-panels::logo />
-                @endif
-            </div>
+        <div class="me-6 hidden items-center lg:flex">
+            @if (filament()->isSidebarCollapsibleOnDesktop())
+                <x-filament::icon-button
+                    color="gray"
+                    :icon="$isRtl ? 'heroicon-o-chevron-left' : 'heroicon-o-chevron-right'"
+                    {{-- @deprecated Use `panels::sidebar.expand-button.rtl` instead of `panels::sidebar.expand-button` for RTL. --}}
+                    :icon-alias="$isRtl ? ['panels::sidebar.expand-button.rtl', 'panels::sidebar.expand-button'] : 'panels::sidebar.expand-button'"
+                    icon-size="lg"
+                    :label="__('filament-panels::layout.actions.sidebar.expand.label')"
+                    x-cloak
+                    x-data="{}"
+                    x-on:click="$store.sidebar.open()"
+                    x-show="! $store.sidebar.isOpen"
+                    class="!mx-0"
+                />
+            @endif
 
+            @if (filament()->isSidebarCollapsibleOnDesktop() || filament()->isSidebarFullyCollapsibleOnDesktop())
+                <x-filament::icon-button
+                    color="gray"
+                    :icon="$isRtl ? 'heroicon-o-chevron-right' : 'heroicon-o-chevron-left'"
+                    {{-- @deprecated Use `panels::sidebar.collapse-button.rtl` instead of `panels::sidebar.collapse-button` for RTL. --}}
+                    :icon-alias="$isRtl ? ['panels::sidebar.collapse-button.rtl', 'panels::sidebar.collapse-button'] : 'panels::sidebar.collapse-button'"
+                    icon-size="lg"
+                    :label="__('filament-panels::layout.actions.sidebar.collapse.label')"
+                    x-cloak
+                    x-data="{}"
+                    x-on:click="$store.sidebar.close()"
+                    x-show="$store.sidebar.isOpen"
+                    class="!mx-0 hidden lg:flex"
+                />
+            @endif
+
+            @if ($homeUrl = filament()->getHomeUrl())
+                <a {{ \Filament\Support\generate_href_html($homeUrl) }}>
+                    <x-filament-panels::logo class="ms-3" />
+                </a>
+            @else
+                <x-filament-panels::logo class="ms-3" />
+            @endif
+        </div>
+
+        @if (filament()->hasTopNavigation() || (! filament()->hasNavigation()))
             @if (filament()->hasTenancy() && filament()->hasTenantMenu())
                 <x-filament-panels::tenant-menu class="hidden lg:block" />
             @endif
 
             @if (filament()->hasNavigation())
-                <ul class="me-4 hidden items-center gap-x-4 lg:flex">
-                    @foreach (filament()->getNavigation() as $group)
+                <ul class="me-4 ms-4 hidden items-center gap-x-4 lg:flex">
+                    @foreach ($navigation as $group)
                         @if ($groupLabel = $group->getLabel())
                             <x-filament::dropdown
                                 placement="bottom-start"
