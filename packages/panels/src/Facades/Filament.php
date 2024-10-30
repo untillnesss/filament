@@ -4,7 +4,7 @@ namespace Filament\Facades;
 
 use Closure;
 use Filament\Actions\Action;
-use Filament\Billing\Providers\Contracts\Provider as BillingProvider;
+use Filament\Billing\Providers\Contracts\BillingProvider;
 use Filament\Contracts\Plugin;
 use Filament\Enums\ThemeMode;
 use Filament\FilamentManager;

@@ -4,7 +4,7 @@ namespace Filament\Billing\Providers\Contracts;
 
 use Closure;
 
-interface Provider
+interface BillingProvider
 {
     /**
      * @return class-string | callable-string | Closure | array<class-string, string>

@@ -304,10 +304,10 @@ Here's an example billing provider that uses a callback function for the route a
 
 ```php
 use App\Http\Middleware\RedirectIfUserNotSubscribed;
-use Filament\Billing\Providers\Contracts\Provider;
+use Filament\Billing\Providers\Contracts\BillingProvider;
 use Illuminate\Http\RedirectResponse;
 
-class ExampleBillingProvider implements Provider
+class ExampleBillingProvider implements BillingProvider
 {
     public function getRouteAction(): string
     {

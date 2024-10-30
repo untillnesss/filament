@@ -209,6 +209,7 @@ return static function (RectorConfig $rectorConfig): void {
             'Filament\\Tables\\Columns\\Concerns\\HasFontFamily' => 'Filament\\Support\\Concerns\\HasFontFamily',
             'Filament\\Tables\\Columns\\Concerns\\HasWeight' => 'Filament\\Support\\Concerns\\HasWeight',
             'Filament\\Resources\\Components\\Tab' => 'Filament\\Schema\\Components\\Tabs\\Tab',
+            'Filament\\Billing\\Providers\\Contracts\\Provider' => 'Filament\\Billing\\Providers\\Contracts\\BillingProvider',
         ],
     );
 

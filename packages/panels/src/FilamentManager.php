@@ -425,7 +425,7 @@ class FilamentManager
         return app($this->getDefaultAvatarProvider())->get($tenant);
     }
 
-    public function getTenantBillingProvider(): ?Billing\Providers\Contracts\Provider
+    public function getTenantBillingProvider(): ?Billing\Providers\Contracts\BillingProvider
     {
         return $this->getCurrentPanel()->getTenantBillingProvider();
     }
