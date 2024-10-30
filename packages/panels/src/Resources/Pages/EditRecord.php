@@ -399,7 +399,7 @@ class EditRecord extends Page
         return $schema
             ->components([
                 ...($this->hasCombinedRelationManagerTabsWithContent() ? [] : $this->getContentComponents()),
-                $this->getRelationManagersContentSchemaComponent(),
+                $this->getRelationManagersContentComponent(),
             ]);
     }
 
@@ -409,11 +409,11 @@ class EditRecord extends Page
     public function getContentComponents(): array
     {
         return [
-            $this->getFormContentSchemaComponent(),
+            $this->getFormContentComponent(),
         ];
     }
 
-    public function getFormContentSchemaComponent(): Component
+    public function getFormContentComponent(): Component
     {
         return Form::make([NestedSchema::make('form')])
             ->id('form')

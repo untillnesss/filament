@@ -332,11 +332,11 @@ class CreateRecord extends Page
     {
         return $schema
             ->components([
-                $this->getFormContentSchemaComponent(),
+                $this->getFormContentComponent(),
             ]);
     }
 
-    public function getFormContentSchemaComponent(): Component
+    public function getFormContentComponent(): Component
     {
         return Form::make([NestedSchema::make('form')])
             ->id('form')

@@ -94,7 +94,7 @@ trait HasRelationManagers
         return [];
     }
 
-    public function getRelationManagersContentSchemaComponent(): Component
+    public function getRelationManagersContentComponent(): Component
     {
         $managers = $this->getRelationManagers();
         $hasCombinedRelationManagerTabsWithContent = $this->hasCombinedRelationManagerTabsWithContent();

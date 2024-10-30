@@ -218,12 +218,12 @@ class Login extends SimplePage
         return $schema
             ->components([
                 RenderHook::make(PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE),
-                $this->getFormContentSchemaComponent(),
+                $this->getFormContentComponent(),
                 RenderHook::make(PanelsRenderHook::AUTH_LOGIN_FORM_AFTER),
             ]);
     }
 
-    public function getFormContentSchemaComponent(): Component
+    public function getFormContentComponent(): Component
     {
         return Form::make([NestedSchema::make('form')])
             ->id('form')

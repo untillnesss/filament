@@ -295,12 +295,12 @@ class Register extends SimplePage
         return $schema
             ->components([
                 RenderHook::make(PanelsRenderHook::AUTH_REGISTER_FORM_BEFORE),
-                $this->getFormContentSchemaComponent(),
+                $this->getFormContentComponent(),
                 RenderHook::make(PanelsRenderHook::AUTH_REGISTER_FORM_AFTER),
             ]);
     }
 
-    public function getFormContentSchemaComponent(): Component
+    public function getFormContentComponent(): Component
     {
         return Form::make([NestedSchema::make('form')])
             ->id('form')

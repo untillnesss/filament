@@ -75,7 +75,7 @@ trait HasTabs
         return $tabs[$this->activeTab]->modifyQuery($query);
     }
 
-    public function getTabsContentSchemaComponent(): Component
+    public function getTabsContentComponent(): Component
     {
         $tabs = $this->getCachedTabs();
 
