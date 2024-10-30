@@ -2,52 +2,52 @@
 
 return [
 
-	'title' => 'ወደ ሲስተሙ ይግቡ',
-	'heading' => 'ግባ',
-	'actions' =>  [
+    'title' => 'ወደ ሲስተሙ ይግቡ',
+    'heading' => 'ግባ',
+    'actions' => [
 
-		'register' => [
+        'register' => [
 
-			'before' => 'ወይም',
-			'label' => 'በመለያ ይመዝገቡ',
-		],
-		'request_password_reset' => [
+            'before' => 'ወይም',
+            'label' => 'በመለያ ይመዝገቡ',
+        ],
+        'request_password_reset' => [
 
-			'label' => 'የይለፍ ቃልዎን ረሱ?',
-		],
-	],
-	'form' =>  [
+            'label' => 'የይለፍ ቃልዎን ረሱ?',
+        ],
+    ],
+    'form' => [
 
-		'email' => [
+        'email' => [
 
-			'label' => 'የ ኢሜል አድራሻ',
-		],
-		'password' => [
+            'label' => 'የ ኢሜል አድራሻ',
+        ],
+        'password' => [
 
-			'label' => 'የይለፍ ቃል',
-		],
-		'remember' => [
+            'label' => 'የይለፍ ቃል',
+        ],
+        'remember' => [
 
-			'label' => 'አስታውሰኝ',
-		],
-		'actions' => [
+            'label' => 'አስታውሰኝ',
+        ],
+        'actions' => [
 
-			'authenticate' => [
+            'authenticate' => [
 
-				'label' => 'ግባ',
-			],
-		],
-	],
-	'messages' =>  [
+                'label' => 'ግባ',
+            ],
+        ],
+    ],
+    'messages' => [
 
-		'failed' => 'እነዚህ ምስክርነቶች(ያስገቡት መረጃ) ከኛ መዝገቦች ጋር አይዛመዱም።',
-	],
-	'notifications' =>  [
+        'failed' => 'እነዚህ ምስክርነቶች(ያስገቡት መረጃ) ከኛ መዝገቦች ጋር አይዛመዱም።',
+    ],
+    'notifications' => [
 
-		'throttled' => [
+        'throttled' => [
 
-			'title' => 'በጣም ብዙ የመግባት ሙከራዎች',
-			'body' => 'እባክዎ በ:seconds ሰከንዶች ውስጥ እንደገና ይሞክሩ።',
-		],
-	],
+            'title' => 'በጣም ብዙ የመግባት ሙከራዎች',
+            'body' => 'እባክዎ በ:seconds ሰከንዶች ውስጥ እንደገና ይሞክሩ።',
+        ],
+    ],
 ];

@@ -2,24 +2,24 @@
 
 return [
 
-	'modal' =>  [
+    'modal' => [
 
-		'heading' => 'ማሳወቂያዎች',
-		'actions' =>    [
+        'heading' => 'ማሳወቂያዎች',
+        'actions' => [
 
-			'clear' =>      [
+            'clear' => [
 
-				'label' => 'አፅዳ',
-			],
-			'mark_all_as_read' =>      [
+                'label' => 'አፅዳ',
+            ],
+            'mark_all_as_read' => [
 
-				'label' => 'ሁሉም ተነበዋል',
-			],
-		],
-		'empty' =>    [
+                'label' => 'ሁሉም ተነበዋል',
+            ],
+        ],
+        'empty' => [
 
-			'heading' => 'ምንም አዲስ ነገር የለም',
-			'description' => 'እባክዎ ከትንሽ ቆይታ በኋላ ይመለሱ',
-		],
-	],
+            'heading' => 'ምንም አዲስ ነገር የለም',
+            'description' => 'እባክዎ ከትንሽ ቆይታ በኋላ ይመለሱ',
+        ],
+    ],
 ];

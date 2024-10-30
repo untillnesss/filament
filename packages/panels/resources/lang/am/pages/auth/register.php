@@ -2,49 +2,49 @@
 
 return [
 
-	'title' => 'ምዝገባ',
-	'heading' => 'ምዝገባን አከናውን',
-	'actions' =>  [
+    'title' => 'ምዝገባ',
+    'heading' => 'ምዝገባን አከናውን',
+    'actions' => [
 
-		'login' =>    [
+        'login' => [
 
-			'before' => 'ወይም',
-			'label' => 'ወደ በመለያዎ ይግቡ',
-		],
-	],
-	'form' =>  [
+            'before' => 'ወይም',
+            'label' => 'ወደ በመለያዎ ይግቡ',
+        ],
+    ],
+    'form' => [
 
-		'email' =>    [
+        'email' => [
 
-			'label' => 'የ ኢሜል አድራሻ',
-		],
-		'name' =>    [
+            'label' => 'የ ኢሜል አድራሻ',
+        ],
+        'name' => [
 
-			'label' => 'ስም',
-		],
-		'password' =>    [
+            'label' => 'ስም',
+        ],
+        'password' => [
 
-			'label' => 'የይለፍ ቃል',
-			'validation_attribute' => 'የይለፍ ቃል',
-		],
-		'password_confirmation' =>    [
+            'label' => 'የይለፍ ቃል',
+            'validation_attribute' => 'የይለፍ ቃል',
+        ],
+        'password_confirmation' => [
 
-			'label' => 'የይለፍ ቃልዎን ያጽድቁ',
-		],
-		'actions' =>    [
+            'label' => 'የይለፍ ቃልዎን ያጽድቁ',
+        ],
+        'actions' => [
 
-			'register' =>      [
+            'register' => [
 
-				'label' => 'ተመዝገብ',
-			],
-		],
-	],
-	'notifications' =>  [
+                'label' => 'ተመዝገብ',
+            ],
+        ],
+    ],
+    'notifications' => [
 
-		'throttled' =>    [
+        'throttled' => [
 
-			'title' => 'በጣም ብዙ የምዝገባ ሙከራዎች',
-			'body' => 'እባክዎ በ:seconds ሰከንዶች ውስጥ እንደገና ይሞክሩ።',
-		],
-	],
+            'title' => 'በጣም ብዙ የምዝገባ ሙከራዎች',
+            'body' => 'እባክዎ በ:seconds ሰከንዶች ውስጥ እንደገና ይሞክሩ።',
+        ],
+    ],
 ];

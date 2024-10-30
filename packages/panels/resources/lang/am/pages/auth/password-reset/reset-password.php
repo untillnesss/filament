@@ -2,37 +2,37 @@
 
 return [
 
-	'title' => 'የይለፍቃልዎን ያድሱ',
-	'heading' => 'የይለፍቃልዎን ያድሱ',
-	'form' =>  [
+    'title' => 'የይለፍቃልዎን ያድሱ',
+    'heading' => 'የይለፍቃልዎን ያድሱ',
+    'form' => [
 
-		'email' =>    [
+        'email' => [
 
-			'label' => 'የኢሜይል አድራሻ',
-		],
-		'password' =>    [
+            'label' => 'የኢሜይል አድራሻ',
+        ],
+        'password' => [
 
-			'label' => 'የይለፍቃል',
-			'validation_attribute' => 'password',
-		],
-		'password_confirmation' =>    [
+            'label' => 'የይለፍቃል',
+            'validation_attribute' => 'password',
+        ],
+        'password_confirmation' => [
 
-			'label' => 'የይለፍቃሉን ያረጋግጡ',
-		],
-		'actions' =>    [
+            'label' => 'የይለፍቃሉን ያረጋግጡ',
+        ],
+        'actions' => [
 
-			'reset' =>      [
+            'reset' => [
 
-				'label' => 'የይለፍቃሉን ይቀይሩ',
-			],
-		],
-	],
-	'notifications' =>  [
+                'label' => 'የይለፍቃሉን ይቀይሩ',
+            ],
+        ],
+    ],
+    'notifications' => [
 
-		'throttled' =>    [
+        'throttled' => [
 
-			'title' => ' በጣም ብዙ ሙከራዎች',
-			'body' => 'እባክዎ በ:seconds ሰከንድ ውስጥ እንደገና ይሞክሩ።',
-		],
-	],
+            'title' => ' በጣም ብዙ ሙከራዎች',
+            'body' => 'እባክዎ በ:seconds ሰከንድ ውስጥ እንደገና ይሞክሩ።',
+        ],
+    ],
 ];

@@ -2,23 +2,23 @@
 
 return [
 
-	'title' => 'ዳሽቦርድ',
-	'actions' =>  [
+    'title' => 'ዳሽቦርድ',
+    'actions' => [
 
-		'filter' =>    [
+        'filter' => [
 
-			'label' => 'አጣራ',
-			'modal' =>      [
+            'label' => 'አጣራ',
+            'modal' => [
 
-				'heading' => 'አጣራ',
-				'actions' =>        [
+                'heading' => 'አጣራ',
+                'actions' => [
 
-					'apply' =>          [
+                    'apply' => [
 
-						'label' => 'ተግብር',
-					],
-				],
-			],
-		],
-	],
+                        'label' => 'ተግብር',
+                    ],
+                ],
+            ],
+        ],
+    ],
 ];

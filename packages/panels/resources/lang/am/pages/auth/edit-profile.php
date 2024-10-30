@@ -2,45 +2,45 @@
 
 return [
 
-	'label' => 'መገለጫዎ',
-	'form' =>  [
+    'label' => 'መገለጫዎ',
+    'form' => [
 
-		'email' => [
+        'email' => [
 
-			'label' => 'የ ኢሜል አድራሻ',
-		],
-		'name' => [
+            'label' => 'የ ኢሜል አድራሻ',
+        ],
+        'name' => [
 
-			'label' => 'ስም',
-		],
-		'password' => [
+            'label' => 'ስም',
+        ],
+        'password' => [
 
-			'label' => 'አዲስ የይለፍ ቃል',
-		],
-		'password_confirmation' => [
+            'label' => 'አዲስ የይለፍ ቃል',
+        ],
+        'password_confirmation' => [
 
-			'label' => 'አዲሱን የይለፍ ቃል አረጋግጥ',
-		],
-		'actions' => [
+            'label' => 'አዲሱን የይለፍ ቃል አረጋግጥ',
+        ],
+        'actions' => [
 
-			'save' =>   [
+            'save' => [
 
-				'label' => 'ለውጦችን አስቀምጥ',
-			],
-		],
-	],
-	'notifications' =>  [
+                'label' => 'ለውጦችን አስቀምጥ',
+            ],
+        ],
+    ],
+    'notifications' => [
 
-		'saved' => [
+        'saved' => [
 
-			'title' => 'ተቀምጧል',
-		],
-	],
-	'actions' =>  [
+            'title' => 'ተቀምጧል',
+        ],
+    ],
+    'actions' => [
 
-		'cancel' => [
+        'cancel' => [
 
-			'label' => 'ይቅር',
-		],
-	],
+            'label' => 'ይቅር',
+        ],
+    ],
 ];

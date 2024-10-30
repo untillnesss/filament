@@ -2,26 +2,26 @@
 
 return [
 
-	'single' =>  [
+    'single' => [
 
-		'label' => 'ይድገሙት',
-		'modal' => [
+        'label' => 'ይድገሙት',
+        'modal' => [
 
-			'heading' => ':labelን ይድገሙት',
-			'actions' => [
+            'heading' => ':labelን ይድገሙት',
+            'actions' => [
 
-				'replicate' =>   [
+                'replicate' => [
 
-					'label' => 'ይድገሙት',
-				],
-			],
-		],
-		'notifications' => [
+                    'label' => 'ይድገሙት',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-			'replicated' => [
+            'replicated' => [
 
-				'title' => 'ተደግሟል',
-			],
-		],
-	],
+                'title' => 'ተደግሟል',
+            ],
+        ],
+    ],
 ];

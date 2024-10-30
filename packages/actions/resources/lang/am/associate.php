@@ -2,38 +2,38 @@
 
 return [
 
-	'single' =>  [
+    'single' => [
 
-		'label' => 'አጣምር',
-		'modal' => [
+        'label' => 'አጣምር',
+        'modal' => [
 
-			'heading' => ':labelን አጣምር',
-			'fields' =>   [
+            'heading' => ':labelን አጣምር',
+            'fields' => [
 
-				'record_id' => [
+                'record_id' => [
 
-					'label' => 'ሪከርድ',
-				],
-			],
-			'actions' =>   [
+                    'label' => 'ሪከርድ',
+                ],
+            ],
+            'actions' => [
 
-				'associate' => [
+                'associate' => [
 
-					'label' => 'አጣምር',
-					
-				],
-				'associate_another' => [
+                    'label' => 'አጣምር',
 
-					'label' => 'አጣምር & ሌላ አጣምር',
-				],
-			],
-		],
-		'notifications' => [
+                ],
+                'associate_another' => [
 
-			'associated' => [
+                    'label' => 'አጣምር & ሌላ አጣምር',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-				'title' => 'ተጣምሮዋል',
-			],
-		],
-	],
+            'associated' => [
+
+                'title' => 'ተጣምሮዋል',
+            ],
+        ],
+    ],
 ];

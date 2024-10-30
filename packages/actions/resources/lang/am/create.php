@@ -2,31 +2,31 @@
 
 return [
 
-	'single' => [
+    'single' => [
 
-		'label' => 'አዲስ :label',
-		
-		'modal' => [
+        'label' => 'አዲስ :label',
 
-			'heading' => ':labelን መዝግብ',
-			'actions' => [
+        'modal' => [
 
-				'create' => [
+            'heading' => ':labelን መዝግብ',
+            'actions' => [
 
-					'label' => 'መዝግብ',
-				],
-				'create_another' => [
+                'create' => [
 
-					'label' => 'መዝግብ & ሌላ መዝግብ',
-				],
-			],
-		],
-		'notifications' => [
+                    'label' => 'መዝግብ',
+                ],
+                'create_another' => [
 
-			'created' => [
+                    'label' => 'መዝግብ & ሌላ መዝግብ',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-				'title' => 'ተመዝግቦዋል',
-			],
-		],
-	],
+            'created' => [
+
+                'title' => 'ተመዝግቦዋል',
+            ],
+        ],
+    ],
 ];

@@ -2,48 +2,48 @@
 
 return [
 
-	'single' =>  [
+    'single' => [
 
-		'label' => 'እነበረበት መልስ',
-		'modal' => [
+        'label' => 'እነበረበት መልስ',
+        'modal' => [
 
-			'heading' => ':labeln መልስ',
-			'actions' => [
+            'heading' => ':labeln መልስ',
+            'actions' => [
 
-				'restore' => [
+                'restore' => [
 
-					'label' => 'እነበረበት መልስ',
-				],
-			],
-		],
-		'notifications' => [
+                    'label' => 'እነበረበት መልስ',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-			'restored' => [
+            'restored' => [
 
-				'title' => 'ወደነበረበት ተመልሷል',
-			],
-		],
-	],
-	'multiple' =>  [
+                'title' => 'ወደነበረበት ተመልሷል',
+            ],
+        ],
+    ],
+    'multiple' => [
 
-		'label' => 'የተመረጡትን መልስ',
-		'modal' => [
+        'label' => 'የተመረጡትን መልስ',
+        'modal' => [
 
-			'heading' => 'የተመረጡት :labelን መልስ',
-			'actions' => [
+            'heading' => 'የተመረጡት :labelን መልስ',
+            'actions' => [
 
-				'restore' => [
+                'restore' => [
 
-					'label' => 'እነበረበት መልስ',
-				],
-			],
-		],
-		'notifications' => [
+                    'label' => 'እነበረበት መልስ',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-			'restored' => [
+            'restored' => [
 
-				'title' => 'ወደነበረበት ተመልሷል',
-			],
-		],
-	],
+                'title' => 'ወደነበረበት ተመልሷል',
+            ],
+        ],
+    ],
 ];

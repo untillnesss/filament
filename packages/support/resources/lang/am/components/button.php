@@ -2,7 +2,7 @@
 
 return [
 
-    'messages' =>  [
+    'messages' => [
 
         'uploading_file' => 'በመጫን ላይ...',
     ],

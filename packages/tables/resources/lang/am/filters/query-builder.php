@@ -3,435 +3,435 @@
 return [
 
     'label' => 'Query builder',
-    'form' =>  [
+    'form' => [
 
-        'operator' =>    [
+        'operator' => [
 
             'label' => 'Operator',
         ],
-        'or_groups' =>    [
+        'or_groups' => [
 
             'label' => 'ቡድኖች',
-            'block' =>      [
+            'block' => [
 
                 'label' => 'Disjunction (ወይም)',
                 'or' => 'ወይም',
             ],
         ],
-        'rules' =>    [
+        'rules' => [
 
             'label' => 'ህጎች',
-            'item' =>      [
+            'item' => [
 
                 'and' => 'AND',
             ],
         ],
     ],
     'no_rules' => '(ምንም ህጎች የሉም)',
-    'item_separators' =>  [
+    'item_separators' => [
 
         'and' => 'AND',
         'or' => 'OR',
     ],
-    'operators' =>  [
+    'operators' => [
 
-        'is_filled' =>    [
+        'is_filled' => [
 
-            'label' =>      [
+            'label' => [
 
                 'direct' => 'ተሞልቶዋል',
                 'inverse' => 'ባዶ ነው',
             ],
-            'summary' =>      [
+            'summary' => [
 
                 'direct' => ':attribute ተሞልቶዋል',
                 'inverse' => ':attribute ባዶ ነው',
             ],
         ],
-        'boolean' =>    [
+        'boolean' => [
 
-            'is_true' =>      [
+            'is_true' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'እውነት ነው',
                     'inverse' => 'እውነት አይደለም',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute እውነት ነው',
                     'inverse' => ':attribute እውነት አይደለም',
                 ],
             ],
         ],
-        'date' =>    [
+        'date' => [
 
-            'is_after' =>      [
+            'is_after' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'በኋላ የሆነ',
                     'inverse' => 'በኋላ አይደለም',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute ከቀን :date በኋላ ነው',
                     'inverse' => ':attribute ከቀን :date በኋላ አይደለም',
                 ],
             ],
-            'is_before' =>      [
+            'is_before' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'በፊት የሆነ',
                     'inverse' => 'በፊት ያልሆነ',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute is before :date',
                     'inverse' => ':attribute is not before :date',
                 ],
             ],
-            'is_date' =>      [
+            'is_date' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'ቀኑ የሆነ',
                     'inverse' => 'ቀኑ ያልሆነ',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute :date ነው',
                     'inverse' => ':attribute :date አይደለም',
                 ],
             ],
-            'is_month' =>      [
+            'is_month' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'ወሩ የሆነ',
                     'inverse' => 'ወሩ ያልሆነ',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute :month ነው',
                     'inverse' => ':attribute :month አይደለም',
                 ],
             ],
-            'is_year' =>      [
+            'is_year' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'አመቱ የሆነ',
                     'inverse' => 'አመቱ ያልሆነ',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute is :year',
                     'inverse' => ':attribute is not :year',
                 ],
             ],
-            'form' =>      [
+            'form' => [
 
-                'date' =>        [
+                'date' => [
 
                     'label' => 'ቀን',
                 ],
-                'month' =>        [
+                'month' => [
 
                     'label' => 'ወር',
                 ],
-                'year' =>        [
+                'year' => [
 
                     'label' => 'አመት',
                 ],
             ],
         ],
-        'number' =>    [
+        'number' => [
 
-            'equals' =>      [
+            'equals' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'እኩል',
                     'inverse' => 'እኩል ያልሆነ',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute :number ነው',
                     'inverse' => ':attribute ከ:number ጋር እኩል አይደለም',
                 ],
             ],
-            'is_max' =>      [
+            'is_max' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'ከፍተኛ የሆነ',
                     'inverse' => 'የሚበልጥ',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => 'የ:attribute ትልቁ :number ነው',
                     'inverse' => ':attribute ከ:number ይበልጣል',
                 ],
             ],
-            'is_min' =>      [
+            'is_min' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'ትንሽ የሆነ',
                     'inverse' => 'ያነሰ',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => 'የ:attribute ትንሹ :number ነው',
                     'inverse' => ':attribute ከ:number ያንሳል',
                 ],
             ],
-            'aggregates' =>      [
+            'aggregates' => [
 
-                'average' =>        [
+                'average' => [
 
                     'label' => 'አማካኝ',
                     'summary' => 'አማካኝ :attribute',
                 ],
-                'max' =>        [
+                'max' => [
 
                     'label' => 'ከፍተኛ',
                     'summary' => 'ከፍተኛ :attribute',
                 ],
-                'min' =>        [
+                'min' => [
 
                     'label' => 'ዝቅተኛ',
                     'summary' => 'ዝቅተኛ :attribute',
                 ],
-                'sum' =>        [
+                'sum' => [
 
                     'label' => 'ድምር',
                     'summary' => 'የ:attribute ድምር',
                 ],
             ],
-            'form' =>      [
+            'form' => [
 
-                'aggregate' =>        [
+                'aggregate' => [
 
                     'label' => 'አጠቃላይ',
                 ],
-                'number' =>        [
+                'number' => [
 
                     'label' => 'ቁጥር',
                 ],
             ],
         ],
-        'relationship' =>    [
+        'relationship' => [
 
-            'equals' =>      [
+            'equals' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'አለው',
                     'inverse' => 'የለውም',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':count :relationship አለው',
                     'inverse' => ':count :relationship የለውም',
                 ],
             ],
-            'has_max' =>      [
+            'has_max' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'ቢበዛ ያለው',
                     'inverse' => 'የበለጠ ያለው',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => 'ከፍተኛው :count :relationship አለው',
                     'inverse' => 'ከ:count በላይ :relationship አለው',
                 ],
             ],
-            'has_min' =>      [
+            'has_min' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'ዝቅተኛ ያለው',
                     'inverse' => 'ያነሰ ያለው',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => 'በትንሹ :count :relationship አለው',
                     'inverse' => 'ከ:count ያነሰ :relationship አለው',
                 ],
             ],
-            'is_empty' =>      [
+            'is_empty' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'ባዶ ነው',
                     'inverse' => 'ባዶ አይደለም',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':relationship ባዶ ነው',
                     'inverse' => ':relationship ባዶ አይደለም',
                 ],
             ],
-            'is_related_to' =>      [
+            'is_related_to' => [
 
-                'label' =>        [
+                'label' => [
 
-                    'single' =>          [
+                    'single' => [
 
                         'direct' => 'ነው',
                         'inverse' => 'አይደለም',
                     ],
-                    'multiple' =>          [
+                    'multiple' => [
 
                         'direct' => 'ይዞዋል',
                         'inverse' => 'አልያዘም',
                     ],
                 ],
-                'summary' =>        [
+                'summary' => [
 
-                    'single' =>          [
+                    'single' => [
 
                         'direct' => ':relationship is :values',
                         'inverse' => ':relationship is not :values',
                     ],
-                    'multiple' =>          [
+                    'multiple' => [
 
                         'direct' => ':relationship contains :values',
                         'inverse' => ':relationship does not contain :values',
                     ],
-                    'values_glue' =>          [
+                    'values_glue' => [
 
                         0 => ', ',
                         'final' => ' or ',
                     ],
                 ],
-                'form' =>        [
+                'form' => [
 
-                    'value' =>          [
+                    'value' => [
 
                         'label' => 'ዋጋ',
                     ],
-                    'values' =>          [
+                    'values' => [
 
                         'label' => 'ዋጋዎች',
                     ],
                 ],
             ],
-            'form' =>      [
+            'form' => [
 
-                'count' =>        [
+                'count' => [
 
                     'label' => 'ብዛት',
                 ],
             ],
         ],
-        'select' =>    [
+        'select' => [
 
-            'is' =>      [
+            'is' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'Is',
                     'inverse' => 'Is not',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute is :values',
                     'inverse' => ':attribute is not :values',
-                    'values_glue' =>          [
+                    'values_glue' => [
 
                         0 => ', ',
                         'final' => ' or ',
                     ],
                 ],
-                'form' =>        [
+                'form' => [
 
-                    'value' =>          [
+                    'value' => [
 
                         'label' => 'ዋጋ',
                     ],
-                    'values' =>          [
+                    'values' => [
 
                         'label' => 'ዋጋዎች',
                     ],
                 ],
             ],
         ],
-        'text' =>    [
+        'text' => [
 
-            'contains' =>      [
+            'contains' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'የያዘ',
                     'inverse' => 'ያልያዘ',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute :textን ይዞዋል',
                     'inverse' => ':attribute :textን አልያዘም',
                 ],
             ],
-            'ends_with' =>      [
+            'ends_with' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'ብሎ የሚያበቃ',
                     'inverse' => 'ብሎ የማያበቃ',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute የሚያበቃው በ:text ነው',
                     'inverse' => ':attribute የሚያበቃው በ:text አይደለም',
                 ],
             ],
-            'equals' =>      [
+            'equals' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'እኩል የሆነ',
                     'inverse' => 'እኩል ያልሆነ',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute ከ:text ጋር እኩል ነው',
                     'inverse' => ':attribute ከ:text ጋር እኩል እይደለም',
                 ],
             ],
-            'starts_with' =>      [
+            'starts_with' => [
 
-                'label' =>        [
+                'label' => [
 
                     'direct' => 'ብሎ የሚጀምር',
                     'inverse' => 'ብሎ የማይጀምር',
                 ],
-                'summary' =>        [
+                'summary' => [
 
                     'direct' => ':attribute ከ:text ይጀምራል',
                     'inverse' => ':attribute ከ:text አይጀምርም',
                 ],
             ],
-            'form' =>      [
+            'form' => [
 
-                'text' =>        [
+                'text' => [
 
                     'label' => 'ፅሁፍ',
                 ],
             ],
         ],
     ],
-    'actions' =>  [
+    'actions' => [
 
-        'add_rule' =>    [
+        'add_rule' => [
 
             'label' => 'ህግ ጨምር',
         ],
-        'add_rule_group' =>    [
+        'add_rule_group' => [
 
             'label' => 'ህጎችን በቡድን ጨምር',
         ],

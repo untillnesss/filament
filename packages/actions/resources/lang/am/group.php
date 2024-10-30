@@ -2,8 +2,8 @@
 
 return [
 
-  'trigger' =>  [
+    'trigger' => [
 
-    'label' => 'ድርጊቶች',
-  ],
+        'label' => 'ድርጊቶች',
+    ],
 ];

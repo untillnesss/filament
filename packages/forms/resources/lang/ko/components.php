@@ -399,7 +399,6 @@ return [
 
     'select' => [
 
-
         'actions' => [
 
             'create_option' => [

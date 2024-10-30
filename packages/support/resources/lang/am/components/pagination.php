@@ -2,40 +2,40 @@
 
 return [
 
-	'label' => 'የገጽታ አሰሳ',
-	'overview' => '{1} ከ1 መዝገብ 1 በማሳየት ላይ |[2,*] ከጠቅላላ :total መዝገቦች ከ:first እስከ :last በማሳየት ላይ::',
-	'fields' =>  [
+    'label' => 'የገጽታ አሰሳ',
+    'overview' => '{1} ከ1 መዝገብ 1 በማሳየት ላይ |[2,*] ከጠቅላላ :total መዝገቦች ከ:first እስከ :last በማሳየት ላይ::',
+    'fields' => [
 
-		'records_per_page' => [
+        'records_per_page' => [
 
-			'label' => 'በየ ገጽ',
-			'options' => [
+            'label' => 'በየ ገጽ',
+            'options' => [
 
-				'all' => 'ሁሉም',
-			],
-		],
-	],
-	'actions' =>  [
+                'all' => 'ሁሉም',
+            ],
+        ],
+    ],
+    'actions' => [
 
-		'first' => [
+        'first' => [
 
-			'label' => 'መጀመርያ',
-		],
-		'go_to_page' => [
+            'label' => 'መጀመርያ',
+        ],
+        'go_to_page' => [
 
-			'label' => 'ወደ ገጽ :page ሂድ',
-		],
-		'last' => [
+            'label' => 'ወደ ገጽ :page ሂድ',
+        ],
+        'last' => [
 
-			'label' => 'መጨረሻ',
-		],
-		'next' => [
+            'label' => 'መጨረሻ',
+        ],
+        'next' => [
 
-			'label' => 'ቀጣይ',
-		],
-		'previous' => [
+            'label' => 'ቀጣይ',
+        ],
+        'previous' => [
 
-			'label' => 'ያለፈው',
-		],
-	],
+            'label' => 'ያለፈው',
+        ],
+    ],
 ];

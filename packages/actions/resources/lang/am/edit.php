@@ -2,26 +2,26 @@
 
 return [
 
-	'single' =>  [
+    'single' => [
 
-		'label' => 'አድስ',
-		'modal' =>    [
+        'label' => 'አድስ',
+        'modal' => [
 
-			'heading' => ':labelን አድስ',
-			'actions' =>      [
+            'heading' => ':labelን አድስ',
+            'actions' => [
 
-				'save' =>        [
+                'save' => [
 
-					'label' => 'አስቀምጥ',
-				],
-			],
-		],
-		'notifications' =>    [
+                    'label' => 'አስቀምጥ',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-			'saved' =>      [
+            'saved' => [
 
-				'title' => 'እድሳቱ ተጠናቆዋል',
-			],
-		],
-	],
+                'title' => 'እድሳቱ ተጠናቆዋል',
+            ],
+        ],
+    ],
 ];

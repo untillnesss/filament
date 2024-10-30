@@ -2,11 +2,11 @@
 
 return [
 
-	'actions' =>  [
+    'actions' => [
 
-		'close' =>    [
+        'close' => [
 
-			'label' => 'ዝጋ',
-		],
-	],
+            'label' => 'ዝጋ',
+        ],
+    ],
 ];

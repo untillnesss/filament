@@ -2,48 +2,48 @@
 
 return [
 
-	'single' => [
+    'single' => [
 
-		'label' => 'ለያይ',
-		'modal' => [
+        'label' => 'ለያይ',
+        'modal' => [
 
-			'heading' => ':labelን ለያይ',
-			'actions' => [
+            'heading' => ':labelን ለያይ',
+            'actions' => [
 
-				'detach' => [
+                'detach' => [
 
-					'label' => 'ለያይ',
-				],
-			],
-		],
-		'notifications' => [
+                    'label' => 'ለያይ',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-			'detached' => [
+            'detached' => [
 
-				'title' => 'ተለያይቶዋል',
-			],
-		],
-	],
-	'multiple' => [
+                'title' => 'ተለያይቶዋል',
+            ],
+        ],
+    ],
+    'multiple' => [
 
-		'label' => 'የተመረጡትን ለያይ',
-		'modal' => [
+        'label' => 'የተመረጡትን ለያይ',
+        'modal' => [
 
-			'heading' => 'የተመረጡት :labelን ለያይ',
-			'actions' => [
+            'heading' => 'የተመረጡት :labelን ለያይ',
+            'actions' => [
 
-				'detach' => [
+                'detach' => [
 
-					'label' => 'ለያይ',
-				],
-			],
-		],
-		'notifications' => [
+                    'label' => 'ለያይ',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-			'detached' => [
+            'detached' => [
 
-				'title' => 'ለያይ',
-			],
-		],
-	],
+                'title' => 'ለያይ',
+            ],
+        ],
+    ],
 ];

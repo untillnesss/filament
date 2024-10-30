@@ -2,26 +2,26 @@
 
 return [
 
-    'entries' =>  [
+    'entries' => [
 
-        'text' =>    [
+        'text' => [
 
-            'actions' =>      [
+            'actions' => [
 
                 'collapse_list' => 'ያነሰ :count አሳይ',
                 'expand_list' => 'ተጨማሪ :count አሳይ',
             ],
             'more_list_items' => 'እና ተጨማሪ :count',
         ],
-        'key_value' =>    [
+        'key_value' => [
 
-            'columns' =>      [
+            'columns' => [
 
-                'key' =>        [
+                'key' => [
 
                     'label' => 'ስም',
                 ],
-                'value' =>        [
+                'value' => [
 
                     'label' => 'ዋጋ',
                 ],

@@ -4,14 +4,14 @@ return [
 
     'title' => 'የይለፍቃል ማደሻ',
     'heading' => 'የይለፍቃልዎ ረሱን?',
-    'actions' =>  [
+    'actions' => [
 
         'login' => [
 
             'label' => 'ወደ መግቢያው ተመለስ',
         ],
     ],
-    'form' =>  [
+    'form' => [
 
         'email' => [
 
@@ -19,15 +19,15 @@ return [
         ],
         'actions' => [
 
-            'request' =>[
+            'request' => [
 
                 'label' => 'ኢሜይል ላክ',
             ],
         ],
     ],
-    'notifications' =>  [
+    'notifications' => [
 
-        'throttled' =>  [
+        'throttled' => [
 
             'title' => ' በጣም ብዙ ሙከራዎች',
             'body' => 'እባክዎ በ:seconds ሰከንድ ውስጥ እንደገና ይሞክሩ።',

@@ -2,7 +2,7 @@
 
 return [
 
-    'messages' =>  [
+    'messages' => [
 
         'copied' => 'ተቀድቶዋል',
     ],

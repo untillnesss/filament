@@ -262,7 +262,7 @@ abstract class Page extends BasePage
     /**
      * @deprecated Use `getWidgetsSchemaComponents()` to transform widgets into schema components instead, which also filters their visibility.
      *
-     * @param array<class-string<Widget> | WidgetConfiguration> $widgets
+     * @param  array<class-string<Widget> | WidgetConfiguration>  $widgets
      * @return array<class-string<Widget> | WidgetConfiguration>
      */
     protected function filterVisibleWidgets(array $widgets): array

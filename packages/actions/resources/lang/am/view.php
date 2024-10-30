@@ -2,19 +2,19 @@
 
 return [
 
-	'single' =>  [
+    'single' => [
 
-		'label' => 'እይ',
-		'modal' =>    [
+        'label' => 'እይ',
+        'modal' => [
 
-			'heading' => ':labelን እይ',
-			'actions' =>      [
+            'heading' => ':labelን እይ',
+            'actions' => [
 
-				'close' =>        [
+                'close' => [
 
-					'label' => 'ዝጋ',
-				],
-			],
-		],
-	],
+                    'label' => 'ዝጋ',
+                ],
+            ],
+        ],
+    ],
 ];

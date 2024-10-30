@@ -2,21 +2,21 @@
 
 return [
 
-	'form' =>  [
+    'form' => [
 
-		'actions' =>    [
+        'actions' => [
 
-			'save' =>      [
+            'save' => [
 
-				'label' => 'ለውጦችን ያስቀምጡ',
-			],
-		],
-	],
-	'notifications' =>  [
+                'label' => 'ለውጦችን ያስቀምጡ',
+            ],
+        ],
+    ],
+    'notifications' => [
 
-		'saved' =>    [
+        'saved' => [
 
-			'title' => 'ተመዝግቦዋል',
-		],
-	],
+            'title' => 'ተመዝግቦዋል',
+        ],
+    ],
 ];

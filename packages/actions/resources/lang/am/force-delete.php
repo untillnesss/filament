@@ -2,48 +2,48 @@
 
 return [
 
-	'single' =>  [
+    'single' => [
 
-		'label' => 'የምር አጥፋ',
-		'modal' => [
+        'label' => 'የምር አጥፋ',
+        'modal' => [
 
-			'heading' => ':labelን የምር አጥፋ',
-			'actions' => [
+            'heading' => ':labelን የምር አጥፋ',
+            'actions' => [
 
-				'delete' =>   [
+                'delete' => [
 
-					'label' => 'አጥፋ',
-				],
-			],
-		],
-		'notifications' => [
+                    'label' => 'አጥፋ',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-			'deleted' => [
+            'deleted' => [
 
-				'title' => 'ጠፍቶዋል',
-			],
-		],
-	],
-	'multiple' =>  [
+                'title' => 'ጠፍቶዋል',
+            ],
+        ],
+    ],
+    'multiple' => [
 
-		'label' => 'የተመረጡትን የምር አጥፋ',
-		'modal' => [
+        'label' => 'የተመረጡትን የምር አጥፋ',
+        'modal' => [
 
-			'heading' => 'የተመረጡትን :label የምር አጥፋ',
-			'actions' => [
+            'heading' => 'የተመረጡትን :label የምር አጥፋ',
+            'actions' => [
 
-				'delete' =>   [
+                'delete' => [
 
-					'label' => 'አጥፋ',
-				],
-			],
-		],
-		'notifications' => [
+                    'label' => 'አጥፋ',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-			'deleted' => [
+            'deleted' => [
 
-				'title' => 'ጠፍቶዋል',
-			],
-		],
-	],
+                'title' => 'ጠፍቶዋል',
+            ],
+        ],
+    ],
 ];

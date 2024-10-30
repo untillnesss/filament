@@ -2,37 +2,37 @@
 
 return [
 
-	'single' =>  [
+    'single' => [
 
-		'label' => 'ያያይዙ',
-		'modal' => [
+        'label' => 'ያያይዙ',
+        'modal' => [
 
-			'heading' => ':labelን ያያይዙ',
-			'fields' => [
+            'heading' => ':labelን ያያይዙ',
+            'fields' => [
 
-				'record_id' => [
+                'record_id' => [
 
-					'label' => 'ሪከርድ',
-				],
-			],
-			'actions' => [
+                    'label' => 'ሪከርድ',
+                ],
+            ],
+            'actions' => [
 
-				'attach' => [
+                'attach' => [
 
-					'label' => 'ያያይዙ',
-				],
-				'attach_another' => [
+                    'label' => 'ያያይዙ',
+                ],
+                'attach_another' => [
 
-					'label' => 'ያያይዙ & ሌላ ያያይዙ',
-				],
-			],
-		],
-		'notifications' => [
+                    'label' => 'ያያይዙ & ሌላ ያያይዙ',
+                ],
+            ],
+        ],
+        'notifications' => [
 
-			'attached' => [
+            'attached' => [
 
-				'title' => 'ተያይዞዋል',
-			],
-		],
-	],
+                'title' => 'ተያይዞዋል',
+            ],
+        ],
+    ],
 ];

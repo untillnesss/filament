@@ -2,7 +2,7 @@
 
 return [
 
-    'field' =>  [
+    'field' => [
         'label' => 'ሙሉ ፍለጋ',
         'placeholder' => 'ፈልግ',
     ],

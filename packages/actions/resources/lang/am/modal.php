@@ -2,20 +2,20 @@
 
 return [
 
-	'confirmation' => 'እርግጠኛ ነዎት ይህን ማድረግ ይፈልጋሉ?',
-	'actions' =>  [
+    'confirmation' => 'እርግጠኛ ነዎት ይህን ማድረግ ይፈልጋሉ?',
+    'actions' => [
 
-		'cancel' => [
+        'cancel' => [
 
-			'label' => 'ይቅር',
-		],
-		'confirm' => [
+            'label' => 'ይቅር',
+        ],
+        'confirm' => [
 
-			'label' => 'አጽድቅ',
-		],
-		'submit' => [
+            'label' => 'አጽድቅ',
+        ],
+        'submit' => [
 
-			'label' => 'መዝግብ',
-		],
-	],
+            'label' => 'መዝግብ',
+        ],
+    ],
 ];

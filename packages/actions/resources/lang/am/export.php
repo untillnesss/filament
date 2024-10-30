@@ -2,63 +2,63 @@
 
 return [
 
-	'label' => 'ኤክስፖርት :label',
-	'modal' =>  [
+    'label' => 'ኤክስፖርት :label',
+    'modal' => [
 
-		'heading' => 'ኤክስፖርት :label',
-		'form' =>    [
+        'heading' => 'ኤክስፖርት :label',
+        'form' => [
 
-			'columns' =>      [
+            'columns' => [
 
-				'label' => 'አምዶች',
-				'form' =>        [
+                'label' => 'አምዶች',
+                'form' => [
 
-					'is_enabled' =>          [
+                    'is_enabled' => [
 
-						'label' => ':column በርቶዋል',
-					],
-					'label' =>          [
+                        'label' => ':column በርቶዋል',
+                    ],
+                    'label' => [
 
-						'label' => ':column መለያ',
-					],
-				],
-			],
-		],
-		'actions' =>    [
+                        'label' => ':column መለያ',
+                    ],
+                ],
+            ],
+        ],
+        'actions' => [
 
-			'export' =>      [
+            'export' => [
 
-				'label' => 'ኤክስፖርት',
-			],
-		],
-	],
-	'notifications' =>  [
+                'label' => 'ኤክስፖርት',
+            ],
+        ],
+    ],
+    'notifications' => [
 
-		'completed' =>    [
+        'completed' => [
 
-			'title' => 'ኤክስፖርት ተጠናቋል',
-			'actions' =>      [
+            'title' => 'ኤክስፖርት ተጠናቋል',
+            'actions' => [
 
-				'download_csv' =>        [
+                'download_csv' => [
 
-					'label' => '.csv አውርድ',
-				],
-				'download_xlsx' =>        [
+                    'label' => '.csv አውርድ',
+                ],
+                'download_xlsx' => [
 
-					'label' => '.xlsx አውርድ',
-				],
-			],
-		],
-		'max_rows' =>    [
+                    'label' => '.xlsx አውርድ',
+                ],
+            ],
+        ],
+        'max_rows' => [
 
-			'title' => 'ይህ በጣም ትልቅ ነው',
-			'body' => 'በአንድ ጊዜ ከ 1 ረድፍ በላይ ኤክስፖርት ማድረግ አይችሉም።|ረድፎችን በአንድ ጊዜ ከ:count  በላይ ኤክስፖርት ማድረግ አይችሉም።',
-		],
-		'started' =>    [
+            'title' => 'ይህ በጣም ትልቅ ነው',
+            'body' => 'በአንድ ጊዜ ከ 1 ረድፍ በላይ ኤክስፖርት ማድረግ አይችሉም።|ረድፎችን በአንድ ጊዜ ከ:count  በላይ ኤክስፖርት ማድረግ አይችሉም።',
+        ],
+        'started' => [
 
-			'title' => 'ኤክስፖርት ተጀምሮዋል',
-			'body' => 'ኤክስፖርቱ ተጀምሯል እና 1 ረድፍ ከበስተጀርባ ይካሄዳል።|ኤክስፖርቱ ጀምሯል እና :count ረድፎች ከበስተጀርባ ይከናወናሉ.',
-		],
-	],
-	'file_name' => 'export-:export_id-:model',
+            'title' => 'ኤክስፖርት ተጀምሮዋል',
+            'body' => 'ኤክስፖርቱ ተጀምሯል እና 1 ረድፍ ከበስተጀርባ ይካሄዳል።|ኤክስፖርቱ ጀምሯል እና :count ረድፎች ከበስተጀርባ ይከናወናሉ.',
+        ],
+    ],
+    'file_name' => 'export-:export_id-:model',
 ];
