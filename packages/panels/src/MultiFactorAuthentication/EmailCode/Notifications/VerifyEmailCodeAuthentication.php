@@ -3,7 +3,6 @@
 namespace Filament\MultiFactorAuthentication\EmailCode\Notifications;
 
 use Exception;
-use Filament\Facades\Filament;
 use Filament\MultiFactorAuthentication\EmailCode\Contracts\HasEmailCodeAuthentication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -33,13 +32,11 @@ class VerifyEmailCodeAuthentication extends Notification implements ShouldQueue
             throw new Exception('The user model must implement the [' . HasEmailCodeAuthentication::class . '] interface to use email code authentication.');
         }
 
-        $brandName = strip_tags(Filament::getBrandName());
-
         $expiryMinutes = ceil($this->codeWindow / 2);
 
         return (new MailMessage)
-            ->subject('Here\'s your sign-in code' . (filled($brandName) ? " for {$brandName}" : ''))
-            ->line("Your sign-in code is: {$this->code}")
-            ->line("This code will expire in {$expiryMinutes} minutes.");
+            ->subject(__('filament-panels::multi-factor-authentication/email-code/notifications/verify-email-code-authentication.subject'))
+            ->line(__('filament-panels::multi-factor-authentication/email-code/notifications/verify-email-code-authentication.lines.0', ['code' => $this->code]))
+            ->line(trans_choice('filament-panels::multi-factor-authentication/email-code/notifications/verify-email-code-authentication.lines.1', $expiryMinutes, ['minutes' => $expiryMinutes]));
     }
 }

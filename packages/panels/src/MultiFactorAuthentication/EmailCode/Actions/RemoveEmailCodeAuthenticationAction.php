@@ -17,7 +17,7 @@ class RemoveEmailCodeAuthenticationAction
     public static function make(EmailCodeAuthentication $emailCodeAuthentication): Action
     {
         return Action::make('removeEmailCodeAuthentication')
-            ->label('Remove')
+            ->label(__('filament-panels::multi-factor-authentication/email-code/actions/remove.label'))
             ->color('danger')
             ->icon('heroicon-m-lock-open')
             ->outlined()
@@ -29,14 +29,14 @@ class RemoveEmailCodeAuthenticationAction
             })
             ->modalWidth(MaxWidth::Medium)
             ->modalIcon('heroicon-o-lock-open')
-            ->modalHeading('Remove email code authentication')
-            ->modalDescription('Are you sure you want to disable email code authentication?')
+            ->modalHeading(__('filament-panels::multi-factor-authentication/email-code/actions/remove.modal.heading'))
+            ->modalDescription(__('filament-panels::multi-factor-authentication/email-code/actions/remove.modal.description'))
             ->form([
                 OneTimeCodeInput::make('code')
-                    ->label('Enter the code we sent you by email')
-                    ->validationAttribute('code')
-                    ->belowContent(Action::make('resendEmailCode')
-                        ->label('Need a new code?')
+                    ->label(__('filament-panels::multi-factor-authentication/email-code/actions/remove.modal.form.code.label'))
+                    ->validationAttribute(__('filament-panels::multi-factor-authentication/email-code/actions/remove.modal.form.code.validation_attribute'))
+                    ->belowContent(Action::make('resend')
+                        ->label(__('filament-panels::multi-factor-authentication/email-code/actions/remove.modal.form.code.actions.resend.label'))
                         ->link()
                         ->action(function () use ($emailCodeAuthentication) {
                             /** @var HasEmailCodeAuthentication $user */
@@ -45,7 +45,7 @@ class RemoveEmailCodeAuthenticationAction
                             $emailCodeAuthentication->sendCode($user);
 
                             Notification::make()
-                                ->title('We\'ve sent you a new code by email')
+                                ->title(__('filament-panels::multi-factor-authentication/email-code/actions/remove.modal.form.code.actions.resend.notifications.resent.title'))
                                 ->success()
                                 ->send();
                         }))
@@ -56,12 +56,12 @@ class RemoveEmailCodeAuthenticationAction
                                 return;
                             }
 
-                            $fail('The code you entered is invalid.');
+                            $fail(__('filament-panels::multi-factor-authentication/email-code/actions/remove.modal.form.code.messages.invalid'));
                         };
                     }),
             ])
             ->modalSubmitAction(fn (Action $action) => $action
-                ->label('Remove email code authentication'))
+                ->label(__('filament-panels::multi-factor-authentication/email-code/actions/remove.modal.actions.submit.label')))
             ->action(function () use ($emailCodeAuthentication) {
                 /** @var HasEmailCodeAuthentication $user */
                 $user = Filament::auth()->user();
@@ -71,7 +71,7 @@ class RemoveEmailCodeAuthenticationAction
                 });
 
                 Notification::make()
-                    ->title('Email code authentication has been removed')
+                    ->title(__('filament-panels::multi-factor-authentication/email-code/actions/remove.notifications.removed.title'))
                     ->success()
                     ->icon('heroicon-o-lock-open')
                     ->send();

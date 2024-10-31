@@ -95,7 +95,7 @@ class EmailCodeAuthentication implements HasAfterLoginHook, MultiFactorAuthentic
     {
         return [
             Actions::make($this->getActions())
-                ->label('Email code authentication'),
+                ->label(__('filament-panels::multi-factor-authentication/email-code/provider.management_form.actions.label')),
         ];
     }
 
@@ -142,16 +142,16 @@ class EmailCodeAuthentication implements HasAfterLoginHook, MultiFactorAuthentic
     {
         return [
             OneTimeCodeInput::make('code')
-                ->label('Enter the code we sent you by email')
+                ->label(__('filament-panels::multi-factor-authentication/email-code/provider.login_form.code.label'))
                 ->validationAttribute('code')
-                ->belowContent(Action::make('resendEmailCode')
-                    ->label('Send a new code by email')
+                ->belowContent(Action::make('resend')
+                    ->label(__('filament-panels::multi-factor-authentication/email-code/provider.login_form.code.actions.resend.label'))
                     ->link()
                     ->action(function () use ($user) {
                         $this->sendCode($user);
 
                         Notification::make()
-                            ->title('We\'ve sent you a new code by email')
+                            ->title(__('filament-panels::multi-factor-authentication/email-code/provider.login_form.code.actions.resend.notifications.resent.title'))
                             ->success()
                             ->send();
                     }))
@@ -162,7 +162,7 @@ class EmailCodeAuthentication implements HasAfterLoginHook, MultiFactorAuthentic
                             return;
                         }
 
-                        $fail('The code you entered is invalid.');
+                        $fail(__('filament-panels::multi-factor-authentication/email-code/provider.login_form.code.messages.invalid'));
                     };
                 }),
         ];

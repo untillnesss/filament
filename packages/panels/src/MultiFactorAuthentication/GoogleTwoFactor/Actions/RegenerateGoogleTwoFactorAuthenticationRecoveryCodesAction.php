@@ -76,7 +76,7 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
                     ->modalHeading(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.show_new_recovery_codes.modal.heading'))
                     ->modalDescription(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.show_new_recovery_codes.modal.description'))
                     ->modalContent(fn (array $arguments): View => view(
-                        'filament-panels::multi-factor-authentication.google-two-factor.recovery-codes-modal-content',
+                        'filament-panels::multi-factor-authentication.recovery-codes-modal-content',
                         $arguments,
                     ))
                     ->modalWidth(MaxWidth::Large)

@@ -19,7 +19,7 @@ class SetUpEmailCodeAuthenticationAction
     public static function make(EmailCodeAuthentication $emailCodeAuthentication): Action
     {
         return Action::make('setUpEmailCodeAuthentication')
-            ->label('Set up')
+            ->label(__('filament-panels::multi-factor-authentication/email-code/actions/set-up.label'))
             ->color('primary')
             ->icon('heroicon-m-lock-closed')
             ->outlined()
@@ -39,13 +39,13 @@ class SetUpEmailCodeAuthenticationAction
             ->modalWidth(MaxWidth::Large)
             ->modalIcon('heroicon-o-lock-closed')
             ->modalIconColor('primary')
-            ->modalHeading('Set up email code authentication')
-            ->modalDescription('You\'ll need to enter a code we send you by email each time you sign in. We\'ve sent you an email with a code to get started.')
+            ->modalHeading(__('filament-panels::multi-factor-authentication/email-code/actions/set-up.modal.heading'))
+            ->modalDescription(__('filament-panels::multi-factor-authentication/email-code/actions/set-up.modal.description'))
             ->form(fn (array $arguments): array => [
                 OneTimeCodeInput::make('code')
-                    ->label('Enter the code we sent you by email')
-                    ->belowContent(Action::make('resendEmailCode')
-                        ->label('Need a new code?')
+                    ->label(__('filament-panels::multi-factor-authentication/email-code/actions/set-up.modal.form.code.label'))
+                    ->belowContent(Action::make('resend')
+                        ->label(__('filament-panels::multi-factor-authentication/email-code/actions/set-up.modal.form.code.actions.resend.label'))
                         ->link()
                         ->action(function () use ($arguments, $emailCodeAuthentication) {
                             /** @var HasEmailCodeAuthentication $user */
@@ -54,11 +54,11 @@ class SetUpEmailCodeAuthenticationAction
                             $emailCodeAuthentication->sendCode($user, decrypt($arguments['encrypted'])['secret']);
 
                             Notification::make()
-                                ->title('We\'ve sent you a new code by email')
+                                ->title(__('filament-panels::multi-factor-authentication/email-code/actions/set-up.modal.form.code.actions.resend.notifications.resent.title'))
                                 ->success()
                                 ->send();
                         }))
-                    ->validationAttribute('code')
+                    ->validationAttribute(__('filament-panels::multi-factor-authentication/email-code/actions/set-up.modal.form.code.validation_attribute'))
                     ->required()
                     ->rule(function () use ($arguments, $emailCodeAuthentication): Closure {
                         return function (string $attribute, $value, Closure $fail) use ($arguments, $emailCodeAuthentication): void {
@@ -66,12 +66,12 @@ class SetUpEmailCodeAuthenticationAction
                                 return;
                             }
 
-                            $fail('The code you entered is invalid.');
+                            $fail(__('filament-panels::multi-factor-authentication/email-code/actions/set-up.modal.form.code.messages.invalid'));
                         };
                     }),
             ])
             ->modalSubmitAction(fn (Action $action) => $action
-                ->label('Enable email code authentication')
+                ->label(__('filament-panels::multi-factor-authentication/email-code/actions/set-up.modal.actions.submit.label'))
                 ->color('danger'))
             ->action(function (array $arguments) use ($emailCodeAuthentication) {
                 /** @var Authenticatable&HasEmailCodeAuthentication $user */
@@ -90,7 +90,7 @@ class SetUpEmailCodeAuthenticationAction
                 });
 
                 Notification::make()
-                    ->title('Email code authentication has been enabled')
+                    ->title(__('filament-panels::multi-factor-authentication/email-code/actions/set-up.notifications.enabled.title'))
                     ->success()
                     ->icon('heroicon-o-lock-closed')
                     ->send();

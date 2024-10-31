@@ -37,7 +37,7 @@
                 {{ __('filament-panels::multi-factor-authentication/google-two-factor/actions/set-up.modal.content.recovery_codes.instruction') }}
             </p>
 
-            @include('filament-panels::multi-factor-authentication.google-two-factor.recovery-codes-modal-content', [
+            @include('filament-panels::multi-factor-authentication.recovery-codes-modal-content', [
                 'recoveryCodes' => $recoveryCodes,
             ])
         </div>
