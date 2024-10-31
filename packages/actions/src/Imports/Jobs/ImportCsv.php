@@ -117,6 +117,27 @@ class ImportCsv implements ShouldQueue
             $this->import->failedRows()->createMany($this->failedRows);
         });
 
+        $this->import::query()
+            ->whereKey($this->import)
+            ->update([
+                'processed_rows' => DB::raw('processed_rows + ' . $processedRows),
+                'successful_rows' => DB::raw('successful_rows + ' . $successfulRows),
+            ]);
+
+        $this->import::query()
+            ->whereKey($this->import)
+            ->whereColumn('processed_rows', '>', 'total_rows')
+            ->update([
+                'processed_rows' => DB::raw('total_rows'),
+            ]);
+
+        $this->import::query()
+            ->whereKey($this->import)
+            ->whereColumn('successful_rows', '>', 'total_rows')
+            ->update([
+                'successful_rows' => DB::raw('total_rows'),
+            ]);
+
         $this->import->refresh();
 
         event(new ImportChunkProcessed(

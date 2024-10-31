@@ -96,21 +96,21 @@ class ExportCsv implements ShouldQueue
         $filePath = $this->export->getFileDirectory() . DIRECTORY_SEPARATOR . str_pad(strval($this->page), 16, '0', STR_PAD_LEFT) . '.csv';
 
         DB::transaction(function () use ($csv, $filePath, $processedRows, $successfulRows) {
-            Export::query()
+            $this->export::query()
                 ->whereKey($this->export->getKey())
                 ->update([
                     'processed_rows' => DB::raw('processed_rows + ' . $processedRows),
                     'successful_rows' => DB::raw('successful_rows + ' . $successfulRows),
                 ]);
 
-            Export::query()
+            $this->export::query()
                 ->whereKey($this->export->getKey())
                 ->whereColumn('processed_rows', '>', 'total_rows')
                 ->update([
                     'processed_rows' => DB::raw('total_rows'),
                 ]);
 
-            Export::query()
+            $this->export::query()
                 ->whereKey($this->export->getKey())
                 ->whereColumn('successful_rows', '>', 'total_rows')
                 ->update([
