@@ -12,10 +12,10 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Concerns;
 use Filament\Pages\Page;
 use Filament\Panel;
-use Filament\Schema\Components\Actions;
 use Filament\Schema\Components\Component;
 use Filament\Schema\Components\Decorations\FormActionsDecorations;
 use Filament\Schema\Components\Form;
+use Filament\Schema\Components\Group;
 use Filament\Schema\Components\NestedSchema;
 use Filament\Schema\Components\Utilities\Get;
 use Filament\Schema\Schema;
@@ -416,8 +416,8 @@ class EditProfile extends Page
 
         return collect($providers)
             ->sort(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): int => $multiFactorAuthenticationProvider->isEnabled($user) ? 0 : 1)
-            ->map(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): Component => Actions::make($multiFactorAuthenticationProvider->getActions())
-                ->label($multiFactorAuthenticationProvider->getLabel()))
+            ->map(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): Component => Group::make($multiFactorAuthenticationProvider->getManagementFormComponents())
+                ->statePath($multiFactorAuthenticationProvider->getId()))
             ->all();
     }
 }

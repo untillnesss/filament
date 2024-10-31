@@ -2,7 +2,6 @@
 
 namespace Filament\MultiFactorAuthentication\Providers\Contracts;
 
-use Filament\Actions\Action;
 use Filament\Schema\Components\Component;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -12,12 +11,10 @@ interface MultiFactorAuthenticationProvider
 
     public function getId(): string;
 
-    public function getLabel(): string;
-
     /**
-     * @return array<Action>
+     * @return array<Component>
      */
-    public function getActions(): array;
+    public function getManagementFormComponents(): array;
 
     /**
      * @return array<Component>

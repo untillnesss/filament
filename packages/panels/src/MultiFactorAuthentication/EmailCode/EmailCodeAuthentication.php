@@ -14,6 +14,8 @@ use Filament\MultiFactorAuthentication\EmailCode\Notifications\VerifyEmailCodeAu
 use Filament\MultiFactorAuthentication\Providers\Contracts\HasAfterLoginHook;
 use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Notifications\Notification;
+use Filament\Schema\Components\Actions;
+use Filament\Schema\Components\Component;
 use Illuminate\Contracts\Auth\Authenticatable;
 use PragmaRX\Google2FAQRCode\Google2FA;
 
@@ -38,11 +40,6 @@ class EmailCodeAuthentication implements HasAfterLoginHook, MultiFactorAuthentic
     public function getId(): string
     {
         return 'email_code';
-    }
-
-    public function getLabel(): string
-    {
-        return 'Email code authentication';
     }
 
     public function isEnabled(Authenticatable $user): bool
@@ -89,6 +86,17 @@ class EmailCodeAuthentication implements HasAfterLoginHook, MultiFactorAuthentic
         $user = Filament::auth()->user();
 
         return $this->google2FA->verifyKey($secret ?? $this->getSecret($user), $code, $this->getCodeWindow());
+    }
+
+    /**
+     * @return array<Component>
+     */
+    public function getManagementFormComponents(): array
+    {
+        return [
+            Actions::make($this->getActions())
+                ->label('Email code authentication'),
+        ];
     }
 
     /**
