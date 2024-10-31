@@ -3,10 +3,14 @@
 namespace Filament\MultiFactorAuthentication\GoogleTwoFactor;
 
 use Closure;
+use Exception;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Forms\Components\TextInput;
+use Filament\MultiFactorAuthentication\GoogleTwoFactor\Actions\RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction;
+use Filament\MultiFactorAuthentication\GoogleTwoFactor\Actions\RemoveGoogleTwoFactorAuthenticationAction;
+use Filament\MultiFactorAuthentication\GoogleTwoFactor\Actions\SetUpGoogleTwoFactorAuthenticationAction;
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthenticationRecovery;
 use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
@@ -51,8 +55,12 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
         return 'Two factor authentication app';
     }
 
-    public function isEnabled(HasGoogleTwoFactorAuthentication $user): bool
+    public function isEnabled(Authenticatable $user): bool
     {
+        if (! ($user instanceof HasGoogleTwoFactorAuthentication)) {
+            throw new Exception('The user model must implement the [' . HasGoogleTwoFactorAuthentication::class . '] interface to use email code authentication.');
+        }
+
         return $user->hasGoogleTwoFactorAuthentication();
     }
 
@@ -134,7 +142,6 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
      */
     public function getActions(): array
     {
-        /** @var HasGoogleTwoFactorAuthentication $user */
         $user = Filament::auth()->user();
 
         return [
@@ -218,10 +225,10 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
             OneTimeCodeInput::make('code')
                 ->label('Enter the code from your authentication app')
                 ->belowContent(fn (Get $get): Action => Action::make('useRecoveryCode')
-                    ->label('Need to use a recovery code?')
+                    ->label('Use a recovery code instead')
                     ->link()
                     ->action(fn (Set $set) => $set('useRecoveryCode', true))
-                    ->visible($isRecoverable && (! $get('useRecoveryCode'))))
+                    ->visible(fn (): bool => $isRecoverable && (! $get('useRecoveryCode'))))
                 ->validationAttribute('code')
                 ->required(fn (Get $get): bool => (! $isRecoverable) || blank($get('recoveryCode')))
                 ->rule(function () use ($user): Closure {

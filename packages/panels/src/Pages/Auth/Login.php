@@ -11,6 +11,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\MultiFactorAuthentication\Providers\Contracts\HasAfterLoginHook;
 use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Notifications\Notification;
 use Filament\Pages\SimplePage;
@@ -85,13 +86,21 @@ class Login extends SimplePage
             $this->multiFactorForm->validate();
         } else {
             foreach (Filament::getMultiFactorAuthenticationProviders() as $multiFactorAuthenticationProvider) {
-                if ($multiFactorAuthenticationProvider->isEnabled($user)) {
-                    $this->userUndertakingMultiFactorAuthentication = encrypt($user->getAuthIdentifier());
-
-                    $this->multiFactorForm->fill();
-
-                    return null;
+                if (! $multiFactorAuthenticationProvider->isEnabled($user)) {
+                    continue;
                 }
+
+                $this->userUndertakingMultiFactorAuthentication = encrypt($user->getAuthIdentifier());
+
+                if ($multiFactorAuthenticationProvider instanceof HasAfterLoginHook) {
+                    $multiFactorAuthenticationProvider->afterLogin($user);
+                }
+            }
+
+            if (filled($this->userUndertakingMultiFactorAuthentication)) {
+                $this->multiFactorForm->fill();
+
+                return null;
             }
         }
 

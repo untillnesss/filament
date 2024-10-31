@@ -7,7 +7,6 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
-use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
 use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns;
@@ -413,7 +412,6 @@ class EditProfile extends Page
             return [];
         }
 
-        /** @var HasGoogleTwoFactorAuthentication $user */
         $user = Filament::auth()->user();
 
         return collect($providers)

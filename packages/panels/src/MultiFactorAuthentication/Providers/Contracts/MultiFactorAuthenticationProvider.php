@@ -3,13 +3,12 @@
 namespace Filament\MultiFactorAuthentication\Providers\Contracts;
 
 use Filament\Actions\Action;
-use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
 use Filament\Schema\Components\Component;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 interface MultiFactorAuthenticationProvider
 {
-    public function isEnabled(HasGoogleTwoFactorAuthentication $user): bool;
+    public function isEnabled(Authenticatable $user): bool;
 
     public function getId(): string;
 

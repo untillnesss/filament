@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\MultiFactorAuthentication\GoogleTwoFactor;
+namespace Filament\MultiFactorAuthentication\GoogleTwoFactor\Actions;
 
 use Closure;
 use Filament\Actions\Action;
@@ -9,6 +9,7 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthenticationRecovery;
+use Filament\MultiFactorAuthentication\GoogleTwoFactor\GoogleTwoFactorAuthentication;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\MaxWidth;
 use Illuminate\Contracts\Auth\Authenticatable;
