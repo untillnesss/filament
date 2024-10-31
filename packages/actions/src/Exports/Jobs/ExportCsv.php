@@ -6,6 +6,7 @@ use AnourValar\EloquentSerialize\Facades\EloquentSerializeFacade;
 use Carbon\CarbonInterface;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
+use Filament\Actions\Imports\Models\Import;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -92,22 +93,29 @@ class ExportCsv implements ShouldQueue
             $processedRows++;
         }
 
-        $this->export->refresh();
-
-        $exportProcessedRows = $this->export->processed_rows + $processedRows;
-        $this->export->processed_rows = ($exportProcessedRows < $this->export->total_rows) ?
-            $exportProcessedRows :
-            $this->export->total_rows;
-
-        $exportSuccessfulRows = $this->export->successful_rows + $successfulRows;
-        $this->export->successful_rows = ($exportSuccessfulRows < $this->export->total_rows) ?
-            $exportSuccessfulRows :
-            $this->export->total_rows;
-
         $filePath = $this->export->getFileDirectory() . DIRECTORY_SEPARATOR . str_pad(strval($this->page), 16, '0', STR_PAD_LEFT) . '.csv';
 
-        DB::transaction(function () use ($csv, $filePath) {
-            $this->export->save();
+        DB::transaction(function () use ($csv, $filePath, $processedRows, $successfulRows) {
+            Export::query()
+                ->whereKey($this->export->getKey())
+                ->update([
+                    'processed_rows' => DB::raw('processed_rows + ' . $processedRows),
+                    'successful_rows' => DB::raw('successful_rows + ' . $successfulRows),
+                ]);
+
+            Export::query()
+                ->whereKey($this->export->getKey())
+                ->whereColumn('processed_rows', '>', 'total_rows')
+                ->update([
+                    'processed_rows' => DB::raw('total_rows'),
+                ]);
+
+            Export::query()
+                ->whereKey($this->export->getKey())
+                ->whereColumn('successful_rows', '>', 'total_rows')
+                ->update([
+                    'successful_rows' => DB::raw('total_rows'),
+                ]);
 
             $this->export->getFileDisk()->put($filePath, $csv->toString(), Filesystem::VISIBILITY_PRIVATE);
         });

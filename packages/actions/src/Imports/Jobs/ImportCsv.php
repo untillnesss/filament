@@ -93,29 +93,39 @@ class ImportCsv implements ShouldQueue
                 $processedRows++;
             }
 
-            $this->import->refresh();
+            Import::query()
+                ->whereKey($this->import->getKey())
+                ->update([
+                    'processed_rows' => DB::raw('processed_rows + ' . $processedRows),
+                    'successful_rows' => DB::raw('successful_rows + ' . $successfulRows),
+                ]);
 
-            $importProcessedRows = $this->import->processed_rows + $processedRows;
-            $this->import->processed_rows = ($importProcessedRows < $this->import->total_rows) ?
-                $importProcessedRows :
-                $this->import->total_rows;
+            Import::query()
+                ->whereKey($this->import->getKey())
+                ->whereColumn('processed_rows', '>', 'total_rows')
+                ->update([
+                    'processed_rows' => DB::raw('total_rows'),
+                ]);
 
-            $importSuccessfulRows = $this->import->successful_rows + $successfulRows;
-            $this->import->successful_rows = ($importSuccessfulRows < $this->import->total_rows) ?
-                $importSuccessfulRows :
-                $this->import->total_rows;
+            Import::query()
+                ->whereKey($this->import->getKey())
+                ->whereColumn('successful_rows', '>', 'total_rows')
+                ->update([
+                    'successful_rows' => DB::raw('total_rows'),
+                ]);
 
-            $this->import->save();
             $this->import->failedRows()->createMany($this->failedRows);
-
-            event(new ImportChunkProcessed(
-                $this->import,
-                $this->columnMap,
-                $this->options,
-                $processedRows,
-                $successfulRows,
-            ));
         });
+
+        $this->import->refresh();
+
+        event(new ImportChunkProcessed(
+            $this->import,
+            $this->columnMap,
+            $this->options,
+            $processedRows,
+            $successfulRows,
+        ));
     }
 
     public function retryUntil(): ?CarbonInterface
