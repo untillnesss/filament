@@ -141,7 +141,7 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
     {
         return [
             Actions::make($this->getActions())
-                ->label('Two factor authentication app'),
+                ->label(__('filament-panels::multi-factor-authentication/google-two-factor/provider.management_form.actions.label')),
         ];
     }
 
@@ -231,13 +231,13 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
 
         return [
             OneTimeCodeInput::make('code')
-                ->label('Enter the code from your authentication app')
+                ->label(__('filament-panels::multi-factor-authentication/google-two-factor/provider.login_form.code.label'))
                 ->belowContent(fn (Get $get): Action => Action::make('useRecoveryCode')
-                    ->label('Use a recovery code instead')
+                    ->label(__('filament-panels::multi-factor-authentication/google-two-factor/provider.login_form.code.actions.use_recovery_code.label'))
                     ->link()
                     ->action(fn (Set $set) => $set('useRecoveryCode', true))
                     ->visible(fn (): bool => $isRecoverable && (! $get('useRecoveryCode'))))
-                ->validationAttribute('code')
+                ->validationAttribute(__('filament-panels::multi-factor-authentication/google-two-factor/provider.login_form.code.validation_attribute'))
                 ->required(fn (Get $get): bool => (! $isRecoverable) || blank($get('recoveryCode')))
                 ->rule(function () use ($user): Closure {
                     return function (string $attribute, $value, Closure $fail) use ($user): void {
@@ -245,12 +245,12 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
                             return;
                         }
 
-                        $fail('The code you entered is invalid.');
+                        $fail(__('filament-panels::multi-factor-authentication/google-two-factor/provider.login_form.code.messages.invalid'));
                     };
                 }),
             TextInput::make('recoveryCode')
-                ->label('Or, enter a recovery code')
-                ->validationAttribute('recovery code')
+                ->label(__('filament-panels::multi-factor-authentication/google-two-factor/provider.login_form.recovery_code.label'))
+                ->validationAttribute(__('filament-panels::multi-factor-authentication/google-two-factor/provider.login_form.recovery_code.validation_attribute'))
                 ->password()
                 ->revealable(Filament::arePasswordsRevealable())
                 ->rule(function () use ($user): Closure {
@@ -263,7 +263,7 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
                             return;
                         }
 
-                        $fail('The recovery code you entered is invalid.');
+                        $fail(__('filament-panels::multi-factor-authentication/google-two-factor/provider.login_form.recovery_code.messages.invalid'));
                     };
                 })
                 ->visible(fn (Get $get): bool => $isRecoverable && $get('useRecoveryCode'))

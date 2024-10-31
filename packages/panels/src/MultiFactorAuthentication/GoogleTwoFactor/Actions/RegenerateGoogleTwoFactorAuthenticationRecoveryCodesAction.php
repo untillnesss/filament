@@ -19,18 +19,19 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
     public static function make(GoogleTwoFactorAuthentication $googleTwoFactorAuthentication): Action
     {
         return Action::make('regenerateGoogleTwoFactorAuthenticationRecoveryCodes')
-            ->label('Regenerate recovery codes')
+            ->label(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.label'))
             ->color('gray')
             ->icon('heroicon-m-arrow-path')
             ->outlined()
+            ->modalWidth(MaxWidth::Large)
             ->modalIcon('heroicon-o-arrow-path')
             ->modalIconColor('primary')
-            ->modalHeading('Regenerate two-factor authentication app recovery codes')
-            ->modalDescription('If you lose your recovery codes, you can regenerate them here. Your old recovery codes will be invalidated.')
+            ->modalHeading(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.modal.heading'))
+            ->modalDescription(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.modal.description'))
             ->form([
                 OneTimeCodeInput::make('code')
-                    ->label('Enter a code from the app')
-                    ->validationAttribute('code')
+                    ->label(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.modal.form.code.label'))
+                    ->validationAttribute(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.modal.form.code.validation_attribute'))
                     ->requiredWithout('password')
                     ->rule(function () use ($googleTwoFactorAuthentication): Closure {
                         return function (string $attribute, $value, Closure $fail) use ($googleTwoFactorAuthentication): void {
@@ -38,20 +39,19 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
                                 return;
                             }
 
-                            $fail('The code you entered is invalid.');
+                            $fail(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.modal.form.code.messages.invalid'));
                         };
                     }),
                 TextInput::make('password')
-                    ->label('Or, enter your current password')
-                    ->validationAttribute('password')
+                    ->label(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.modal.form.password.label'))
+                    ->validationAttribute(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.modal.form.password.validation_attribute'))
                     ->currentPassword(guard: Filament::getAuthGuard())
                     ->password()
                     ->revealable(filament()->arePasswordsRevealable())
                     ->dehydrated(false),
             ])
-            ->modalWidth(MaxWidth::Large)
             ->modalSubmitAction(fn (Action $action) => $action
-                ->label('Replace old recovery codes with new')
+                ->label(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.modal.actions.submit.label'))
                 ->color('danger'))
             ->action(function (Action $action, HasActions $livewire) use ($googleTwoFactorAuthentication) {
                 $recoveryCodes = $googleTwoFactorAuthentication->generateRecoveryCodes();
@@ -66,14 +66,15 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
                 ]);
 
                 Notification::make()
-                    ->title('New two-factor app authentication recovery codes have been generated')
+                    ->title(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.notifications.regenerated.title'))
                     ->success()
+                    ->icon('heroicon-o-arrow-path')
                     ->send();
             })
             ->registerModalActions([
                 Action::make('showNewRecoveryCodes')
-                    ->modalHeading('New recovery codes')
-                    ->modalDescription('Please save the following recovery codes in a safe place. You won\'t see them again, but you\'ll need them if you lose access to your app:')
+                    ->modalHeading(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.show_new_recovery_codes.modal.heading'))
+                    ->modalDescription(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.show_new_recovery_codes.modal.description'))
                     ->modalContent(fn (array $arguments): View => view(
                         'filament-panels::multi-factor-authentication.google-two-factor.recovery-codes-modal-content',
                         $arguments,
@@ -83,7 +84,7 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
                     ->closeModalByEscaping(false)
                     ->modalCloseButton(false)
                     ->modalSubmitAction(fn (Action $action) => $action
-                        ->label('Close')
+                        ->label(__('filament-panels::multi-factor-authentication/google-two-factor/actions/regenerate-recovery-codes.show_new_recovery_codes.modal.actions.submit.label'))
                         ->color('danger'))
                     ->modalCancelAction(false)
                     ->cancelParentActions(),

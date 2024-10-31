@@ -6,7 +6,7 @@
                     type="button"
                     x-on:click="
                         window.navigator.clipboard.writeText(@js($recoveryCode))
-                        $tooltip('Copied recovery code', {
+                        $tooltip(@js(__('filament-panels::multi-factor-authentication/recovery-codes-modal-content.messages.copied')), {
                             theme: $store.theme,
                         })
                     "
@@ -18,31 +18,31 @@
     </ul>
 
     <p>
-        You can also
+        {{ __('filament-panels::multi-factor-authentication/recovery-codes-modal-content.actions.0') }}
 
         <x-filament::link
             tag="button"
             :x-on:click="
                 '
                     window.navigator.clipboard.writeText(' . \Illuminate\Support\Js::from(implode(PHP_EOL, $recoveryCodes)) . ')
-                    $tooltip(\'Copied all recovery codes to clipboard\', {
+                    $tooltip(' . \Illuminate\Support\Js::from(__('filament-panels::multi-factor-authentication/recovery-codes-modal-content.messages.copied')) . ', {
                         theme: $store.theme,
                     })
                 '
             "
         >
-            copy
+            {{ __('filament-panels::multi-factor-authentication/recovery-codes-modal-content.actions.copy.label') }}
         </x-filament::link>
 
-        or
+        {{ __('filament-panels::multi-factor-authentication/recovery-codes-modal-content.actions.1') }}
 
         <x-filament::link
             :href="'data:application/octet-stream,' . urlencode(implode(PHP_EOL, $recoveryCodes))"
             download
         >
-            download
+            {{ __('filament-panels::multi-factor-authentication/recovery-codes-modal-content.actions.download.label') }}
         </x-filament::link>
 
-        all the recovery codes at once.
+        {{ __('filament-panels::multi-factor-authentication/recovery-codes-modal-content.actions.2') }}
     </p>
 </div>

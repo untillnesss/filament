@@ -21,15 +21,16 @@ class RemoveEmailCodeAuthenticationAction
             ->color('danger')
             ->icon('heroicon-m-lock-open')
             ->outlined()
-            ->modalIcon('heroicon-o-lock-open')
-            ->modalHeading('Remove email code authentication')
-            ->modalDescription('Are you sure you want to disable email code authentication?')
             ->mountUsing(function () use ($emailCodeAuthentication) {
                 /** @var HasEmailCodeAuthentication $user */
                 $user = Filament::auth()->user();
 
                 $emailCodeAuthentication->sendCode($user);
             })
+            ->modalWidth(MaxWidth::Medium)
+            ->modalIcon('heroicon-o-lock-open')
+            ->modalHeading('Remove email code authentication')
+            ->modalDescription('Are you sure you want to disable email code authentication?')
             ->form([
                 OneTimeCodeInput::make('code')
                     ->label('Enter the code we sent you by email')
@@ -59,7 +60,6 @@ class RemoveEmailCodeAuthenticationAction
                         };
                     }),
             ])
-            ->modalWidth(MaxWidth::Medium)
             ->modalSubmitAction(fn (Action $action) => $action
                 ->label('Remove email code authentication'))
             ->action(function () use ($emailCodeAuthentication) {
@@ -73,6 +73,7 @@ class RemoveEmailCodeAuthenticationAction
                 Notification::make()
                     ->title('Email code authentication has been removed')
                     ->success()
+                    ->icon('heroicon-o-lock-open')
                     ->send();
             });
     }

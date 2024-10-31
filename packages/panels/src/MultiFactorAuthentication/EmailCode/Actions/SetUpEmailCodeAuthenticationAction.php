@@ -36,6 +36,7 @@ class SetUpEmailCodeAuthenticationAction
 
                 $emailCodeAuthentication->sendCode($user, $secret);
             })
+            ->modalWidth(MaxWidth::Large)
             ->modalIcon('heroicon-o-lock-closed')
             ->modalIconColor('primary')
             ->modalHeading('Set up email code authentication')
@@ -69,7 +70,6 @@ class SetUpEmailCodeAuthenticationAction
                         };
                     }),
             ])
-            ->modalWidth(MaxWidth::Large)
             ->modalSubmitAction(fn (Action $action) => $action
                 ->label('Enable email code authentication')
                 ->color('danger'))
@@ -92,6 +92,7 @@ class SetUpEmailCodeAuthenticationAction
                 Notification::make()
                     ->title('Email code authentication has been enabled')
                     ->success()
+                    ->icon('heroicon-o-lock-closed')
                     ->send();
             });
     }

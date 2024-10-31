@@ -23,7 +23,7 @@ class SetUpGoogleTwoFactorAuthenticationAction
     public static function make(GoogleTwoFactorAuthentication $googleTwoFactorAuthentication): Action
     {
         return Action::make('setUpGoogleTwoFactorAuthentication')
-            ->label('Set up')
+            ->label(__('filament-panels::multi-factor-authentication/google-two-factor/actions/set-up.label'))
             ->color('primary')
             ->icon('heroicon-m-lock-closed')
             ->outlined()
@@ -38,12 +38,11 @@ class SetUpGoogleTwoFactorAuthenticationAction
                     ]),
                 ]);
             })
+            ->modalWidth(MaxWidth::Large)
             ->modalIcon('heroicon-o-lock-closed')
             ->modalIconColor('primary')
-            ->modalHeading('Set up two-factor authentication app')
-            ->modalDescription(new HtmlString(Blade::render(<<<'BLADE'
-                        You'll need an app like Google Authenticator (<x-filament::link href="https://itunes.apple.com/us/app/google-authenticator/id388497605" target="_blank">iOS</x-filament::link>, <x-filament::link href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</x-filament::link>) to complete this process.
-                        BLADE)))
+            ->modalHeading(__('filament-panels::multi-factor-authentication/google-two-factor/actions/set-up.modal.heading'))
+            ->modalDescription(new HtmlString(Blade::render(__('filament-panels::multi-factor-authentication/google-two-factor/actions/set-up.modal.description'))))
             ->modalContent(fn (array $arguments): View => view(
                 'filament-panels::multi-factor-authentication.google-two-factor.set-up-modal-content',
                 [
@@ -54,9 +53,9 @@ class SetUpGoogleTwoFactorAuthenticationAction
             ))
             ->form(fn (array $arguments): array => [
                 OneTimeCodeInput::make('code')
-                    ->label('Enter a code from the app')
-                    ->belowContent('You\'ll need to put a code like this in each time you sign in.')
-                    ->validationAttribute('code')
+                    ->label(__('filament-panels::multi-factor-authentication/google-two-factor/actions/set-up.modal.form.code.label'))
+                    ->belowContent(__('filament-panels::multi-factor-authentication/google-two-factor/actions/set-up.modal.form.code.below_content'))
+                    ->validationAttribute(__('filament-panels::multi-factor-authentication/google-two-factor/actions/set-up.modal.form.code.validation_attribute'))
                     ->required()
                     ->rule(function () use ($arguments, $googleTwoFactorAuthentication): Closure {
                         return function (string $attribute, $value, Closure $fail) use ($arguments, $googleTwoFactorAuthentication): void {
@@ -64,13 +63,12 @@ class SetUpGoogleTwoFactorAuthenticationAction
                                 return;
                             }
 
-                            $fail('The code you entered is invalid.');
+                            $fail(__('filament-panels::multi-factor-authentication/google-two-factor/actions/set-up.modal.form.code.messages.invalid'));
                         };
                     }),
             ])
-            ->modalWidth(MaxWidth::Large)
             ->modalSubmitAction(fn (Action $action) => $action
-                ->label('Enable two-factor authentication')
+                ->label(__('filament-panels::multi-factor-authentication/google-two-factor/actions/set-up.modal.actions.submit.label'))
                 ->color('danger'))
             ->action(function (array $arguments) use ($googleTwoFactorAuthentication) {
                 /** @var Authenticatable&HasGoogleTwoFactorAuthentication&HasGoogleTwoFactorAuthenticationRecovery $user */
@@ -93,8 +91,9 @@ class SetUpGoogleTwoFactorAuthenticationAction
                 });
 
                 Notification::make()
-                    ->title('Two-factor app authentication has been enabled')
+                    ->title(__('filament-panels::multi-factor-authentication/google-two-factor/actions/set-up.notifications.enabled.title'))
                     ->success()
+                    ->icon('heroicon-o-lock-closed')
                     ->send();
             });
     }
