@@ -7,10 +7,13 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
+use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
+use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns;
 use Filament\Pages\Page;
 use Filament\Panel;
+use Filament\Schema\Components\Actions;
 use Filament\Schema\Components\Component;
 use Filament\Schema\Components\Decorations\FormActionsDecorations;
 use Filament\Schema\Components\Form;
@@ -46,6 +49,8 @@ class EditProfile extends Page
     public ?array $data = [];
 
     protected static bool $isDiscovered = false;
+
+    protected static string $view;
 
     public function getLayout(): string
     {
@@ -269,6 +274,18 @@ class EditProfile extends Page
             ->dehydrated(false);
     }
 
+    protected function getCurrentPasswordFormComponent(): Component
+    {
+        return TextInput::make('currentPassword')
+            ->label(__('filament-panels::pages/auth/edit-profile.form.current_password.label'))
+            ->password()
+            ->currentPassword(guard: Filament::getAuthGuard())
+            ->revealable(filament()->arePasswordsRevealable())
+            ->required()
+            ->visible(fn (Get $get): bool => filled($get('password')))
+            ->dehydrated(false);
+    }
+
     public function form(Schema $form): Schema
     {
         return $form;
@@ -287,6 +304,8 @@ class EditProfile extends Page
                         $this->getEmailFormComponent(),
                         $this->getPasswordFormComponent(),
                         $this->getPasswordConfirmationFormComponent(),
+                        $this->getCurrentPasswordFormComponent(),
+                        ...$this->getMultiFactorAuthenticationFormComponents(),
                     ])
                     ->operation('edit')
                     ->model($this->getUser())
@@ -380,6 +399,27 @@ class EditProfile extends Page
             ->footer(FormActionsDecorations::make($this->getFormActions())
                 ->alignment($this->getFormActionsAlignment())
                 ->fullWidth($this->hasFullWidthFormActions())
-                ->sticky($this->areFormActionsSticky()));
+                ->sticky((! static::isSimple()) && $this->areFormActionsSticky()));
+    }
+
+    /**
+     * @return array<Component>
+     */
+    public function getMultiFactorAuthenticationFormComponents(): array
+    {
+        $providers = Filament::getMultiFactorAuthenticationProviders();
+
+        if (empty($providers)) {
+            return [];
+        }
+
+        /** @var HasGoogleTwoFactorAuthentication $user */
+        $user = Filament::auth()->user();
+
+        return collect($providers)
+            ->sort(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): int => $multiFactorAuthenticationProvider->isEnabled($user) ? 0 : 1)
+            ->map(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): Component => Actions::make($multiFactorAuthenticationProvider->getActions())
+                ->label($multiFactorAuthenticationProvider->getLabel()))
+            ->all();
     }
 }

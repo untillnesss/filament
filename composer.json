@@ -9,6 +9,7 @@
     },
     "require-dev": {
         "anourvalar/eloquent-serialize": "^1.2",
+        "chillerlan/php-qrcode": "^5.0",
         "danharrin/livewire-rate-limiting": "^0.3|^1.0",
         "filament/support": "*",
         "larastan/larastan": "^2.2",
@@ -22,6 +23,8 @@
         "pestphp/pest-plugin-laravel": "^2.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "v1.11.1",
+        "pragmarx/google2fa": "^8.0",
+        "pragmarx/google2fa-qrcode": "^3.0",
         "rector/rector": "^1.0",
         "spatie/laravel-medialibrary": "^10.0|^11.0",
         "spatie/laravel-ray": "^1.29",

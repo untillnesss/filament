@@ -627,4 +627,17 @@ trait InteractsWithActions
     {
         return $this->originallyMountedActionIndex;
     }
+
+    /**
+     * @param  array<string, mixed>  $arguments
+     */
+    public function mergeMountedActionArguments(array $arguments): void
+    {
+        $this->mountedActions[array_key_last($this->mountedActions)]['arguments'] = array_merge(
+            $this->mountedActions[array_key_last($this->mountedActions)]['arguments'],
+            $arguments,
+        );
+
+        $this->getMountedAction()->mergeArguments($arguments);
+    }
 }

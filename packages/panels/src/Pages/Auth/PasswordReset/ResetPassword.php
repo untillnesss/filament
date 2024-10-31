@@ -206,7 +206,6 @@ class ResetPassword extends SimplePage
             ->livewireSubmitHandler('resetPassword')
             ->footer(FormActionsDecorations::make($this->getFormActions())
                 ->alignment($this->getFormActionsAlignment())
-                ->fullWidth($this->hasFullWidthFormActions())
-                ->sticky($this->areFormActionsSticky()));
+                ->fullWidth($this->hasFullWidthFormActions()));
     }
 }

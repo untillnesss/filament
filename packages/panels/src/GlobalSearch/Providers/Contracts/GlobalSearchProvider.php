@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\GlobalSearch\Contracts;
+namespace Filament\GlobalSearch\Providers\Contracts;
 
 use Filament\GlobalSearch\GlobalSearchResults;
 

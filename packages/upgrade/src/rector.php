@@ -210,6 +210,8 @@ return static function (RectorConfig $rectorConfig): void {
             'Filament\\Tables\\Columns\\Concerns\\HasWeight' => 'Filament\\Support\\Concerns\\HasWeight',
             'Filament\\Resources\\Components\\Tab' => 'Filament\\Schema\\Components\\Tabs\\Tab',
             'Filament\\Billing\\Providers\\Contracts\\Provider' => 'Filament\\Billing\\Providers\\Contracts\\BillingProvider',
+            'Filament\\GlobalSearch\\Contracts\\GlobalSearchProvider' => 'Filament\\GlobalSearch\\Providers\\Contracts\\GlobalSearchProvider',
+            'Filament\\GlobalSearch\\DefaultGlobalSearchProvider' => 'Filament\\GlobalSearch\\Providers\\DefaultGlobalSearchProvider',
         ],
     );
 

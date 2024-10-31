@@ -307,7 +307,6 @@ class Register extends SimplePage
             ->livewireSubmitHandler('register')
             ->footer(FormActionsDecorations::make($this->getFormActions())
                 ->alignment($this->getFormActionsAlignment())
-                ->fullWidth($this->hasFullWidthFormActions())
-                ->sticky($this->areFormActionsSticky()));
+                ->fullWidth($this->hasFullWidthFormActions()));
     }
 }

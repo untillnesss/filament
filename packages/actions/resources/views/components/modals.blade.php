@@ -58,6 +58,7 @@
             if ($event.detail.id === '{{ $this->getId() }}')
                 syncActionModals($event.detail.newActionNestingIndex)
         "
+        style="height: 0"
     >
         @foreach ($this->getMountedActions() as $action)
             {{ $action->toModalHtmlable() }}
