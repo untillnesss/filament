@@ -11,7 +11,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Models\Contracts\FilamentUser;
-use Filament\MultiFactorAuthentication\Providers\Contracts\HasAfterLoginHook;
+use Filament\MultiFactorAuthentication\Providers\Contracts\HasBeforeChallengeHook;
 use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Notifications\Notification;
 use Filament\Pages\SimplePage;
@@ -92,8 +92,8 @@ class Login extends SimplePage
 
                 $this->userUndertakingMultiFactorAuthentication = encrypt($user->getAuthIdentifier());
 
-                if ($multiFactorAuthenticationProvider instanceof HasAfterLoginHook) {
-                    $multiFactorAuthenticationProvider->afterLogin($user);
+                if ($multiFactorAuthenticationProvider instanceof HasBeforeChallengeHook) {
+                    $multiFactorAuthenticationProvider->beforeChallenge($user);
                 }
             }
 
@@ -182,7 +182,7 @@ class Login extends SimplePage
 
                         return collect(Filament::getMultiFactorAuthenticationProviders())
                             ->filter(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): bool => $multiFactorAuthenticationProvider->isEnabled($user))
-                            ->map(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): Component => Group::make($multiFactorAuthenticationProvider->getLoginFormComponents($user))
+                            ->map(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): Component => Group::make($multiFactorAuthenticationProvider->getChallengeFormComponents($user))
                                 ->statePath($multiFactorAuthenticationProvider->getId()))
                             ->all();
                     })

@@ -225,7 +225,7 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
     /**
      * @param  Authenticatable&HasGoogleTwoFactorAuthentication&HasGoogleTwoFactorAuthenticationRecovery  $user
      */
-    public function getLoginFormComponents(Authenticatable $user): array
+    public function getChallengeFormComponents(Authenticatable $user): array
     {
         $isRecoverable = $this->isRecoverable();
 

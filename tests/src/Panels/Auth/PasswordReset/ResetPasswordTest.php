@@ -28,7 +28,7 @@ it('can render page', function () {
 });
 
 it('can render page with a custom slug', function () {
-    Filament::setCurrentPanel(Filament::getPanel('slugs'));
+    Filament::setCurrentPanel('slugs');
 
     $userToResetPassword = User::factory()->make();
     $token = Password::createToken($userToResetPassword);

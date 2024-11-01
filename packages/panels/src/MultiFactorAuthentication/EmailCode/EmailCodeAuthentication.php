@@ -11,7 +11,7 @@ use Filament\MultiFactorAuthentication\EmailCode\Actions\RemoveEmailCodeAuthenti
 use Filament\MultiFactorAuthentication\EmailCode\Actions\SetUpEmailCodeAuthenticationAction;
 use Filament\MultiFactorAuthentication\EmailCode\Contracts\HasEmailCodeAuthentication;
 use Filament\MultiFactorAuthentication\EmailCode\Notifications\VerifyEmailCodeAuthentication;
-use Filament\MultiFactorAuthentication\Providers\Contracts\HasAfterLoginHook;
+use Filament\MultiFactorAuthentication\Providers\Contracts\HasBeforeChallengeHook;
 use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Notifications\Notification;
 use Filament\Schema\Components\Actions;
@@ -19,7 +19,7 @@ use Filament\Schema\Components\Component;
 use Illuminate\Contracts\Auth\Authenticatable;
 use PragmaRX\Google2FAQRCode\Google2FA;
 
-class EmailCodeAuthentication implements HasAfterLoginHook, MultiFactorAuthenticationProvider
+class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuthenticationProvider
 {
     /**
      * 8 keys (respectively 4 minutes) past and future
@@ -126,7 +126,7 @@ class EmailCodeAuthentication implements HasAfterLoginHook, MultiFactorAuthentic
         return $this->codeWindow;
     }
 
-    public function afterLogin(Authenticatable $user): void
+    public function beforeChallenge(Authenticatable $user): void
     {
         if (! ($user instanceof HasEmailCodeAuthentication)) {
             throw new Exception('The user model must implement the [' . HasEmailCodeAuthentication::class . '] interface to use email code authentication.');
@@ -138,7 +138,7 @@ class EmailCodeAuthentication implements HasAfterLoginHook, MultiFactorAuthentic
     /**
      * @param  Authenticatable&HasEmailCodeAuthentication  $user
      */
-    public function getLoginFormComponents(Authenticatable $user): array
+    public function getChallengeFormComponents(Authenticatable $user): array
     {
         return [
             OneTimeCodeInput::make('code')

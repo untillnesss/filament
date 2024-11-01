@@ -753,8 +753,12 @@ class FilamentManager
         $this->currentDomain = $domain;
     }
 
-    public function setCurrentPanel(?Panel $panel): void
+    public function setCurrentPanel(Panel | string | null $panel): void
     {
+        if (is_string($panel)) {
+            $panel = $this->getPanel($panel);
+        }
+
         $this->currentPanel = $panel;
     }
 

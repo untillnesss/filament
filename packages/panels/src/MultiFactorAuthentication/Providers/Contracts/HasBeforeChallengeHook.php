@@ -4,7 +4,7 @@ namespace Filament\MultiFactorAuthentication\Providers\Contracts;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 
-interface HasAfterLoginHook
+interface HasBeforeChallengeHook
 {
-    public function afterLogin(Authenticatable $user): void;
+    public function beforeChallenge(Authenticatable $user): void;
 }

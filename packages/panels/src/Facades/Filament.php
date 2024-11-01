@@ -133,7 +133,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool isSidebarCollapsibleOnDesktop()
  * @method static bool isSidebarFullyCollapsibleOnDesktop()
  * @method static void serving(Closure $callback)
- * @method static void setCurrentPanel(Panel | null $panel = null)
+ * @method static void setCurrentPanel(Panel | string | null $panel = null)
  * @method static void setServingStatus(bool $condition = true)
  * @method static void setTenant(Model | null $tenant = null, bool $isQuiet = false)
  *
