@@ -60,9 +60,14 @@ class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuth
         }
 
         $user->notify(app($this->getCodeNotification(), [
-            'code' => $this->google2FA->getCurrentOtp($secret ?? $this->getSecret($user)),
+            'code' => $this->getCurrentCode($user, $secret),
             'codeWindow' => $this->getCodeWindow(),
         ]));
+    }
+
+    public function getCurrentCode(HasEmailCodeAuthentication $user, ?string $secret = null): string
+    {
+        return $this->google2FA->getCurrentOtp($secret ?? $this->getSecret($user));
     }
 
     public function getSecret(HasEmailCodeAuthentication $user): string

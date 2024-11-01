@@ -47,11 +47,13 @@ abstract class TestCase extends BaseTestCase
             WidgetsServiceProvider::class,
             AdminPanelProvider::class,
             CustomPanelProvider::class,
-            SlugsPanelProvider::class,
-            SingleDomainPanel::class,
-            MultiDomainPanel::class,
-            TenancyPanelProvider::class,
+            EmailCodeAuthenticationPanelProvider::class,
+            GoogleTwoFactorAuthenticationPanelProvider::class,
             DomainTenancyPanelProvider::class,
+            MultiDomainPanel::class,
+            SingleDomainPanel::class,
+            SlugsPanelProvider::class,
+            TenancyPanelProvider::class,
         ];
 
         sort($providers);

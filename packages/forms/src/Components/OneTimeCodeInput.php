@@ -23,8 +23,7 @@ class OneTimeCodeInput extends Field
     {
         parent::setUp();
 
-        $this->rule('numeric');
-        $this->rule('integer');
+        $this->rule('numeric'); // Integer validation does not allow leading zeros.
         $this->rule(static fn (OneTimeCodeInput $component): string => "digits:{$component->getLength()}");
     }
 

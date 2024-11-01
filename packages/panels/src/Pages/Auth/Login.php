@@ -33,7 +33,7 @@ use Livewire\Attributes\Locked;
 /**
  * @property-read Action $registerAction
  * @property-read Schema $form
- * @property-read Schema $multiFactorForm
+ * @property-read Schema $multiFactorChallengeForm
  */
 class Login extends SimplePage
 {
@@ -83,7 +83,7 @@ class Login extends SimplePage
             filled($this->userUndertakingMultiFactorAuthentication) &&
             (decrypt($this->userUndertakingMultiFactorAuthentication) === $user->getAuthIdentifier())
         ) {
-            $this->multiFactorForm->validate();
+            $this->multiFactorChallengeForm->validate();
         } else {
             foreach (Filament::getMultiFactorAuthenticationProviders() as $multiFactorAuthenticationProvider) {
                 if (! $multiFactorAuthenticationProvider->isEnabled($user)) {
@@ -98,7 +98,7 @@ class Login extends SimplePage
             }
 
             if (filled($this->userUndertakingMultiFactorAuthentication)) {
-                $this->multiFactorForm->fill();
+                $this->multiFactorChallengeForm->fill();
 
                 return null;
             }
@@ -150,7 +150,7 @@ class Login extends SimplePage
         return $form;
     }
 
-    public function multiFactorForm(Schema $form): Schema
+    public function multiFactorChallengeForm(Schema $form): Schema
     {
         return $form;
     }
@@ -170,7 +170,7 @@ class Login extends SimplePage
                     ])
                     ->statePath('data'),
             ),
-            'multiFactorForm' => $this->multiFactorForm(
+            'multiFactorChallengeForm' => $this->multiFactorChallengeForm(
                 $this->makeSchema()
                     ->schema(function (): array {
                         if (blank($this->userUndertakingMultiFactorAuthentication)) {
@@ -262,7 +262,7 @@ class Login extends SimplePage
     /**
      * @return array<Action | ActionGroup>
      */
-    protected function getMultiFactorFormActions(): array
+    protected function getMultiFactorChallengeFormActions(): array
     {
         return [
             $this->getMultiFactorAuthenticateFormAction(),
@@ -281,7 +281,7 @@ class Login extends SimplePage
         return true;
     }
 
-    protected function hasFullWidthMultiFactorFormActions(): bool
+    protected function hasFullWidthMultiFactorChallengeFormActions(): bool
     {
         return $this->hasFullWidthFormActions();
     }
@@ -317,7 +317,7 @@ class Login extends SimplePage
             ->components([
                 RenderHook::make(PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE),
                 $this->getFormContentComponent(),
-                $this->getMultiFactorFormContentComponent(),
+                $this->getMultiFactorChallengeFormContentComponent(),
                 RenderHook::make(PanelsRenderHook::AUTH_LOGIN_FORM_AFTER),
             ]);
     }
@@ -333,18 +333,18 @@ class Login extends SimplePage
             ->visible(fn (): bool => blank($this->userUndertakingMultiFactorAuthentication));
     }
 
-    public function getMultiFactorFormContentComponent(): Component
+    public function getMultiFactorChallengeFormContentComponent(): Component
     {
-        return Form::make([NestedSchema::make('multiFactorForm')])
-            ->id('multiFactorForm')
+        return Form::make([NestedSchema::make('multiFactorChallengeForm')])
+            ->id('multiFactorChallengeForm')
             ->livewireSubmitHandler('authenticate')
-            ->footer(FormActionsDecorations::make($this->getMultiFactorFormActions())
-                ->alignment($this->getMultiFactorFormActionsAlignment())
-                ->fullWidth($this->hasFullWidthMultiFactorFormActions()))
+            ->footer(FormActionsDecorations::make($this->getMultiFactorChallengeFormActions())
+                ->alignment($this->getMultiFactorChallengeFormActionsAlignment())
+                ->fullWidth($this->hasFullWidthMultiFactorChallengeFormActions()))
             ->visible(fn (): bool => filled($this->userUndertakingMultiFactorAuthentication));
     }
 
-    public function getMultiFactorFormActionsAlignment(): string | Alignment
+    public function getMultiFactorChallengeFormActionsAlignment(): string | Alignment
     {
         return $this->getFormActionsAlignment();
     }

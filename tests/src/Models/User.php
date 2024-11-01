@@ -4,6 +4,8 @@ namespace Filament\Tests\Models;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
+use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
+use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthenticationRecovery;
 use Filament\Panel;
 use Filament\Tests\Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -14,7 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
-class User extends Authenticatable implements FilamentUser, HasTenants, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasGoogleTwoFactorAuthentication, HasGoogleTwoFactorAuthenticationRecovery, HasTenants, MustVerifyEmail
 {
     use HasFactory;
     use Notifiable;
@@ -24,11 +26,24 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     protected $hidden = [
         'password',
         'remember_token',
+        'google_two_factor_authentication_secret',
+        'google_two_factor_authentication_recovery_codes',
+        'email_code_authentication_secret',
+    ];
+
+    /**
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'google_two_factor_authentication_secret' => 'encrypted',
+        'google_two_factor_authentication_recovery_codes' => 'encrypted:array',
+        'email_code_authentication_secret' => 'encrypted',
     ];
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return in_array($panel->getId(), ['admin', 'slugs']);
+        return in_array($panel->getId(), ['admin', 'slugs', 'google-two-factor-authentication', 'email-code-authentication']);
     }
 
     public function posts(): HasMany
@@ -49,5 +64,53 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     public function getTenants(Panel $panel): array | Collection
     {
         return Team::all();
+    }
+
+    public function hasGoogleTwoFactorAuthentication(): bool
+    {
+        return filled($this->google_two_factor_authentication_secret);
+    }
+
+    public function getGoogleTwoFactorAuthenticationSecret(): string
+    {
+        return $this->google_two_factor_authentication_secret;
+    }
+
+    public function saveGoogleTwoFactorAuthenticationSecret(?string $secret): void
+    {
+        $this->google_two_factor_authentication_secret = $secret;
+        $this->save();
+    }
+
+    public function getGoogleTwoFactorAuthenticationRecoveryCodes(): array
+    {
+        return $this->google_two_factor_authentication_recovery_codes;
+    }
+
+    public function saveGoogleTwoFactorAuthenticationRecoveryCodes(?array $codes): void
+    {
+        $this->google_two_factor_authentication_recovery_codes = $codes;
+        $this->save();
+    }
+
+    public function getGoogleTwoFactorAuthenticationHolderName(): string
+    {
+        return $this->email;
+    }
+
+    public function hasEmailCodeAuthentication(): bool
+    {
+        return filled($this->email_code_authentication_secret);
+    }
+
+    public function getEmailCodeAuthenticationSecret(): string
+    {
+        return $this->email_code_authentication_secret;
+    }
+
+    public function saveEmailCodeAuthenticationSecret(?string $secret): void
+    {
+        $this->email_code_authentication_secret = $secret;
+        $this->save();
     }
 }

@@ -97,6 +97,11 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
         return $this->google2FA->generateSecretKey();
     }
 
+    public function getCurrentCode(HasGoogleTwoFactorAuthentication $user, ?string $secret = null): string
+    {
+        return $this->google2FA->getCurrentOtp($secret ?? $this->getSecret($user));
+    }
+
     public function generateQRCodeDataUri(string $secret): string
     {
         /** @var HasGoogleTwoFactorAuthentication $user */
