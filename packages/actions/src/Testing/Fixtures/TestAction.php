@@ -2,12 +2,13 @@
 
 namespace Filament\Actions\Testing\Fixtures;
 
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 
 class TestAction implements Arrayable
 {
-    /** @var array<string, mixed> */
-    protected array $arguments = [];
+    /** @var array<string, mixed> | Closure | null */
+    protected array | Closure | null $arguments = null;
 
     /** @var array<string, mixed> */
     protected array $context = [];
@@ -28,9 +29,9 @@ class TestAction implements Arrayable
     }
 
     /**
-     * @param  array<string, mixed>  $arguments
+     * @param  array<string, mixed> | Closure | null  $arguments
      */
-    public function arguments(array $arguments): static
+    public function arguments(array | Closure | null $arguments): static
     {
         $this->arguments = $arguments;
 
@@ -59,13 +60,25 @@ class TestAction implements Arrayable
     }
 
     /**
+     * @param  array<string, mixed>  $actualArguments
+     */
+    public function checkArguments(array $actualArguments): bool
+    {
+        if (! ($this->arguments instanceof Closure)) {
+            return true;
+        }
+
+        return ($this->arguments)($actualArguments);
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
         $array = [
             'name' => $this->name,
-            'arguments' => $this->arguments,
+            ...((is_array($this->arguments)) ? ['arguments' => $this->arguments] : []),
             'context' => [
                 ...($this->isBulk ? ['bulk' => true] : []),
                 ...($this->schemaComponent ? ['schemaComponent' => $this->schemaComponent] : []),

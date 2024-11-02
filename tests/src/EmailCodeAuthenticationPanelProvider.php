@@ -25,6 +25,7 @@ class EmailCodeAuthenticationPanelProvider extends PanelProvider
             ->path('email-code-authentication')
             ->login()
             ->multiFactorAuthentication(EmailCodeAuthentication::make())
+            ->profile()
             ->resources([])
             ->pages([])
             ->middleware([

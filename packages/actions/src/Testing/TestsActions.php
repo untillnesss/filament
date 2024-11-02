@@ -421,6 +421,8 @@ class TestsActions
                 return $this;
             }
 
+            $originalActions = Arr::wrap($actions);
+
             /** @var array<array<string, mixed>> $actions */
             /** @phpstan-ignore-next-line */
             $actions = $this->parseNestedActions($actions);
@@ -435,10 +437,19 @@ class TestsActions
                     $action['name'],
                 );
 
-                $this->assertSet(
-                    "mountedActions.{$actionNestingIndex}.arguments",
-                    $action['arguments'] ?? [],
-                );
+                if (array_key_exists('arguments', $action)) {
+                    $this->assertSet(
+                        "mountedActions.{$actionNestingIndex}.arguments",
+                        $action['arguments'],
+                    );
+                }
+
+                if (($originalAction = array_shift($originalActions)) instanceof TestAction) {
+                    Assert::assertTrue(
+                        $originalAction->checkArguments($this->instance()->mountedActions[$actionNestingIndex]['arguments'] ?? []),
+                        message: "Failed asserting that the mounted arguments for the action [{$action['name']}] match the expected arguments.",
+                    );
+                }
 
                 $this->assertSet(
                     "mountedActions.{$actionNestingIndex}.context",

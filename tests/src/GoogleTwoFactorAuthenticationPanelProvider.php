@@ -25,6 +25,7 @@ class GoogleTwoFactorAuthenticationPanelProvider extends PanelProvider
             ->path('google-two-factor-authentication')
             ->login()
             ->multiFactorAuthentication(GoogleTwoFactorAuthentication::make()->recoverable())
+            ->profile()
             ->resources([])
             ->pages([])
             ->middleware([
