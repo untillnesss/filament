@@ -25,8 +25,8 @@ it('can generate a secret and recovery codes when the action is mounted', functi
             ->schemaComponent('form.google_two_factor.setUpGoogleTwoFactorAuthenticationAction'))
         ->assertActionMounted(TestAction::make('setUpGoogleTwoFactorAuthentication')
             ->schemaComponent('form.google_two_factor.setUpGoogleTwoFactorAuthenticationAction')
-            ->arguments(function (array $arguments): bool {
-                $encrypted = decrypt($arguments['encrypted']);
+            ->arguments(function (array $actualArguments): bool {
+                $encrypted = decrypt($actualArguments['encrypted']);
 
                 if (blank($encrypted['secret'] ?? null)) {
                     return false;

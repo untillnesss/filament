@@ -470,6 +470,8 @@ class TestsActions
                 return $this;
             }
 
+            $originalActions = Arr::wrap($actions);
+
             /** @var array<array<string, mixed>> $actions */
             /** @phpstan-ignore-next-line */
             $actions = $this->parseNestedActions($actions);
@@ -479,21 +481,33 @@ class TestsActions
             foreach ($actions as $actionNestingIndex => $action) {
                 $actionNestingIndex += $actionNestingIndexOffset;
 
-                $this->assertNotSet(
-                    "mountedActions.{$actionNestingIndex}.name",
-                    $action['name'],
-                );
+                if (($this->instance()->mountedActions[$actionNestingIndex]['name'] ?? null) !== $action['name']) {
+                    return $this;
+                }
 
-                $this->assertNotSet(
-                    "mountedActions.{$actionNestingIndex}.arguments",
-                    $action['arguments'] ?? [],
-                );
+                if (
+                    array_key_exists('arguments', $action) &&
+                    (($this->instance()->mountedActions[$actionNestingIndex]['arguments'] ?? null) !== $action['arguments'])
+                ) {
+                    return $this;
+                }
 
-                $this->assertNotSet(
-                    "mountedActions.{$actionNestingIndex}.context",
-                    $action['context'] ?? [],
-                );
+                if (
+                    (($originalAction = array_shift($originalActions)) instanceof TestAction) &&
+                    (! $originalAction->checkArguments($this->instance()->mountedActions[$actionNestingIndex]['arguments'] ?? []))
+                ) {
+                    return $this;
+                }
+
+                if (($this->instance()->mountedActions[$actionNestingIndex]['context'] ?? null) !== $action['context']) {
+                    return $this;
+                }
             }
+
+            Assert::assertFalse(
+                true,
+                message: 'Failed asserting that the action is not mounted.',
+            );
 
             return $this;
         };
