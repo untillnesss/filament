@@ -4,6 +4,7 @@ namespace Filament\Tests\Models;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
+use Filament\MultiFactorAuthentication\EmailCode\Contracts\HasEmailCodeAuthentication;
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthenticationRecovery;
 use Filament\Panel;
@@ -16,7 +17,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
-class User extends Authenticatable implements FilamentUser, HasGoogleTwoFactorAuthentication, HasGoogleTwoFactorAuthenticationRecovery, HasTenants, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasEmailCodeAuthentication, HasGoogleTwoFactorAuthentication, HasGoogleTwoFactorAuthenticationRecovery, HasTenants, MustVerifyEmail
 {
     use HasFactory;
     use Notifiable;
