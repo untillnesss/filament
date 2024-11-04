@@ -206,7 +206,6 @@ class RequestPasswordReset extends SimplePage
             ->livewireSubmitHandler('request')
             ->footer(FormActionsDecorations::make($this->getFormActions())
                 ->alignment($this->getFormActionsAlignment())
-                ->fullWidth($this->hasFullWidthFormActions())
-                ->sticky($this->areFormActionsSticky()));
+                ->fullWidth($this->hasFullWidthFormActions()));
     }
 }

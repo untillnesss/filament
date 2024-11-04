@@ -10,11 +10,12 @@ use Filament\Enums\ThemeMode;
 use Filament\Events\ServingFilament;
 use Filament\Events\TenantSet;
 use Filament\Exceptions\NoDefaultPanelSetException;
-use Filament\GlobalSearch\Contracts\GlobalSearchProvider;
+use Filament\GlobalSearch\Providers\Contracts\GlobalSearchProvider;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasTenants;
+use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
@@ -752,8 +753,12 @@ class FilamentManager
         $this->currentDomain = $domain;
     }
 
-    public function setCurrentPanel(?Panel $panel): void
+    public function setCurrentPanel(Panel | string | null $panel): void
     {
+        if (is_string($panel)) {
+            $panel = $this->getPanel($panel);
+        }
+
         $this->currentPanel = $panel;
     }
 
@@ -949,5 +954,13 @@ class FilamentManager
     public function getTenancyScopeName(): string
     {
         return $this->getCurrentPanel()->getTenancyScopeName();
+    }
+
+    /**
+     * @return array<MultiFactorAuthenticationProvider>
+     */
+    public function getMultiFactorAuthenticationProviders(): array
+    {
+        return $this->getCurrentPanel()->getMultiFactorAuthenticationProviders();
     }
 }

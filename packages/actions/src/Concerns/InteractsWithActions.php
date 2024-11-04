@@ -239,9 +239,13 @@ trait InteractsWithActions
         $action->resetArguments();
         $action->resetFormData();
 
+        $onlyActionNamesAndContexts = fn (array $actions): array => collect($actions)
+            ->map(fn (array $action): array => Arr::only($action, ['name', 'context']))
+            ->all();
+
         // If the action was replaced while it was being called,
         // we don't want to unmount it.
-        if ($originallyMountedActions !== $this->mountedActions) {
+        if ($onlyActionNamesAndContexts($originallyMountedActions) !== $onlyActionNamesAndContexts($this->mountedActions)) {
             $action->clearRecordAfter();
 
             return null;
@@ -508,8 +512,6 @@ trait InteractsWithActions
      */
     protected function getMountableModalActionFromAction(Action $action, array $modalActionNames): ?Action
     {
-        $mountedActions = $this->mountedActions;
-
         foreach ($modalActionNames as $modalActionName) {
             $action = $action->getMountableModalAction($modalActionName);
 
@@ -626,5 +628,18 @@ trait InteractsWithActions
     public function getOriginallyMountedActionIndex(): ?int
     {
         return $this->originallyMountedActionIndex;
+    }
+
+    /**
+     * @param  array<string, mixed>  $arguments
+     */
+    public function mergeMountedActionArguments(array $arguments): void
+    {
+        $this->mountedActions[array_key_last($this->mountedActions)]['arguments'] = array_merge(
+            $this->mountedActions[array_key_last($this->mountedActions)]['arguments'],
+            $arguments,
+        );
+
+        $this->getMountedAction()->mergeArguments($arguments);
     }
 }

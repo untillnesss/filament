@@ -3,6 +3,7 @@
 namespace Filament\Panel\Concerns;
 
 use Closure;
+use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Pages\Auth\EditProfile;
 use Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
 use Filament\Pages\Auth\Login;
@@ -14,6 +15,7 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -73,6 +75,11 @@ trait HasAuth
     protected ?string $authPasswordBroker = null;
 
     protected bool | Closure $arePasswordsRevealable = true;
+
+    /**
+     * @var array<MultiFactorAuthenticationProvider>
+     */
+    protected array $multiFactorAuthenticationProviders = [];
 
     /**
      * @param  string | Closure | array<class-string, string> | null  $promptAction
@@ -475,5 +482,23 @@ trait HasAuth
     public function arePasswordsRevealable(): bool
     {
         return (bool) $this->evaluate($this->arePasswordsRevealable);
+    }
+
+    /**
+     * @param  array<MultiFactorAuthenticationProvider>  $providers
+     */
+    public function multiFactorAuthentication(array | MultiFactorAuthenticationProvider $providers): static
+    {
+        $this->multiFactorAuthenticationProviders = Arr::wrap($providers);
+
+        return $this;
+    }
+
+    /**
+     * @return array<MultiFactorAuthenticationProvider>
+     */
+    public function getMultiFactorAuthenticationProviders(): array
+    {
+        return $this->multiFactorAuthenticationProviders;
     }
 }

@@ -4,12 +4,14 @@ namespace Filament\Schema\Components;
 
 use Closure;
 use Filament\Actions\Action;
+use Filament\Schema\Components\Concerns\HasLabel;
 use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Concerns\HasVerticalAlignment;
 
 class Actions extends Component
 {
     use HasAlignment;
+    use HasLabel;
     use HasVerticalAlignment;
 
     protected string $view = 'filament-schema::components.actions';

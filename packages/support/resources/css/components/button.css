@@ -39,6 +39,10 @@
 
         &.fi-color-custom {
             @apply text-custom-600 ring-custom-600 hover:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-500;
+
+            & > .fi-icon {
+                @apply text-custom-600 dark:text-custom-400;
+            }
         }
     }
 

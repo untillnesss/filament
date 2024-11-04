@@ -8,8 +8,9 @@ use Filament\Billing\Providers\Contracts\BillingProvider;
 use Filament\Contracts\Plugin;
 use Filament\Enums\ThemeMode;
 use Filament\FilamentManager;
-use Filament\GlobalSearch\Contracts\GlobalSearchProvider;
+use Filament\GlobalSearch\Providers\Contracts\GlobalSearchProvider;
 use Filament\Models\Contracts\HasTenants;
+use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages\Enums\SubNavigationPosition;
@@ -67,6 +68,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getLogoutUrl(array $parameters = [])
  * @method static MaxWidth | string | null getMaxContentWidth()
  * @method static string | null getModelResource(string | Model $model)
+ * @method static array<MultiFactorAuthenticationProvider> getMultiFactorAuthenticationProviders()
  * @method static string getNameForDefaultAvatar(Model | Authenticatable $user)
  * @method static array<NavigationGroup> getNavigation()
  * @method static array<string | int, NavigationGroup | string> getNavigationGroups()
@@ -131,7 +133,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool isSidebarCollapsibleOnDesktop()
  * @method static bool isSidebarFullyCollapsibleOnDesktop()
  * @method static void serving(Closure $callback)
- * @method static void setCurrentPanel(Panel | null $panel = null)
+ * @method static void setCurrentPanel(Panel | string | null $panel = null)
  * @method static void setServingStatus(bool $condition = true)
  * @method static void setTenant(Model | null $tenant = null, bool $isQuiet = false)
  *

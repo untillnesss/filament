@@ -16,7 +16,7 @@
             ], escape: false)
             ->merge($getExtraAttributes(), escape: false)
             ->class([
-                'fi-fo-actions flex h-full flex-col',
+                'fi-fo-actions flex h-full flex-col gap-y-2',
                 match ($verticalAlignment) {
                     VerticalAlignment::Start => 'justify-start',
                     VerticalAlignment::Center => 'justify-center',
@@ -26,6 +26,14 @@
             ])
     }}
 >
+    @if (filled($label = $getLabel()))
+        <div
+            class="text-sm font-medium leading-6 text-gray-950 dark:text-white"
+        >
+            {{ $label }}
+        </div>
+    @endif
+
     <x-filament::actions
         :actions="$getChildComponentContainer()->getComponents()"
         :alignment="$getAlignment()"
