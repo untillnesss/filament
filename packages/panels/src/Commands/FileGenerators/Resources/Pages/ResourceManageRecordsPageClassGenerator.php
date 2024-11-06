@@ -17,7 +17,7 @@ class ResourceManageRecordsPageClassGenerator extends ClassGenerator
     use CanGenerateResourceProperty;
 
     /**
-     * @param  class-string<resource>  $resourceFqn
+     * @param  class-string  $resourceFqn
      */
     final public function __construct(
         protected string $fqn,
@@ -82,7 +82,7 @@ class ResourceManageRecordsPageClassGenerator extends ClassGenerator
     }
 
     /**
-     * @return class-string<resource>
+     * @return class-string
      */
     public function getResourceFqn(): string
     {

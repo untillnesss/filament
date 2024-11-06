@@ -22,7 +22,7 @@ use Nette\PhpGenerator\Literal;
 
 trait CanGenerateResourceTables
 {
-    public function getTableMethodBody(): string
+    public function generateTableMethodBody(): string
     {
         $this->importUnlessPartial(BulkActionGroup::class);
 

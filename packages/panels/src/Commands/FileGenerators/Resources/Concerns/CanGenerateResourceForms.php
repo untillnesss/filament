@@ -14,7 +14,7 @@ use Nette\PhpGenerator\Literal;
 
 trait CanGenerateResourceForms
 {
-    public function getFormMethodBody(): string
+    public function generateFormMethodBody(): string
     {
         return <<<PHP
             return \$schema

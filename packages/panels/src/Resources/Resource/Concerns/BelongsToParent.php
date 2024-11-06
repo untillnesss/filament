@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 trait BelongsToParent
 {
     /**
-     * @var class-string<resource>|null
+     * @var class-string|null
      */
     protected static ?string $parentResource = null;
 

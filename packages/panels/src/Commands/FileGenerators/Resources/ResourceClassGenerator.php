@@ -31,6 +31,9 @@ class ResourceClassGenerator extends ClassGenerator
 
     /**
      * @param  class-string<Model>  $modelFqn
+     * @param ?class-string $formSchemaFqn
+     * @param ?class-string $infolistSchemaFqn
+     * @param ?class-string $tableFqn
      * @param  ?class-string<Cluster>  $clusterFqn
      * @param array<string, array{
      *     class: class-string<Page>,
@@ -41,6 +44,9 @@ class ResourceClassGenerator extends ClassGenerator
         protected string $fqn,
         protected string $modelFqn,
         protected array $pages,
+        protected ?string $formSchemaFqn,
+        protected ?string $infolistSchemaFqn,
+        protected ?string $tableFqn,
         protected ?string $clusterFqn,
         protected bool $hasViewOperation,
         protected bool $isGenerated,
@@ -67,12 +73,14 @@ class ResourceClassGenerator extends ClassGenerator
             ...($this->isSoftDeletable() ? [Builder::class, SoftDeletingScope::class] : []),
             ...$this->getPagesImports(),
             ...($this->hasPartialImports() ? [
-                ...($this->hasEmbeddedPanelResourceTables()) ? ['Filament\Actions', 'Filament\Tables'] : [],
-                ...($this->hasEmbeddedPanelResourceSchemas()) ? [
-                    'Filament\Forms',
-                    ...($this->hasViewOperation() ? ['Filament\Infolists'] : []),
-                ] : [],
-            ] : []),
+                ...(blank($this->getTableFqn()) ? ['Filament\Actions', 'Filament\Tables'] : []),
+                ...(blank($this->getFormSchemaFqn()) ? ['Filament\Forms'] : []),
+                ...($this->hasViewOperation() && blank($this->getInfolistSchemaFqn())) ? ['Filament\Infolists'] : [],
+            ] : [
+                ...(filled($this->getTableFqn()) ? [$this->getTableFqn()] : []),
+                ...(filled($this->getFormSchemaFqn()) ? [$this->getFormSchemaFqn()] : []),
+                ...(filled($this->getInfolistSchemaFqn()) ? [$this->getInfolistSchemaFqn()] : []),
+            ]),
         ];
     }
 
@@ -142,11 +150,19 @@ class ResourceClassGenerator extends ClassGenerator
 
     protected function addFormMethodToClass(ClassType $class): void
     {
+        $formSchemaFqn = $this->getFormSchemaFqn();
+
+        $methodBody = filled($formSchemaFqn)
+            ? <<<PHP
+                return {$this->simplifyFqn($formSchemaFqn)}::configure(\$schema);
+                PHP
+            : $this->generateFormMethodBody();
+
         $method = $class->addMethod('form')
             ->setPublic()
             ->setStatic()
             ->setReturnType(Schema::class)
-            ->setBody($this->getFormMethodBody());
+            ->setBody($methodBody);
         $method->addParameter('schema')
             ->setType(Schema::class);
 
@@ -161,18 +177,24 @@ class ResourceClassGenerator extends ClassGenerator
             return;
         }
 
+        $infolistSchemaFqn = $this->getFormSchemaFqn();
+
+        $methodBody = filled($infolistSchemaFqn)
+            ? <<<PHP
+                return {$this->simplifyFqn($infolistSchemaFqn)}::configure(\$schema);
+                PHP
+            : <<<PHP
+                return \$schema
+                    ->components([
+                        //
+                    ]);
+                PHP;
+
         $method = $class->addMethod('infolist')
             ->setPublic()
             ->setStatic()
             ->setReturnType(Schema::class)
-            ->setBody(
-                <<<'PHP'
-                return $schema
-                    ->components([
-                        //
-                    ]);
-                PHP
-            );
+            ->setBody($methodBody);
         $method->addParameter('schema')
             ->setType(Schema::class);
 
@@ -183,11 +205,19 @@ class ResourceClassGenerator extends ClassGenerator
 
     protected function addTableMethodToClass(ClassType $class): void
     {
+        $tableFqn = $this->getTableFqn();
+
+        $methodBody = filled($tableFqn)
+            ? <<<PHP
+                return {$this->simplifyFqn($tableFqn)}::configure(\$table);
+                PHP
+            : $this->generateTableMethodBody();
+
         $method = $class->addMethod('table')
             ->setPublic()
             ->setStatic()
             ->setReturnType(Table::class)
-            ->setBody($this->getTableMethodBody());
+            ->setBody($methodBody);
         $method->addParameter('table')
             ->setType(Table::class);
 
@@ -207,7 +237,7 @@ class ResourceClassGenerator extends ClassGenerator
             ->setStatic()
             ->setReturnType('array')
             ->setBody(
-                <<<'PHP'
+                <<<PHP
                 return [
                     //
                 ];
@@ -331,6 +361,30 @@ class ResourceClassGenerator extends ClassGenerator
         }
 
         return Arr::pluck($this->getPages(), 'class');
+    }
+
+    /**
+     * @return ?class-string
+     */
+    public function getFormSchemaFqn(): ?string
+    {
+        return $this->formSchemaFqn;
+    }
+
+    /**
+     * @return ?class-string
+     */
+    public function getInfolistSchemaFqn(): ?string
+    {
+        return $this->infolistSchemaFqn;
+    }
+
+    /**
+     * @return ?class-string
+     */
+    public function getTableFqn(): ?string
+    {
+        return $this->tableFqn;
     }
 
     public function hasViewOperation(): bool

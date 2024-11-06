@@ -9,6 +9,9 @@ use Filament\Commands\FileGenerators\Resources\Pages\ResourceListRecordsPageClas
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceManageRecordsPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceViewRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\ResourceClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Schemas\ResourceFormSchemaClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Schemas\ResourceInfolistSchemaClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Schemas\ResourceTableClassGenerator;
 use Filament\Facades\Filament;
 use Filament\Forms\Commands\Concerns\CanGenerateForms;
 use Filament\Panel;
@@ -18,6 +21,7 @@ use Filament\Support\Commands\Concerns\CanIndentStrings;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Config\FileGenerationFlag;
 use Filament\Tables\Commands\Concerns\CanGenerateTables;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
@@ -42,7 +46,7 @@ class MakeResourceCommand extends Command
 
     protected $description = 'Create a new Filament resource class and default page classes';
 
-    protected $signature = 'make:filament-resource {name?} {--model-namespace=} {--soft-deletes} {--view} {--G|generate} {--S|simple} {--panel=} {--model} {--migration} {--factory} {--F|force}';
+    protected $signature = 'make:filament-resource {name?} {--model-namespace=} {--soft-deletes} {--view} {--G|generate} {--S|simple} {--panel=} {--embed-schemas} {--embed-table} {--not-embedded} {--model} {--migration} {--factory} {--F|force}';
 
     /**
      * @var array<string>
@@ -69,7 +73,7 @@ class MakeResourceCommand extends Command
     protected ?string $clusterFqn;
 
     /**
-     * @var class-string<resource>
+     * @var class-string
      */
     protected string $fqn;
 
@@ -83,6 +87,16 @@ class MakeResourceCommand extends Command
      */
     protected array $pages;
 
+    protected string $namespace;
+
+    protected string $directory;
+
+    protected ?string $formSchemaFqn = null;
+
+    protected ?string $infolistSchemaFqn = null;
+
+    protected ?string $tableFqn = null;
+
     protected bool $hasViewOperation;
 
     protected bool $isGenerated;
@@ -90,6 +104,8 @@ class MakeResourceCommand extends Command
     protected bool $isSimple;
 
     protected bool $isSoftDeletable;
+
+    protected bool $hasResourceClassesOutsideDirectories;
 
     protected Panel $panel;
 
@@ -102,12 +118,18 @@ class MakeResourceCommand extends Command
         $this->isGenerated = $this->option('generate');
         $this->isSoftDeletable = $this->option('soft-deletes');
         $this->isSimple = $this->option('simple');
+        $this->hasResourceClassesOutsideDirectories = $this->hasFileGenerationFlag(FileGenerationFlag::PANEL_RESOURCE_CLASSES_OUTSIDE_DIRECTORIES);
 
         $this->configureFqn();
         $this->configurePages();
 
         try {
+            $this->createFormSchema();
+            $this->createInfolistSchema();
+            $this->createTable();
+
             $this->createResourceClass();
+
             $this->createManagePage();
             $this->createListPage();
             $this->createCreatePage();
@@ -234,8 +256,26 @@ class MakeResourceCommand extends Command
 
     protected function configureFqn(): void
     {
-        $this->fqnEnd = "{$this->modelFqnEnd}Resource";
+        if ($this->hasResourceClassesOutsideDirectories) {
+            $this->fqnEnd = "{$this->modelFqnEnd}Resource";
+        } else {
+            $this->fqnEnd = Str::pluralStudly($this->modelFqnEnd) . '\\' . class_basename($this->modelFqn) . 'Resource';
+        }
+
         $this->fqn = $this->resourcesNamespace . '\\' . $this->fqnEnd;
+
+        if ($this->hasResourceClassesOutsideDirectories) {
+            $this->namespace = $this->fqn;
+            $this->directory = (string) str("{$this->resourcesDirectory}/{$this->fqnEnd}")
+                ->replace('\\', '/')
+                ->replace('//', '/');
+        } else {
+            $this->namespace = (string) str($this->fqn)
+                ->beforeLast('\\');
+            $this->directory = (string) str($this->resourcesDirectory . '/' . Str::pluralStudly($this->modelFqnEnd))
+                ->replace('\\', '/')
+                ->replace('//', '/');
+        }
     }
 
     protected function configurePages(): void
@@ -246,7 +286,7 @@ class MakeResourceCommand extends Command
         if ($this->isSimple) {
             $this->pages = [
                 'index' => [
-                    'class' => "{$this->fqn}\\Pages\\Manage{$pluralModelBasename}",
+                    'class' => "{$this->namespace}\\Pages\\Manage{$pluralModelBasename}",
                     'path' => '/',
                 ],
             ];
@@ -256,24 +296,99 @@ class MakeResourceCommand extends Command
 
         $this->pages = [
             'index' => [
-                'class' => "{$this->fqn}\\Pages\\List{$pluralModelBasename}",
+                'class' => "{$this->namespace}\\Pages\\List{$pluralModelBasename}",
                 'path' => '/',
             ],
             'create' => [
-                'class' => "{$this->fqn}\\Pages\\Create{$modelBasename}",
+                'class' => "{$this->namespace}\\Pages\\Create{$modelBasename}",
                 'path' => '/create',
             ],
             ...($this->hasViewOperation ? [
                 'view' => [
-                    'class' => "{$this->fqn}\\Pages\\View{$modelBasename}",
+                    'class' => "{$this->namespace}\\Pages\\View{$modelBasename}",
                     'path' => '/{record}',
                 ],
             ] : []),
             'edit' => [
-                'class' => "{$this->fqn}\\Pages\\Edit{$modelBasename}",
+                'class' => "{$this->namespace}\\Pages\\Edit{$modelBasename}",
                 'path' => '/{record}/edit',
             ],
         ];
+    }
+
+    protected function createFormSchema(): void
+    {
+        if ($this->hasEmbeddedSchemas()) {
+            return;
+        }
+
+        $modelBasename = class_basename($this->modelFqn);
+
+        $path = "{$this->directory}/Schemas/{$modelBasename}Form.php";
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->formSchemaFqn = "{$this->namespace}\\Schemas\\{$modelBasename}Form";
+
+        $this->writeFile($path, app(ResourceFormSchemaClassGenerator::class, [
+            'fqn' => $this->formSchemaFqn,
+            'modelFqn' => $this->modelFqn,
+            'isGenerated' => $this->isGenerated,
+        ]));
+    }
+
+    protected function createInfolistSchema(): void
+    {
+        if (! $this->hasViewOperation) {
+            return;
+        }
+
+        if ($this->hasEmbeddedSchemas()) {
+            return;
+        }
+
+        $modelBasename = class_basename($this->modelFqn);
+
+        $path = "{$this->directory}/Schemas/{$modelBasename}Infolist.php";
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->infolistSchemaFqn = "{$this->namespace}\\Schemas\\{$modelBasename}Infolist";
+
+        $this->writeFile($path, app(ResourceInfolistSchemaClassGenerator::class, [
+            'fqn' => $this->infolistSchemaFqn,
+        ]));
+    }
+
+    protected function createTable(): void
+    {
+        if ($this->hasEmbeddedTable()) {
+            return;
+        }
+
+        $modelBasename = class_basename($this->modelFqn);
+        $pluralModelBasename = Str::pluralStudly($modelBasename);
+
+        $path = "{$this->directory}/Tables/{$pluralModelBasename}Table.php";
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->tableFqn = "{$this->namespace}\\Tables\\{$pluralModelBasename}Table";
+
+        $this->writeFile($path, app(ResourceTableClassGenerator::class, [
+            'fqn' => $this->tableFqn,
+            'modelFqn' => $this->modelFqn,
+            'hasViewOperation' => $this->hasViewOperation,
+            'isGenerated' => $this->isGenerated,
+            'isSoftDeletable' => $this->isSoftDeletable,
+            'isSimple' => $this->isSimple,
+        ]));
     }
 
     protected function createResourceClass(): void
@@ -291,6 +406,9 @@ class MakeResourceCommand extends Command
             'modelFqn' => $this->modelFqn,
             'clusterFqn' => $this->clusterFqn,
             'pages' => $this->pages,
+            'formSchemaFqn' => $this->formSchemaFqn,
+            'infolistSchemaFqn' => $this->infolistSchemaFqn,
+            'tableFqn' => $this->tableFqn,
             'hasViewOperation' => $this->hasViewOperation,
             'isGenerated' => $this->isGenerated,
             'isSoftDeletable' => $this->isSoftDeletable,
@@ -307,16 +425,14 @@ class MakeResourceCommand extends Command
         $modelBasename = class_basename($this->modelFqn);
         $pluralModelBasename = Str::pluralStudly($modelBasename);
 
-        $path = (string) str("{$this->resourcesDirectory}\\{$this->fqnEnd}\\Pages\\Manage{$pluralModelBasename}.php")
-            ->replace('\\', '/')
-            ->replace('//', '/');
+        $path = "{$this->directory}/Pages/Manage{$pluralModelBasename}.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
             throw new InvalidCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceManageRecordsPageClassGenerator::class, [
-            'fqn' => "{$this->fqn}\\Pages\\Manage{$pluralModelBasename}",
+            'fqn' => "{$this->namespace}\\Pages\\Manage{$pluralModelBasename}",
             'resourceFqn' => $this->fqn,
         ]));
     }
@@ -330,16 +446,14 @@ class MakeResourceCommand extends Command
         $modelBasename = class_basename($this->modelFqn);
         $pluralModelBasename = Str::pluralStudly($modelBasename);
 
-        $path = (string) str("{$this->resourcesDirectory}\\{$this->fqnEnd}\\Pages\\List{$pluralModelBasename}.php")
-            ->replace('\\', '/')
-            ->replace('//', '/');
+        $path = "{$this->directory}/Pages/List{$pluralModelBasename}.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
             throw new InvalidCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceListRecordsPageClassGenerator::class, [
-            'fqn' => "{$this->fqn}\\Pages\\List{$pluralModelBasename}",
+            'fqn' => "{$this->namespace}\\Pages\\List{$pluralModelBasename}",
             'resourceFqn' => $this->fqn,
         ]));
     }
@@ -352,16 +466,14 @@ class MakeResourceCommand extends Command
 
         $modelBasename = class_basename($this->modelFqn);
 
-        $path = (string) str("{$this->resourcesDirectory}\\{$this->fqnEnd}\\Pages\\Create{$modelBasename}.php")
-            ->replace('\\', '/')
-            ->replace('//', '/');
+        $path = "{$this->directory}/Pages/Create{$modelBasename}.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
             throw new InvalidCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceCreateRecordPageClassGenerator::class, [
-            'fqn' => "{$this->fqn}\\Pages\\Create{$modelBasename}",
+            'fqn' => "{$this->namespace}\\Pages\\Create{$modelBasename}",
             'resourceFqn' => $this->fqn,
         ]));
     }
@@ -374,16 +486,14 @@ class MakeResourceCommand extends Command
 
         $modelBasename = class_basename($this->modelFqn);
 
-        $path = (string) str("{$this->resourcesDirectory}\\{$this->fqnEnd}\\Pages\\Edit{$modelBasename}.php")
-            ->replace('\\', '/')
-            ->replace('//', '/');
+        $path = "{$this->directory}/Pages/Edit{$modelBasename}.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
             throw new InvalidCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceEditRecordPageClassGenerator::class, [
-            'fqn' => "{$this->fqn}\\Pages\\Edit{$modelBasename}",
+            'fqn' => "{$this->namespace}\\Pages\\Edit{$modelBasename}",
             'resourceFqn' => $this->fqn,
             'hasViewOperation' => $this->hasViewOperation,
             'isSoftDeletable' => $this->isSoftDeletable,
@@ -398,17 +508,46 @@ class MakeResourceCommand extends Command
 
         $modelBasename = class_basename($this->modelFqn);
 
-        $path = (string) str("{$this->resourcesDirectory}\\{$this->fqnEnd}\\Pages\\View{$modelBasename}.php")
-            ->replace('\\', '/')
-            ->replace('//', '/');
+        $path = "{$this->directory}/Pages/View{$modelBasename}.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
             throw new InvalidCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceViewRecordPageClassGenerator::class, [
-            'fqn' => "{$this->fqn}\\Pages\\View{$modelBasename}",
+            'fqn' => "{$this->namespace}\\Pages\\View{$modelBasename}",
             'resourceFqn' => $this->fqn,
         ]));
+    }
+
+    protected function hasFileGenerationFlag(string $flag): bool
+    {
+        return in_array($flag, config('filament.file_generation.flags') ?? []);
+    }
+
+    protected function hasEmbeddedSchemas(): bool
+    {
+        if ($this->isSimple && (! $this->option('not-embedded'))) {
+            return true;
+        }
+
+        if ($this->option('embed-schemas')) {
+            return true;
+        }
+
+        return $this->hasFileGenerationFlag(FileGenerationFlag::EMBEDDED_PANEL_RESOURCE_SCHEMAS);
+    }
+
+    protected function hasEmbeddedTable(): bool
+    {
+        if ($this->isSimple && (! $this->option('not-embedded'))) {
+            return true;
+        }
+
+        if ($this->option('embed-table')) {
+            return true;
+        }
+
+        return $this->hasFileGenerationFlag(FileGenerationFlag::EMBEDDED_PANEL_RESOURCE_TABLES);
     }
 }

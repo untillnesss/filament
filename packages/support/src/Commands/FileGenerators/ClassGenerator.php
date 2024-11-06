@@ -71,24 +71,9 @@ abstract class ClassGenerator implements FileGenerator
         return (string) str($fqn)->beforeLast('\\');
     }
 
-    public function hasEmbeddedPanelResourceSchemas(): bool
-    {
-        return in_array(FileGenerationFlag::EMBEDDED_PANEL_RESOURCE_SCHEMAS, $this->getFileGenerationFlags());
-    }
-
-    public function hasEmbeddedPanelResourceTables(): bool
-    {
-        return in_array(FileGenerationFlag::EMBEDDED_PANEL_RESOURCE_TABLES, $this->getFileGenerationFlags());
-    }
-
     public function hasPartialImports(): bool
     {
         return in_array(FileGenerationFlag::PARTIAL_IMPORTS, $this->getFileGenerationFlags());
-    }
-
-    public function hasPanelResourceClassesOutsideDirectories(): bool
-    {
-        return in_array(FileGenerationFlag::PANEL_RESOURCE_CLASSES_OUTSIDE_DIRECTORIES, $this->getFileGenerationFlags());
     }
 
     /**
