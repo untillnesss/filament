@@ -13,7 +13,7 @@ trait CanGenerateTables
      */
     protected function getResourceTableColumns(string $model): string
     {
-        $model = $this->getModel($model);
+        $model = $this->parseModel($model);
 
         if (blank($model)) {
             return '//';

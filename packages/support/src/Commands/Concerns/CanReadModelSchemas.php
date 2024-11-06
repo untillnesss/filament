@@ -15,7 +15,7 @@ trait CanReadModelSchemas
     /**
      * @return class-string<Model>|null
      */
-    protected function getModel(string $model): ?string
+    protected function parseModel(string $model): ?string
     {
         if (! class_exists($model)) {
             return null;

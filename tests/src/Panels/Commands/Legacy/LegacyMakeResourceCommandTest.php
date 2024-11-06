@@ -2,7 +2,7 @@
 
 use Filament\Support\Config\FileGenerationFlag;
 use Filament\Tests\TestCase;
-use function PHPUnit\Framework\assertFileDoesNotExist;
+
 use function PHPUnit\Framework\assertFileExists;
 
 uses(TestCase::class);
@@ -81,7 +81,6 @@ it('can generate the schemas and table of a resource class', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'Post',
         '--generate' => true,
-        '--view' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
     ])->assertExitCode(0);

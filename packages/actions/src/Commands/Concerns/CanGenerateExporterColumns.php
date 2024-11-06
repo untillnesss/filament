@@ -12,7 +12,7 @@ trait CanGenerateExporterColumns
      */
     protected function getExporterColumns(string $model): string
     {
-        $model = $this->getModel($model);
+        $model = $this->parseModel($model);
 
         if (blank($model)) {
             return '//';
