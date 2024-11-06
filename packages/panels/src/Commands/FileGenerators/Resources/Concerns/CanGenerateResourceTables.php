@@ -15,6 +15,8 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Support\Str;
 use Nette\PhpGenerator\Literal;
 
@@ -30,7 +32,7 @@ trait CanGenerateResourceTables
                     {$this->outputTableColumns()}
                 ])
                 ->filters([
-                    //
+                    {$this->outputTableFilters()}
                 ])
                 ->actions([
                     {$this->outputTableActions()}
@@ -197,6 +199,38 @@ trait CanGenerateResourceTables
         }
 
         return implode(PHP_EOL . '        ', $columns);
+    }
+
+    /**
+     * @return array<class-string<Filter>>
+     */
+    public function getTableFilters(): array
+    {
+        $filters = [];
+
+        if ($this->isSoftDeletable()) {
+            $filters[] = TrashedFilter::class;
+        }
+
+        foreach ($filters as $filter) {
+            $this->importUnlessPartial($filter);
+        }
+
+        return $filters;
+    }
+
+    public function outputTableFilters(): string
+    {
+        $filters = $this->getTableFilters();
+
+        if (empty($filters)) {
+            return '//';
+        }
+
+        return implode(PHP_EOL . '        ', array_map(
+            fn (string $filter) => "{$this->simplifyFqn($filter)}::make(),",
+            $filters,
+        ));
     }
 
     /**

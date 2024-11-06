@@ -34,7 +34,7 @@ class PostResource extends Resource
                 //
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Actions\EditAction::make(),
