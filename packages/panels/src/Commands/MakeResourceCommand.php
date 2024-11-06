@@ -3,6 +3,7 @@
 namespace Filament\Commands;
 
 use Filament\Clusters\Cluster;
+use Filament\Commands\FileGenerators\Resources\Pages\ResourceCreateRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceListRecordsPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceManageRecordsPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\ResourceClassGenerator;
@@ -107,7 +108,7 @@ class MakeResourceCommand extends Command
             $this->createResourceClass();
             $this->createManagePage();
             $this->createListPage();
-            // $this->createCreatePage();
+            $this->createCreatePage();
             // $this->createEditPage();
             // $this->createViewPage();
         } catch (InvalidCommandOutput) {
@@ -337,6 +338,28 @@ class MakeResourceCommand extends Command
 
         $this->writeFile($path, app(ResourceListRecordsPageClassGenerator::class, [
             'fqn' => "{$this->fqn}\\Pages\\List{$pluralModelBasename}",
+            'resourceFqn' => $this->fqn,
+        ]));
+    }
+
+    protected function createCreatePage(): void
+    {
+        if ($this->isSimple) {
+            return;
+        }
+
+        $modelBasename = class_basename($this->modelFqn);
+
+        $path = (string) str("{$this->resourcesDirectory}\\{$this->fqnEnd}\\Pages\\Create{$modelBasename}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($path, app(ResourceCreateRecordPageClassGenerator::class, [
+            'fqn' => "{$this->fqn}\\Pages\\Create{$modelBasename}",
             'resourceFqn' => $this->fqn,
         ]));
     }
