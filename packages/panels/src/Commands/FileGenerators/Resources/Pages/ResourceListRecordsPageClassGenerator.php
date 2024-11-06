@@ -1,10 +1,10 @@
 <?php
 
-namespace Filament\Commands\FileGenerators\Resources;
+namespace Filament\Commands\FileGenerators\Resources\Pages;
 
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
-use Filament\Resources\Pages\ManageRecords;
+use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Resource;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Nette\PhpGenerator\ClassType;
@@ -12,7 +12,7 @@ use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\Property;
 
-class ResourceManageRecordsPageClassGenerator extends ClassGenerator
+class ResourceListRecordsPageClassGenerator extends ClassGenerator
 {
     /**
      * @param  class-string<resource>  $resourceFqn
@@ -51,7 +51,7 @@ class ResourceManageRecordsPageClassGenerator extends ClassGenerator
 
     public function getExtends(): string
     {
-        return ManageRecords::class;
+        return ListRecords::class;
     }
 
     protected function addPropertiesToClass(ClassType $class): void

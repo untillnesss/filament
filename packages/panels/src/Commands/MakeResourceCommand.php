@@ -3,8 +3,9 @@
 namespace Filament\Commands;
 
 use Filament\Clusters\Cluster;
+use Filament\Commands\FileGenerators\Resources\Pages\ResourceListRecordsPageClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Pages\ResourceManageRecordsPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\ResourceClassGenerator;
-use Filament\Commands\FileGenerators\Resources\ResourceManageRecordsPageClassGenerator;
 use Filament\Facades\Filament;
 use Filament\Forms\Commands\Concerns\CanGenerateForms;
 use Filament\Panel;
@@ -105,7 +106,7 @@ class MakeResourceCommand extends Command
         try {
             $this->createResourceClass();
             $this->createManagePage();
-            // $this->createListPage();
+            $this->createListPage();
             // $this->createCreatePage();
             // $this->createEditPage();
             // $this->createViewPage();
@@ -313,6 +314,29 @@ class MakeResourceCommand extends Command
 
         $this->writeFile($path, app(ResourceManageRecordsPageClassGenerator::class, [
             'fqn' => "{$this->fqn}\\Pages\\Manage{$pluralModelBasename}",
+            'resourceFqn' => $this->fqn,
+        ]));
+    }
+
+    protected function createListPage(): void
+    {
+        if ($this->isSimple) {
+            return;
+        }
+
+        $modelBasename = class_basename($this->modelFqn);
+        $pluralModelBasename = Str::pluralStudly($modelBasename);
+
+        $path = (string) str("{$this->resourcesDirectory}\\{$this->fqnEnd}\\Pages\\List{$pluralModelBasename}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($path, app(ResourceListRecordsPageClassGenerator::class, [
+            'fqn' => "{$this->fqn}\\Pages\\List{$pluralModelBasename}",
             'resourceFqn' => $this->fqn,
         ]));
     }
