@@ -1,10 +1,10 @@
 <?php
 
-namespace Filament\Tests\Panels\Fixtures\Resources\PostCategoryResource\Pages;
+namespace Filament\Tests\Panels\Fixtures\Resources\PostCategories\Pages;
 
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tests\Panels\Fixtures\Resources\PostCategoryResource;
+use Filament\Tests\Panels\Fixtures\Resources\PostCategories\PostCategoryResource;
 
 class ListPostCategories extends ListRecords
 {

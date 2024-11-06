@@ -1,10 +1,9 @@
 <?php
 
-namespace Filament\Tests\Panels\Fixtures\Resources;
+namespace Filament\Tests\Panels\Fixtures\Resources\PostCategories;
 
 use Filament\Resources\Resource;
 use Filament\Tests\Models\PostCategory;
-use Filament\Tests\Panels\Fixtures\Resources\PostCategoryResource\Pages;
 
 class PostCategoryResource extends Resource
 {

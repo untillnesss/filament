@@ -1,14 +1,14 @@
 <?php
 
-namespace Filament\Tests\Panels\Fixtures\Resources\ProductResource\Pages;
+namespace Filament\Tests\Panels\Fixtures\Resources\Users\Pages;
 
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Tests\Panels\Fixtures\Resources\ProductResource;
+use Filament\Tests\Panels\Fixtures\Resources\Users\UserResource;
 
-class EditProduct extends EditRecord
+class EditUser extends EditRecord
 {
-    protected static string $resource = ProductResource::class;
+    protected static string $resource = UserResource::class;
 
     protected function getHeaderActions(): array
     {

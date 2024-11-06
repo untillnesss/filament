@@ -2,9 +2,7 @@
 
 namespace Filament\Commands\FileGenerators\Resources\Schemas;
 
-use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceInfolists;
 use Filament\Schema\Schema;
-use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Nette\PhpGenerator\ClassType;
@@ -50,8 +48,8 @@ class ResourceInfolistSchemaClassGenerator extends ClassGenerator
             ->setPublic()
             ->setStatic()
             ->setReturnType(Schema::class)
-            ->setBody(<<<PHP
-                return \$schema
+            ->setBody(<<<'PHP'
+                return $schema
                     ->components([
                         //
                     ]);

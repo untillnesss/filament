@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Tests\Panels\Fixtures\Resources;
+namespace Filament\Tests\Panels\Fixtures\Resources\Posts;
 
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -12,7 +12,6 @@ use Filament\Schema\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tests\Models\Post;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource\Pages;
 use Illuminate\Database\Eloquent\Builder;
 
 class PostResource extends Resource

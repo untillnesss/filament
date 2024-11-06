@@ -2,17 +2,7 @@
 
 namespace Filament\Commands\FileGenerators\Resources\Schemas;
 
-use Filament\Actions\Action;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\ForceDeleteAction;
-use Filament\Actions\RestoreAction;
-use Filament\Actions\ViewAction;
-use Filament\Commands\FileGenerators\Concerns\CanGenerateGetHeaderActionsMethod;
 use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceForms;
-use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceTables;
-use Filament\Commands\FileGenerators\Resources\Pages\Concerns\CanGenerateResourceProperty;
-use Filament\Resources\Pages\EditRecord;
-use Filament\Resources\Resource;
 use Filament\Schema\Schema;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;

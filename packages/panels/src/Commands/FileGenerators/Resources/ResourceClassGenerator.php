@@ -31,9 +31,9 @@ class ResourceClassGenerator extends ClassGenerator
 
     /**
      * @param  class-string<Model>  $modelFqn
-     * @param ?class-string $formSchemaFqn
-     * @param ?class-string $infolistSchemaFqn
-     * @param ?class-string $tableFqn
+     * @param  ?class-string  $formSchemaFqn
+     * @param  ?class-string  $infolistSchemaFqn
+     * @param  ?class-string  $tableFqn
      * @param  ?class-string<Cluster>  $clusterFqn
      * @param array<string, array{
      *     class: class-string<Page>,
@@ -183,8 +183,8 @@ class ResourceClassGenerator extends ClassGenerator
             ? <<<PHP
                 return {$this->simplifyFqn($infolistSchemaFqn)}::configure(\$schema);
                 PHP
-            : <<<PHP
-                return \$schema
+            : <<<'PHP'
+                return $schema
                     ->components([
                         //
                     ]);
@@ -237,7 +237,7 @@ class ResourceClassGenerator extends ClassGenerator
             ->setStatic()
             ->setReturnType('array')
             ->setBody(
-                <<<PHP
+                <<<'PHP'
                 return [
                     //
                 ];

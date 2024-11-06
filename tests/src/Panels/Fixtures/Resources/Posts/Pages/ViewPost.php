@@ -1,10 +1,10 @@
 <?php
 
-namespace Filament\Tests\Panels\Fixtures\Resources\PostResource\Pages;
+namespace Filament\Tests\Panels\Fixtures\Resources\Posts\Pages;
 
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource;
+use Filament\Tests\Panels\Fixtures\Resources\Posts\PostResource;
 
 class ViewPost extends ViewRecord
 {

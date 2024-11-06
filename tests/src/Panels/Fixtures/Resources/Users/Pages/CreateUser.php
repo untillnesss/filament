@@ -1,9 +1,9 @@
 <?php
 
-namespace Filament\Tests\Panels\Fixtures\Resources\UserResource\Pages;
+namespace Filament\Tests\Panels\Fixtures\Resources\Users\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Tests\Panels\Fixtures\Resources\UserResource;
+use Filament\Tests\Panels\Fixtures\Resources\Users\UserResource;
 
 class CreateUser extends CreateRecord
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Filament\Tests\Panels\Fixtures\Resources\UserResource\Pages;
+namespace Filament\Tests\Panels\Fixtures\Resources\Users\Pages;
 
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Tests\Panels\Fixtures\Resources\UserResource;
+use Filament\Tests\Panels\Fixtures\Resources\Users\UserResource;
 
 class ViewUser extends ViewRecord
 {

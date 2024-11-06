@@ -151,7 +151,15 @@ trait HasRoutes
                 fn (Stringable $slug): Stringable => $slug->classBasename(),
             )
             ->beforeLast('Resource')
-            ->plural()
+            ->pluralStudly()
+            ->when(
+                fn (Stringable $slug): bool => $slug->contains('\\') && $slug->beforeLast('\\')->classBasename()->is($slug->classBasename()->pluralStudly()),
+                fn (Stringable $slug): Stringable => $slug->when(
+                    fn (Stringable $slug): bool => $slug->beforeLast('\\')->contains('\\'),
+                    fn (Stringable $slug): Stringable => $slug->beforeLast('\\')->beforeLast('\\')->append('\\')->append($slug->classBasename()),
+                    fn (Stringable $slug): Stringable => $slug->classBasename(),
+                ),
+            )
             ->explode('\\')
             ->map(fn (string $string) => str($string)->kebab()->slug())
             ->implode('/');

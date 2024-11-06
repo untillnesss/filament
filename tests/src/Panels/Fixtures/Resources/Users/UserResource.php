@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Tests\Panels\Fixtures\Resources;
+namespace Filament\Tests\Panels\Fixtures\Resources\Users;
 
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -11,7 +11,6 @@ use Filament\Schema\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tests\Models\User;
-use Filament\Tests\Panels\Fixtures\Resources\UserResource\Pages;
 
 class UserResource extends Resource
 {

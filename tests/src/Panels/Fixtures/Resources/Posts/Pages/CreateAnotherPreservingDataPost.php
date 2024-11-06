@@ -1,9 +1,9 @@
 <?php
 
-namespace Filament\Tests\Panels\Fixtures\Resources\PostResource\Pages;
+namespace Filament\Tests\Panels\Fixtures\Resources\Posts\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource;
+use Filament\Tests\Panels\Fixtures\Resources\Posts\PostResource;
 use Illuminate\Support\Arr;
 
 class CreateAnotherPreservingDataPost extends CreateRecord

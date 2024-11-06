@@ -1,6 +1,5 @@
 <?php
 
-use Filament\Support\Config\FileGenerationFlag;
 use Filament\Tests\TestCase;
 
 use function PHPUnit\Framework\assertFileDoesNotExist;

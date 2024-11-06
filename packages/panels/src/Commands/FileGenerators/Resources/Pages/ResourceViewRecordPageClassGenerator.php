@@ -7,7 +7,6 @@ use Filament\Actions\EditAction;
 use Filament\Commands\FileGenerators\Concerns\CanGenerateGetHeaderActionsMethod;
 use Filament\Commands\FileGenerators\Resources\Pages\Concerns\CanGenerateResourceProperty;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Resources\Resource;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Nette\PhpGenerator\ClassType;
 

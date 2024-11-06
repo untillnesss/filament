@@ -4,7 +4,6 @@ namespace Filament\Commands\FileGenerators\Resources\Pages;
 
 use Filament\Commands\FileGenerators\Resources\Pages\Concerns\CanGenerateResourceProperty;
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Resources\Resource;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Nette\PhpGenerator\ClassType;
 
