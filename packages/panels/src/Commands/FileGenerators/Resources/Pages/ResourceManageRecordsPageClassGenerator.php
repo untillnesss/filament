@@ -4,16 +4,18 @@ namespace Filament\Commands\FileGenerators\Resources\Pages;
 
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
+use Filament\Commands\FileGenerators\Concerns\CanGenerateGetHeaderActionsMethod;
+use Filament\Commands\FileGenerators\Resources\Pages\Concerns\CanGenerateResourceProperty;
 use Filament\Resources\Pages\ManageRecords;
 use Filament\Resources\Resource;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Nette\PhpGenerator\ClassType;
-use Nette\PhpGenerator\Literal;
-use Nette\PhpGenerator\Method;
-use Nette\PhpGenerator\Property;
 
 class ResourceManageRecordsPageClassGenerator extends ClassGenerator
 {
+    use CanGenerateGetHeaderActionsMethod;
+    use CanGenerateResourceProperty;
+
     /**
      * @param  class-string<resource>  $resourceFqn
      */
@@ -64,40 +66,6 @@ class ResourceManageRecordsPageClassGenerator extends ClassGenerator
         $this->addGetHeaderActionsMethodToClass($class);
     }
 
-    protected function addResourcePropertyToClass(ClassType $class): void
-    {
-        $property = $class->addProperty('resource', new Literal("{$this->simplifyFqn($this->getResourceFqn())}::class"))
-            ->setProtected()
-            ->setStatic()
-            ->setType('string');
-        $this->configureResourceProperty($property);
-    }
-
-    protected function configureResourceProperty(Property $property): void {}
-
-    protected function addGetHeaderActionsMethodToClass(ClassType $class): void
-    {
-        $actions = array_map(
-            fn (string $action): string => (string) new Literal("{$this->simplifyFqn($action)}::make(),"),
-            $this->getHeaderActions(),
-        );
-
-        $actionsOutput = implode(PHP_EOL . '    ', $actions);
-
-        $method = $class->addMethod('getHeaderActions')
-            ->setProtected()
-            ->setReturnType('array')
-            ->setBody(
-                <<<PHP
-                return [
-                    {$actionsOutput}
-                ];
-                PHP
-            );
-
-        $this->configureGetHeaderActionsMethod($method);
-    }
-
     /**
      * @return array<class-string<Action>>
      */
@@ -107,8 +75,6 @@ class ResourceManageRecordsPageClassGenerator extends ClassGenerator
             CreateAction::class,
         ];
     }
-
-    protected function configureGetHeaderActionsMethod(Method $method): void {}
 
     public function getFqn(): string
     {

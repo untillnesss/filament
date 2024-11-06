@@ -2,14 +2,18 @@
 
 namespace Filament\Commands\FileGenerators\Resources\Pages;
 
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Commands\FileGenerators\Concerns\CanGenerateGetHeaderActionsMethod;
 use Filament\Commands\FileGenerators\Resources\Pages\Concerns\CanGenerateResourceProperty;
-use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\ViewRecord;
 use Filament\Resources\Resource;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Nette\PhpGenerator\ClassType;
 
-class ResourceCreateRecordPageClassGenerator extends ClassGenerator
+class ResourceViewRecordPageClassGenerator extends ClassGenerator
 {
+    use CanGenerateGetHeaderActionsMethod;
     use CanGenerateResourceProperty;
 
     /**
@@ -36,6 +40,9 @@ class ResourceCreateRecordPageClassGenerator extends ClassGenerator
         return [
             $this->getResourceFqn(),
             ...(($extendsBasename === class_basename($this->getFqn())) ? [$extends => "Base{$extendsBasename}"] : [$extends]),
+            ...($this->hasPartialImports() ? [
+                'Filament\Actions',
+            ] : $this->getHeaderActions()),
         ];
     }
 
@@ -46,12 +53,27 @@ class ResourceCreateRecordPageClassGenerator extends ClassGenerator
 
     public function getExtends(): string
     {
-        return CreateRecord::class;
+        return ViewRecord::class;
     }
 
     protected function addPropertiesToClass(ClassType $class): void
     {
         $this->addResourcePropertyToClass($class);
+    }
+
+    protected function addMethodsToClass(ClassType $class): void
+    {
+        $this->addGetHeaderActionsMethodToClass($class);
+    }
+
+    /**
+     * @return array<class-string<Action>>
+     */
+    public function getHeaderActions(): array
+    {
+        return [
+            EditAction::class,
+        ];
     }
 
     public function getFqn(): string

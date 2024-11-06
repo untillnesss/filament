@@ -4,8 +4,10 @@ namespace Filament\Commands;
 
 use Filament\Clusters\Cluster;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceCreateRecordPageClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Pages\ResourceEditRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceListRecordsPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceManageRecordsPageClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Pages\ResourceViewRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\ResourceClassGenerator;
 use Filament\Facades\Filament;
 use Filament\Forms\Commands\Concerns\CanGenerateForms;
@@ -109,8 +111,8 @@ class MakeResourceCommand extends Command
             $this->createManagePage();
             $this->createListPage();
             $this->createCreatePage();
-            // $this->createEditPage();
-            // $this->createViewPage();
+            $this->createEditPage();
+            $this->createViewPage();
         } catch (InvalidCommandOutput) {
             return static::INVALID;
         }
@@ -360,6 +362,52 @@ class MakeResourceCommand extends Command
 
         $this->writeFile($path, app(ResourceCreateRecordPageClassGenerator::class, [
             'fqn' => "{$this->fqn}\\Pages\\Create{$modelBasename}",
+            'resourceFqn' => $this->fqn,
+        ]));
+    }
+
+    protected function createEditPage(): void
+    {
+        if ($this->isSimple) {
+            return;
+        }
+
+        $modelBasename = class_basename($this->modelFqn);
+
+        $path = (string) str("{$this->resourcesDirectory}\\{$this->fqnEnd}\\Pages\\Edit{$modelBasename}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($path, app(ResourceEditRecordPageClassGenerator::class, [
+            'fqn' => "{$this->fqn}\\Pages\\Edit{$modelBasename}",
+            'resourceFqn' => $this->fqn,
+            'hasViewOperation' => $this->hasViewOperation,
+            'isSoftDeletable' => $this->isSoftDeletable,
+        ]));
+    }
+
+    protected function createViewPage(): void
+    {
+        if ($this->isSimple) {
+            return;
+        }
+
+        $modelBasename = class_basename($this->modelFqn);
+
+        $path = (string) str("{$this->resourcesDirectory}\\{$this->fqnEnd}\\Pages\\View{$modelBasename}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($path, app(ResourceViewRecordPageClassGenerator::class, [
+            'fqn' => "{$this->fqn}\\Pages\\View{$modelBasename}",
             'resourceFqn' => $this->fqn,
         ]));
     }

@@ -77,7 +77,7 @@ it('can generate a resource view page', function () {
         ->toMatchSnapshot();
 });
 
-it('can generate the schemas and table of a resource class', function () {
+it('can generate the form and table of a resource class', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'Post',
         '--generate' => true,
