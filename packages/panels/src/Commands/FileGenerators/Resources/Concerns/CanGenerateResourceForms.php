@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Commands\FileGenerators\Concerns;
+namespace Filament\Commands\FileGenerators\Resources\Concerns;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -155,6 +155,8 @@ trait CanGenerateResourceForms
             if ($componentData['type'] === Textarea::class) {
                 $componentData['columnSpanFull'] = [];
             }
+
+            $this->importUnlessPartial($componentData['type']);
 
             $components[$componentName] = $componentData;
         }

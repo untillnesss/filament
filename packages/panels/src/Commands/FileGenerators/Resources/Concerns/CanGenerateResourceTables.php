@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Commands\FileGenerators\Concerns;
+namespace Filament\Commands\FileGenerators\Resources\Concerns;
 
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -22,6 +22,8 @@ trait CanGenerateResourceTables
 {
     public function getTableMethodBody(): string
     {
+        $this->importUnlessPartial(BulkActionGroup::class);
+
         return <<<PHP
             return \$table
                 ->columns([
@@ -164,6 +166,8 @@ trait CanGenerateResourceTables
                 $columnData['toggleable'] = ['isToggledHiddenByDefault' => true];
             }
 
+            $this->importUnlessPartial($columnData['type']);
+
             $columns[$columnName] = $columnData;
         }
 
@@ -217,6 +221,10 @@ trait CanGenerateResourceTables
             }
         }
 
+        foreach ($actions as $action) {
+            $this->importUnlessPartial($action);
+        }
+
         return $actions;
     }
 
@@ -240,6 +248,10 @@ trait CanGenerateResourceTables
         if ($this->isSoftDeletable()) {
             $actions[] = ForceDeleteBulkAction::class;
             $actions[] = RestoreBulkAction::class;
+        }
+
+        foreach ($actions as $action) {
+            $this->importUnlessPartial($action);
         }
 
         return $actions;

@@ -1,16 +1,15 @@
 <?php
 
-namespace Filament\Commands\FileGenerators;
+namespace Filament\Commands\FileGenerators\Resources;
 
 use Filament\Clusters\Cluster;
-use Filament\Commands\FileGenerators\Concerns\CanGenerateResourceForms;
-use Filament\Commands\FileGenerators\Concerns\CanGenerateResourceTables;
+use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceForms;
+use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceTables;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Schema\Schema;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
-use Filament\Support\Commands\FileGenerators\Contracts\FileGenerator;
-use Filament\Support\Config\FileGenerationFlag;
+use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -19,13 +18,10 @@ use Illuminate\Support\Arr;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
-use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
-use Nette\PhpGenerator\Printer;
 use Nette\PhpGenerator\Property;
-use Nette\PhpGenerator\PsrPrinter;
 
-class ResourceClassGenerator implements FileGenerator
+class ResourceClassGenerator extends ClassGenerator
 {
     use CanGenerateResourceForms;
     use CanGenerateResourceTables;
@@ -51,30 +47,6 @@ class ResourceClassGenerator implements FileGenerator
         protected bool $isSoftDeletable,
         protected bool $isSimple,
     ) {}
-
-    public function getFile(): PhpFile
-    {
-        $file = (new PhpFile);
-        $this->configureFile($file);
-
-        $this->namespace = $file->addNamespace($this->getNamespace());
-        $this->useImportsInNamespace($this->namespace, $this->getImports());
-        $this->configureNamespace($this->namespace);
-
-        $class = $this->namespace->addClass($this->getBasename())
-            ->setExtends($this->getExtends());
-        $this->addPropertiesToClass($class);
-        $this->addMethodsToClass($class);
-        $this->configureClass($class);
-
-        return $file;
-    }
-
-    protected function configureFile(PhpFile $file): void {}
-
-    protected function configureNamespace(PhpNamespace $namespace): void {}
-
-    protected function configureClass(ClassType $class): void {}
 
     protected function addPropertiesToClass(ClassType $class): void
     {
@@ -267,14 +239,6 @@ class ResourceClassGenerator implements FileGenerator
         return Resource::class;
     }
 
-    /**
-     * @param  class-string  $name
-     */
-    public function simplifyFqn(string $name): string
-    {
-        return $this->namespace->simplifyName($name);
-    }
-
     public function getFqn(): string
     {
         return $this->fqn;
@@ -288,11 +252,6 @@ class ResourceClassGenerator implements FileGenerator
     public function getNamespace(): string
     {
         return $this->extractNamespace($this->getFqn());
-    }
-
-    protected function extractNamespace(string $fqn): string
-    {
-        return (string) str($fqn)->beforeLast('\\');
     }
 
     public function getModelBasename(): string
@@ -371,50 +330,6 @@ class ResourceClassGenerator implements FileGenerator
         return $this->isSimple;
     }
 
-    public function hasEmbeddedPanelResourceSchemas(): bool
-    {
-        return in_array(FileGenerationFlag::EMBEDDED_PANEL_RESOURCE_SCHEMAS, $this->getFileGenerationFlags());
-    }
-
-    public function hasEmbeddedPanelResourceTables(): bool
-    {
-        return in_array(FileGenerationFlag::EMBEDDED_PANEL_RESOURCE_TABLES, $this->getFileGenerationFlags());
-    }
-
-    public function hasPartialImports(): bool
-    {
-        return in_array(FileGenerationFlag::PARTIAL_IMPORTS, $this->getFileGenerationFlags());
-    }
-
-    public function hasPanelResourceClassesOutsideDirectories(): bool
-    {
-        return in_array(FileGenerationFlag::PANEL_RESOURCE_CLASSES_OUTSIDE_DIRECTORIES, $this->getFileGenerationFlags());
-    }
-
-    /**
-     * @return array<string>
-     */
-    public function getFileGenerationFlags(): array
-    {
-        return config('filament.file_generation.flags') ?? [];
-    }
-
-    /**
-     * @param  array<string>  $imports
-     */
-    protected function useImportsInNamespace(PhpNamespace $namespace, array $imports): void
-    {
-        foreach ($imports as $key => $import) {
-            if (is_string($key)) {
-                $namespace->addUse($key, alias: $import);
-
-                continue;
-            }
-
-            $namespace->addUse($import);
-        }
-    }
-
     /**
      * @return array<string>
      */
@@ -436,20 +351,5 @@ class ResourceClassGenerator implements FileGenerator
                 ] : [],
             ] : []),
         ];
-    }
-
-    public function getPrinter(): Printer
-    {
-        $printer = new PsrPrinter;
-        $printer->linesBetweenProperties = 1;
-
-        return $printer;
-    }
-
-    protected function configurePrinter(Printer $printer): void {}
-
-    public function generate(): string
-    {
-        return $this->getPrinter()->printFile($this->getFile());
     }
 }

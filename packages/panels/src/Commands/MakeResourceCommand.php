@@ -3,7 +3,8 @@
 namespace Filament\Commands;
 
 use Filament\Clusters\Cluster;
-use Filament\Commands\FileGenerators\ResourceClassGenerator;
+use Filament\Commands\FileGenerators\Resources\ResourceClassGenerator;
+use Filament\Commands\FileGenerators\Resources\ResourceManageRecordsPageClassGenerator;
 use Filament\Facades\Filament;
 use Filament\Forms\Commands\Concerns\CanGenerateForms;
 use Filament\Panel;
@@ -103,8 +104,8 @@ class MakeResourceCommand extends Command
 
         try {
             $this->createResourceClass();
+            $this->createManagePage();
             // $this->createListPage();
-            // $this->createManagePage();
             // $this->createCreatePage();
             // $this->createEditPage();
             // $this->createViewPage();
@@ -236,7 +237,7 @@ class MakeResourceCommand extends Command
     protected function configurePages(): void
     {
         $modelBasename = class_basename($this->modelFqn);
-        $pluralModelBasename = Str::plural($modelBasename);
+        $pluralModelBasename = Str::pluralStudly($modelBasename);
 
         if ($this->isSimple) {
             $this->pages = [
@@ -290,6 +291,29 @@ class MakeResourceCommand extends Command
             'isGenerated' => $this->isGenerated,
             'isSoftDeletable' => $this->isSoftDeletable,
             'isSimple' => $this->isSimple,
+        ]));
+    }
+
+    protected function createManagePage(): void
+    {
+        if (! $this->isSimple) {
+            return;
+        }
+
+        $modelBasename = class_basename($this->modelFqn);
+        $pluralModelBasename = Str::pluralStudly($modelBasename);
+
+        $path = (string) str("{$this->resourcesDirectory}\\{$this->fqnEnd}\\Pages\\Manage{$pluralModelBasename}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($path, app(ResourceManageRecordsPageClassGenerator::class, [
+            'fqn' => "{$this->fqn}\\Pages\\Manage{$pluralModelBasename}",
+            'resourceFqn' => $this->fqn,
         ]));
     }
 }
