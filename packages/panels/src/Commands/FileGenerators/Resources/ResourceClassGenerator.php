@@ -48,11 +48,59 @@ class ResourceClassGenerator extends ClassGenerator
         protected bool $isSimple,
     ) {}
 
+    public function getNamespace(): string
+    {
+        return $this->extractNamespace($this->getFqn());
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getImports(): array
+    {
+        return [
+            Resource::class,
+            Schema::class,
+            Table::class,
+            ...(($this->getModelBasename() === 'Resource') ? [$this->getModelFqn() => 'ResourceModel'] : [$this->getModelFqn()]),
+            ...($this->hasCluster() ? (($this->getClusterBasename() === 'Resource') ? [$this->getClusterFqn() => 'ResourceCluster'] : [$this->getClusterFqn()]) : []),
+            ...($this->isSoftDeletable() ? [Builder::class, SoftDeletingScope::class] : []),
+            ...$this->getPagesImports(),
+            ...($this->hasPartialImports() ? [
+                ...($this->hasEmbeddedPanelResourceTables()) ? ['Filament\Actions', 'Filament\Tables'] : [],
+                ...($this->hasEmbeddedPanelResourceSchemas()) ? [
+                    'Filament\Forms',
+                    ...($this->hasViewOperation() ? ['Filament\Infolists'] : []),
+                ] : [],
+            ] : []),
+        ];
+    }
+
+    public function getBasename(): string
+    {
+        return class_basename($this->getFqn());
+    }
+
+    public function getExtends(): string
+    {
+        return Resource::class;
+    }
+
     protected function addPropertiesToClass(ClassType $class): void
     {
         $this->addModelPropertyToClass($class);
         $this->addNavigationIconPropertyToClass($class);
         $this->addClusterPropertyToClass($class);
+    }
+
+    protected function addMethodsToClass(ClassType $class): void
+    {
+        $this->addFormMethodToClass($class);
+        $this->addInfolistMethodToClass($class);
+        $this->addTableMethodToClass($class);
+        $this->addGetRelationsMethodToClass($class);
+        $this->addGetPagesMethodToClass($class);
+        $this->addGetEloquentQueryMethodToClass($class);
     }
 
     protected function addModelPropertyToClass(ClassType $class): void
@@ -91,16 +139,6 @@ class ResourceClassGenerator extends ClassGenerator
     }
 
     protected function configureClusterProperty(Property $property): void {}
-
-    protected function addMethodsToClass(ClassType $class): void
-    {
-        $this->addFormMethodToClass($class);
-        $this->addInfolistMethodToClass($class);
-        $this->addTableMethodToClass($class);
-        $this->addGetRelationsMethodToClass($class);
-        $this->addGetPagesMethodToClass($class);
-        $this->addGetEloquentQueryMethodToClass($class);
-    }
 
     protected function addFormMethodToClass(ClassType $class): void
     {
@@ -234,24 +272,9 @@ class ResourceClassGenerator extends ClassGenerator
 
     protected function configureGetEloquentQueryMethod(Method $method): void {}
 
-    public function getExtends(): string
-    {
-        return Resource::class;
-    }
-
     public function getFqn(): string
     {
         return $this->fqn;
-    }
-
-    public function getBasename(): string
-    {
-        return class_basename($this->getFqn());
-    }
-
-    public function getNamespace(): string
-    {
-        return $this->extractNamespace($this->getFqn());
     }
 
     public function getModelBasename(): string
@@ -328,28 +351,5 @@ class ResourceClassGenerator extends ClassGenerator
     public function isSimple(): bool
     {
         return $this->isSimple;
-    }
-
-    /**
-     * @return array<string>
-     */
-    public function getImports(): array
-    {
-        return [
-            Resource::class,
-            Schema::class,
-            Table::class,
-            ...(($this->getModelBasename() === 'Resource') ? [$this->getModelFqn() => 'ResourceModel'] : [$this->getModelFqn()]),
-            ...($this->hasCluster() ? (($this->getClusterBasename() === 'Resource') ? [$this->getClusterFqn() => 'ResourceCluster'] : [$this->getClusterFqn()]) : []),
-            ...($this->isSoftDeletable() ? [Builder::class, SoftDeletingScope::class] : []),
-            ...$this->getPagesImports(),
-            ...($this->hasPartialImports() ? [
-                ...($this->hasEmbeddedPanelResourceTables()) ? ['Filament\Actions', 'Filament\Tables'] : [],
-                ...($this->hasEmbeddedPanelResourceSchemas()) ? [
-                    'Filament\Forms',
-                    ...($this->hasViewOperation() ? ['Filament\Infolists'] : []),
-                ] : [],
-            ] : []),
-        ];
     }
 }

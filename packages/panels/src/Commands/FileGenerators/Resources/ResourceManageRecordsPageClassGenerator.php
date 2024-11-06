@@ -22,9 +22,46 @@ class ResourceManageRecordsPageClassGenerator extends ClassGenerator
         protected string $resourceFqn,
     ) {}
 
+    public function getNamespace(): string
+    {
+        return $this->extractNamespace($this->getFqn());
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getImports(): array
+    {
+        $extends = $this->getExtends();
+        $extendsBasename = class_basename($extends);
+
+        return [
+            $this->getResourceFqn(),
+            ...(($extendsBasename === class_basename($this->getFqn())) ? [$extends => "Base{$extendsBasename}"] : [$extends]),
+            ...($this->hasPartialImports() ? [
+                'Filament\Actions',
+            ] : $this->getHeaderActions()),
+        ];
+    }
+
+    public function getBasename(): string
+    {
+        return class_basename($this->getFqn());
+    }
+
+    public function getExtends(): string
+    {
+        return ManageRecords::class;
+    }
+
     protected function addPropertiesToClass(ClassType $class): void
     {
         $this->addResourcePropertyToClass($class);
+    }
+
+    protected function addMethodsToClass(ClassType $class): void
+    {
+        $this->addGetHeaderActionsMethodToClass($class);
     }
 
     protected function addResourcePropertyToClass(ClassType $class): void
@@ -37,11 +74,6 @@ class ResourceManageRecordsPageClassGenerator extends ClassGenerator
     }
 
     protected function configureResourceProperty(Property $property): void {}
-
-    protected function addMethodsToClass(ClassType $class): void
-    {
-        $this->addGetHeaderActionsMethodToClass($class);
-    }
 
     protected function addGetHeaderActionsMethodToClass(ClassType $class): void
     {
@@ -78,24 +110,9 @@ class ResourceManageRecordsPageClassGenerator extends ClassGenerator
 
     protected function configureGetHeaderActionsMethod(Method $method): void {}
 
-    public function getExtends(): string
-    {
-        return ManageRecords::class;
-    }
-
     public function getFqn(): string
     {
         return $this->fqn;
-    }
-
-    public function getBasename(): string
-    {
-        return class_basename($this->getFqn());
-    }
-
-    public function getNamespace(): string
-    {
-        return $this->extractNamespace($this->getFqn());
     }
 
     /**
@@ -104,22 +121,5 @@ class ResourceManageRecordsPageClassGenerator extends ClassGenerator
     public function getResourceFqn(): string
     {
         return $this->resourceFqn;
-    }
-
-    /**
-     * @return array<string>
-     */
-    public function getImports(): array
-    {
-        $extends = $this->getExtends();
-        $extendsBasename = class_basename($extends);
-
-        return [
-            $this->getResourceFqn(),
-            ...(($extendsBasename === class_basename($this->getFqn())) ? [$extends => "Base{$extendsBasename}"] : [$extends]),
-            ...($this->hasPartialImports() ? [
-                'Filament\Actions',
-            ] : $this->getHeaderActions()),
-        ];
     }
 }
