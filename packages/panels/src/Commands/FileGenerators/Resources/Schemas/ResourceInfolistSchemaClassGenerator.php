@@ -4,15 +4,11 @@ namespace Filament\Commands\FileGenerators\Resources\Schemas;
 
 use Filament\Schema\Schema;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
-use Illuminate\Database\Eloquent\Model;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
 class ResourceInfolistSchemaClassGenerator extends ClassGenerator
 {
-    /**
-     * @param  class-string<Model>  $modelFqn
-     */
     final public function __construct(
         protected string $fqn,
     ) {}

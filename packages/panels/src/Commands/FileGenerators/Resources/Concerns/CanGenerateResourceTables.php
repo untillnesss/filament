@@ -15,7 +15,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Support\Str;
 use Nette\PhpGenerator\Literal;
@@ -202,7 +202,7 @@ trait CanGenerateResourceTables
     }
 
     /**
-     * @return array<class-string<Filter>>
+     * @return array<class-string<BaseFilter>>
      */
     public function getTableFilters(): array
     {
