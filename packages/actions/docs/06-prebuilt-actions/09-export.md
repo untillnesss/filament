@@ -4,8 +4,6 @@ title: Export action
 
 ## Overview
 
-> Please note that this feature uses the Filament filesystem to store exported files. The disk used by the Filament filesystem is defined in the [configuration file](../../installation#publishing-configuration). By default, the disk is set to `public` for easy local development, so when using Filament exports in production, please make sure that you use a production-ready disk such as `s3` with a private access policy. You may also consider [customizing the storage disk](#customizing-the-storage-disk) for exports only.
-
 Filament includes a prebuilt action that is able to export rows to a CSV or XLSX file. When the trigger button is clicked, a modal asks for the columns that they want to export, and what they should be labeled. This feature uses [job batches](https://laravel.com/docs/queues#job-batching) and [database notifications](../../notifications/database-notifications#overview), so you need to publish those migrations from Laravel. Also, you need to publish the migrations for tables that Filament uses to store information about exports:
 
 ```bash
@@ -389,7 +387,11 @@ public static function modifyQuery(Builder $query): Builder
 
 ### Customizing the storage disk
 
-By default, exported files will be uploaded to the storage disk defined in the [configuration file](../../installation#publishing-configuration), which is `public` by default. You can set the `FILAMENT_FILESYSTEM_DISK` environment variable to change this. In production, you need to use a production-ready disk such as `s3` with a private access policy, to prevent unauthorized access to the exported files.
+By default, exported files will be uploaded to the storage disk defined in the [configuration file](../../installation#publishing-configuration), which is `public` by default. You can set the `FILAMENT_FILESYSTEM_DISK` environment variable to change this.
+
+While using the `public` disk a good default for many parts of Filament, using it for exports would result in exported files being stored in a public location. As such, if the default filesystem disk is `public` and a `local` disk exists in your `config/filesystems.php`, Filament will use the `local` disk for exports instead. If you override the disk to be `public` for an `ExportAction` or inside an exporter class, Filament will use that.
+
+In production, you should use a disk such as `s3` with a private access policy, to prevent unauthorized access to the exported files.
 
 If you want to use a different disk for a specific export, you can pass the disk name to the `disk()` method on the action:
 
