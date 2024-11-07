@@ -16,7 +16,6 @@ use Filament\Facades\Filament;
 use Filament\Forms\Commands\Concerns\CanGenerateForms;
 use Filament\Panel;
 use Filament\Resources\Pages\Page;
-use Filament\Resources\Resource;
 use Filament\Support\Commands\Concerns\CanIndentStrings;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
@@ -30,9 +29,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
-
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
@@ -385,7 +384,7 @@ class MakeResourceCommand extends Command
         if ($this->isSimple) {
             $this->components->error('Nested resources cannot be simple, you can use the relation manager or relation page on the parent resource to open modals for each operation.');
 
-            throw new InvalidCommandOutput();
+            throw new InvalidCommandOutput;
         }
 
         $parentResource = $this->option('nested');
@@ -451,12 +450,12 @@ class MakeResourceCommand extends Command
             $this->resourcesNamespace = (string) $parentResourceNamespace
                 ->when(
                     $parentResourceNamespace
-                        ->beforeLast("\\")
-                        ->contains("\\"),
+                        ->beforeLast('\\')
+                        ->contains('\\'),
                     fn (Stringable $namespace): Stringable => $namespace
-                        ->beforeLast("\\")
-                        ->beforeLast("\\")
-                        ->append("\\")
+                        ->beforeLast('\\')
+                        ->beforeLast('\\')
+                        ->append('\\')
                         ->append($namespace->classBasename()),
                     fn (Stringable $namespace): Stringable => $namespace->classBasename(),
                 )

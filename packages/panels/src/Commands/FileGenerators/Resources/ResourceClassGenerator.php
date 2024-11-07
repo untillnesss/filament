@@ -35,7 +35,7 @@ class ResourceClassGenerator extends ClassGenerator
      * @param  ?class-string  $infolistSchemaFqn
      * @param  ?class-string  $tableFqn
      * @param  ?class-string<Cluster>  $clusterFqn
-     * @param  ?class-string $parentResourceFqn
+     * @param  ?class-string  $parentResourceFqn
      * @param array<string, array{
      *     class: class-string<Page>,
      *     path: string,
