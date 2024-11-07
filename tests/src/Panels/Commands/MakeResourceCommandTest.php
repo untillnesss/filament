@@ -422,6 +422,62 @@ it('can generate a nested resource class', function () {
         ->toMatchSnapshot();
 });
 
+it('can generate a nested resource class with a plural parent resource name', function () {
+    $this->artisan('make:filament-resource', [
+        'name' => 'User',
+        '--panel' => 'admin',
+    ])->assertExitCode(0);
+
+    require_once app_path('Filament/Resources/Users/UserResource.php');
+    require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
+    require_once app_path('Filament/Resources/Users/Pages/CreateUser.php');
+    require_once app_path('Filament/Resources/Users/Pages/EditUser.php');
+
+    invade(Filament::getCurrentPanel())->resources = [
+        ...invade(Filament::getCurrentPanel())->resources,
+        'App\\Filament\\Resources\\Users\\UserResource',
+    ];
+
+    $this->artisan('make:filament-resource', [
+        'name' => 'Posts',
+        '--nested' => 'Users',
+        '--model-namespace' => 'Filament\Tests\Models',
+        '--panel' => 'admin',
+    ])->assertExitCode(0);
+
+    assertFileExists($path = app_path('Filament/Resources/Users/Resources/Posts/PostResource.php'));
+    expect(file_get_contents($path))
+        ->toMatchSnapshot();
+});
+
+it('can generate a nested resource class with a parent resource name with `Resource` at the end', function () {
+    $this->artisan('make:filament-resource', [
+        'name' => 'User',
+        '--panel' => 'admin',
+    ])->assertExitCode(0);
+
+    require_once app_path('Filament/Resources/Users/UserResource.php');
+    require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
+    require_once app_path('Filament/Resources/Users/Pages/CreateUser.php');
+    require_once app_path('Filament/Resources/Users/Pages/EditUser.php');
+
+    invade(Filament::getCurrentPanel())->resources = [
+        ...invade(Filament::getCurrentPanel())->resources,
+        'App\\Filament\\Resources\\Users\\UserResource',
+    ];
+
+    $this->artisan('make:filament-resource', [
+        'name' => 'Post',
+        '--nested' => 'UserResource',
+        '--model-namespace' => 'Filament\Tests\Models',
+        '--panel' => 'admin',
+    ])->assertExitCode(0);
+
+    assertFileExists($path = app_path('Filament/Resources/Users/Resources/Posts/PostResource.php'));
+    expect(file_get_contents($path))
+        ->toMatchSnapshot();
+});
+
 it('can generate a nested resource form', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'User',
