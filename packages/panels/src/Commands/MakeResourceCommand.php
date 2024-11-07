@@ -84,7 +84,7 @@ class MakeResourceCommand extends Command
      *      path: string,
      * }>
      */
-    protected array $pages;
+    protected array $pageRoutes;
 
     protected string $namespace;
 
@@ -119,8 +119,8 @@ class MakeResourceCommand extends Command
         $this->isSimple = $this->option('simple');
         $this->hasResourceClassesOutsideDirectories = $this->hasFileGenerationFlag(FileGenerationFlag::PANEL_RESOURCE_CLASSES_OUTSIDE_DIRECTORIES);
 
-        $this->configureFqn();
-        $this->configurePages();
+        $this->configureLocation();
+        $this->configurePageRoutes();
 
         try {
             $this->createFormSchema();
@@ -253,7 +253,7 @@ class MakeResourceCommand extends Command
         }
     }
 
-    protected function configureFqn(): void
+    protected function configureLocation(): void
     {
         if ($this->hasResourceClassesOutsideDirectories) {
             $this->fqnEnd = "{$this->modelFqnEnd}Resource";
@@ -277,13 +277,13 @@ class MakeResourceCommand extends Command
         }
     }
 
-    protected function configurePages(): void
+    protected function configurePageRoutes(): void
     {
         $modelBasename = class_basename($this->modelFqn);
         $pluralModelBasename = Str::pluralStudly($modelBasename);
 
         if ($this->isSimple) {
-            $this->pages = [
+            $this->pageRoutes = [
                 'index' => [
                     'class' => "{$this->namespace}\\Pages\\Manage{$pluralModelBasename}",
                     'path' => '/',
@@ -293,7 +293,7 @@ class MakeResourceCommand extends Command
             return;
         }
 
-        $this->pages = [
+        $this->pageRoutes = [
             'index' => [
                 'class' => "{$this->namespace}\\Pages\\List{$pluralModelBasename}",
                 'path' => '/',
@@ -404,7 +404,7 @@ class MakeResourceCommand extends Command
             'fqn' => $this->fqn,
             'modelFqn' => $this->modelFqn,
             'clusterFqn' => $this->clusterFqn,
-            'pages' => $this->pages,
+            'pageRoutes' => $this->pageRoutes,
             'formSchemaFqn' => $this->formSchemaFqn,
             'infolistSchemaFqn' => $this->infolistSchemaFqn,
             'tableFqn' => $this->tableFqn,

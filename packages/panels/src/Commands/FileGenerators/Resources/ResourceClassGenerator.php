@@ -38,12 +38,12 @@ class ResourceClassGenerator extends ClassGenerator
      * @param array<string, array{
      *     class: class-string<Page>,
      *     path: string,
-     * }> $pages
+     * }> $pageRoutes
      */
     final public function __construct(
         protected string $fqn,
         protected string $modelFqn,
-        protected array $pages,
+        protected array $pageRoutes,
         protected ?string $formSchemaFqn,
         protected ?string $infolistSchemaFqn,
         protected ?string $tableFqn,
@@ -251,13 +251,15 @@ class ResourceClassGenerator extends ClassGenerator
 
     protected function addGetPagesMethodToClass(ClassType $class): void
     {
+        $pageRoutes = $this->getPageRoutes();
+
         $pages = array_map(
             fn (array $page, string $routeName): string => (string) new Literal("? => {$this->simplifyFqn($page['class'])}::route(?),", [
                 $routeName,
                 $page['path'],
             ]),
-            $pages = $this->getPages(),
-            array_keys($pages),
+            $pageRoutes,
+            array_keys($pageRoutes),
         );
 
         $pagesOutput = implode(PHP_EOL . '    ', $pages);
@@ -344,9 +346,9 @@ class ResourceClassGenerator extends ClassGenerator
      *     path: string,
      * }>
      */
-    public function getPages(): array
+    public function getPageRoutes(): array
     {
-        return $this->pages;
+        return $this->pageRoutes;
     }
 
     /**
@@ -356,11 +358,11 @@ class ResourceClassGenerator extends ClassGenerator
     {
         if ($this->hasPartialImports()) {
             return [
-                (string) str(Arr::first($this->getPages())['class'])->beforeLast('\\'),
+                (string) str(Arr::first($this->getPageRoutes())['class'])->beforeLast('\\'),
             ];
         }
 
-        return Arr::pluck($this->getPages(), 'class');
+        return Arr::pluck($this->getPageRoutes(), 'class');
     }
 
     /**
