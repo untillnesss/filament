@@ -35,6 +35,7 @@ class ResourceClassGenerator extends ClassGenerator
      * @param  ?class-string  $infolistSchemaFqn
      * @param  ?class-string  $tableFqn
      * @param  ?class-string<Cluster>  $clusterFqn
+     * @param  ?class-string $parentResourceFqn
      * @param array<string, array{
      *     class: class-string<Page>,
      *     path: string,
@@ -48,6 +49,7 @@ class ResourceClassGenerator extends ClassGenerator
         protected ?string $infolistSchemaFqn,
         protected ?string $tableFqn,
         protected ?string $clusterFqn,
+        protected ?string $parentResourceFqn,
         protected bool $hasViewOperation,
         protected bool $isGenerated,
         protected bool $isSoftDeletable,
@@ -70,6 +72,7 @@ class ResourceClassGenerator extends ClassGenerator
             Table::class,
             ...(($this->getModelBasename() === 'Resource') ? [$this->getModelFqn() => 'ResourceModel'] : [$this->getModelFqn()]),
             ...($this->hasCluster() ? (($this->getClusterBasename() === 'Resource') ? [$this->getClusterFqn() => 'ResourceCluster'] : [$this->getClusterFqn()]) : []),
+            ...($this->hasParentResource() ? [$this->getParentResourceFqn()] : []),
             ...($this->isSoftDeletable() ? [Builder::class, SoftDeletingScope::class] : []),
             ...$this->getPagesImports(),
             ...($this->hasPartialImports() ? [
@@ -99,6 +102,7 @@ class ResourceClassGenerator extends ClassGenerator
         $this->addModelPropertyToClass($class);
         $this->addNavigationIconPropertyToClass($class);
         $this->addClusterPropertyToClass($class);
+        $this->addParentResourcePropertyToClass($class);
     }
 
     protected function addMethodsToClass(ClassType $class): void
@@ -139,7 +143,7 @@ class ResourceClassGenerator extends ClassGenerator
             return;
         }
 
-        $property = $class->addProperty('cluster', new Literal("{$this->simplifyFqn($this->clusterFqn)}::class"))
+        $property = $class->addProperty('cluster', new Literal("{$this->simplifyFqn($this->getClusterFqn())}::class"))
             ->setProtected()
             ->setStatic()
             ->setType('?string');
@@ -147,6 +151,21 @@ class ResourceClassGenerator extends ClassGenerator
     }
 
     protected function configureClusterProperty(Property $property): void {}
+
+    protected function addParentResourcePropertyToClass(ClassType $class): void
+    {
+        if (! $this->hasParentResource()) {
+            return;
+        }
+
+        $property = $class->addProperty('parentResource', new Literal("{$this->simplifyFqn($this->getParentResourceFqn())}::class"))
+            ->setProtected()
+            ->setStatic()
+            ->setType('?string');
+        $this->configureParentResourceProperty($property);
+    }
+
+    protected function configureParentResourceProperty(Property $property): void {}
 
     protected function addFormMethodToClass(ClassType $class): void
     {
@@ -337,7 +356,24 @@ class ResourceClassGenerator extends ClassGenerator
 
     public function hasCluster(): bool
     {
+        if ($this->hasParentResource()) {
+            return false;
+        }
+
         return filled($this->getClusterFqn());
+    }
+
+    /**
+     * @return ?class-string
+     */
+    public function getParentResourceFqn(): ?string
+    {
+        return $this->parentResourceFqn;
+    }
+
+    public function hasParentResource(): bool
+    {
+        return filled($this->getParentResourceFqn());
     }
 
     /**

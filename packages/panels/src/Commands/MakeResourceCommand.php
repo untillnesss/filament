@@ -16,6 +16,7 @@ use Filament\Facades\Filament;
 use Filament\Forms\Commands\Concerns\CanGenerateForms;
 use Filament\Panel;
 use Filament\Resources\Pages\Page;
+use Filament\Resources\Resource;
 use Filament\Support\Commands\Concerns\CanIndentStrings;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
@@ -26,8 +27,12 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
+use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
@@ -45,7 +50,7 @@ class MakeResourceCommand extends Command
 
     protected $description = 'Create a new Filament resource class and default page classes';
 
-    protected $signature = 'make:filament-resource {name?} {--model-namespace=} {--soft-deletes} {--view} {--G|generate} {--S|simple} {--panel=} {--embed-schemas} {--embed-table} {--not-embedded} {--model} {--migration} {--factory} {--F|force}';
+    protected $name = 'make:filament-resource';
 
     /**
      * @var array<string>
@@ -69,7 +74,12 @@ class MakeResourceCommand extends Command
     /**
      * @var ?class-string<Cluster>
      */
-    protected ?string $clusterFqn;
+    protected ?string $clusterFqn = null;
+
+    /**
+     * @var ?class-string
+     */
+    protected ?string $parentResourceFqn = null;
 
     /**
      * @var class-string
@@ -106,23 +116,132 @@ class MakeResourceCommand extends Command
 
     protected bool $hasResourceClassesOutsideDirectories;
 
-    protected Panel $panel;
+    protected ?Panel $panel;
+
+    /**
+     * @return array<InputArgument>
+     */
+    protected function getArguments(): array
+    {
+        return [
+            new InputArgument(
+                name: 'name',
+                mode: InputArgument::OPTIONAL,
+                description: 'The name of the model to generate the resource for, optionally prefixed with directories',
+            ),
+        ];
+    }
+
+    /**
+     * @return array<InputOption>
+     */
+    protected function getOptions(): array
+    {
+        return [
+            new InputOption(
+                name: 'embed-schemas',
+                shortcut: null,
+                mode: InputOption::VALUE_NONE,
+                description: 'Embed the form and infolist schemas in the resource class instead of creating separate files',
+            ),
+            new InputOption(
+                name: 'embed-table',
+                shortcut: null,
+                mode: InputOption::VALUE_NONE,
+                description: 'Embed the table in the resource class instead of creating a separate file',
+            ),
+            new InputOption(
+                name: 'factory',
+                shortcut: null,
+                mode: InputOption::VALUE_NONE,
+                description: 'Create a factory for the model',
+            ),
+            new InputOption(
+                name: 'generate',
+                shortcut: 'G',
+                mode: InputOption::VALUE_NONE,
+                description: 'Generate the form schema and table columns based on the attributes of the model',
+            ),
+            new InputOption(
+                name: 'migration',
+                shortcut: null,
+                mode: InputOption::VALUE_NONE,
+                description: 'Create a migration for the model',
+            ),
+            new InputOption(
+                name: 'model',
+                shortcut: null,
+                mode: InputOption::VALUE_NONE,
+                description: 'Create the model class if it does not exist',
+            ),
+            new InputOption(
+                name: 'model-namespace',
+                shortcut: null,
+                mode: InputOption::VALUE_REQUIRED,
+                description: 'The namespace of the model class, [App\\Models] by default',
+            ),
+            new InputOption(
+                name: 'nested',
+                shortcut: 'N',
+                mode: InputOption::VALUE_OPTIONAL,
+                description: 'Nest the resource inside another through a relationship',
+            ),
+            new InputOption(
+                name: 'not-embedded',
+                shortcut: null,
+                mode: InputOption::VALUE_NONE,
+                description: 'Even if the resource is simple, create separate files for the form and infolist schemas and table',
+            ),
+            new InputOption(
+                name: 'panel',
+                shortcut: null,
+                mode: InputOption::VALUE_REQUIRED,
+                description: 'The panel to create the resource in',
+            ),
+            new InputOption(
+                name: 'simple',
+                shortcut: 'S',
+                mode: InputOption::VALUE_NONE,
+                description: 'Generate a simple resource class with a single page, modals and embedded schemas and embedded table',
+            ),
+            new InputOption(
+                name: 'soft-deletes',
+                shortcut: null,
+                mode: InputOption::VALUE_NONE,
+                description: 'Indicate if the model uses soft deletes',
+            ),
+            new InputOption(
+                name: 'view',
+                shortcut: null,
+                mode: InputOption::VALUE_NONE,
+                description: 'Generate a view page for the resource',
+            ),
+            new InputOption(
+                name: 'force',
+                shortcut: 'F',
+                mode: InputOption::VALUE_NONE,
+                description: 'Overwrite the contents of the files if they already exist',
+            ),
+        ];
+    }
 
     public function handle(): int
     {
-        $this->configureModel();
-        $this->configurePanel();
-        $this->configureResourcesLocation();
-        $this->hasViewOperation = $this->option('view');
-        $this->isGenerated = $this->option('generate');
-        $this->isSoftDeletable = $this->option('soft-deletes');
-        $this->isSimple = $this->option('simple');
-        $this->hasResourceClassesOutsideDirectories = $this->hasFileGenerationFlag(FileGenerationFlag::PANEL_RESOURCE_CLASSES_OUTSIDE_DIRECTORIES);
-
-        $this->configureLocation();
-        $this->configurePageRoutes();
-
         try {
+            $this->configureModel();
+            $this->configurePanel();
+            $this->configureResourcesLocation();
+            $this->configureCluster();
+            $this->isSimple = $this->option('simple');
+            $this->configureParentResource();
+            $this->hasViewOperation = $this->option('view');
+            $this->isGenerated = $this->option('generate');
+            $this->isSoftDeletable = $this->option('soft-deletes');
+            $this->hasResourceClassesOutsideDirectories = $this->hasFileGenerationFlag(FileGenerationFlag::PANEL_RESOURCE_CLASSES_OUTSIDE_DIRECTORIES);
+
+            $this->configureLocation();
+            $this->configurePageRoutes();
+
             $this->createFormSchema();
             $this->createInfolistSchema();
             $this->createTable();
@@ -137,6 +256,8 @@ class MakeResourceCommand extends Command
         } catch (InvalidCommandOutput) {
             return static::INVALID;
         }
+
+        $this->components->info("Filament resource [{$this->fqn}] created successfully.");
 
         return static::SUCCESS;
     }
@@ -236,9 +357,11 @@ class MakeResourceCommand extends Command
         $this->resourcesDirectory = (count($directories) > 1) ?
             $directories[array_search($this->resourcesNamespace, $namespaces)] :
             (Arr::first($directories) ?? app_path('Filament/Resources/'));
+    }
 
+    protected function configureCluster(): void
+    {
         $clusterNamespace = (string) str($this->resourcesNamespace)->beforeLast('\Resources');
-        $this->clusterFqn = null;
 
         if (
             class_exists($cluster = ($clusterNamespace . '\\' . class_basename($clusterNamespace))) &&
@@ -251,6 +374,105 @@ class MakeResourceCommand extends Command
         ) {
             $this->clusterFqn = $clusterNamespace;
         }
+    }
+
+    protected function configureParentResource(): void
+    {
+        if (! $this->option('nested')) {
+            return;
+        }
+
+        if ($this->isSimple) {
+            $this->components->error('Nested resources cannot be simple, you can use the relation manager or relation page on the parent resource to open modals for each operation.');
+
+            throw new InvalidCommandOutput();
+        }
+
+        $parentResource = $this->option('nested');
+
+        if (is_string($parentResource)) {
+            $parentResourceNamespace = (string) str($parentResource)
+                ->beforeLast('Resource')
+                ->pluralStudly()
+                ->replace('/', '\\')
+                ->prepend("{$this->resourcesNamespace}\\");
+
+            $parentResourceBasename = (string) str($parentResource)
+                ->classBasename()
+                ->beforeLast('Resource')
+                ->singular()
+                ->append('Resource');
+
+            if (class_exists("{$parentResourceNamespace}\\{$parentResourceBasename}")) {
+                $this->parentResourceFqn = "{$parentResourceNamespace}\\{$parentResourceBasename}";
+                $this->resourcesNamespace = (string) str($this->parentResourceFqn)
+                    ->beforeLast('\\')
+                    ->append('\\Resources');
+                $this->resourcesDirectory = (string) str((new ReflectionClass($this->parentResourceFqn))->getFileName())
+                    ->beforeLast(DIRECTORY_SEPARATOR)
+                    ->append('/Resources');
+
+                return;
+            }
+
+            $parentResourceNamespace = (string) str($parentResourceNamespace)
+                ->beforeLast('\\');
+
+            if (class_exists("{$parentResourceNamespace}\\{$parentResourceBasename}")) {
+                $this->parentResourceFqn = "{$parentResourceNamespace}\\{$parentResourceBasename}";
+                $this->resourcesNamespace = (string) str($this->parentResourceFqn)
+                    ->append('\\Resources');
+                $this->resourcesDirectory = (string) str((new ReflectionClass($this->parentResourceFqn))->getFileName())
+                    ->beforeLast('.')
+                    ->append('/Resources');
+
+                return;
+            }
+        }
+
+        $this->parentResourceFqn = select(
+            label: 'Which resource would you like to nest this resource inside?',
+            options: array_filter(
+                $this->panel->getResources(),
+                fn (string $resource): bool => str($resource)->startsWith("{$this->resourcesNamespace}\\"),
+            ),
+        );
+
+        $parentResourceNamespace = str($this->parentResourceFqn)
+            ->beforeLast('Resource')
+            ->pluralStudly();
+
+        if (
+            $parentResourceNamespace->contains('\\') &&
+            $parentResourceNamespace->beforeLast('\\')->classBasename()->is(
+                $parentResourceNamespace->classBasename()->pluralStudly()
+            )
+        ) {
+            $this->resourcesNamespace = (string) $parentResourceNamespace
+                ->when(
+                    $parentResourceNamespace
+                        ->beforeLast("\\")
+                        ->contains("\\"),
+                    fn (Stringable $namespace): Stringable => $namespace
+                        ->beforeLast("\\")
+                        ->beforeLast("\\")
+                        ->append("\\")
+                        ->append($namespace->classBasename()),
+                    fn (Stringable $namespace): Stringable => $namespace->classBasename(),
+                )
+                ->append('\\Resources');
+
+            $this->resourcesDirectory = (string) str((new ReflectionClass($this->parentResourceFqn))->getFileName())
+                ->beforeLast(DIRECTORY_SEPARATOR)
+                ->append('/Resources');
+
+            return;
+        }
+
+        $this->resourcesNamespace = "{$this->parentResourceFqn}\\Resources";
+        $this->resourcesDirectory = (string) str((new ReflectionClass($this->parentResourceFqn))->getFileName())
+            ->beforeLast('.')
+            ->append('/Resources');
     }
 
     protected function configureLocation(): void
@@ -294,10 +516,12 @@ class MakeResourceCommand extends Command
         }
 
         $this->pageRoutes = [
-            'index' => [
-                'class' => "{$this->namespace}\\Pages\\List{$pluralModelBasename}",
-                'path' => '/',
-            ],
+            ...(blank($this->parentResourceFqn) ? [
+                'index' => [
+                    'class' => "{$this->namespace}\\Pages\\List{$pluralModelBasename}",
+                    'path' => '/',
+                ],
+            ] : []),
             'create' => [
                 'class' => "{$this->namespace}\\Pages\\Create{$modelBasename}",
                 'path' => '/create',
@@ -404,6 +628,7 @@ class MakeResourceCommand extends Command
             'fqn' => $this->fqn,
             'modelFqn' => $this->modelFqn,
             'clusterFqn' => $this->clusterFqn,
+            'parentResourceFqn' => $this->parentResourceFqn,
             'pageRoutes' => $this->pageRoutes,
             'formSchemaFqn' => $this->formSchemaFqn,
             'infolistSchemaFqn' => $this->infolistSchemaFqn,
@@ -439,6 +664,10 @@ class MakeResourceCommand extends Command
     protected function createListPage(): void
     {
         if ($this->isSimple) {
+            return;
+        }
+
+        if (filled($this->parentResourceFqn)) {
             return;
         }
 
