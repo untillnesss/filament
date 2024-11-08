@@ -48,7 +48,7 @@ class MakeFieldCommand extends Command
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
-        $fieldClass = (string) str($field)->afterLast('\\');
+        $fieldClass = (string) str($field)->classBasename();
         $fieldNamespace = str($field)->contains('\\') ?
             (string) str($field)->beforeLast('\\') :
             '';

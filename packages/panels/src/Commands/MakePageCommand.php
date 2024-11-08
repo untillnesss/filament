@@ -52,7 +52,7 @@ class MakePageCommand extends Command
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
-        $pageClass = (string) str($page)->afterLast('\\');
+        $pageClass = (string) str($page)->classBasename();
         $pageNamespace = str($page)->contains('\\') ?
             (string) str($page)->beforeLast('\\') :
             '';
@@ -117,7 +117,7 @@ class MakePageCommand extends Command
             }
 
             $resourceClass = (string) str($resource)
-                ->afterLast('\\');
+                ->classBasename();
 
             $resourcePage = $this->option('type') ?? select(
                 label: 'Which type of page would you like to create?',

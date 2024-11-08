@@ -51,7 +51,7 @@ class MakeExporterCommand extends Command
             $model = 'Exporter';
         }
 
-        $modelClass = (string) str($model)->afterLast('\\');
+        $modelClass = (string) str($model)->classBasename();
         $modelNamespace = str($model)->contains('\\') ?
             (string) str($model)->beforeLast('\\') :
             '';

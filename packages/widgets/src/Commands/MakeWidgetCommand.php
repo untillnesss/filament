@@ -45,7 +45,7 @@ class MakeWidgetCommand extends Command
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
-        $widgetClass = (string) str($widget)->afterLast('\\');
+        $widgetClass = (string) str($widget)->classBasename();
         $widgetNamespace = str($widget)->contains('\\') ?
             (string) str($widget)->beforeLast('\\') :
             '';
@@ -82,7 +82,7 @@ class MakeWidgetCommand extends Command
                 }
 
                 $resourceClass = (string) str($resource)
-                    ->afterLast('\\');
+                    ->classBasename();
             }
         }
 

@@ -51,7 +51,7 @@ class MakeImporterCommand extends Command
             $model = 'Importer';
         }
 
-        $modelClass = (string) str($model)->afterLast('\\');
+        $modelClass = (string) str($model)->classBasename();
         $modelNamespace = str($model)->contains('\\') ?
             (string) str($model)->beforeLast('\\') :
             '';

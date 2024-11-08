@@ -56,7 +56,7 @@ class MakeLayoutComponentCommand extends Command
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
-        $componentClass = (string) str($component)->afterLast('\\');
+        $componentClass = (string) str($component)->classBasename();
         $componentNamespace = str($component)->contains('\\') ?
             (string) str($component)->beforeLast('\\') :
             '';

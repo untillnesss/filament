@@ -3,6 +3,7 @@
 namespace Filament\Commands;
 
 use Filament\Clusters\Cluster;
+use Filament\Commands\Concerns\HasPanel;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceCreateRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceEditRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceListRecordsPageClassGenerator;
@@ -12,26 +13,23 @@ use Filament\Commands\FileGenerators\Resources\ResourceClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Schemas\ResourceFormSchemaClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Schemas\ResourceInfolistSchemaClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Schemas\ResourceTableClassGenerator;
-use Filament\Facades\Filament;
-use Filament\Forms\Commands\Concerns\CanGenerateForms;
-use Filament\Panel;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Support\Commands\Concerns\CanIndentStrings;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
-use Filament\Support\Config\FileGenerationFlag;
-use Filament\Tables\Commands\Concerns\CanGenerateTables;
+use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
+use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
@@ -41,11 +39,9 @@ use function Laravel\Prompts\text;
 ])]
 class MakeResourceCommand extends Command
 {
-    use CanGenerateForms;
-    use CanGenerateTables;
-    use CanIndentStrings;
+    use CanCheckFileGenerationFlags;
     use CanManipulateFiles;
-    use CanReadModelSchemas;
+    use HasPanel;
 
     protected $description = 'Create a new Filament resource class and default page classes';
 
@@ -114,8 +110,6 @@ class MakeResourceCommand extends Command
     protected bool $isSoftDeletable;
 
     protected bool $hasResourceClassesOutsideDirectories;
-
-    protected ?Panel $panel;
 
     /**
      * @return array<InputArgument>
@@ -228,7 +222,7 @@ class MakeResourceCommand extends Command
     {
         try {
             $this->configureModel();
-            $this->configurePanel();
+            $this->configurePanel(question: 'Which panel would you like to create this resource in?');
             $this->configureCluster();
             $this->configureResourcesLocation();
             $this->isSimple = $this->option('simple');
@@ -258,6 +252,10 @@ class MakeResourceCommand extends Command
 
         $this->components->info("Filament resource [{$this->fqn}] created successfully.");
 
+        if (empty($this->panel->getResourceNamespaces())) {
+            $this->components->info('Make sure to register the resource with `resources()` or discover it with `discoverResources()` in the panel service provider.');
+        }
+
         return static::SUCCESS;
     }
 
@@ -268,11 +266,13 @@ class MakeResourceCommand extends Command
             placeholder: 'BlogPost',
             required: true,
         ))
-            ->studly()
-            ->beforeLast('Resource')
             ->trim('/')
             ->trim('\\')
             ->trim(' ')
+            ->when(
+                fn (Stringable $model): bool => str($model)->endsWith('Resource'),
+                fn (Stringable $model): Stringable => str($model)->beforeLast('Resource'),
+            )
             ->studly()
             ->replace('/', '\\');
 
@@ -307,31 +307,6 @@ class MakeResourceCommand extends Command
         }
     }
 
-    protected function configurePanel(): void
-    {
-        $panelName = $this->option('panel');
-
-        $this->panel = filled($panelName) ? Filament::getPanel($panelName, isStrict: false) : null;
-
-        if ($this->panel) {
-            return;
-        }
-
-        $panels = Filament::getPanels();
-
-        /** @var Panel $panel */
-        $panel = (count($panels) > 1) ? $panels[select(
-            label: 'Which panel would you like to create this in?',
-            options: array_map(
-                fn (Panel $panel): string => $panel->getId(),
-                $panels,
-            ),
-            default: Filament::getDefaultPanel()->getId(),
-        )] : Arr::first($panels);
-
-        $this->panel = $panel;
-    }
-
     protected function configureCluster(): void
     {
         $clusterFqns = $this->panel->getClusters();
@@ -340,10 +315,16 @@ class MakeResourceCommand extends Command
             return;
         }
 
+        if (! confirm(
+            label: 'Would you like to create this resource in a cluster?',
+            default: false,
+        )) {
+            return;
+        }
+
         $this->clusterFqn = select(
             label: 'Would you like to create this resource in a cluster?',
             options: $clusterFqns,
-            required: false,
         );
     }
 
@@ -356,7 +337,7 @@ class MakeResourceCommand extends Command
 
             $clusterNamespacePartBeforeBasename = (string) str($this->clusterFqn)
                 ->beforeLast('\\')
-                ->afterLast('\\');
+                ->classBasename();
 
             if ($clusterBasenameBeforeCluster === $clusterNamespacePartBeforeBasename) {
                 $this->resourcesNamespace = (string) str($this->clusterFqn)
@@ -395,7 +376,7 @@ class MakeResourceCommand extends Command
         }
 
         $this->resourcesNamespace = select(
-            label: 'Which namespace would you like to create this in?',
+            label: 'Which namespace would you like to create this resource in?',
             options: $namespaces,
         );
         $this->resourcesDirectory = $directories[array_search($this->resourcesNamespace, $namespaces)];
@@ -461,16 +442,29 @@ class MakeResourceCommand extends Command
         );
 
         if ($parentResourceFqns) {
-            $this->parentResourceFqn = text(
+            $this->parentResourceFqn = (string) str(text(
                 label: "No resources were found within [{$this->resourcesNamespace}]. Which resource would you like to nest this resource inside?",
                 placeholder: 'App\\Filament\\Resources\\Posts\\PostResource',
-                validate: fn (string $value): ?string => match (true) {
-                    ! class_exists($value) => 'The resource class does not exist. Please ensure you use the fully qualified class name (the namespace and class name) of the resource.',
-                    ! is_subclass_of($value, Resource::class) => 'The resource class or one of its parents must extend [' . Resource::class . '].',
-                    default => null,
+                required: true,
+                validate: function (string $value): ?string {
+                    $value = (string) str($value)
+                        ->trim('/')
+                        ->trim('\\')
+                        ->trim(' ')
+                        ->replace('/', '\\');
+
+                    return match (true) {
+                        ! class_exists($value) => 'The resource class does not exist. Please ensure you use the fully qualified class name (the namespace and class name) of the resource.',
+                        ! is_subclass_of($value, Resource::class) => 'The resource class or one of its parents must extend [' . Resource::class . '].',
+                        default => null,
+                    };
                 },
                 hint: 'Please provide the fully qualified class name of the resource.',
-            );
+            ))
+                ->trim('/')
+                ->trim('\\')
+                ->trim(' ')
+                ->replace('/', '\\');
         } else {
             $this->parentResourceFqn = select(
                 label: 'Which resource would you like to nest this resource inside?',
@@ -485,7 +479,7 @@ class MakeResourceCommand extends Command
 
         $parentResourceNamespacePartBeforeBasename = (string) str($this->parentResourceFqn)
             ->beforeLast('\\')
-            ->afterLast('\\');
+            ->classBasename();
 
         if ($pluralParentResourceBasenameBeforeResource === $parentResourceNamespacePartBeforeBasename) {
             $this->resourcesNamespace = (string) str($this->parentResourceFqn)
@@ -775,11 +769,6 @@ class MakeResourceCommand extends Command
             'fqn' => "{$this->namespace}\\Pages\\View{$modelBasename}",
             'resourceFqn' => $this->fqn,
         ]));
-    }
-
-    protected function hasFileGenerationFlag(string $flag): bool
-    {
-        return in_array($flag, config('filament.file_generation.flags') ?? []);
     }
 
     protected function hasEmbeddedSchemas(): bool

@@ -42,7 +42,7 @@ class MakeSettingsPageCommand extends Command
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
-        $pageClass = (string) str($page)->afterLast('\\');
+        $pageClass = (string) str($page)->classBasename();
         $pageNamespace = str($page)->contains('\\') ?
             (string) str($page)->beforeLast('\\') :
             '';

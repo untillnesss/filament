@@ -44,7 +44,7 @@ class MakeTableCommand extends Command
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
-        $componentClass = (string) str($component)->afterLast('\\');
+        $componentClass = (string) str($component)->classBasename();
         $componentNamespace = str($component)->contains('\\') ?
             (string) str($component)->beforeLast('\\') :
             '';
@@ -62,7 +62,7 @@ class MakeTableCommand extends Command
             required: true,
         ))
             ->replace('/', '\\');
-        $modelClass = (string) str($model)->afterLast('\\');
+        $modelClass = (string) str($model)->classBasename();
 
         $path = (string) str($component)
             ->prepend('/')

@@ -151,7 +151,7 @@ trait HasRoutes
 
         $namespacePartBeforeBasename = (string) str(static::class)
             ->beforeLast('\\')
-            ->afterLast('\\');
+            ->classBasename();
 
         if ($pluralBasenameBeforeResource === $namespacePartBeforeBasename) {
             return str(static::class)

@@ -45,7 +45,7 @@ class MakeFormCommand extends Command
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
-        $componentClass = (string) str($component)->afterLast('\\');
+        $componentClass = (string) str($component)->classBasename();
         $componentNamespace = str($component)->contains('\\') ?
             (string) str($component)->beforeLast('\\') :
             '';
@@ -63,7 +63,7 @@ class MakeFormCommand extends Command
                     placeholder: 'Product',
                     required: $this->option('edit')
                 ))->replace('/', '\\');
-        $modelClass = (string) str($model)->afterLast('\\');
+        $modelClass = (string) str($model)->classBasename();
 
         if ($this->option('edit')) {
             $isEditForm = true;

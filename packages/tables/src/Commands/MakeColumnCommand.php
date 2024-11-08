@@ -42,7 +42,7 @@ class MakeColumnCommand extends Command
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
-        $columnClass = (string) str($column)->afterLast('\\');
+        $columnClass = (string) str($column)->classBasename();
         $columnNamespace = str($column)->contains('\\') ?
             (string) str($column)->beforeLast('\\') :
             '';

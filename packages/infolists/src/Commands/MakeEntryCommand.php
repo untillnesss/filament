@@ -48,7 +48,7 @@ class MakeEntryCommand extends Command
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
-        $entryClass = (string) str($entry)->afterLast('\\');
+        $entryClass = (string) str($entry)->classBasename();
         $entryNamespace = str($entry)->contains('\\') ?
             (string) str($entry)->beforeLast('\\') :
             '';

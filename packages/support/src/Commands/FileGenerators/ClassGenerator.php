@@ -2,8 +2,8 @@
 
 namespace Filament\Support\Commands\FileGenerators;
 
+use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\Contracts\FileGenerator;
-use Filament\Support\Config\FileGenerationFlag;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
@@ -12,6 +12,8 @@ use Nette\PhpGenerator\PsrPrinter;
 
 abstract class ClassGenerator implements FileGenerator
 {
+    use CanCheckFileGenerationFlags;
+
     protected PhpNamespace $namespace;
 
     public function getFile(): PhpFile
@@ -73,15 +75,7 @@ abstract class ClassGenerator implements FileGenerator
 
     public function hasPartialImports(): bool
     {
-        return in_array(FileGenerationFlag::PARTIAL_IMPORTS, $this->getFileGenerationFlags());
-    }
-
-    /**
-     * @return array<string>
-     */
-    public function getFileGenerationFlags(): array
-    {
-        return config('filament.file_generation.flags') ?? [];
+        return $this->hasFileGenerationFlag(FileGenerationFlag::PARTIAL_IMPORTS);
     }
 
     /**

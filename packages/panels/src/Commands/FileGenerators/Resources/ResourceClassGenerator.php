@@ -18,7 +18,6 @@ use Illuminate\Support\Arr;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
-use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\Property;
 
 class ResourceClassGenerator extends ClassGenerator
@@ -26,8 +25,6 @@ class ResourceClassGenerator extends ClassGenerator
     use CanGenerateResourceForms;
     use CanGenerateResourceTables;
     use CanReadModelSchemas;
-
-    protected PhpNamespace $namespace;
 
     /**
      * @param  class-string<Model>  $modelFqn
