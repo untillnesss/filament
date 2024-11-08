@@ -2,8 +2,10 @@
 
 namespace Filament\Commands;
 
-use Filament\Clusters\Cluster;
+use Filament\Commands\Concerns\CanAskForResource;
+use Filament\Commands\Concerns\HasCluster;
 use Filament\Commands\Concerns\HasPanel;
+use Filament\Commands\Concerns\HasResourcesLocation;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceCreateRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceEditRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceListRecordsPageClassGenerator;
@@ -14,7 +16,6 @@ use Filament\Commands\FileGenerators\Resources\Schemas\ResourceFormSchemaClassGe
 use Filament\Commands\FileGenerators\Resources\Schemas\ResourceInfolistSchemaClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Schemas\ResourceTableClassGenerator;
 use Filament\Resources\Pages\Page;
-use Filament\Resources\Resource;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
@@ -22,8 +23,6 @@ use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use ReflectionClass;
@@ -32,9 +31,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\search;
 use function Laravel\Prompts\suggest;
-use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:filament-resource', aliases: [
     'filament:make-resource',
@@ -42,9 +39,12 @@ use function Laravel\Prompts\text;
 ])]
 class MakeResourceCommand extends Command
 {
+    use CanAskForResource;
     use CanCheckFileGenerationFlags;
     use CanManipulateFiles;
+    use HasCluster;
     use HasPanel;
+    use HasResourcesLocation;
 
     protected $description = 'Create a new Filament resource class and default page classes';
 
@@ -64,15 +64,6 @@ class MakeResourceCommand extends Command
     protected string $modelFqn;
 
     protected string $modelFqnEnd;
-
-    protected string $resourcesNamespace;
-
-    protected string $resourcesDirectory;
-
-    /**
-     * @var ?class-string<Cluster>
-     */
-    protected ?string $clusterFqn = null;
 
     /**
      * @var ?class-string
@@ -141,7 +132,6 @@ class MakeResourceCommand extends Command
                 shortcut: 'C',
                 mode: InputOption::VALUE_OPTIONAL,
                 description: 'The cluster to create the resource in',
-                default: false,
             ),
             new InputOption(
                 name: 'embed-schemas',
@@ -237,7 +227,7 @@ class MakeResourceCommand extends Command
             $this->configureModel();
             $this->configurePanel(question: 'Which panel would you like to create this resource in?');
             $this->configureCluster();
-            $this->configureResourcesLocation();
+            $this->configureResourcesLocation(question: 'Which namespace would you like to create this resource in?');
             $this->configureIsSimple();
             $this->configureParentResource();
             $this->configureHasViewOperation();
@@ -342,165 +332,16 @@ class MakeResourceCommand extends Command
 
     protected function configureCluster(): void
     {
-        $cluster = $this->option('cluster');
-
-        if ($cluster === false) {
-            return;
-        }
-
-        if (is_string($cluster)) {
-            $cluster = (string) str($cluster)
-                ->trim('/')
-                ->trim('\\')
-                ->trim(' ')
-                ->replace('/', '\\');
-
-            if (! class_exists($cluster)) {
-                $this->components->warn('The cluster class provided does not exist.');
-            } elseif (! is_subclass_of($cluster, Cluster::class)) {
-                $this->components->warn('The cluster class or one of its parents must extend [' . Cluster::class . '].');
-            } else {
-                $this->clusterFqn = $cluster;
-
-                return;
-            }
-        }
-
-        $clusterFqns = array_values($this->panel->getClusters());
-
-        if (empty($clusterFqns)) {
-            $this->clusterFqn = (string) str(text(
-                label: "No clusters were found within the [{$this->panel->getId()}] panel. Which cluster would you like to create this resource in?",
-                placeholder: 'App\\Filament\\Clusters\\Blog',
-                required: true,
-                validate: function (string $value): ?string {
-                    $value = (string) str($value)
-                        ->trim('/')
-                        ->trim('\\')
-                        ->trim(' ')
-                        ->replace('/', '\\');
-
-                    if (
-                        (! class_exists($value)) &&
-                        class_exists("{$value}\\" . class_basename($value) . 'Cluster')
-                    ) {
-                        $value = "{$value}\\" . class_basename($value) . 'Cluster';
-                    }
-
-                    return match (true) {
-                        ! class_exists($value) => 'The cluster class does not exist. Please ensure you use the fully qualified class name of the cluster, such as [App\\Filament\\Clusters\\Blog].',
-                        ! is_subclass_of($value, Cluster::class) => 'The cluster class or one of its parents must extend [' . Cluster::class . '].',
-                        default => null,
-                    };
-                },
-                hint: 'Please provide the fully qualified class name of the cluster.',
-            ))
-                ->trim('/')
-                ->trim('\\')
-                ->trim(' ')
-                ->replace('/', '\\');
-
-            if (
-                (! class_exists($this->clusterFqn)) &&
-                class_exists("{$this->clusterFqn}\\" . class_basename($this->clusterFqn) . 'Cluster')
-            ) {
-                $this->clusterFqn = "{$this->clusterFqn}\\" . class_basename($this->clusterFqn) . 'Cluster';
-            }
-
-            return;
-        }
-
-        $this->clusterFqn = search(
-            label: 'Which cluster would you like to create this resource in?',
-            options: function (?string $search) use ($clusterFqns): array {
-                if (blank($search)) {
-                    return $clusterFqns;
-                }
-
-                $search = str($search)->trim()->replace(['\\', '/'], '');
-
-                return collect($clusterFqns)
-                    ->filter(fn (string $fqn): bool => str($fqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true))
-                    ->mapWithKeys(function (string $fqn): array {
-                        $basenameBeforeCluster = (string) str($fqn)
-                            ->classBasename()
-                            ->beforeLast('Cluster');
-
-                        $namespacePartBeforeBasename = (string) str($fqn)
-                            ->beforeLast('\\')
-                            ->classBasename();
-
-                        if ($basenameBeforeCluster === $namespacePartBeforeBasename) {
-                            return [$fqn => (string) str($fqn)->beforeLast('\\')];
-                        }
-
-                        return [$fqn => $fqn];
-                    })
-                    ->all();
-            },
+        $this->configureClusterFqn(
+            initialQuestion: 'Would you like to create this resource in a cluster?',
+            question: 'Which cluster would you like to create this resource in?',
         );
-    }
 
-    protected function configureResourcesLocation(): void
-    {
-        if (filled($this->clusterFqn)) {
-            $clusterBasenameBeforeCluster = (string) str($this->clusterFqn)
-                ->classBasename()
-                ->beforeLast('Cluster');
-
-            $clusterNamespacePartBeforeBasename = (string) str($this->clusterFqn)
-                ->beforeLast('\\')
-                ->classBasename();
-
-            if ($clusterBasenameBeforeCluster === $clusterNamespacePartBeforeBasename) {
-                $this->resourcesNamespace = (string) str($this->clusterFqn)
-                    ->beforeLast('\\')
-                    ->append('\\Resources');
-                $this->resourcesDirectory = (string) str((new ReflectionClass($this->clusterFqn))->getFileName())
-                    ->beforeLast(DIRECTORY_SEPARATOR)
-                    ->append('/Resources');
-
-                return;
-            }
-
-            $this->resourcesNamespace = (string) str($this->clusterFqn)->append('\\Resources');
-            $this->resourcesDirectory = (string) str((new ReflectionClass($this->clusterFqn))->getFileName())
-                ->beforeLast('.')
-                ->append('/Resources');
-
+        if (blank($this->clusterFqn)) {
             return;
         }
 
-        $directories = $this->panel->getResourceDirectories();
-        $namespaces = $this->panel->getResourceNamespaces();
-
-        foreach ($directories as $index => $directory) {
-            if (str($directory)->startsWith(base_path('vendor'))) {
-                unset($directories[$index]);
-                unset($namespaces[$index]);
-            }
-        }
-
-        if (count($namespaces) < 2) {
-            $this->resourcesNamespace = (Arr::first($namespaces) ?? 'App\\Filament\\Resources');
-            $this->resourcesDirectory = (Arr::first($directories) ?? app_path('Filament/Resources/'));
-
-            return;
-        }
-
-        $this->resourcesNamespace = search(
-            label: 'Which namespace would you like to create this resource in?',
-            options: function (?string $search) use ($namespaces): array {
-                if (blank($search)) {
-                    return $namespaces;
-                }
-
-                $search = str($search)->trim()->replace(['\\', '/'], '');
-
-                return array_filter($namespaces, fn (string $namespace): bool => str($namespace)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
-            },
-        );
-        $this->resourcesDirectory = $directories[array_search($this->resourcesNamespace, $namespaces)];
+        $this->configureClusterResourcesLocation();
     }
 
     protected function configureIsSimple(): void
@@ -522,91 +363,10 @@ class MakeResourceCommand extends Command
             throw new InvalidCommandOutput;
         }
 
-        if (is_string($parentResource)) {
-            $parentResourceNamespace = (string) str($parentResource)
-                ->beforeLast('Resource')
-                ->pluralStudly()
-                ->replace('/', '\\')
-                ->prepend("{$this->resourcesNamespace}\\");
-
-            $parentResourceBasename = (string) str($parentResource)
-                ->classBasename()
-                ->beforeLast('Resource')
-                ->singular()
-                ->append('Resource');
-
-            if (class_exists("{$parentResourceNamespace}\\{$parentResourceBasename}")) {
-                $this->parentResourceFqn = "{$parentResourceNamespace}\\{$parentResourceBasename}";
-                $this->resourcesNamespace = (string) str($this->parentResourceFqn)
-                    ->beforeLast('\\')
-                    ->append('\\Resources');
-                $this->resourcesDirectory = (string) str((new ReflectionClass($this->parentResourceFqn))->getFileName())
-                    ->beforeLast(DIRECTORY_SEPARATOR)
-                    ->append('/Resources');
-
-                return;
-            }
-
-            $parentResourceNamespace = (string) str($parentResourceNamespace)
-                ->beforeLast('\\');
-
-            if (class_exists("{$parentResourceNamespace}\\{$parentResourceBasename}")) {
-                $this->parentResourceFqn = "{$parentResourceNamespace}\\{$parentResourceBasename}";
-                $this->resourcesNamespace = (string) str($this->parentResourceFqn)
-                    ->append('\\Resources');
-                $this->resourcesDirectory = (string) str((new ReflectionClass($this->parentResourceFqn))->getFileName())
-                    ->beforeLast('.')
-                    ->append('/Resources');
-
-                return;
-            }
-        }
-
-        $parentResourceFqns = array_filter(
-            array_values($this->panel->getResources()),
-            fn (string $resource): bool => str($resource)->startsWith("{$this->resourcesNamespace}\\"),
+        $this->parentResourceFqn = $this->askForResource(
+            question: 'Which resource would you like to nest this resource inside?',
+            initialResource: $parentResource,
         );
-
-        if (! $parentResourceFqns) {
-            $this->parentResourceFqn = (string) str(text(
-                label: "No resources were found within [{$this->resourcesNamespace}]. Which resource would you like to nest this resource inside?",
-                placeholder: 'App\\Filament\\Resources\\Posts\\PostResource',
-                required: true,
-                validate: function (string $value): ?string {
-                    $value = (string) str($value)
-                        ->trim('/')
-                        ->trim('\\')
-                        ->trim(' ')
-                        ->replace('/', '\\');
-
-                    return match (true) {
-                        ! class_exists($value) => 'The resource class does not exist. Please ensure you use the fully qualified class name of the resource, such as [App\\Filament\\Resources\\Posts\\PostResource].',
-                        ! is_subclass_of($value, Resource::class) => 'The resource class or one of its parents must extend [' . Resource::class . '].',
-                        default => null,
-                    };
-                },
-                hint: 'Please provide the fully qualified class name of the resource.',
-            ))
-                ->trim('/')
-                ->trim('\\')
-                ->trim(' ')
-                ->replace('/', '\\');
-        } else {
-            $this->parentResourceFqn = search(
-                label: 'Which resource would you like to nest this resource inside?',
-                options: function (?string $search) use ($parentResourceFqns): array {
-                    $search = str($search)->trim()->replace(['\\', '/'], '');
-
-                    return collect($parentResourceFqns)
-                        ->when(
-                            filled($search = (string) str($search)->trim()->replace(['\\', '/'], '')),
-                            fn (Collection $parentResourceFqns) => $parentResourceFqns->filter(fn (string $fqn): bool => str($fqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true)),
-                        )
-                        ->mapWithKeys(fn (string $fqn): array => [$fqn => (string) str($fqn)->after("{$this->resourcesNamespace}\\")])
-                        ->all();
-                },
-            );
-        }
 
         $pluralParentResourceBasenameBeforeResource = (string) str($this->parentResourceFqn)
             ->classBasename()

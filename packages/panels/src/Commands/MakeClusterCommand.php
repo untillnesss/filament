@@ -97,7 +97,7 @@ class MakeClusterCommand extends Command
 
             $this->configureFqn();
 
-            $this->createClusterClass();
+            $this->createClass();
         } catch (InvalidCommandOutput) {
             return static::INVALID;
         }
@@ -185,7 +185,7 @@ class MakeClusterCommand extends Command
         $this->fqn = $this->clustersNamespace . '\\' . $this->fqnEnd;
     }
 
-    protected function createClusterClass(): void
+    protected function createClass(): void
     {
         $path = (string) str("{$this->clustersDirectory}\\{$this->fqnEnd}.php")
             ->replace('\\', '/')
