@@ -49,7 +49,7 @@ trait HasComponents
     protected array $pageNamespaces = [];
 
     /**
-     * @var array<class-string>
+     * @var array<class-string<Cluster>>
      */
     protected array $clusters = [];
 
@@ -272,6 +272,14 @@ trait HasComponents
     }
 
     /**
+     * @return array<class-string<Cluster>>
+     */
+    public function getClusters(): array
+    {
+        return $this->clusters;
+    }
+
+    /**
      * @return array<string>
      */
     public function getClusterDirectories(): array
@@ -311,10 +319,7 @@ trait HasComponents
      */
     public function getResourceDirectories(): array
     {
-        return [
-            ...$this->resourceDirectories,
-            ...array_map(fn (string $fileName): string => ((string) str($fileName)->beforeLast('.php')) . DIRECTORY_SEPARATOR . 'Resources', array_keys($this->clusters)),
-        ];
+        return $this->resourceDirectories;
     }
 
     /**
@@ -322,10 +327,7 @@ trait HasComponents
      */
     public function getResourceNamespaces(): array
     {
-        return [
-            ...$this->resourceNamespaces,
-            ...array_map(fn (string $namespace): string => "{$namespace}\Resources", array_values($this->clusters)),
-        ];
+        return $this->resourceNamespaces;
     }
 
     public function discoverWidgets(string $in, string $for): static

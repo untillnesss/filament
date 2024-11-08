@@ -144,6 +144,28 @@ trait HasRoutes
             return static::$slug;
         }
 
+        $pluralBasenameBeforeResource = (string) str(static::class)
+            ->classBasename()
+            ->beforeLast('Resource')
+            ->pluralStudly();
+
+        $namespacePartBeforeBasename = (string) str(static::class)
+            ->beforeLast('\\')
+            ->afterLast('\\');
+
+        if ($pluralBasenameBeforeResource === $namespacePartBeforeBasename) {
+            return str(static::class)
+                ->beforeLast('\\')
+                ->whenContains(
+                    '\\Resources\\',
+                    fn (Stringable $slug): Stringable => $slug->afterLast('\\Resources\\'),
+                    fn (Stringable $slug): Stringable => $slug->classBasename(),
+                )
+                ->explode('\\')
+                ->map(fn (string $string) => str($string)->kebab()->slug())
+                ->implode('/');
+        }
+
         return str(static::class)
             ->whenContains(
                 '\\Resources\\',
@@ -152,14 +174,6 @@ trait HasRoutes
             )
             ->beforeLast('Resource')
             ->pluralStudly()
-            ->when(
-                fn (Stringable $slug): bool => $slug->contains('\\') && $slug->beforeLast('\\')->classBasename()->is($slug->classBasename()->pluralStudly()),
-                fn (Stringable $slug): Stringable => $slug->when(
-                    fn (Stringable $slug): bool => $slug->beforeLast('\\')->contains('\\'),
-                    fn (Stringable $slug): Stringable => $slug->beforeLast('\\')->beforeLast('\\')->append('\\')->append($slug->classBasename()),
-                    fn (Stringable $slug): Stringable => $slug->classBasename(),
-                ),
-            )
             ->explode('\\')
             ->map(fn (string $string) => str($string)->kebab()->slug())
             ->implode('/');

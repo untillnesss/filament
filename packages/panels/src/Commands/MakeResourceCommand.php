@@ -16,6 +16,7 @@ use Filament\Facades\Filament;
 use Filament\Forms\Commands\Concerns\CanGenerateForms;
 use Filament\Panel;
 use Filament\Resources\Pages\Page;
+use Filament\Resources\Resource;
 use Filament\Support\Commands\Concerns\CanIndentStrings;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
@@ -26,7 +27,6 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
 use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -229,8 +229,8 @@ class MakeResourceCommand extends Command
         try {
             $this->configureModel();
             $this->configurePanel();
-            $this->configureResourcesLocation();
             $this->configureCluster();
+            $this->configureResourcesLocation();
             $this->isSimple = $this->option('simple');
             $this->configureParentResource();
             $this->hasViewOperation = $this->option('view');
@@ -332,8 +332,51 @@ class MakeResourceCommand extends Command
         $this->panel = $panel;
     }
 
+    protected function configureCluster(): void
+    {
+        $clusterFqns = $this->panel->getClusters();
+
+        if (empty($clusterFqns)) {
+            return;
+        }
+
+        $this->clusterFqn = select(
+            label: 'Would you like to create this resource in a cluster?',
+            options: $clusterFqns,
+            required: false,
+        );
+    }
+
     protected function configureResourcesLocation(): void
     {
+        if (filled($this->clusterFqn)) {
+            $clusterBasenameBeforeCluster = (string) str($this->clusterFqn)
+                ->classBasename()
+                ->beforeLast('Cluster');
+
+            $clusterNamespacePartBeforeBasename = (string) str($this->clusterFqn)
+                ->beforeLast('\\')
+                ->afterLast('\\');
+
+            if ($clusterBasenameBeforeCluster === $clusterNamespacePartBeforeBasename) {
+                $this->resourcesNamespace = (string) str($this->clusterFqn)
+                    ->beforeLast('\\')
+                    ->append('\\Resources');
+                $this->resourcesDirectory = (string) str((new ReflectionClass($this->clusterFqn))->getFileName())
+                    ->beforeLast(DIRECTORY_SEPARATOR)
+                    ->append('/Resources');
+
+                return;
+            }
+
+            $this->resourcesNamespace = (string) str($this->clusterFqn)->append('\\Resources');
+            $this->resourcesDirectory = (string) str((new ReflectionClass($this->clusterFqn))->getFileName())
+                ->beforeLast('.')
+                ->append('/Resources');
+
+            return;
+        }
+
         $directories = $this->panel->getResourceDirectories();
         $namespaces = $this->panel->getResourceNamespaces();
 
@@ -344,35 +387,18 @@ class MakeResourceCommand extends Command
             }
         }
 
-        /** @var array<string> $namespaces */
-        $this->resourcesNamespace = (count($namespaces) > 1) ?
-            select(
-                label: 'Which namespace would you like to create this in?',
-                options: $namespaces,
-            ) :
-            (Arr::first($namespaces) ?? 'App\\Filament\\Resources');
+        if (count($namespaces) < 2) {
+            $this->resourcesNamespace = (Arr::first($namespaces) ?? 'App\\Filament\\Resources');
+            $this->resourcesDirectory = (Arr::first($directories) ?? app_path('Filament/Resources/'));
 
-        /** @var array<string> $directories */
-        $this->resourcesDirectory = (count($directories) > 1) ?
-            $directories[array_search($this->resourcesNamespace, $namespaces)] :
-            (Arr::first($directories) ?? app_path('Filament/Resources/'));
-    }
-
-    protected function configureCluster(): void
-    {
-        $clusterNamespace = (string) str($this->resourcesNamespace)->beforeLast('\Resources');
-
-        if (
-            class_exists($cluster = ($clusterNamespace . '\\' . class_basename($clusterNamespace))) &&
-            is_subclass_of($cluster, Cluster::class)
-        ) {
-            $this->clusterFqn = $cluster;
-        } elseif (
-            class_exists($clusterNamespace) &&
-            is_subclass_of($clusterNamespace, Cluster::class)
-        ) {
-            $this->clusterFqn = $clusterNamespace;
+            return;
         }
+
+        $this->resourcesNamespace = select(
+            label: 'Which namespace would you like to create this in?',
+            options: $namespaces,
+        );
+        $this->resourcesDirectory = $directories[array_search($this->resourcesNamespace, $namespaces)];
     }
 
     protected function configureParentResource(): void
@@ -429,38 +455,42 @@ class MakeResourceCommand extends Command
             }
         }
 
-        $this->parentResourceFqn = select(
-            label: 'Which resource would you like to nest this resource inside?',
-            options: array_filter(
-                $this->panel->getResources(),
-                fn (string $resource): bool => str($resource)->startsWith("{$this->resourcesNamespace}\\"),
-            ),
+        $parentResourceFqns = array_filter(
+            $this->panel->getResources(),
+            fn (string $resource): bool => str($resource)->startsWith("{$this->resourcesNamespace}\\"),
         );
 
-        $parentResourceNamespace = str($this->parentResourceFqn)
+        if ($parentResourceFqns) {
+            $this->parentResourceFqn = text(
+                label: "No resources were found within [{$this->resourcesNamespace}]. Which resource would you like to nest this resource inside?",
+                placeholder: 'App\\Filament\\Resources\\Posts\\PostResource',
+                validate: fn (string $value): ?string => match (true) {
+                    ! class_exists($value) => 'The resource class does not exist. Please ensure you use the fully qualified class name (the namespace and class name) of the resource.',
+                    ! is_subclass_of($value, Resource::class) => 'The resource class or one of its parents must extend [' . Resource::class . '].',
+                    default => null,
+                },
+                hint: 'Please provide the fully qualified class name of the resource.',
+            );
+        } else {
+            $this->parentResourceFqn = select(
+                label: 'Which resource would you like to nest this resource inside?',
+                options: $parentResourceFqns,
+            );
+        }
+
+        $pluralParentResourceBasenameBeforeResource = (string) str($this->parentResourceFqn)
+            ->classBasename()
             ->beforeLast('Resource')
-            ->pluralStudly();
+            ->plural();
 
-        if (
-            $parentResourceNamespace->contains('\\') &&
-            $parentResourceNamespace->beforeLast('\\')->classBasename()->is(
-                $parentResourceNamespace->classBasename()->pluralStudly()
-            )
-        ) {
-            $this->resourcesNamespace = (string) $parentResourceNamespace
-                ->when(
-                    $parentResourceNamespace
-                        ->beforeLast('\\')
-                        ->contains('\\'),
-                    fn (Stringable $namespace): Stringable => $namespace
-                        ->beforeLast('\\')
-                        ->beforeLast('\\')
-                        ->append('\\')
-                        ->append($namespace->classBasename()),
-                    fn (Stringable $namespace): Stringable => $namespace->classBasename(),
-                )
+        $parentResourceNamespacePartBeforeBasename = (string) str($this->parentResourceFqn)
+            ->beforeLast('\\')
+            ->afterLast('\\');
+
+        if ($pluralParentResourceBasenameBeforeResource === $parentResourceNamespacePartBeforeBasename) {
+            $this->resourcesNamespace = (string) str($this->parentResourceFqn)
+                ->beforeLast('\\')
                 ->append('\\Resources');
-
             $this->resourcesDirectory = (string) str((new ReflectionClass($this->parentResourceFqn))->getFileName())
                 ->beforeLast(DIRECTORY_SEPARATOR)
                 ->append('/Resources');
@@ -468,7 +498,7 @@ class MakeResourceCommand extends Command
             return;
         }
 
-        $this->resourcesNamespace = "{$this->parentResourceFqn}\\Resources";
+        $this->resourcesNamespace = (string) str($this->parentResourceFqn)->append('\\Resources');
         $this->resourcesDirectory = (string) str((new ReflectionClass($this->parentResourceFqn))->getFileName())
             ->beforeLast('.')
             ->append('/Resources');
