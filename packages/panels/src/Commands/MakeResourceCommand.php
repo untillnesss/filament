@@ -21,6 +21,7 @@ use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlag
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -113,6 +114,8 @@ class MakeResourceCommand extends Command
 
     protected bool $hasResourceClassesOutsideDirectories;
 
+    public static bool $shouldCheckModelForSoftDeletes = true;
+
     /**
      * @return array<InputArgument>
      */
@@ -133,6 +136,13 @@ class MakeResourceCommand extends Command
     protected function getOptions(): array
     {
         return [
+            new InputOption(
+                name: 'cluster',
+                shortcut: 'C',
+                mode: InputOption::VALUE_OPTIONAL,
+                description: 'The cluster to create the resource in',
+                default: false,
+            ),
             new InputOption(
                 name: 'embed-schemas',
                 shortcut: null,
@@ -180,6 +190,7 @@ class MakeResourceCommand extends Command
                 shortcut: 'N',
                 mode: InputOption::VALUE_OPTIONAL,
                 description: 'Nest the resource inside another through a relationship',
+                default: false,
             ),
             new InputOption(
                 name: 'not-embedded',
@@ -227,12 +238,12 @@ class MakeResourceCommand extends Command
             $this->configurePanel(question: 'Which panel would you like to create this resource in?');
             $this->configureCluster();
             $this->configureResourcesLocation();
-            $this->isSimple = $this->option('simple');
+            $this->configureIsSimple();
             $this->configureParentResource();
-            $this->hasViewOperation = $this->option('view');
-            $this->isGenerated = $this->option('generate');
-            $this->isSoftDeletable = $this->option('soft-deletes');
-            $this->hasResourceClassesOutsideDirectories = $this->hasFileGenerationFlag(FileGenerationFlag::PANEL_RESOURCE_CLASSES_OUTSIDE_DIRECTORIES);
+            $this->configureHasViewOperation();
+            $this->configureIsGenerated();
+            $this->configureIsSoftDeletable();
+            $this->configureHasResourceClassesOutsideDirectories();
 
             $this->configureLocation();
             $this->configurePageRoutes();
@@ -265,17 +276,25 @@ class MakeResourceCommand extends Command
     {
         $modelNamespace = $this->option('model-namespace') ?? 'App\\Models';
 
+        $modelFqns = collect(get_declared_classes())
+            ->filter(fn (string $class): bool => is_subclass_of($class, Model::class) &&
+                str($class)->startsWith("{$modelNamespace}\\"))
+            ->map(fn (string $class): string => str($class)->after("{$modelNamespace}\\"))
+            ->all();
+
         $this->modelFqnEnd = (string) str($this->argument('name') ?? suggest(
             label: 'What is the model name?',
-            options: function (string $search) use ($modelNamespace): array {
+            options: function (string $search) use ($modelFqns): array {
                 $search = str($search)->trim()->replace(['\\', '/'], '');
 
-                return collect(get_declared_classes())
-                    ->filter(fn (string $class): bool => is_subclass_of($class, Model::class) &&
-                        str($class)->startsWith("{$modelNamespace}\\") &&
-                        (blank($search) || str($class)->replace(['\\', '/'], '')->contains($search, ignoreCase: true)))
-                    ->map(fn (string $class): string => str($class)->after("{$modelNamespace}\\"))
-                    ->all();
+                if (blank($search)) {
+                    return $modelFqns;
+                }
+
+                return array_filter(
+                    $modelFqns,
+                    fn (string $class): bool => str($class)->replace(['\\', '/'], '')->contains($search, ignoreCase: true),
+                );
             },
             placeholder: 'BlogPost',
             required: true,
@@ -323,16 +342,71 @@ class MakeResourceCommand extends Command
 
     protected function configureCluster(): void
     {
-        $clusterFqns = array_values($this->panel->getClusters());
+        $cluster = $this->option('cluster');
 
-        if (empty($clusterFqns)) {
+        if ($cluster === false) {
             return;
         }
 
-        if (! confirm(
-            label: 'Would you like to create this resource in a cluster?',
-            default: false,
-        )) {
+        if (is_string($cluster)) {
+            $cluster = (string) str($cluster)
+                ->trim('/')
+                ->trim('\\')
+                ->trim(' ')
+                ->replace('/', '\\');
+
+            if (! class_exists($cluster)) {
+                $this->components->warn('The cluster class provided does not exist.');
+            } elseif (! is_subclass_of($cluster, Cluster::class)) {
+                $this->components->warn('The cluster class or one of its parents must extend [' . Cluster::class . '].');
+            } else {
+                $this->clusterFqn = $cluster;
+
+                return;
+            }
+        }
+
+        $clusterFqns = array_values($this->panel->getClusters());
+
+        if (empty($clusterFqns)) {
+            $this->clusterFqn = (string) str(text(
+                label: "No clusters were found within the [{$this->panel->getId()}] panel. Which cluster would you like to create this resource in?",
+                placeholder: 'App\\Filament\\Clusters\\Blog',
+                required: true,
+                validate: function (string $value): ?string {
+                    $value = (string) str($value)
+                        ->trim('/')
+                        ->trim('\\')
+                        ->trim(' ')
+                        ->replace('/', '\\');
+
+                    if (
+                        (! class_exists($value)) &&
+                        class_exists("{$value}\\" . class_basename($value) . 'Cluster')
+                    ) {
+                        $value = "{$value}\\" . class_basename($value) . 'Cluster';
+                    }
+
+                    return match (true) {
+                        ! class_exists($value) => 'The cluster class does not exist. Please ensure you use the fully qualified class name of the cluster, such as [App\\Filament\\Clusters\\Blog].',
+                        ! is_subclass_of($value, Cluster::class) => 'The cluster class or one of its parents must extend [' . Cluster::class . '].',
+                        default => null,
+                    };
+                },
+                hint: 'Please provide the fully qualified class name of the cluster.',
+            ))
+                ->trim('/')
+                ->trim('\\')
+                ->trim(' ')
+                ->replace('/', '\\');
+
+            if (
+                (! class_exists($this->clusterFqn)) &&
+                class_exists("{$this->clusterFqn}\\" . class_basename($this->clusterFqn) . 'Cluster')
+            ) {
+                $this->clusterFqn = "{$this->clusterFqn}\\" . class_basename($this->clusterFqn) . 'Cluster';
+            }
+
             return;
         }
 
@@ -345,7 +419,24 @@ class MakeResourceCommand extends Command
 
                 $search = str($search)->trim()->replace(['\\', '/'], '');
 
-                return array_filter($clusterFqns, fn (string $fqn): bool => str($fqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
+                return collect($clusterFqns)
+                    ->filter(fn (string $fqn): bool => str($fqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true))
+                    ->mapWithKeys(function (string $fqn): array {
+                        $basenameBeforeCluster = (string) str($fqn)
+                            ->classBasename()
+                            ->beforeLast('Cluster');
+
+                        $namespacePartBeforeBasename = (string) str($fqn)
+                            ->beforeLast('\\')
+                            ->classBasename();
+
+                        if ($basenameBeforeCluster === $namespacePartBeforeBasename) {
+                            return [$fqn => (string) str($fqn)->beforeLast('\\')];
+                        }
+
+                        return [$fqn => $fqn];
+                    })
+                    ->all();
             },
         );
     }
@@ -412,9 +503,16 @@ class MakeResourceCommand extends Command
         $this->resourcesDirectory = $directories[array_search($this->resourcesNamespace, $namespaces)];
     }
 
+    protected function configureIsSimple(): void
+    {
+        $this->isSimple = $this->option('simple');
+    }
+
     protected function configureParentResource(): void
     {
-        if (! $this->hasOption('nested')) {
+        $parentResource = $this->option('nested');
+
+        if ($parentResource === false) {
             return;
         }
 
@@ -423,8 +521,6 @@ class MakeResourceCommand extends Command
 
             throw new InvalidCommandOutput;
         }
-
-        $parentResource = $this->option('nested');
 
         if (is_string($parentResource)) {
             $parentResourceNamespace = (string) str($parentResource)
@@ -536,6 +632,39 @@ class MakeResourceCommand extends Command
         $this->resourcesDirectory = (string) str((new ReflectionClass($this->parentResourceFqn))->getFileName())
             ->beforeLast('.')
             ->append('/Resources');
+    }
+
+    protected function configureHasViewOperation(): void
+    {
+        $this->hasViewOperation = $this->option('view') || confirm(
+            label: $this->isSimple
+                ? 'Would you like to generate an infolist and view modal for the resource?'
+                : 'Would you like to generate an infolist and view page for the resource?',
+            default: false,
+        );
+    }
+
+    protected function configureIsGenerated(): void
+    {
+        $this->isGenerated = $this->option('generate') || confirm(
+            label: 'Would you like to generate the form schema and table columns based on the attributes of the model?',
+            default: false,
+        );
+    }
+
+    protected function configureIsSoftDeletable(): void
+    {
+        $this->isSoftDeletable = $this->option('soft-deletes') || ((static::$shouldCheckModelForSoftDeletes && class_exists($this->modelFqn))
+            ? in_array(SoftDeletes::class, class_uses_recursive($this->modelFqn))
+            : confirm(
+                label: 'Does the model use soft deletes?',
+                default: false,
+            ));
+    }
+
+    protected function configureHasResourceClassesOutsideDirectories(): void
+    {
+        $this->hasResourceClassesOutsideDirectories = $this->hasFileGenerationFlag(FileGenerationFlag::PANEL_RESOURCE_CLASSES_OUTSIDE_DIRECTORIES);
     }
 
     protected function configureLocation(): void

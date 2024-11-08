@@ -90,7 +90,7 @@ class MakeClusterCommand extends Command
     public function handle(): int
     {
         try {
-            $this->hasClusterClassesOutsideDirectories = $this->hasFileGenerationFlag(FileGenerationFlag::PANEL_CLUSTER_CLASSES_OUTSIDE_DIRECTORIES);
+            $this->configureHasClusterClassesOutsideDirectories();
             $this->configureFqnEnd();
             $this->configurePanel(question: 'Which panel would you like to create this cluster in?');
             $this->configureClustersLocation();
@@ -109,6 +109,11 @@ class MakeClusterCommand extends Command
         }
 
         return static::SUCCESS;
+    }
+
+    protected function configureHasClusterClassesOutsideDirectories(): void
+    {
+        $this->hasClusterClassesOutsideDirectories = $this->hasFileGenerationFlag(FileGenerationFlag::PANEL_CLUSTER_CLASSES_OUTSIDE_DIRECTORIES);
     }
 
     protected function configureFqnEnd(): void

@@ -1,5 +1,6 @@
 <?php
 
+use Filament\Commands\MakeResourceCommand;
 use Filament\Facades\Filament;
 use Filament\Tests\TestCase;
 
@@ -8,12 +9,19 @@ use function PHPUnit\Framework\assertFileExists;
 
 uses(TestCase::class);
 
+beforeEach(function () {
+    $this->withoutMockingConsoleOutput();
+
+    MakeResourceCommand::$shouldCheckModelForSoftDeletes = false;
+});
+
 it('can generate a resource class', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -25,7 +33,8 @@ it('can generate a resource form', function () {
         'name' => 'Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Schemas/PostForm.php'));
     expect(file_get_contents($path))
@@ -38,7 +47,8 @@ it('can generate a resource infolist', function () {
         '--view' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Schemas/PostInfolist.php'));
     expect(file_get_contents($path))
@@ -50,7 +60,8 @@ it('can generate a resource table', function () {
         'name' => 'Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Tables/PostsTable.php'));
     expect(file_get_contents($path))
@@ -62,7 +73,8 @@ it('can generate a resource list page', function () {
         'name' => 'Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Pages/ListPosts.php'));
     expect(file_get_contents($path))
@@ -74,7 +86,8 @@ it('can generate a resource create page', function () {
         'name' => 'Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Pages/CreatePost.php'));
     expect(file_get_contents($path))
@@ -86,7 +99,8 @@ it('can generate a resource edit page', function () {
         'name' => 'Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Pages/EditPost.php'));
     expect(file_get_contents($path))
@@ -99,7 +113,8 @@ it('can generate a resource view page', function () {
         '--view' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Pages/ViewPost.php'));
     expect(file_get_contents($path))
@@ -112,7 +127,8 @@ it('can generate a resource class with embedded form', function () {
         '--embed-schemas' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -126,7 +142,8 @@ it('can generate a resource class with embedded infolist', function () {
         '--view' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -139,7 +156,8 @@ it('can generate a resource class with embedded table', function () {
         '--embed-table' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -152,7 +170,8 @@ it('can generate the resource form content', function () {
         '--generate' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Schemas/PostForm.php'));
     expect(file_get_contents($path))
@@ -165,7 +184,8 @@ it('can generate the resource table content', function () {
         '--generate' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Tables/PostsTable.php'));
     expect(file_get_contents($path))
@@ -180,7 +200,8 @@ it('can generate the form and table content embedded in a resource class', funct
         '--generate' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -193,7 +214,8 @@ it('can generate a resource class with soft deletes', function () {
         '--soft-deletes' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -206,7 +228,8 @@ it('can generate a resource table with soft deletes', function () {
         '--soft-deletes' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Tables/PostsTable.php'));
     expect(file_get_contents($path))
@@ -219,7 +242,8 @@ it('can generate a resource edit page with soft deletes', function () {
         '--soft-deletes' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Pages/EditPost.php'));
     expect(file_get_contents($path))
@@ -244,7 +268,8 @@ it('can generate a simple resource class', function () {
         '--simple' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -261,7 +286,8 @@ it('can generate a simple resource manage page', function () {
         '--simple' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/Pages/ManagePosts.php'));
     expect(file_get_contents($path))
@@ -276,7 +302,8 @@ it('can generate a simple resource class without embedded schemas and table', fu
         '--view' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -288,7 +315,8 @@ it('can generate a resource class in a nested directory', function () {
         'name' => 'Blog/Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Blog/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -300,7 +328,8 @@ it('can generate a resource form in a nested directory', function () {
         'name' => 'Blog/Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Blog/Posts/Schemas/PostForm.php'));
     expect(file_get_contents($path))
@@ -313,7 +342,8 @@ it('can generate a resource infolist in a nested directory', function () {
         '--view' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Blog/Posts/Schemas/PostInfolist.php'));
     expect(file_get_contents($path))
@@ -325,7 +355,8 @@ it('can generate a resource table in a nested directory', function () {
         'name' => 'Blog/Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Blog/Posts/Tables/PostsTable.php'));
     expect(file_get_contents($path))
@@ -337,7 +368,8 @@ it('can generate a resource list page in a nested directory', function () {
         'name' => 'Blog/Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Blog/Posts/Pages/ListPosts.php'));
     expect(file_get_contents($path))
@@ -349,7 +381,8 @@ it('can generate a resource create page in a nested directory', function () {
         'name' => 'Blog/Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Blog/Posts/Pages/CreatePost.php'));
     expect(file_get_contents($path))
@@ -361,7 +394,8 @@ it('can generate a resource edit page in a nested directory', function () {
         'name' => 'Blog/Post',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Blog/Posts/Pages/EditPost.php'));
     expect(file_get_contents($path))
@@ -374,7 +408,8 @@ it('can generate a resource view page in a nested directory', function () {
         '--view' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Blog/Posts/Pages/ViewPost.php'));
     expect(file_get_contents($path))
@@ -387,7 +422,8 @@ it('can generate a simple resource manage page in a nested directory', function 
         '--simple' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Blog/Posts/Pages/ManagePosts.php'));
     expect(file_get_contents($path))
@@ -398,7 +434,8 @@ it('can generate a nested resource class', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'User',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     require_once app_path('Filament/Resources/Users/UserResource.php');
     require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
@@ -415,7 +452,8 @@ it('can generate a nested resource class', function () {
         '--nested' => 'Users',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Users/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -426,7 +464,8 @@ it('can generate a nested resource class with a plural parent resource name', fu
     $this->artisan('make:filament-resource', [
         'name' => 'User',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     require_once app_path('Filament/Resources/Users/UserResource.php');
     require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
@@ -443,7 +482,8 @@ it('can generate a nested resource class with a plural parent resource name', fu
         '--nested' => 'Users',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Users/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -454,7 +494,8 @@ it('can generate a nested resource class with a parent resource name with `Resou
     $this->artisan('make:filament-resource', [
         'name' => 'User',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     require_once app_path('Filament/Resources/Users/UserResource.php');
     require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
@@ -471,7 +512,8 @@ it('can generate a nested resource class with a parent resource name with `Resou
         '--nested' => 'UserResource',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Users/Resources/Posts/PostResource.php'));
     expect(file_get_contents($path))
@@ -482,7 +524,8 @@ it('can generate a nested resource form', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'User',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     require_once app_path('Filament/Resources/Users/UserResource.php');
     require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
@@ -499,7 +542,8 @@ it('can generate a nested resource form', function () {
         '--nested' => 'Users',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Users/Resources/Posts/Schemas/PostForm.php'));
     expect(file_get_contents($path))
@@ -510,7 +554,8 @@ it('can generate a nested resource infolist', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'User',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     require_once app_path('Filament/Resources/Users/UserResource.php');
     require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
@@ -528,7 +573,8 @@ it('can generate a nested resource infolist', function () {
         '--view' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Users/Resources/Posts/Schemas/PostInfolist.php'));
     expect(file_get_contents($path))
@@ -539,7 +585,8 @@ it('can generate a nested resource create page', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'User',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     require_once app_path('Filament/Resources/Users/UserResource.php');
     require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
@@ -556,7 +603,8 @@ it('can generate a nested resource create page', function () {
         '--nested' => 'Users',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Users/Resources/Posts/Pages/CreatePost.php'));
     expect(file_get_contents($path))
@@ -567,7 +615,8 @@ it('can generate a nested resource edit page', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'User',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     require_once app_path('Filament/Resources/Users/UserResource.php');
     require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
@@ -584,7 +633,8 @@ it('can generate a nested resource edit page', function () {
         '--nested' => 'Users',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Users/Resources/Posts/Pages/EditPost.php'));
     expect(file_get_contents($path))
@@ -595,7 +645,8 @@ it('can generate a nested resource view page', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'User',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     require_once app_path('Filament/Resources/Users/UserResource.php');
     require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
@@ -613,7 +664,8 @@ it('can generate a nested resource view page', function () {
         '--view' => true,
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Users/Resources/Posts/Pages/ViewPost.php'));
     expect(file_get_contents($path))
@@ -624,7 +676,8 @@ it('can generate a nested resource class in a nested directory', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'User',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     require_once app_path('Filament/Resources/Users/UserResource.php');
     require_once app_path('Filament/Resources/Users/Pages/ListUsers.php');
@@ -641,7 +694,8 @@ it('can generate a nested resource class in a nested directory', function () {
         '--nested' => 'Users',
         '--model-namespace' => 'Filament\Tests\Models',
         '--panel' => 'admin',
-    ])->assertExitCode(0);
+        '--no-interaction' => true,
+    ]);
 
     assertFileExists($path = app_path('Filament/Resources/Users/Resources/Blog/Posts/PostResource.php'));
     expect(file_get_contents($path))
