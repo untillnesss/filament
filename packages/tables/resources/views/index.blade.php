@@ -562,19 +562,21 @@
                     </div>
                 </div>
 
-                <button
-                    type="button"
-                    x-tooltip="{
-                        content: @js(__('filament-tables::table.filters.actions.remove_all.tooltip')),
-                        theme: $store.theme,
-                    }"
-                    wire:click="removeTableFilters"
-                    wire:loading.attr="disabled"
-                    wire:target="removeTableFilters,removeTableFilter"
-                    class="fi-icon-btn fi-size-sm"
-                >
-                    {{ \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'tables::filters.remove-all-button') }}
-                </button>
+                @if (collect($filterIndicators)->contains(fn (\Filament\Tables\Filters\Indicator $indicator): bool => $indicator->isRemovable()))
+                    <button
+                        type="button"
+                        x-tooltip="{
+                            content: @js(__('filament-tables::table.filters.actions.remove_all.tooltip')),
+                            theme: $store.theme,
+                        }"
+                        wire:click="removeTableFilters"
+                        wire:loading.attr="disabled"
+                        wire:target="removeTableFilters,removeTableFilter"
+                        class="fi-icon-btn fi-size-sm"
+                    >
+                        {{ \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'tables::filters.remove-all-button') }}
+                    </button>
+                @endif
             </div>
         @endif
 
