@@ -14,7 +14,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-use function Laravel\Prompts\select;
+use function Laravel\Prompts\search;
 use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:filament-cluster', aliases: [
@@ -160,9 +160,17 @@ class MakeClusterCommand extends Command
             return;
         }
 
-        $this->clustersNamespace = select(
+        $this->clustersNamespace = search(
             label: 'Which namespace would you like to create this cluster in?',
-            options: $namespaces,
+            options: function (?string $search) use ($namespaces): array {
+                if (blank($search)) {
+                    return $namespaces;
+                }
+
+                $search = str($search)->trim()->replace(['\\', '/'], '');
+
+                return array_filter($namespaces, fn (string $namespace): bool => str($namespace)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
+            },
         );
         $this->clustersDirectory = $directories[array_search($this->clustersNamespace, $namespaces)];
     }

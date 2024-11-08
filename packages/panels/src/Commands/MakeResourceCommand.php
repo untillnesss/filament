@@ -22,6 +22,7 @@ use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use ReflectionClass;
@@ -30,7 +31,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\select;
+use function Laravel\Prompts\search;
+use function Laravel\Prompts\suggest;
 use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:filament-resource', aliases: [
@@ -261,8 +263,20 @@ class MakeResourceCommand extends Command
 
     protected function configureModel(): void
     {
-        $this->modelFqnEnd = (string) str($this->argument('name') ?? text(
+        $modelNamespace = $this->option('model-namespace') ?? 'App\\Models';
+
+        $this->modelFqnEnd = (string) str($this->argument('name') ?? suggest(
             label: 'What is the model name?',
+            options: function (string $search) use ($modelNamespace): array {
+                $search = str($search)->trim()->replace(['\\', '/'], '');
+
+                return collect(get_declared_classes())
+                    ->filter(fn (string $class): bool => is_subclass_of($class, Model::class) &&
+                        str($class)->startsWith("{$modelNamespace}\\") &&
+                        (blank($search) || str($class)->replace(['\\', '/'], '')->contains($search, ignoreCase: true)))
+                    ->map(fn (string $class): string => str($class)->after("{$modelNamespace}\\"))
+                    ->all();
+            },
             placeholder: 'BlogPost',
             required: true,
         ))
@@ -280,7 +294,7 @@ class MakeResourceCommand extends Command
             $this->modelFqnEnd = 'Resource';
         }
 
-        $this->modelFqn = ($this->option('model-namespace') ?? 'App\\Models') . '\\' . $this->modelFqnEnd;
+        $this->modelFqn = "{$modelNamespace}\\{$this->modelFqnEnd}";
 
         if ($this->option('model')) {
             $this->callSilently('make:model', [
@@ -309,7 +323,7 @@ class MakeResourceCommand extends Command
 
     protected function configureCluster(): void
     {
-        $clusterFqns = $this->panel->getClusters();
+        $clusterFqns = array_values($this->panel->getClusters());
 
         if (empty($clusterFqns)) {
             return;
@@ -322,9 +336,17 @@ class MakeResourceCommand extends Command
             return;
         }
 
-        $this->clusterFqn = select(
-            label: 'Would you like to create this resource in a cluster?',
-            options: $clusterFqns,
+        $this->clusterFqn = search(
+            label: 'Which cluster would you like to create this resource in?',
+            options: function (?string $search) use ($clusterFqns): array {
+                if (blank($search)) {
+                    return $clusterFqns;
+                }
+
+                $search = str($search)->trim()->replace(['\\', '/'], '');
+
+                return array_filter($clusterFqns, fn (string $fqn): bool => str($fqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
+            },
         );
     }
 
@@ -375,16 +397,24 @@ class MakeResourceCommand extends Command
             return;
         }
 
-        $this->resourcesNamespace = select(
+        $this->resourcesNamespace = search(
             label: 'Which namespace would you like to create this resource in?',
-            options: $namespaces,
+            options: function (?string $search) use ($namespaces): array {
+                if (blank($search)) {
+                    return $namespaces;
+                }
+
+                $search = str($search)->trim()->replace(['\\', '/'], '');
+
+                return array_filter($namespaces, fn (string $namespace): bool => str($namespace)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
+            },
         );
         $this->resourcesDirectory = $directories[array_search($this->resourcesNamespace, $namespaces)];
     }
 
     protected function configureParentResource(): void
     {
-        if (! $this->option('nested')) {
+        if (! $this->hasOption('nested')) {
             return;
         }
 
@@ -437,11 +467,11 @@ class MakeResourceCommand extends Command
         }
 
         $parentResourceFqns = array_filter(
-            $this->panel->getResources(),
+            array_values($this->panel->getResources()),
             fn (string $resource): bool => str($resource)->startsWith("{$this->resourcesNamespace}\\"),
         );
 
-        if ($parentResourceFqns) {
+        if (! $parentResourceFqns) {
             $this->parentResourceFqn = (string) str(text(
                 label: "No resources were found within [{$this->resourcesNamespace}]. Which resource would you like to nest this resource inside?",
                 placeholder: 'App\\Filament\\Resources\\Posts\\PostResource',
@@ -454,7 +484,7 @@ class MakeResourceCommand extends Command
                         ->replace('/', '\\');
 
                     return match (true) {
-                        ! class_exists($value) => 'The resource class does not exist. Please ensure you use the fully qualified class name (the namespace and class name) of the resource.',
+                        ! class_exists($value) => 'The resource class does not exist. Please ensure you use the fully qualified class name of the resource, such as [App\\Filament\\Resources\\Posts\\PostResource].',
                         ! is_subclass_of($value, Resource::class) => 'The resource class or one of its parents must extend [' . Resource::class . '].',
                         default => null,
                     };
@@ -466,9 +496,19 @@ class MakeResourceCommand extends Command
                 ->trim(' ')
                 ->replace('/', '\\');
         } else {
-            $this->parentResourceFqn = select(
+            $this->parentResourceFqn = search(
                 label: 'Which resource would you like to nest this resource inside?',
-                options: $parentResourceFqns,
+                options: function (?string $search) use ($parentResourceFqns): array {
+                    $search = str($search)->trim()->replace(['\\', '/'], '');
+
+                    return collect($parentResourceFqns)
+                        ->when(
+                            filled($search = (string) str($search)->trim()->replace(['\\', '/'], '')),
+                            fn (Collection $parentResourceFqns) => $parentResourceFqns->filter(fn (string $fqn): bool => str($fqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true)),
+                        )
+                        ->mapWithKeys(fn (string $fqn): array => [$fqn => (string) str($fqn)->after("{$this->resourcesNamespace}\\")])
+                        ->all();
+                },
             );
         }
 
