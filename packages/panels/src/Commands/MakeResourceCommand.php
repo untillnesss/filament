@@ -107,6 +107,8 @@ class MakeResourceCommand extends Command
 
     public static bool $shouldCheckModelForSoftDeletes = true;
 
+    protected bool $isNested;
+
     /**
      * @return array<InputArgument>
      */
@@ -226,9 +228,10 @@ class MakeResourceCommand extends Command
         try {
             $this->configureModel();
             $this->configurePanel(question: 'Which panel would you like to create this resource in?');
+            $this->configureIsSimple();
+            $this->configureIsNested();
             $this->configureCluster();
             $this->configureResourcesLocation(question: 'Which namespace would you like to create this resource in?');
-            $this->configureIsSimple();
             $this->configureParentResource();
             $this->configureHasViewOperation();
             $this->configureIsGenerated();
@@ -330,12 +333,35 @@ class MakeResourceCommand extends Command
         }
     }
 
+    protected function configureIsSimple(): void
+    {
+        $this->isSimple = $this->option('simple');
+    }
+
+    protected function configureIsNested(): void
+    {
+        $this->isNested = $this->option('nested') !== false;
+
+        if ($this->isNested && $this->isSimple) {
+            $this->components->error('Nested resources cannot be simple, you can use the relation manager or relation page on the parent resource to open modals for each operation.');
+
+            throw new InvalidCommandOutput;
+        }
+    }
+
     protected function configureCluster(): void
     {
-        $this->configureClusterFqn(
-            initialQuestion: 'Would you like to create this resource in a cluster?',
-            question: 'Which cluster would you like to create this resource in?',
-        );
+        if ($this->isNested) {
+            $this->configureClusterFqn(
+                initialQuestion: 'Is the parent resource in a cluster?',
+                question: 'Which cluster is the parent resource in?',
+            );
+        } else {
+            $this->configureClusterFqn(
+                initialQuestion: 'Would you like to create this resource in a cluster?',
+                question: 'Which cluster would you like to create this resource in?',
+            );
+        }
 
         if (blank($this->clusterFqn)) {
             return;
@@ -344,28 +370,15 @@ class MakeResourceCommand extends Command
         $this->configureClusterResourcesLocation();
     }
 
-    protected function configureIsSimple(): void
-    {
-        $this->isSimple = $this->option('simple');
-    }
-
     protected function configureParentResource(): void
     {
-        $parentResource = $this->option('nested');
-
-        if ($parentResource === false) {
+        if (! $this->isNested) {
             return;
-        }
-
-        if ($this->isSimple) {
-            $this->components->error('Nested resources cannot be simple, you can use the relation manager or relation page on the parent resource to open modals for each operation.');
-
-            throw new InvalidCommandOutput;
         }
 
         $this->parentResourceFqn = $this->askForResource(
             question: 'Which resource would you like to nest this resource inside?',
-            initialResource: $parentResource,
+            initialResource: $this->option('nested'),
         );
 
         $pluralParentResourceBasenameBeforeResource = (string) str($this->parentResourceFqn)
