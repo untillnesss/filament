@@ -18,6 +18,16 @@ trait CanAskForResource
         $resourcesNamespace ??= $this->resourcesNamespace;
 
         if (is_string($initialResource)) {
+            $initialResource = (string) str($initialResource)
+                ->trim('/')
+                ->trim('\\')
+                ->trim(' ')
+                ->replace('/', '\\');
+
+            if (class_exists($initialResource)) {
+                return $initialResource;
+            }
+
             $resourceNamespace = (string) str($initialResource)
                 ->beforeLast('Resource')
                 ->pluralStudly()

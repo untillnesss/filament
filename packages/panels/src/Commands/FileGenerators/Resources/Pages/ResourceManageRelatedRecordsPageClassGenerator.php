@@ -213,7 +213,10 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
             $this->importUnlessPartial($textEntryClass);
 
             $methodBody = new Literal(<<<PHP
-                {$this->simplifyFqn($textEntryClass)}::make(?),
+                return \$schema
+                    ->components([
+                        {$this->simplifyFqn($textEntryClass)}::make(?),
+                    ]);
                 PHP, [$this->getRecordTitleAttribute()]);
         }
 

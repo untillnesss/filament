@@ -68,9 +68,10 @@ trait CanGenerateResourceTables
 
             $modifyQueryOutput = <<<PHP
 
-                ->modifyQueryUsing(function ({$this->simplifyFqn($builderClass)} \$query) => \$query->withoutGlobalScopes([$
-                    {$this->simplifyFqn($softDeletingScopeClass)}::class,
-                ])
+                ->modifyQueryUsing(fn ({$this->simplifyFqn($builderClass)} \$query) => \$query
+                    ->withoutGlobalScopes([
+                        {$this->simplifyFqn($softDeletingScopeClass)}::class,
+                    ]))
             PHP;
         }
 
@@ -261,7 +262,7 @@ trait CanGenerateResourceTables
 
             return new Literal(<<<PHP
                 {$this->simplifyFqn($textColumnClass)}::make(?)
-                    ->searchable(),
+                            ->searchable(),
                 PHP, [$recordTitleAttribute]);
         }
 

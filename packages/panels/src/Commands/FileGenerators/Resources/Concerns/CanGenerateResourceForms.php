@@ -205,8 +205,8 @@ trait CanGenerateResourceForms
 
             return new Literal(<<<PHP
                 {$this->simplifyFqn($textInputClass)}::make(?)
-                    ->required()
-                    ->maxLength(255),
+                            ->required()
+                            ->maxLength(255),
                 PHP, [$recordTitleAttribute]);
         }
 

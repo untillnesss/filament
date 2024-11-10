@@ -223,10 +223,7 @@ trait HasComponents
      */
     public function getPageDirectories(): array
     {
-        return [
-            ...$this->pageDirectories,
-            ...array_map(fn (string $fileName): string => ((string) str($fileName)->beforeLast('.php')) . DIRECTORY_SEPARATOR . 'Pages', array_keys($this->clusters)),
-        ];
+        return $this->pageDirectories;
     }
 
     /**
@@ -234,10 +231,7 @@ trait HasComponents
      */
     public function getPageNamespaces(): array
     {
-        return [
-            ...$this->pageNamespaces,
-            ...array_map(fn (string $namespace): string => "{$namespace}\Pages", array_values($this->clusters)),
-        ];
+        return $this->pageNamespaces;
     }
 
     public function discoverClusters(string $in, string $for): static

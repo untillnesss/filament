@@ -381,7 +381,7 @@ class MakePageCommand extends Command
 
     protected function createCustomPage(): void
     {
-        if (! $this->hasResource) {
+        if ($this->hasResource) {
             return;
         }
 
@@ -396,6 +396,7 @@ class MakePageCommand extends Command
         $this->writeFile($path, app(CustomPageClassGenerator::class, [
             'fqn' => $this->fqn,
             'view' => $this->view,
+            'clusterFqn' => $this->clusterFqn,
         ]));
     }
 
@@ -549,7 +550,7 @@ class MakePageCommand extends Command
                     fn (string $modelFqn): bool => is_subclass_of($modelFqn, Model::class),
                 );
 
-                return $relatedModelFqn = (string) str(suggest(
+                return $relatedModelFqn = search(
                     label: "Filament couldn't automatically find the related model for the [{$relationship}] relationship. What is the fully qualified class name of the related model?",
                     options: function (?string $search) use ($modelFqns): array {
                         if (blank($search)) {
@@ -561,25 +562,7 @@ class MakePageCommand extends Command
                         return array_filter($modelFqns, fn (string $modelFqn): bool => str($modelFqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
                     },
                     placeholder: 'App\\Models\\User',
-                    required: true,
-                    validate: function (string $value): ?string {
-                        $value = (string) str($value)
-                            ->trim('/')
-                            ->trim('\\')
-                            ->trim(' ')
-                            ->replace('/', '\\');
-
-                        return match (true) {
-                            ! class_exists($value) => 'The model class does not exist. Please ensure you use the fully qualified class name of the resource, such as [App\\Models\\User].',
-                            ! is_subclass_of($value, Model::class) => 'The model class or one of its parents must extend [' . Model::class . '].',
-                            default => null,
-                        };
-                    },
-                ))
-                    ->trim('/')
-                    ->trim('\\')
-                    ->trim(' ')
-                    ->replace('/', '\\');
+                );
             };
 
             $askForRecordTitleAttributeIfNotAlready = function () use (&$recordTitleAttribute): string {
@@ -678,7 +661,7 @@ class MakePageCommand extends Command
             'tableFqn' => $tableFqn,
             'recordTitleAttribute' => $recordTitleAttribute,
             'isGenerated' => $isGenerated ?? false,
-            'relatedModelFqn' => null,
+            'relatedModelFqn' => $relatedModelFqn,
             'isSoftDeletable' => $isSoftDeletable,
             'relationshipType' => $relationshipType,
         ]));
@@ -690,15 +673,15 @@ class MakePageCommand extends Command
     protected function askForRelatedResource(): ?string
     {
         if (! confirm(
-            label: 'Does you want to use an existing resource?',
+            label: 'Do you want each table row to link to a resource instead of opening a modal? Filament will also inherit the resource\'s configuration.',
             default: false,
         )) {
             return null;
         }
 
         $clusterFqn = $this->askForCluster(
-            initialQuestion: 'Is the related resource in a cluster?',
-            question: 'Which cluster is the related resource in?',
+            initialQuestion: 'Is the resource in a cluster?',
+            question: 'Which cluster is the resource in?',
         );
 
         if (filled($clusterFqn)) {
@@ -710,7 +693,7 @@ class MakePageCommand extends Command
         }
 
         return $this->askForResource(
-            question: 'Which resource is related to this resource?',
+            question: 'Which resource do you want to use?',
             resourcesNamespace: $resourcesNamespace,
         );
     }
@@ -729,7 +712,7 @@ class MakePageCommand extends Command
 
         $schemaFqns = array_filter(
             get_declared_classes(),
-            fn (string $schemaFqn): bool => (new ReflectionClass($schemaFqn))->hasMethod('configure'),
+            fn (string $schemaFqn): bool => method_exists($schemaFqn, 'configure'),
         );
 
         return suggest(
