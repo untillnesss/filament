@@ -59,7 +59,7 @@ class ResourceTableClassGenerator extends ClassGenerator
             ->setPublic()
             ->setStatic()
             ->setReturnType(Table::class)
-            ->setBody($this->generateTableMethodBody());
+            ->setBody($this->generateTableMethodBody($this->getModelFqn()));
         $method->addParameter('table')
             ->setType(Table::class);
 

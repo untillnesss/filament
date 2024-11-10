@@ -18,22 +18,28 @@ trait HasCluster
 
     protected function configureClusterFqn(string $initialQuestion, string $question): void
     {
-        $cluster = $this->option('cluster');
+        $this->clusterFqn = $this->askForCluster($initialQuestion, $question, $this->option('cluster'));
+    }
 
+    /**
+     * @return ?class-string<Cluster>
+     */
+    protected function askForCluster(string $initialQuestion, string $question, ?string $initialValue = null): ?string
+    {
         $clusterFqns = array_values($this->panel->getClusters());
 
         if (
-            blank($cluster) &&
+            blank($initialValue) &&
             (empty($clusterFqns) || (! confirm(
                 label: $initialQuestion,
                 default: false,
             )))
         ) {
-            return;
+            return null;
         }
 
-        if (is_string($cluster)) {
-            $cluster = (string) str($cluster)
+        if (is_string($initialValue)) {
+            $cluster = (string) str($initialValue)
                 ->trim('/')
                 ->trim('\\')
                 ->trim(' ')
@@ -44,14 +50,12 @@ trait HasCluster
             } elseif (! is_subclass_of($cluster, Cluster::class)) {
                 $this->components->warn('The cluster class or one of its parents must extend [' . Cluster::class . '].');
             } else {
-                $this->clusterFqn = $cluster;
-
-                return;
+                return $cluster;
             }
         }
 
         if (empty($clusterFqns)) {
-            $this->clusterFqn = (string) str(text(
+            $clusterFqn = (string) str(text(
                 label: "No clusters were found within the [{$this->panel->getId()}] panel. {$question}",
                 placeholder: 'App\\Filament\\Clusters\\Blog',
                 required: true,
@@ -83,16 +87,16 @@ trait HasCluster
                 ->replace('/', '\\');
 
             if (
-                (! class_exists($this->clusterFqn)) &&
-                class_exists("{$this->clusterFqn}\\" . class_basename($this->clusterFqn) . 'Cluster')
+                (! class_exists($clusterFqn)) &&
+                class_exists("{$clusterFqn}\\" . class_basename($clusterFqn) . 'Cluster')
             ) {
-                $this->clusterFqn = "{$this->clusterFqn}\\" . class_basename($this->clusterFqn) . 'Cluster';
+                return "{$clusterFqn}\\" . class_basename($clusterFqn) . 'Cluster';
             }
 
-            return;
+            return $clusterFqn;
         }
 
-        $this->clusterFqn = search(
+        return search(
             label: $question,
             options: function (?string $search) use ($clusterFqns): array {
                 if (blank($search)) {
@@ -125,28 +129,47 @@ trait HasCluster
 
     protected function configureClusterResourcesLocation(): void
     {
-        $clusterBasenameBeforeCluster = (string) str($this->clusterFqn)
+        [
+            $this->resourcesNamespace,
+            $this->resourcesDirectory,
+        ] = $this->getClusterResourcesLocation();
+    }
+
+    /**
+     * @param  ?class-string<Cluster>  $clusterFqn
+     * @return array{
+     *     0: string,
+     *     1: string
+     * }
+     */
+    public function getClusterResourcesLocation(?string $clusterFqn = null): array
+    {
+        $clusterFqn ??= $this->clusterFqn;
+
+        $clusterBasenameBeforeCluster = (string) str($clusterFqn)
             ->classBasename()
             ->beforeLast('Cluster');
 
-        $clusterNamespacePartBeforeBasename = (string) str($this->clusterFqn)
+        $clusterNamespacePartBeforeBasename = (string) str($clusterFqn)
             ->beforeLast('\\')
             ->classBasename();
 
         if ($clusterBasenameBeforeCluster === $clusterNamespacePartBeforeBasename) {
-            $this->resourcesNamespace = (string) str($this->clusterFqn)
-                ->beforeLast('\\')
-                ->append('\\Resources');
-            $this->resourcesDirectory = (string) str((new ReflectionClass($this->clusterFqn))->getFileName())
-                ->beforeLast(DIRECTORY_SEPARATOR)
-                ->append('/Resources');
-
-            return;
+            return [
+                (string) str($clusterFqn)
+                    ->beforeLast('\\')
+                    ->append('\\Resources'),
+                (string) str((new ReflectionClass($clusterFqn))->getFileName())
+                    ->beforeLast(DIRECTORY_SEPARATOR)
+                    ->append('/Resources'),
+            ];
         }
 
-        $this->resourcesNamespace = (string) str($this->clusterFqn)->append('\\Resources');
-        $this->resourcesDirectory = (string) str((new ReflectionClass($this->clusterFqn))->getFileName())
-            ->beforeLast('.')
-            ->append('/Resources');
+        return [
+            (string) str($clusterFqn)->append('\\Resources'),
+            (string) str((new ReflectionClass($clusterFqn))->getFileName())
+                ->beforeLast('.')
+                ->append('/Resources'),
+        ];
     }
 }

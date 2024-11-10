@@ -3,9 +3,16 @@
 namespace Filament\Commands\FileGenerators\Resources\Concerns;
 
 use Filament\Actions\Action;
+use Filament\Actions\AssociateAction;
+use Filament\Actions\AttachAction;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\DetachBulkAction;
+use Filament\Actions\DissociateAction;
+use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ForceDeleteBulkAction;
@@ -17,23 +24,64 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Filters\TrashedFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 use Nette\PhpGenerator\Literal;
 
 trait CanGenerateResourceTables
 {
-    public function generateTableMethodBody(): string
+    /**
+     * @param  ?class-string<Model>  $model
+     */
+    public function generateTableMethodBody(?string $model = null): string
     {
         $this->importUnlessPartial(BulkActionGroup::class);
 
+        $recordTitleAttributeOutput = '';
+
+        if (filled($recordTitleAttribute = $this->getRecordTitleAttribute())) {
+            $recordTitleAttributeOutput = new Literal(<<<'PHP'
+
+                ->recordTitleAttribute(?)
+            PHP, [$recordTitleAttribute]);
+        }
+
+        if (filled($headerActionsOutput = $this->outputTableHeaderActions())) {
+            $headerActionsOutput = <<<PHP
+
+                ->headerActions([
+                    {$headerActionsOutput}
+                ])
+            PHP;
+        }
+
+        $modifyQueryOutput = '';
+
+        if ($this->isSoftDeletable() && $this->hasTableModifyQueryForSoftDeletes()) {
+            $builderClass = Builder::class;
+            $softDeletingScopeClass = SoftDeletingScope::class;
+
+            $this->importUnlessPartial($builderClass);
+            $this->importUnlessPartial($softDeletingScopeClass);
+
+            $modifyQueryOutput = <<<PHP
+
+                ->modifyQueryUsing(function ({$this->simplifyFqn($builderClass)} \$query) => \$query->withoutGlobalScopes([$
+                    {$this->simplifyFqn($softDeletingScopeClass)}::class,
+                ])
+            PHP;
+        }
+
         return <<<PHP
-            return \$table
+            return \$table{$recordTitleAttributeOutput}
                 ->columns([
-                    {$this->outputTableColumns()}
+                    {$this->outputTableColumns($model)}
                 ])
                 ->filters([
                     {$this->outputTableFilters()}
-                ])
+                ]){$headerActionsOutput}
                 ->actions([
                     {$this->outputTableActions()}
                 ])
@@ -41,20 +89,23 @@ trait CanGenerateResourceTables
                     {$this->simplifyFqn(BulkActionGroup::class)}::make([
                         {$this->outputTableMethodBulkActions()}
                     ]),
-                ]);
+                ]){$modifyQueryOutput};
             PHP;
     }
 
     /**
+     * @param  ?class-string<Model>  $model
      * @return array<string>
      */
-    public function getTableColumns(): array
+    public function getTableColumns(?string $model = null): array
     {
         if (! $this->isGenerated()) {
             return [];
         }
 
-        $model = $this->getModelFqn();
+        if (blank($model)) {
+            return [];
+        }
 
         if (! class_exists($model)) {
             return [];
@@ -190,12 +241,28 @@ trait CanGenerateResourceTables
         );
     }
 
-    public function outputTableColumns(): string
+    /**
+     * @param  ?class-string<Model>  $model
+     */
+    public function outputTableColumns(?string $model = null): string
     {
-        $columns = $this->getTableColumns();
+        $columns = $this->getTableColumns($model);
 
         if (empty($columns)) {
-            return '//';
+            $recordTitleAttribute = $this->getRecordTitleAttribute();
+
+            if (blank($recordTitleAttribute)) {
+                return '//';
+            }
+
+            $textColumnClass = TextColumn::class;
+
+            $this->importUnlessPartial($textColumnClass);
+
+            return new Literal(<<<PHP
+                {$this->simplifyFqn($textColumnClass)}::make(?)
+                    ->searchable(),
+                PHP, [$recordTitleAttribute]);
         }
 
         return implode(PHP_EOL . '        ', $columns);
@@ -236,6 +303,46 @@ trait CanGenerateResourceTables
     /**
      * @return array<class-string<Action>>
      */
+    public function getTableHeaderActions(): array
+    {
+        $actions = [];
+
+        if ($this->hasCreateTableAction()) {
+            $actions[] = CreateAction::class;
+        }
+
+        if ($this->hasAttachTableActions()) {
+            $actions[] = AttachAction::class;
+        }
+
+        if ($this->hasAssociateTableActions()) {
+            $actions[] = AssociateAction::class;
+        }
+
+        foreach ($actions as $action) {
+            $this->importUnlessPartial($action);
+        }
+
+        return $actions;
+    }
+
+    public function outputTableHeaderActions(): ?string
+    {
+        $actions = $this->getTableHeaderActions();
+
+        if (empty($actions)) {
+            return null;
+        }
+
+        return implode(PHP_EOL . '        ', array_map(
+            fn (string $action) => "{$this->simplifyFqn($action)}::make(),",
+            $actions,
+        ));
+    }
+
+    /**
+     * @return array<class-string<Action>>
+     */
     public function getTableActions(): array
     {
         $actions = [];
@@ -246,7 +353,15 @@ trait CanGenerateResourceTables
 
         $actions[] = EditAction::class;
 
-        if ($this->isSimple()) {
+        if ($this->hasAssociateTableActions()) {
+            $actions[] = DissociateAction::class;
+        }
+
+        if ($this->hasAttachTableActions()) {
+            $actions[] = DetachAction::class;
+        }
+
+        if ($this->hasDeleteTableActions()) {
             $actions[] = DeleteAction::class;
 
             if ($this->isSoftDeletable()) {
@@ -262,6 +377,26 @@ trait CanGenerateResourceTables
         return $actions;
     }
 
+    public function hasCreateTableAction(): bool
+    {
+        return false;
+    }
+
+    public function hasAssociateTableActions(): bool
+    {
+        return false;
+    }
+
+    public function hasAttachTableActions(): bool
+    {
+        return false;
+    }
+
+    public function hasDeleteTableActions(): bool
+    {
+        return $this->isSimple();
+    }
+
     public function outputTableActions(): string
     {
         return implode(PHP_EOL . '        ', array_map(
@@ -275,9 +410,17 @@ trait CanGenerateResourceTables
      */
     public function getTableBulkActions(): array
     {
-        $actions = [
-            DeleteBulkAction::class,
-        ];
+        $actions = [];
+
+        if ($this->hasAssociateTableActions()) {
+            $actions[] = DissociateBulkAction::class;
+        }
+
+        if ($this->hasAttachTableActions()) {
+            $actions[] = DetachBulkAction::class;
+        }
+
+        $actions[] = DeleteBulkAction::class;
 
         if ($this->isSoftDeletable()) {
             $actions[] = ForceDeleteBulkAction::class;
@@ -297,5 +440,10 @@ trait CanGenerateResourceTables
             fn (string $action) => "{$this->simplifyFqn($action)}::make(),",
             $this->getTableBulkActions(),
         ));
+    }
+
+    public function hasTableModifyQueryForSoftDeletes(): bool
+    {
+        return false;
     }
 }

@@ -172,7 +172,7 @@ class ResourceClassGenerator extends ClassGenerator
             ? <<<PHP
                 return {$this->simplifyFqn($formSchemaFqn)}::configure(\$schema);
                 PHP
-            : $this->generateFormMethodBody();
+            : $this->generateFormMethodBody($this->getModelFqn());
 
         $method = $class->addMethod('form')
             ->setPublic()
@@ -193,7 +193,7 @@ class ResourceClassGenerator extends ClassGenerator
             return;
         }
 
-        $infolistSchemaFqn = $this->getFormSchemaFqn();
+        $infolistSchemaFqn = $this->getInfolistSchemaFqn();
 
         $methodBody = filled($infolistSchemaFqn)
             ? <<<PHP
@@ -227,7 +227,7 @@ class ResourceClassGenerator extends ClassGenerator
             ? <<<PHP
                 return {$this->simplifyFqn($tableFqn)}::configure(\$table);
                 PHP
-            : $this->generateTableMethodBody();
+            : $this->generateTableMethodBody($this->getModelFqn());
 
         $method = $class->addMethod('table')
             ->setPublic()

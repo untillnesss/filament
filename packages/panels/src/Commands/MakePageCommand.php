@@ -2,17 +2,42 @@
 
 namespace Filament\Commands;
 
-use Filament\Clusters\Cluster;
-use Filament\Facades\Filament;
-use Filament\Panel;
-use Filament\Support\Commands\Concerns\CanIndentStrings;
+use Filament\Commands\Concerns\CanAskForResource;
+use Filament\Commands\Concerns\HasCluster;
+use Filament\Commands\Concerns\HasPanel;
+use Filament\Commands\Concerns\HasResourcesLocation;
+use Filament\Commands\FileGenerators\CustomPageClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Pages\ResourceCreateRecordPageClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Pages\ResourceCustomPageClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Pages\ResourceEditRecordPageClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Pages\ResourceManageRelatedRecordsPageClassGenerator;
+use Filament\Commands\FileGenerators\Resources\Pages\ResourceViewRecordPageClassGenerator;
+use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Resources\Pages\Page as ResourcePage;
+use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
+use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
+use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\search;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\suggest;
 use function Laravel\Prompts\text;
@@ -23,12 +48,43 @@ use function Laravel\Prompts\text;
 ])]
 class MakePageCommand extends Command
 {
-    use CanIndentStrings;
+    use CanAskForResource;
+    use CanCheckFileGenerationFlags;
     use CanManipulateFiles;
+    use HasCluster;
+    use HasPanel;
+    use HasResourcesLocation;
 
     protected $description = 'Create a new Filament page class and view';
 
-    protected $signature = 'make:filament-page {name?} {--R|resource=} {--T|type=} {--panel=} {--F|force}';
+    protected $name = 'make:filament-page';
+
+    /**
+     * @var class-string
+     */
+    protected string $fqn;
+
+    protected string $fqnEnd;
+
+    protected ?string $view = null;
+
+    protected bool $hasResource;
+
+    /**
+     * @var ?class-string
+     */
+    protected ?string $resourceFqn = null;
+
+    /**
+     * @var class-string<ResourcePage> | null
+     */
+    protected ?string $resourcePageType = null;
+
+    protected string $pagesNamespace;
+
+    protected string $pagesDirectory;
+
+    public static bool $shouldCheckModelsForSoftDeletes = true;
 
     /**
      * @var array<string>
@@ -38,319 +94,676 @@ class MakePageCommand extends Command
         'filament:page',
     ];
 
+    /**
+     * @return array<InputArgument>
+     */
+    protected function getArguments(): array
+    {
+        return [
+            new InputArgument(
+                name: 'name',
+                mode: InputArgument::OPTIONAL,
+                description: 'The name of the page to generate, optionally prefixed with directories',
+            ),
+        ];
+    }
+
+    /**
+     * @return array<InputOption>
+     */
+    protected function getOptions(): array
+    {
+        return [
+            new InputOption(
+                name: 'cluster',
+                shortcut: 'C',
+                mode: InputOption::VALUE_OPTIONAL,
+                description: 'The cluster to create the page in',
+            ),
+            new InputOption(
+                name: 'panel',
+                shortcut: null,
+                mode: InputOption::VALUE_REQUIRED,
+                description: 'The panel to create the resource in',
+            ),
+            new InputOption(
+                name: 'resource',
+                shortcut: 'R',
+                mode: InputOption::VALUE_OPTIONAL,
+                description: 'The resource to create the page in',
+            ),
+            new InputOption(
+                name: 'type',
+                shortcut: 'T',
+                mode: InputOption::VALUE_REQUIRED,
+                description: 'The type of resource page to create',
+            ),
+            new InputOption(
+                name: 'force',
+                shortcut: 'F',
+                mode: InputOption::VALUE_NONE,
+                description: 'Overwrite the contents of the files if they already exist',
+            ),
+        ];
+    }
+
     public function handle(): int
     {
-        $page = (string) str(
-            $this->argument('name') ??
-            text(
-                label: 'What is the page name?',
-                placeholder: 'EditSettings',
-                required: true,
-            ),
-        )
+        try {
+            $this->configureFqnEnd();
+            $this->configurePanel(question: 'Which panel would you like to create this page in?');
+            $this->configureHasResource();
+            $this->configureCluster();
+            $this->configureResource();
+            $this->configureResourcePageType();
+            $this->configurePagesLocation();
+
+            $this->configureLocation();
+
+            $this->createCustomPage();
+            $this->createResourceCustomPage();
+            $this->createResourceCreatePage();
+            $this->createResourceEditPage();
+            $this->createResourceViewPage();
+            $this->createResourceManageRelatedRecordsPage();
+            $this->createView();
+        } catch (InvalidCommandOutput) {
+            return static::INVALID;
+        }
+
+        $this->components->info("Filament page [{$this->fqn}] created successfully.");
+
+        if (filled($this->resourceFqn)) {
+            $this->components->info("Make sure to register the page in [{$this->resourceFqn}::getPages()].");
+        } elseif (empty($this->panel->getPageNamespaces())) {
+            $this->components->info('Make sure to register the page with [pages()] or discover it with [discoverPages()] in the panel service provider.');
+        }
+
+        return static::SUCCESS;
+    }
+
+    protected function configureFqnEnd(): void
+    {
+        $this->fqnEnd = (string) str($this->argument('name') ?? text(
+            label: 'What is the page name?',
+            placeholder: 'ManageSettings',
+            required: true,
+        ))
             ->trim('/')
             ->trim('\\')
             ->trim(' ')
+            ->studly()
             ->replace('/', '\\');
-        $pageClass = (string) str($page)->classBasename();
-        $pageNamespace = str($page)->contains('\\') ?
-            (string) str($page)->beforeLast('\\') :
-            '';
+    }
 
-        $resource = null;
-        $resourceClass = null;
-        $resourcePage = null;
+    protected function configureHasResource(): void
+    {
+        $this->hasResource = $this->option('resource') || confirm(
+            label: 'Would you like to create this page in a resource?',
+            default: false,
+        );
+    }
 
-        $panel = $this->option('panel');
-
-        if ($panel) {
-            $panel = Filament::getPanel($panel, isStrict: false);
+    protected function configureCluster(): void
+    {
+        if ($this->hasResource) {
+            $this->configureClusterFqn(
+                initialQuestion: 'Is the resource in a cluster?',
+                question: 'Which cluster is the resource in?',
+            );
+        } else {
+            $this->configureClusterFqn(
+                initialQuestion: 'Would you like to create this page in a cluster?',
+                question: 'Which cluster would you like to create this page in?',
+            );
         }
 
-        if (! $panel) {
-            $panels = Filament::getPanels();
-
-            /** @var Panel $panel */
-            $panel = (count($panels) > 1) ? $panels[select(
-                label: 'Which panel would you like to create this in?',
-                options: array_map(
-                    fn (Panel $panel): string => $panel->getId(),
-                    $panels,
-                ),
-                default: Filament::getDefaultPanel()->getId()
-            )] : Arr::first($panels);
+        if (blank($this->clusterFqn)) {
+            return;
         }
 
-        $resourceDirectories = $panel->getResourceDirectories();
-        $resourceNamespaces = $panel->getResourceNamespaces();
+        $this->configureClusterPagesLocation();
+        $this->configureClusterResourcesLocation();
+    }
 
-        foreach ($resourceDirectories as $resourceIndex => $resourceDirectory) {
-            if (str($resourceDirectory)->startsWith(base_path('vendor'))) {
-                unset($resourceDirectories[$resourceIndex]);
-                unset($resourceNamespaces[$resourceIndex]);
-            }
+    protected function configureClusterPagesLocation(): void
+    {
+        $clusterBasenameBeforeCluster = (string) str($this->clusterFqn)
+            ->classBasename()
+            ->beforeLast('Cluster');
+
+        $clusterNamespacePartBeforeBasename = (string) str($this->clusterFqn)
+            ->beforeLast('\\')
+            ->classBasename();
+
+        if ($clusterBasenameBeforeCluster === $clusterNamespacePartBeforeBasename) {
+            $this->pagesNamespace = (string) str($this->clusterFqn)
+                ->beforeLast('\\')
+                ->append('\\Pages');
+            $this->pagesDirectory = (string) str((new ReflectionClass($this->clusterFqn))->getFileName())
+                ->beforeLast(DIRECTORY_SEPARATOR)
+                ->append('/Pages');
+
+            return;
         }
 
-        $resourceInput = $this->option('resource') ?? suggest(
-            label: 'Which resource would you like to create this in?',
-            options: collect($panel->getResources())
-                ->filter(fn (string $namespace): bool => str($namespace)->contains('\\Resources\\') && str($namespace)->startsWith($resourceNamespaces))
-                ->map(
-                    fn (string $namespace): string => (string) str($namespace)
-                        ->afterLast('\\Resources\\')
-                        ->beforeLast('Resource')
-                )
-                ->all(),
-            placeholder: '[Optional] UserResource',
+        $this->pagesNamespace = (string) str($this->clusterFqn)->append('\\Pages');
+        $this->pagesDirectory = (string) str((new ReflectionClass($this->clusterFqn))->getFileName())
+            ->beforeLast('.')
+            ->append('/Pages');
+    }
+
+    protected function configureResource(): void
+    {
+        if (! $this->hasResource) {
+            return;
+        }
+
+        $this->configureResourcesLocation(question: 'Which namespace would you like to search for resources in?');
+
+        $this->resourceFqn = $this->askForResource(
+            question: 'Which resource would you like to create this page in?',
+            initialResource: $this->option('resource'),
         );
 
-        if (filled($resourceInput)) {
-            $resource = (string) str($resourceInput)
-                ->studly()
-                ->trim('/')
-                ->trim('\\')
-                ->trim(' ')
-                ->replace('/', '\\');
+        $pluralResourceBasenameBeforeResource = (string) str($this->resourceFqn)
+            ->classBasename()
+            ->beforeLast('Resource')
+            ->plural();
 
-            if (! str($resource)->endsWith('Resource')) {
-                $resource .= 'Resource';
-            }
+        $resourceNamespacePartBeforeBasename = (string) str($this->resourceFqn)
+            ->beforeLast('\\')
+            ->classBasename();
 
-            $resourceClass = (string) str($resource)
-                ->classBasename();
+        if ($pluralResourceBasenameBeforeResource === $resourceNamespacePartBeforeBasename) {
+            $this->pagesNamespace = (string) str($this->resourceFqn)
+                ->beforeLast('\\')
+                ->append('\\Pages');
+            $this->pagesDirectory = (string) str((new ReflectionClass($this->resourceFqn))->getFileName())
+                ->beforeLast(DIRECTORY_SEPARATOR)
+                ->append('/Pages');
 
-            $resourcePage = $this->option('type') ?? select(
-                label: 'Which type of page would you like to create?',
+            return;
+        }
+
+        $this->pagesNamespace = (string) str($this->resourceFqn)->append('\\Pages');
+        $this->pagesDirectory = (string) str((new ReflectionClass($this->resourceFqn))->getFileName())
+            ->beforeLast('.')
+            ->append('/Pages');
+    }
+
+    protected function configureResourcePageType(): void
+    {
+        if (! $this->hasResource) {
+            return;
+        }
+
+        $type = match ((string) str($this->option('type'))->slug()->replace('-', '')) {
+            'custom' => ResourcePage::class,
+            'create', 'createrecord' => CreateRecord::class,
+            'edit', 'editrecord' => EditRecord::class,
+            'view', 'viewrecord' => ViewRecord::class,
+            'managerelated', 'related', 'relation', 'relationship', 'managerelatedrecords' => ManageRelatedRecords::class,
+            default => $this->option('type'),
+        };
+
+        if (! class_exists($type)) {
+            $type = select(
+                label: 'Which type of resource page would you like to create?',
                 options: [
-                    'custom' => 'Custom',
-                    'ListRecords' => 'List',
-                    'CreateRecord' => 'Create',
-                    'EditRecord' => 'Edit',
-                    'ViewRecord' => 'View',
-                    'ManageRelatedRecords' => 'Relationship',
-                    'ManageRecords' => 'Manage',
+                    ResourcePage::class => 'Custom',
+                    CreateRecord::class => 'Create',
+                    EditRecord::class => 'Edit',
+                    ViewRecord::class => 'View',
+                    ManageRelatedRecords::class => 'Manage relationship',
                 ],
-                default: 'custom'
             );
+        }
 
-            if ($resourcePage === 'ManageRelatedRecords') {
-                $relationship = (string) str(text(
-                    label: 'What is the relationship?',
-                    placeholder: 'members',
+        $this->resourcePageType = $type;
+    }
+
+    protected function configurePagesLocation(): void
+    {
+        if (filled($this->resourceFqn)) {
+            return;
+        }
+
+        if (filled($this->clusterFqn)) {
+            return;
+        }
+
+        $directories = $this->panel->getPageDirectories();
+        $namespaces = $this->panel->getPageNamespaces();
+
+        foreach ($directories as $index => $directory) {
+            if (str($directory)->startsWith(base_path('vendor'))) {
+                unset($directories[$index]);
+                unset($namespaces[$index]);
+            }
+        }
+
+        if (count($namespaces) < 2) {
+            $this->pagesNamespace = (Arr::first($namespaces) ?? 'App\\Filament\\Pages');
+            $this->pagesDirectory = (Arr::first($directories) ?? app_path('Filament/Pages/'));
+
+            return;
+        }
+
+        $this->pagesNamespace = search(
+            label: 'Which namespace would you like to create this page in?',
+            options: function (?string $search) use ($namespaces): array {
+                if (blank($search)) {
+                    return $namespaces;
+                }
+
+                $search = str($search)->trim()->replace(['\\', '/'], '');
+
+                return array_filter($namespaces, fn (string $namespace): bool => str($namespace)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
+            },
+        );
+        $this->pagesDirectory = $directories[array_search($this->pagesNamespace, $namespaces)];
+    }
+
+    protected function configureLocation(): void
+    {
+        $this->fqn = $this->pagesNamespace . '\\' . $this->fqnEnd;
+
+        if ((! $this->hasResource) || ($this->resourcePageType === ResourcePage::class)) {
+            $this->view = str($this->fqn)
+                ->replaceFirst('App\\', '')
+                ->replace('\\', '/')
+                ->explode('/')
+                ->map(Str::kebab(...))
+                ->implode('.');
+        }
+    }
+
+    protected function createCustomPage(): void
+    {
+        if (! $this->hasResource) {
+            return;
+        }
+
+        $path = (string) str("{$this->pagesDirectory}\\{$this->fqnEnd}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($path, app(CustomPageClassGenerator::class, [
+            'fqn' => $this->fqn,
+            'view' => $this->view,
+        ]));
+    }
+
+    protected function createResourceCustomPage(): void
+    {
+        if ($this->resourcePageType !== ResourcePage::class) {
+            return;
+        }
+
+        $path = (string) str("{$this->pagesDirectory}\\{$this->fqnEnd}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($path, app(ResourceCustomPageClassGenerator::class, [
+            'fqn' => $this->fqn,
+            'resourceFqn' => $this->resourceFqn,
+            'view' => $this->view,
+            'hasRecord' => confirm(
+                label: 'Does the page relate to a specific record in the resource? This is similar to the default Edit or View page of a resource, which have the record ID in the URL.',
+                default: false,
+            ),
+        ]));
+    }
+
+    protected function createResourceCreatePage(): void
+    {
+        if ($this->resourcePageType !== CreateRecord::class) {
+            return;
+        }
+
+        $path = (string) str("{$this->pagesDirectory}\\{$this->fqnEnd}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($path, app(ResourceCreateRecordPageClassGenerator::class, [
+            'fqn' => $this->fqn,
+            'resourceFqn' => $this->resourceFqn,
+        ]));
+    }
+
+    protected function createResourceEditPage(): void
+    {
+        if ($this->resourcePageType !== EditRecord::class) {
+            return;
+        }
+
+        $path = (string) str("{$this->pagesDirectory}\\{$this->fqnEnd}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($path, app(ResourceEditRecordPageClassGenerator::class, [
+            'fqn' => $this->fqn,
+            'resourceFqn' => $this->resourceFqn,
+            'hasViewOperation' => $this->resourceFqn::hasPage('view'),
+            'isSoftDeletable' => confirm(
+                label: 'Does the model use soft deletes?',
+                default: false,
+            ),
+        ]));
+    }
+
+    protected function createResourceViewPage(): void
+    {
+        if ($this->resourcePageType !== ViewRecord::class) {
+            return;
+        }
+
+        $path = (string) str("{$this->pagesDirectory}\\{$this->fqnEnd}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($path, app(ResourceViewRecordPageClassGenerator::class, [
+            'fqn' => $this->fqn,
+            'resourceFqn' => $this->resourceFqn,
+        ]));
+    }
+
+    protected function createResourceManageRelatedRecordsPage(): void
+    {
+        if ($this->resourcePageType !== ManageRelatedRecords::class) {
+            return;
+        }
+
+        $path = (string) str("{$this->pagesDirectory}\\{$this->fqnEnd}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $relationship = text(
+            label: 'What is the relationship?',
+            placeholder: 'members',
+            required: true,
+        );
+
+        $hasViewOperation = false;
+        $formSchemaFqn = null;
+        $infolistSchemaFqn = null;
+        $tableFqn = null;
+        $recordTitleAttribute = null;
+        $isGenerated = null;
+        $relatedModelFqn = null;
+        $isSoftDeletable = false;
+        $relationshipType = null;
+
+        $relatedResourceFqn = $this->askForRelatedResource();
+
+        if (blank($relatedResourceFqn)) {
+            $askForIsGeneratedIfNotAlready = function (?string $question = null) use (&$isGenerated): bool {
+                return $isGenerated ??= confirm(
+                    label: $question ?? 'Would you like to generate the page based on the attributes of the model?',
+                    default: false,
+                );
+            };
+
+            $askForRelatedModelFqnIfNotAlready = function () use (&$relatedModelFqn, $relationship): string {
+                if (filled($relatedModelFqn)) {
+                    return $relatedModelFqn;
+                }
+
+                $resourceModelFqn = $this->resourceFqn::getModel();
+
+                if (
+                    class_exists($resourceModelFqn) &&
+                    method_exists($resourceModelFqn, $relationship) &&
+                    (($relationshipInstance = app($relatedModelFqn)->{$relationship}()) instanceof Relation)
+                ) {
+                    return $relatedModelFqn = $relationshipInstance->getRelated()::class;
+                }
+
+                $modelFqns = array_filter(
+                    get_declared_classes(),
+                    fn (string $modelFqn): bool => is_subclass_of($modelFqn, Model::class),
+                );
+
+                return $relatedModelFqn = (string) str(suggest(
+                    label: "Filament couldn't automatically find the related model for the [{$relationship}] relationship. What is the fully qualified class name of the related model?",
+                    options: function (?string $search) use ($modelFqns): array {
+                        if (blank($search)) {
+                            return $modelFqns;
+                        }
+
+                        $search = str($search)->trim()->replace(['\\', '/'], '');
+
+                        return array_filter($modelFqns, fn (string $modelFqn): bool => str($modelFqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
+                    },
+                    placeholder: 'App\\Models\\User',
                     required: true,
-                ))
-                    ->trim(' ');
+                    validate: function (string $value): ?string {
+                        $value = (string) str($value)
+                            ->trim('/')
+                            ->trim('\\')
+                            ->trim(' ')
+                            ->replace('/', '\\');
 
-                $recordTitleAttribute = (string) str(text(
-                    label: 'What is the title attribute?',
+                        return match (true) {
+                            ! class_exists($value) => 'The model class does not exist. Please ensure you use the fully qualified class name of the resource, such as [App\\Models\\User].',
+                            ! is_subclass_of($value, Model::class) => 'The model class or one of its parents must extend [' . Model::class . '].',
+                            default => null,
+                        };
+                    },
+                ))
+                    ->trim('/')
+                    ->trim('\\')
+                    ->trim(' ')
+                    ->replace('/', '\\');
+            };
+
+            $askForRecordTitleAttributeIfNotAlready = function () use (&$recordTitleAttribute): string {
+                return $recordTitleAttribute ??= text(
+                    label: 'What is the title attribute? This is the attribute that will be used to uniquely identify each record in the table.',
                     placeholder: 'name',
                     required: true,
-                ))
-                    ->trim(' ');
+                );
+            };
 
-                $tableHeaderActions = [];
+            if (! $this->hasFileGenerationFlag(FileGenerationFlag::EMBEDDED_PANEL_RESOURCE_SCHEMAS)) {
+                $formSchemaFqn = $this->askForSchema(
+                    intialQuestion: 'Would you like to use an existing form schema class instead of defining the form on this page?',
+                    question: 'Which form schema class would you like to use? Please provide the fully qualified class name.',
+                    questionPlaceholder: 'App\\Filament\\Resources\\Users\\Schemas\\UserForm',
+                );
+            }
 
-                $tableHeaderActions[] = 'Actions\CreateAction::make(),';
+            if (blank($formSchemaFqn)) {
+                $askForIsGeneratedIfNotAlready()
+                    ? $askForRelatedModelFqnIfNotAlready()
+                    : $askForRecordTitleAttributeIfNotAlready();
+            }
 
-                if ($hasAssociateAction = confirm('Is this a one-to-many relationship where the related records can be associated?')) {
-                    $tableHeaderActions[] = 'Actions\AssociateAction::make(),';
-                } elseif ($hasAttachAction = confirm('Is this a many-to-many relationship where the related records can be attached?')) {
-                    $tableHeaderActions[] = 'Actions\AttachAction::make(),';
+            if (confirm(
+                'Would you like a view modal for the table?',
+                default: false,
+            )) {
+                $hasViewOperation = true;
+
+                if (! $this->hasFileGenerationFlag(FileGenerationFlag::EMBEDDED_PANEL_RESOURCE_SCHEMAS)) {
+                    $infolistSchemaFqn = $this->askForSchema(
+                        intialQuestion: 'Would you like to use an existing infolist schema class instead of defining the infolist on this page?',
+                        question: 'Which infolist schema class would you like to use? Please provide the fully qualified class name.',
+                        questionPlaceholder: 'App\\Filament\\Resources\\Users\\Schemas\\UserInfolist',
+                    );
                 }
 
-                $tableHeaderActions = implode(PHP_EOL, $tableHeaderActions);
-
-                $tableActions = [];
-
-                if (confirm('Would you like an action to open each record in a read-only View modal?')) {
-                    $tableActions[] = 'Actions\ViewAction::make(),';
+                if (blank($infolistSchemaFqn)) {
+                    $askForRecordTitleAttributeIfNotAlready();
                 }
+            }
 
-                $tableActions[] = 'Actions\EditAction::make(),';
+            if ($this->hasFileGenerationFlag(FileGenerationFlag::EMBEDDED_PANEL_RESOURCE_TABLES)) {
+                $askForIsGeneratedIfNotAlready()
+                    ? $askForRelatedModelFqnIfNotAlready()
+                    : $askForRecordTitleAttributeIfNotAlready();
+            } else {
+                $tableFqn = $this->askForSchema(
+                    intialQuestion: 'Would you like to use an existing table class instead of defining the table on this page?',
+                    question: 'Which table class would you like to use? Please provide the fully qualified class name.',
+                    questionPlaceholder: 'App\\Filament\\Resources\\Users\\Tables\\UsersTable',
+                );
 
-                if ($hasAssociateAction) {
-                    $tableActions[] = 'Actions\DissociateAction::make(),';
+                if (blank($tableFqn)) {
+                    $askForRecordTitleAttributeIfNotAlready();
+
+                    $askForIsGeneratedIfNotAlready(
+                        question: 'Would you like to generate the table columns based on the attributes of the model?',
+                    ) && $askForRelatedModelFqnIfNotAlready();
+
+                    $isSoftDeletable = (filled($relatedModelFqn) && static::$shouldCheckModelsForSoftDeletes && class_exists($relatedModelFqn))
+                        ? in_array(SoftDeletes::class, class_uses_recursive($relatedModelFqn))
+                        : confirm(
+                            label: 'Does the related model use soft deletes?',
+                            default: false,
+                        );
+
+                    $relationshipType = select(
+                        label: 'What type of relationship is this?',
+                        options: [
+                            HasMany::class => 'HasMany',
+                            BelongsToMany::class => 'BelongsToMany',
+                            MorphMany::class => 'MorphMany',
+                            MorphToMany::class => 'MorphToMany',
+                            'other' => 'Other',
+                        ],
+                    );
+
+                    if ($relationshipType === 'other') {
+                        $relationshipType = null;
+                    }
                 }
-
-                if ($hasAttachAction ?? false) {
-                    $tableActions[] = 'Actions\DetachAction::make(),';
-                }
-
-                $tableActions[] = 'Actions\DeleteAction::make(),';
-
-                if ($hasSoftDeletes = confirm('Can the related records be soft deleted?')) {
-                    $tableActions[] = 'Actions\ForceDeleteAction::make(),';
-                    $tableActions[] = 'Actions\RestoreAction::make(),';
-                }
-
-                $tableActions = implode(PHP_EOL, $tableActions);
-
-                $tableBulkActions = [];
-
-                if ($hasAssociateAction) {
-                    $tableBulkActions[] = 'Actions\DissociateBulkAction::make(),';
-                }
-
-                if ($hasAttachAction ?? false) {
-                    $tableBulkActions[] = 'Actions\DetachBulkAction::make(),';
-                }
-
-                $tableBulkActions[] = 'Actions\DeleteBulkAction::make(),';
-
-                $modifyQueryUsing = '';
-
-                if ($hasSoftDeletes) {
-                    $modifyQueryUsing .= '->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes([';
-                    $modifyQueryUsing .= PHP_EOL . '    SoftDeletingScope::class,';
-                    $modifyQueryUsing .= PHP_EOL . ']))';
-
-                    $tableBulkActions[] = 'Actions\RestoreBulkAction::make(),';
-                    $tableBulkActions[] = 'Actions\ForceDeleteBulkAction::make(),';
-                }
-
-                $tableBulkActions = implode(PHP_EOL, $tableBulkActions);
             }
         }
 
-        if (empty($resource)) {
-            $pageDirectories = $panel->getPageDirectories();
-            $pageNamespaces = $panel->getPageNamespaces();
+        $this->writeFile($path, app(ResourceManageRelatedRecordsPageClassGenerator::class, [
+            'fqn' => $this->fqn,
+            'resourceFqn' => $this->resourceFqn,
+            'relationship' => $relationship,
+            'relatedResourceFqn' => $relatedResourceFqn,
+            'navigationLabel' => Str::headline($relationship),
+            'hasViewOperation' => $hasViewOperation,
+            'formSchemaFqn' => $formSchemaFqn,
+            'infolistSchemaFqn' => $infolistSchemaFqn,
+            'tableFqn' => $tableFqn,
+            'recordTitleAttribute' => $recordTitleAttribute,
+            'isGenerated' => $isGenerated ?? false,
+            'relatedModelFqn' => null,
+            'isSoftDeletable' => $isSoftDeletable,
+            'relationshipType' => $relationshipType,
+        ]));
+    }
 
-            foreach ($pageDirectories as $pageIndex => $pageDirectory) {
-                if (str($pageDirectory)->startsWith(base_path('vendor'))) {
-                    unset($pageDirectories[$pageIndex]);
-                    unset($pageNamespaces[$pageIndex]);
-                }
-            }
+    /**
+     * @return ?class-string
+     */
+    protected function askForRelatedResource(): ?string
+    {
+        if (! confirm(
+            label: 'Does you want to use an existing resource?',
+            default: false,
+        )) {
+            return null;
+        }
 
-            $namespace = (count($pageNamespaces) > 1) ?
-                select(
-                    label: 'Which namespace would you like to create this in?',
-                    options: $pageNamespaces
-                ) :
-                (Arr::first($pageNamespaces) ?? 'App\\Filament\\Pages');
-            $path = (count($pageDirectories) > 1) ?
-                $pageDirectories[array_search($namespace, $pageNamespaces)] :
-                (Arr::first($pageDirectories) ?? app_path('Filament/Pages/'));
+        $clusterFqn = $this->askForCluster(
+            initialQuestion: 'Is the related resource in a cluster?',
+            question: 'Which cluster is the related resource in?',
+        );
+
+        if (filled($clusterFqn)) {
+            [$resourcesNamespace] = $this->getClusterResourcesLocation($clusterFqn);
         } else {
-            $resourceDirectories = $panel->getResourceDirectories();
-            $resourceNamespaces = $panel->getResourceNamespaces();
-
-            foreach ($resourceDirectories as $resourceIndex => $resourceDirectory) {
-                if (str($resourceDirectory)->startsWith(base_path('vendor'))) {
-                    unset($resourceDirectories[$resourceIndex]);
-                    unset($resourceNamespaces[$resourceIndex]);
-                }
-            }
-
-            $resourceNamespace = (count($resourceNamespaces) > 1) ?
-                select(
-                    label: 'Which namespace would you like to create this in?',
-                    options: $resourceNamespaces
-                ) :
-                (Arr::first($resourceNamespaces) ?? 'App\\Filament\\Resources');
-            $resourcePath = (count($resourceDirectories) > 1) ?
-                $resourceDirectories[array_search($resourceNamespace, $resourceNamespaces)] :
-                (Arr::first($resourceDirectories) ?? app_path('Filament/Resources/'));
+            [$resourcesNamespace] = $this->getResourcesLocation(
+                question: 'Which namespace would you like to search for resources in?',
+            );
         }
 
-        $view = str($page)
-            ->prepend(
-                (string) str(empty($resource) ? "{$namespace}\\" : "{$resourceNamespace}\\{$resource}\\pages\\")
-                    ->replaceFirst('App\\', '')
-            )
-            ->replace('\\', '/')
-            ->explode('/')
-            ->map(fn ($segment) => Str::lower(Str::kebab($segment)))
-            ->implode('.');
+        return $this->askForResource(
+            question: 'Which resource is related to this resource?',
+            resourcesNamespace: $resourcesNamespace,
+        );
+    }
 
-        $path = (string) str($page)
-            ->prepend('/')
-            ->prepend(empty($resource) ? $path : $resourcePath . "\\{$resource}\\Pages\\")
-            ->replace('\\', '/')
-            ->replace('//', '/')
-            ->append('.php');
+    /**
+     * @return ?class-string
+     */
+    protected function askForSchema(string $intialQuestion, string $question, string $questionPlaceholder): ?string
+    {
+        if (! confirm(
+            label: $intialQuestion,
+            default: false,
+        )) {
+            return null;
+        }
 
-        $viewPath = resource_path(
-            (string) str($view)
+        $schemaFqns = array_filter(
+            get_declared_classes(),
+            fn (string $schemaFqn): bool => (new ReflectionClass($schemaFqn))->hasMethod('configure'),
+        );
+
+        return suggest(
+            label: $question,
+            options: function (?string $search) use ($schemaFqns): array {
+                if (blank($search)) {
+                    return $schemaFqns;
+                }
+
+                $search = str($search)->trim()->replace(['\\', '/'], '');
+
+                return array_filter($schemaFqns, fn (string $schemaFqn): bool => str($schemaFqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
+            },
+            placeholder: $questionPlaceholder,
+        );
+    }
+
+    protected function createView(): void
+    {
+        if (blank($this->view)) {
+            return;
+        }
+
+        $path = resource_path(
+            (string) str($this->view)
                 ->replace('.', '/')
                 ->prepend('views/')
                 ->append('.blade.php'),
         );
 
-        $files = [
-            $path,
-            ...($resourcePage === 'custom' ? [$viewPath] : []),
-        ];
-
-        if (! $this->option('force') && $this->checkForCollision($files)) {
-            return static::INVALID;
+        if (! $this->option('force') && $this->checkForCollision($path)) {
+            throw new InvalidCommandOutput;
         }
 
-        $potentialCluster = empty($resource) ? ((string) str($namespace)->beforeLast('\Pages')) : null;
-        $clusterAssignment = null;
-        $clusterImport = null;
-
-        if (
-            filled($potentialCluster) &&
-            class_exists($potentialCluster) &&
-            is_subclass_of($potentialCluster, Cluster::class)
-        ) {
-            $clusterAssignment = $this->indentString(PHP_EOL . PHP_EOL . 'protected static ?string $cluster = ' . class_basename($potentialCluster) . '::class;');
-            $clusterImport = "use {$potentialCluster};" . PHP_EOL;
-        }
-
-        if (empty($resource)) {
-            $this->copyStubToApp('Page', $path, [
-                'class' => $pageClass,
-                'clusterAssignment' => $clusterAssignment,
-                'clusterImport' => $clusterImport,
-                'namespace' => $namespace . ($pageNamespace !== '' ? "\\{$pageNamespace}" : ''),
-                'view' => $view,
-            ]);
-        } elseif ($resourcePage === 'ManageRelatedRecords') {
-            $this->copyStubToApp('ResourceManageRelatedRecordsPage', $path, [
-                'baseResourcePage' => "Filament\\Resources\\Pages\\{$resourcePage}",
-                'baseResourcePageClass' => $resourcePage,
-                'modifyQueryUsing' => filled($modifyQueryUsing ?? null) ? PHP_EOL . $this->indentString($modifyQueryUsing, 3) : $modifyQueryUsing ?? '',
-                'namespace' => "{$resourceNamespace}\\{$resource}\\Pages" . ($pageNamespace !== '' ? "\\{$pageNamespace}" : ''),
-                'recordTitleAttribute' => $recordTitleAttribute ?? null,
-                'relationship' => $relationship ?? null,
-                'resource' => "{$resourceNamespace}\\{$resource}",
-                'resourceClass' => $resourceClass,
-                'resourcePageClass' => $pageClass,
-                'tableActions' => $this->indentString($tableActions ?? '', 4),
-                'tableBulkActions' => $this->indentString($tableBulkActions ?? '', 5),
-                'tableFilters' => $this->indentString(
-                    ($hasSoftDeletes ?? false) ? 'Tables\Filters\TrashedFilter::make()' : '//',
-                    4,
-                ),
-                'tableHeaderActions' => $this->indentString($tableHeaderActions ?? '', 4),
-                'title' => Str::headline($relationship ?? ''),
-                'view' => $view,
-            ]);
-        } else {
-            $this->copyStubToApp($resourcePage === 'custom' ? 'CustomResourcePage' : 'ResourcePage', $path, [
-                'baseResourcePage' => 'Filament\\Resources\\Pages\\' . ($resourcePage === 'custom' ? 'Page' : $resourcePage),
-                'baseResourcePageClass' => $resourcePage === 'custom' ? 'Page' : $resourcePage,
-                'namespace' => "{$resourceNamespace}\\{$resource}\\Pages" . ($pageNamespace !== '' ? "\\{$pageNamespace}" : ''),
-                'resource' => "{$resourceNamespace}\\{$resource}",
-                'resourceClass' => $resourceClass,
-                'resourcePageClass' => $pageClass,
-                'view' => $view,
-            ]);
-        }
-
-        if (empty($resource) || $resourcePage === 'custom') {
-            $this->copyStubToApp('PageView', $viewPath);
-        }
-
-        $this->components->info("Filament page [{$path}] created successfully.");
-
-        if ($resource !== null) {
-            $this->components->info("Make sure to register the page in `{$resourceClass}::getPages()`.");
-        }
-
-        return static::SUCCESS;
+        $this->copyStubToApp('PageView', $path);
     }
 }

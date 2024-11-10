@@ -9,31 +9,38 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Nette\PhpGenerator\Literal;
 
 trait CanGenerateResourceForms
 {
-    public function generateFormMethodBody(): string
+    /**
+     * @param  ?class-string<Model>  $model
+     */
+    public function generateFormMethodBody(?string $model = null): string
     {
         return <<<PHP
             return \$schema
                 ->components([
-                    {$this->outputFormComponents()}
+                    {$this->outputFormComponents($model)}
                 ]);
             PHP;
     }
 
     /**
+     * @param  ?class-string<Model>  $model
      * @return array<string>
      */
-    public function getFormComponents(): array
+    public function getFormComponents(?string $model = null): array
     {
         if (! $this->isGenerated()) {
             return [];
         }
 
-        $model = $this->getModelFqn();
+        if (blank($model)) {
+            return [];
+        }
 
         if (! class_exists($model)) {
             return [];
@@ -178,12 +185,29 @@ trait CanGenerateResourceForms
         );
     }
 
-    public function outputFormComponents(): string
+    /**
+     * @param  ?class-string<Model>  $model
+     */
+    public function outputFormComponents(?string $model = null): string
     {
-        $components = $this->getFormComponents();
+        $components = $this->getFormComponents($model);
 
         if (empty($components)) {
-            return '//';
+            $recordTitleAttribute = $this->getRecordTitleAttribute();
+
+            if (blank($recordTitleAttribute)) {
+                return '//';
+            }
+
+            $textInputClass = TextInput::class;
+
+            $this->importUnlessPartial($textInputClass);
+
+            return new Literal(<<<PHP
+                {$this->simplifyFqn($textInputClass)}::make(?)
+                    ->required()
+                    ->maxLength(255),
+                PHP, [$recordTitleAttribute]);
         }
 
         return implode(PHP_EOL . '        ', $components);

@@ -56,7 +56,7 @@ class ResourceFormSchemaClassGenerator extends ClassGenerator
             ->setPublic()
             ->setStatic()
             ->setReturnType(Schema::class)
-            ->setBody($this->generateFormMethodBody());
+            ->setBody($this->generateFormMethodBody($this->getModelFqn()));
         $method->addParameter('schema')
             ->setType(Schema::class);
 

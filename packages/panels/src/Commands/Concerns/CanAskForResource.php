@@ -10,14 +10,19 @@ use function Laravel\Prompts\text;
 
 trait CanAskForResource
 {
-    protected function askForResource(string $question, ?string $initialResource = null): string
+    /**
+     * @return class-string
+     */
+    protected function askForResource(string $question, ?string $initialResource = null, ?string $resourcesNamespace = null): string
     {
+        $resourcesNamespace ??= $this->resourcesNamespace;
+
         if (is_string($initialResource)) {
             $resourceNamespace = (string) str($initialResource)
                 ->beforeLast('Resource')
                 ->pluralStudly()
                 ->replace('/', '\\')
-                ->prepend("{$this->resourcesNamespace}\\");
+                ->prepend("{$resourcesNamespace}\\");
 
             $resourceBasename = (string) str($initialResource)
                 ->classBasename()
@@ -39,12 +44,12 @@ trait CanAskForResource
 
         $resourceFqns = array_filter(
             array_values($this->panel->getResources()),
-            fn (string $resource): bool => str($resource)->startsWith("{$this->resourcesNamespace}\\"),
+            fn (string $resource): bool => str($resource)->startsWith("{$resourcesNamespace}\\"),
         );
 
         if (! $resourceFqns) {
             return (string) str(text(
-                label: "No resources were found within [{$this->resourcesNamespace}]. {$question}",
+                label: "No resources were found within [{$resourcesNamespace}]. {$question}",
                 placeholder: 'App\\Filament\\Resources\\Posts\\PostResource',
                 required: true,
                 validate: function (string $value): ?string {
@@ -70,7 +75,7 @@ trait CanAskForResource
 
         return search(
             label: $question,
-            options: function (?string $search) use ($resourceFqns): array {
+            options: function (?string $search) use ($resourceFqns, $resourcesNamespace): array {
                 $search = str($search)->trim()->replace(['\\', '/'], '');
 
                 return collect($resourceFqns)
@@ -78,7 +83,7 @@ trait CanAskForResource
                         filled($search = (string) str($search)->trim()->replace(['\\', '/'], '')),
                         fn (Collection $resourceFqns) => $resourceFqns->filter(fn (string $fqn): bool => str($fqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true)),
                     )
-                    ->mapWithKeys(fn (string $fqn): array => [$fqn => (string) str($fqn)->after("{$this->resourcesNamespace}\\")])
+                    ->mapWithKeys(fn (string $fqn): array => [$fqn => (string) str($fqn)->after("{$resourcesNamespace}\\")])
                     ->all();
             },
         );

@@ -105,7 +105,7 @@ class MakeClusterCommand extends Command
         $this->components->info("Filament cluster [{$this->fqn}] created successfully.");
 
         if (empty($this->panel->getClusterNamespaces())) {
-            $this->components->info('Make sure to register the cluster with `clusters()` or discover it with `discoverClusters()` in the panel service provider.');
+            $this->components->info('Make sure to register the cluster with [clusters()] or discover it with [discoverClusters()] in the panel service provider.');
         }
 
         return static::SUCCESS;

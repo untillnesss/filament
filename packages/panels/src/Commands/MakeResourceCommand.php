@@ -105,7 +105,7 @@ class MakeResourceCommand extends Command
 
     protected bool $hasResourceClassesOutsideDirectories;
 
-    public static bool $shouldCheckModelForSoftDeletes = true;
+    public static bool $shouldCheckModelsForSoftDeletes = true;
 
     protected bool $isNested;
 
@@ -259,7 +259,7 @@ class MakeResourceCommand extends Command
         $this->components->info("Filament resource [{$this->fqn}] created successfully.");
 
         if (empty($this->panel->getResourceNamespaces())) {
-            $this->components->info('Make sure to register the resource with `resources()` or discover it with `discoverResources()` in the panel service provider.');
+            $this->components->info('Make sure to register the resource with [resources()] or discover it with [discoverResources()] in the panel service provider.');
         }
 
         return static::SUCCESS;
@@ -427,7 +427,7 @@ class MakeResourceCommand extends Command
 
     protected function configureIsSoftDeletable(): void
     {
-        $this->isSoftDeletable = $this->option('soft-deletes') || ((static::$shouldCheckModelForSoftDeletes && class_exists($this->modelFqn))
+        $this->isSoftDeletable = $this->option('soft-deletes') || ((static::$shouldCheckModelsForSoftDeletes && class_exists($this->modelFqn))
             ? in_array(SoftDeletes::class, class_uses_recursive($this->modelFqn))
             : confirm(
                 label: 'Does the model use soft deletes?',

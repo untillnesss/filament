@@ -31,6 +31,7 @@ abstract class ClassGenerator implements FileGenerator
             $class->setExtends($extends);
         }
 
+        $this->addTraitsToClass($class);
         $this->addPropertiesToClass($class);
         $this->addMethodsToClass($class);
         $this->configureClass($class);
@@ -43,6 +44,8 @@ abstract class ClassGenerator implements FileGenerator
     protected function configureNamespace(PhpNamespace $namespace): void {}
 
     protected function configureClass(ClassType $class): void {}
+
+    protected function addTraitsToClass(ClassType $class): void {}
 
     protected function addPropertiesToClass(ClassType $class): void {}
 

@@ -12,7 +12,7 @@ uses(TestCase::class);
 beforeEach(function () {
     $this->withoutMockingConsoleOutput();
 
-    MakeResourceCommand::$shouldCheckModelForSoftDeletes = false;
+    MakeResourceCommand::$shouldCheckModelsForSoftDeletes = false;
 });
 
 it('can generate a resource class', function () {

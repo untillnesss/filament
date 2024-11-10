@@ -18,6 +18,20 @@ trait HasResourcesLocation
             return;
         }
 
+        [
+            $this->resourcesNamespace,
+            $this->resourcesDirectory,
+        ] = $this->getResourcesLocation($question);
+    }
+
+    /**
+     * @return array{
+     *     0: string,
+     *     1: string,
+     * }
+     */
+    public function getResourcesLocation(string $question): array
+    {
         $directories = $this->panel->getResourceDirectories();
         $namespaces = $this->panel->getResourceNamespaces();
 
@@ -29,24 +43,26 @@ trait HasResourcesLocation
         }
 
         if (count($namespaces) < 2) {
-            $this->resourcesNamespace = (Arr::first($namespaces) ?? 'App\\Filament\\Resources');
-            $this->resourcesDirectory = (Arr::first($directories) ?? app_path('Filament/Resources/'));
-
-            return;
+            return [
+                (Arr::first($namespaces) ?? 'App\\Filament\\Resources'),
+                (Arr::first($directories) ?? app_path('Filament/Resources/')),
+            ];
         }
 
-        $this->resourcesNamespace = search(
-            label: $question,
-            options: function (?string $search) use ($namespaces): array {
-                if (blank($search)) {
-                    return $namespaces;
-                }
+        return [
+            $namespace = search(
+                label: $question,
+                options: function (?string $search) use ($namespaces): array {
+                    if (blank($search)) {
+                        return $namespaces;
+                    }
 
-                $search = str($search)->trim()->replace(['\\', '/'], '');
+                    $search = str($search)->trim()->replace(['\\', '/'], '');
 
-                return array_filter($namespaces, fn (string $namespace): bool => str($namespace)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
-            },
-        );
-        $this->resourcesDirectory = $directories[array_search($this->resourcesNamespace, $namespaces)];
+                    return array_filter($namespaces, fn (string $namespace): bool => str($namespace)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
+                },
+            ),
+            $directories[array_search($namespace, $namespaces)],
+        ];
     }
 }

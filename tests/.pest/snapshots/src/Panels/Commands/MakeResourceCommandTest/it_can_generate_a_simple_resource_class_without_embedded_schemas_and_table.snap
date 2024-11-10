@@ -24,7 +24,7 @@ class PostResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return PostForm::configure($schema);
+        return PostInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

@@ -223,4 +223,9 @@ trait CanReadModelSchemas
 
         return $default;
     }
+
+    public function getRecordTitleAttribute(): ?string
+    {
+        return null;
+    }
 }
