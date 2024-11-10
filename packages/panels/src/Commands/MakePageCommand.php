@@ -616,35 +616,35 @@ class MakePageCommand extends Command
                     question: 'Which table class would you like to use? Please provide the fully qualified class name.',
                     questionPlaceholder: 'App\\Filament\\Resources\\Users\\Tables\\UsersTable',
                 );
+            }
 
-                if (blank($tableFqn)) {
-                    $askForRecordTitleAttributeIfNotAlready();
+            if (blank($tableFqn)) {
+                $askForRecordTitleAttributeIfNotAlready();
 
-                    $askForIsGeneratedIfNotAlready(
-                        question: 'Would you like to generate the table columns based on the attributes of the model?',
-                    ) && $askForRelatedModelFqnIfNotAlready();
+                $askForIsGeneratedIfNotAlready(
+                    question: 'Would you like to generate the table columns based on the attributes of the model?',
+                ) && $askForRelatedModelFqnIfNotAlready();
 
-                    $isSoftDeletable = (filled($relatedModelFqn) && static::$shouldCheckModelsForSoftDeletes && class_exists($relatedModelFqn))
-                        ? in_array(SoftDeletes::class, class_uses_recursive($relatedModelFqn))
-                        : confirm(
-                            label: 'Does the related model use soft deletes?',
-                            default: false,
-                        );
-
-                    $relationshipType = select(
-                        label: 'What type of relationship is this?',
-                        options: [
-                            HasMany::class => 'HasMany',
-                            BelongsToMany::class => 'BelongsToMany',
-                            MorphMany::class => 'MorphMany',
-                            MorphToMany::class => 'MorphToMany',
-                            'other' => 'Other',
-                        ],
+                $isSoftDeletable = (filled($relatedModelFqn) && static::$shouldCheckModelsForSoftDeletes && class_exists($relatedModelFqn))
+                    ? in_array(SoftDeletes::class, class_uses_recursive($relatedModelFqn))
+                    : confirm(
+                        label: 'Does the related model use soft deletes?',
+                        default: false,
                     );
 
-                    if ($relationshipType === 'other') {
-                        $relationshipType = null;
-                    }
+                $relationshipType = select(
+                    label: 'What type of relationship is this?',
+                    options: [
+                        HasMany::class => 'HasMany',
+                        BelongsToMany::class => 'BelongsToMany',
+                        MorphMany::class => 'MorphMany',
+                        MorphToMany::class => 'MorphToMany',
+                        'other' => 'Other',
+                    ],
+                );
+
+                if ($relationshipType === 'other') {
+                    $relationshipType = null;
                 }
             }
         }
