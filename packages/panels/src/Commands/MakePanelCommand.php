@@ -6,6 +6,8 @@ use Filament\Support\Commands\Concerns\CanGeneratePanels;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 #[AsCommand(name: 'make:filament-panel', aliases: [
     'filament:make-panel',
@@ -18,7 +20,7 @@ class MakePanelCommand extends Command
 
     protected $description = 'Create a new Filament panel';
 
-    protected $signature = 'make:filament-panel {id?} {--F|force}';
+    protected $name = 'make:filament-panel';
 
     /**
      * @var array<string>
@@ -27,6 +29,35 @@ class MakePanelCommand extends Command
         'filament:make-panel',
         'filament:panel',
     ];
+
+    /**
+     * @return array<InputArgument>
+     */
+    protected function getArguments(): array
+    {
+        return [
+            new InputArgument(
+                name: 'id',
+                mode: InputArgument::OPTIONAL,
+                description: 'The ID of the panel',
+            ),
+        ];
+    }
+
+    /**
+     * @return array<InputOption>
+     */
+    protected function getOptions(): array
+    {
+        return [
+            new InputOption(
+                name: 'force',
+                shortcut: 'F',
+                mode: InputOption::VALUE_NONE,
+                description: 'Overwrite the contents of the files if they already exist',
+            ),
+        ];
+    }
 
     public function handle(): int
     {
