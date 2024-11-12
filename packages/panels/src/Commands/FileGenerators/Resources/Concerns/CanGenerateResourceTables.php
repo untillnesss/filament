@@ -60,17 +60,14 @@ trait CanGenerateResourceTables
         $modifyQueryOutput = '';
 
         if ($this->isSoftDeletable() && $this->hasTableModifyQueryForSoftDeletes()) {
-            $builderClass = Builder::class;
-            $softDeletingScopeClass = SoftDeletingScope::class;
-
-            $this->importUnlessPartial($builderClass);
-            $this->importUnlessPartial($softDeletingScopeClass);
+            $this->importUnlessPartial(Builder::class);
+            $this->importUnlessPartial(SoftDeletingScope::class);
 
             $modifyQueryOutput = <<<PHP
 
-                ->modifyQueryUsing(fn ({$this->simplifyFqn($builderClass)} \$query) => \$query
+                ->modifyQueryUsing(fn ({$this->simplifyFqn(Builder::class)} \$query) => \$query
                     ->withoutGlobalScopes([
-                        {$this->simplifyFqn($softDeletingScopeClass)}::class,
+                        {$this->simplifyFqn(SoftDeletingScope::class)}::class,
                     ]))
             PHP;
         }
@@ -256,12 +253,10 @@ trait CanGenerateResourceTables
                 return '//';
             }
 
-            $textColumnClass = TextColumn::class;
-
-            $this->importUnlessPartial($textColumnClass);
+            $this->importUnlessPartial(TextColumn::class);
 
             return new Literal(<<<PHP
-                {$this->simplifyFqn($textColumnClass)}::make(?)
+                {$this->simplifyFqn(TextColumn::class)}::make(?)
                             ->searchable(),
                 PHP, [$recordTitleAttribute]);
         }

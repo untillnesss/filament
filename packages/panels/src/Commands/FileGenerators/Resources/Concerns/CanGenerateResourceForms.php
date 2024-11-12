@@ -199,12 +199,10 @@ trait CanGenerateResourceForms
                 return '//';
             }
 
-            $textInputClass = TextInput::class;
-
-            $this->importUnlessPartial($textInputClass);
+            $this->importUnlessPartial(TextInput::class);
 
             return new Literal(<<<PHP
-                {$this->simplifyFqn($textInputClass)}::make(?)
+                {$this->simplifyFqn(TextInput::class)}::make(?)
                             ->required()
                             ->maxLength(255),
                 PHP, [$recordTitleAttribute]);

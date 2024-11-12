@@ -208,14 +208,12 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
                 return {$this->simplifyFqn($infolistSchemaFqn)}::configure(\$schema);
                 PHP;
         } else {
-            $textEntryClass = TextEntry::class;
-
-            $this->importUnlessPartial($textEntryClass);
+            $this->importUnlessPartial(TextEntry::class);
 
             $methodBody = new Literal(<<<PHP
                 return \$schema
                     ->components([
-                        {$this->simplifyFqn($textEntryClass)}::make(?),
+                        {$this->simplifyFqn(TextEntry::class)}::make(?),
                     ]);
                 PHP, [$this->getRecordTitleAttribute()]);
         }

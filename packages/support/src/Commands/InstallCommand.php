@@ -76,7 +76,7 @@ class InstallCommand extends Command
             return false;
         }
 
-        return $this->generatePanel(default: 'admin', force: $this->option('force'));
+        return $this->generatePanel(defaultId: 'admin', isForced: $this->option('force'));
     }
 
     protected function installScaffolding(): void
