@@ -2,7 +2,10 @@
 
 namespace Filament\Commands;
 
+use Filament\Commands\Concerns\CanAskForRelatedModel;
+use Filament\Commands\Concerns\CanAskForRelatedResource;
 use Filament\Commands\Concerns\CanAskForResource;
+use Filament\Commands\Concerns\CanAskForSchema;
 use Filament\Commands\Concerns\HasCluster;
 use Filament\Commands\Concerns\HasPanel;
 use Filament\Commands\Concerns\HasResourcesLocation;
@@ -22,7 +25,6 @@ use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -39,7 +41,6 @@ use Symfony\Component\Console\Input\InputOption;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\search;
 use function Laravel\Prompts\select;
-use function Laravel\Prompts\suggest;
 use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:filament-page', aliases: [
@@ -48,7 +49,10 @@ use function Laravel\Prompts\text;
 ])]
 class MakePageCommand extends Command
 {
+    use CanAskForRelatedModel;
+    use CanAskForRelatedResource;
     use CanAskForResource;
+    use CanAskForSchema;
     use CanCheckFileGenerationFlags;
     use CanManipulateFiles;
     use HasCluster;
@@ -247,7 +251,7 @@ class MakePageCommand extends Command
             return;
         }
 
-        $this->pagesNamespace = (string) str($this->clusterFqn)->append('\\Pages');
+        $this->pagesNamespace = "{$this->clusterFqn}\\Pages";
         $this->pagesDirectory = (string) str((new ReflectionClass($this->clusterFqn))->getFileName())
             ->beforeLast('.')
             ->append('/Pages');
@@ -286,7 +290,7 @@ class MakePageCommand extends Command
             return;
         }
 
-        $this->pagesNamespace = (string) str($this->resourceFqn)->append('\\Pages');
+        $this->pagesNamespace = "{$this->resourceFqn}\\Pages";
         $this->pagesDirectory = (string) str((new ReflectionClass($this->resourceFqn))->getFileName())
             ->beforeLast('.')
             ->append('/Pages');
@@ -545,24 +549,7 @@ class MakePageCommand extends Command
                     return $relatedModelFqn = $relationshipInstance->getRelated()::class;
                 }
 
-                $modelFqns = array_filter(
-                    get_declared_classes(),
-                    fn (string $modelFqn): bool => is_subclass_of($modelFqn, Model::class),
-                );
-
-                return $relatedModelFqn = search(
-                    label: "Filament couldn't automatically find the related model for the [{$relationship}] relationship. What is the fully qualified class name of the related model?",
-                    options: function (?string $search) use ($modelFqns): array {
-                        if (blank($search)) {
-                            return $modelFqns;
-                        }
-
-                        $search = str($search)->trim()->replace(['\\', '/'], '');
-
-                        return array_filter($modelFqns, fn (string $modelFqn): bool => str($modelFqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
-                    },
-                    placeholder: 'App\\Models\\User',
-                );
+                return $relatedModelFqn = $this->askForRelatedModel($relationship);
             };
 
             $askForRecordTitleAttributeIfNotAlready = function () use (&$recordTitleAttribute): string {
@@ -588,7 +575,7 @@ class MakePageCommand extends Command
             }
 
             if (confirm(
-                'Would you like a view modal for the table?',
+                'Would you like to generate an infolist and view modal for the table?',
                 default: false,
             )) {
                 $hasViewOperation = true;
@@ -665,69 +652,6 @@ class MakePageCommand extends Command
             'isSoftDeletable' => $isSoftDeletable,
             'relationshipType' => $relationshipType,
         ]));
-    }
-
-    /**
-     * @return ?class-string
-     */
-    protected function askForRelatedResource(): ?string
-    {
-        if (! confirm(
-            label: 'Do you want each table row to link to a resource instead of opening a modal? Filament will also inherit the resource\'s configuration.',
-            default: false,
-        )) {
-            return null;
-        }
-
-        $clusterFqn = $this->askForCluster(
-            initialQuestion: 'Is the resource in a cluster?',
-            question: 'Which cluster is the resource in?',
-        );
-
-        if (filled($clusterFqn)) {
-            [$resourcesNamespace] = $this->getClusterResourcesLocation($clusterFqn);
-        } else {
-            [$resourcesNamespace] = $this->getResourcesLocation(
-                question: 'Which namespace would you like to search for resources in?',
-            );
-        }
-
-        return $this->askForResource(
-            question: 'Which resource do you want to use?',
-            resourcesNamespace: $resourcesNamespace,
-        );
-    }
-
-    /**
-     * @return ?class-string
-     */
-    protected function askForSchema(string $intialQuestion, string $question, string $questionPlaceholder): ?string
-    {
-        if (! confirm(
-            label: $intialQuestion,
-            default: false,
-        )) {
-            return null;
-        }
-
-        $schemaFqns = array_filter(
-            get_declared_classes(),
-            fn (string $schemaFqn): bool => method_exists($schemaFqn, 'configure'),
-        );
-
-        return suggest(
-            label: $question,
-            options: function (?string $search) use ($schemaFqns): array {
-                if (blank($search)) {
-                    return $schemaFqns;
-                }
-
-                $search = str($search)->trim()->replace(['\\', '/'], '');
-
-                return array_filter($schemaFqns, fn (string $schemaFqn): bool => str($schemaFqn)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
-            },
-            placeholder: $questionPlaceholder,
-        );
     }
 
     protected function createView(): void

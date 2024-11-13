@@ -166,7 +166,7 @@ trait HasCluster
         }
 
         return [
-            (string) str($clusterFqn)->append('\\Resources'),
+            "{$clusterFqn}\\Resources",
             (string) str((new ReflectionClass($clusterFqn))->getFileName())
                 ->beforeLast('.')
                 ->append('/Resources'),

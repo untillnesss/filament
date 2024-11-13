@@ -212,7 +212,7 @@ class MakeResourceCommand extends Command
                 name: 'view',
                 shortcut: null,
                 mode: InputOption::VALUE_NONE,
-                description: 'Generate a view page for the resource',
+                description: 'Generate a view page / modal for the resource',
             ),
             new InputOption(
                 name: 'force',
@@ -401,7 +401,7 @@ class MakeResourceCommand extends Command
             return;
         }
 
-        $this->resourcesNamespace = (string) str($this->parentResourceFqn)->append('\\Resources');
+        $this->resourcesNamespace = "{$this->parentResourceFqn}\\Resources";
         $this->resourcesDirectory = (string) str((new ReflectionClass($this->parentResourceFqn))->getFileName())
             ->beforeLast('.')
             ->append('/Resources');
