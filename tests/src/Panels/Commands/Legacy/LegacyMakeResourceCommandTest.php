@@ -4,6 +4,7 @@ use Filament\Commands\MakeResourceCommand;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Filament\Tests\TestCase;
 
+use Illuminate\Support\Arr;
 use function PHPUnit\Framework\assertFileExists;
 
 uses(TestCase::class);
@@ -19,11 +20,8 @@ beforeEach(function () {
     $this->withoutMockingConsoleOutput();
 
     MakeResourceCommand::$shouldCheckModelsForSoftDeletes = false;
-});
-
-afterEach(function () {
-    config()->set('filament.file_generation.flags', []);
-});
+})
+    ->skip((bool) Arr::get($_SERVER, 'PARATEST'), 'File generation tests cannot be run in parallel as they would share a filesystem and have the potential to conflict with each other.');
 
 it('can generate a resource class', function () {
     $this->artisan('make:filament-resource', [

@@ -4,6 +4,7 @@ use Filament\Commands\MakeRelationManagerCommand;
 use Filament\Facades\Filament;
 use Filament\Tests\TestCase;
 
+use Illuminate\Support\Arr;
 use function PHPUnit\Framework\assertFileExists;
 
 uses(TestCase::class);
@@ -46,7 +47,8 @@ beforeEach(function () {
     ];
 
     MakeRelationManagerCommand::$shouldCheckModelsForSoftDeletes = false;
-});
+})
+    ->skip((bool) Arr::get($_SERVER, 'PARATEST'), 'File generation tests cannot be run in parallel as they would share a filesystem and have the potential to conflict with each other.');
 
 it('can generate a relation manager', function () {
     $this->artisan('make:filament-relation-manager', [

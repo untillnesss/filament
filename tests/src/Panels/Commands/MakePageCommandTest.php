@@ -5,6 +5,7 @@ use Filament\Facades\Filament;
 use Filament\Tests\TestCase;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Arr;
 use Illuminate\Testing\PendingCommand;
 
 use function PHPUnit\Framework\assertFileDoesNotExist;
@@ -14,7 +15,8 @@ uses(TestCase::class);
 
 beforeEach(function () {
     MakePageCommand::$shouldCheckModelsForSoftDeletes = false;
-});
+})
+    ->skip((bool) Arr::get($_SERVER, 'PARATEST'), 'File generation tests cannot be run in parallel as they would share a filesystem and have the potential to conflict with each other.');
 
 it('can generate a page class', function () {
     $this->withoutMockingConsoleOutput();
