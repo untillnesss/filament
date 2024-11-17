@@ -11,6 +11,7 @@ use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\text;
@@ -23,10 +24,7 @@ class MakeUserCommand extends Command
 {
     protected $description = 'Create a new Filament user';
 
-    protected $signature = 'make:filament-user
-                            {--name= : The name of the user}
-                            {--email= : A valid and unique email address}
-                            {--password= : The password for the user (min. 8 characters)}';
+    protected $name = 'make:filament-user';
 
     /**
      * @var array<string>
@@ -37,9 +35,52 @@ class MakeUserCommand extends Command
     ];
 
     /**
+     * @return array<InputOption>
+     */
+    protected function getOptions(): array
+    {
+        return [
+            new InputOption(
+                name: 'name',
+                shortcut: null,
+                mode: InputOption::VALUE_REQUIRED,
+                description: 'The name of the user',
+            ),
+            new InputOption(
+                name: 'email',
+                shortcut: null,
+                mode: InputOption::VALUE_REQUIRED,
+                description: 'A valid and unique email address',
+            ),
+            new InputOption(
+                name: 'password',
+                shortcut: null,
+                mode: InputOption::VALUE_REQUIRED,
+                description: 'The password for the user (min. 8 characters)',
+            ),
+        ];
+    }
+
+    /**
      * @var array{'name': string | null, 'email': string | null, 'password': string | null}
      */
     protected array $options;
+
+    public function handle(): int
+    {
+        $this->options = $this->options();
+
+        if (! Filament::getCurrentPanel()) {
+            $this->error('Filament has not been installed yet: php artisan filament:install --panels');
+
+            return static::INVALID;
+        }
+
+        $user = $this->createUser();
+        $this->sendSuccessMessage($user);
+
+        return static::SUCCESS;
+    }
 
     /**
      * @return array{'name': string, 'email': string, 'password': string}
@@ -103,21 +144,5 @@ class MakeUserCommand extends Command
         $provider = $this->getUserProvider();
 
         return $provider->getModel();
-    }
-
-    public function handle(): int
-    {
-        $this->options = $this->options();
-
-        if (! Filament::getCurrentPanel()) {
-            $this->error('Filament has not been installed yet: php artisan filament:install --panels');
-
-            return static::INVALID;
-        }
-
-        $user = $this->createUser();
-        $this->sendSuccessMessage($user);
-
-        return static::SUCCESS;
     }
 }
