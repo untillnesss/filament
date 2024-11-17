@@ -9,16 +9,46 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Exception\InvalidOptionException;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Finder\SplFileInfo;
 
 #[AsCommand(name: 'filament:check-translations')]
 class CheckTranslationsCommand extends Command
 {
-    protected $signature = 'filament:check-translations
-                            {locales* : The locales to check.}
-                            {--source=vendor : The directory containing the translations to check - either \'vendor\' or \'app\'.}';
-
     protected $description = 'Check for missing and removed translations';
+
+    protected $name = 'filament:check-translations';
+
+    /**
+     * @return array<InputArgument>
+     */
+    protected function getArguments(): array
+    {
+        return [
+            new InputArgument(
+                name: 'locales',
+                mode: InputArgument::IS_ARRAY,
+                description: 'The locales to check',
+            ),
+        ];
+    }
+
+    /**
+     * @return array<InputOption>
+     */
+    protected function getOptions(): array
+    {
+        return [
+            new InputOption(
+                name: 'source',
+                shortcut: null,
+                mode: InputOption::VALUE_REQUIRED,
+                description: 'The directory containing the translations to check - either \'vendor\' or \'app\'',
+                default: 'vendor',
+            ),
+        ];
+    }
 
     public function handle(): int
     {

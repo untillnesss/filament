@@ -4,6 +4,7 @@ namespace Filament\Commands;
 
 use Filament\Support\Commands\Concerns\CanGeneratePanels;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
+use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -61,13 +62,13 @@ class MakePanelCommand extends Command
 
     public function handle(): int
     {
-        $isPanelGenerated = $this->generatePanel(
-            id: $this->argument('id'),
-            placeholderId: 'app',
-            isForced: $this->option('force'),
-        );
-
-        if (! $isPanelGenerated) {
+        try {
+            $this->generatePanel(
+                id: $this->argument('id'),
+                placeholderId: 'app',
+                isForced: $this->option('force'),
+            );
+        } catch (InvalidCommandOutput) {
             return static::FAILURE;
         }
 

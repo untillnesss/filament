@@ -4,6 +4,7 @@ namespace Filament\Support\Commands\Concerns;
 
 use Filament\Commands\FileGenerators\PanelProviderClassGenerator;
 use Filament\Facades\Filament;
+use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -14,7 +15,7 @@ trait CanGeneratePanels
 {
     use CanManipulateFiles;
 
-    public function generatePanel(?string $id = null, string $defaultId = '', string $placeholderId = '', bool $isForced = false): bool
+    public function generatePanel(?string $id = null, string $defaultId = '', string $placeholderId = '', bool $isForced = false): void
     {
         $id = Str::lcfirst($id ?? text(
             label: 'What is the panel\'s ID?',
@@ -36,7 +37,7 @@ trait CanGeneratePanels
         );
 
         if (! $isForced && $this->checkForCollision([$path])) {
-            return false;
+            throw new InvalidCommandOutput;
         }
 
         $fqn = "App\\Providers\\Filament\\{$basename}";
@@ -84,7 +85,5 @@ trait CanGeneratePanels
         } else {
             $this->components->warn("We've attempted to register the {$basename} in your [config/app.php] file as a service provider.  If you get an error while trying to access your panel then this process has probably failed. You can manually register the service provider by adding it to the [providers] array.");
         }
-
-        return true;
     }
 }

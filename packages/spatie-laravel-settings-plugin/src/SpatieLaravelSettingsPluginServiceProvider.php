@@ -2,7 +2,6 @@
 
 namespace Filament;
 
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 
 class SpatieLaravelSettingsPluginServiceProvider extends ServiceProvider
