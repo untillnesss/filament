@@ -3,8 +3,8 @@
 use Filament\Commands\MakeResourceCommand;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Filament\Tests\TestCase;
-
 use Illuminate\Support\Arr;
+
 use function PHPUnit\Framework\assertFileExists;
 
 uses(TestCase::class);

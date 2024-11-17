@@ -130,8 +130,8 @@ trait HasCluster
     protected function configureClusterResourcesLocation(): void
     {
         [
-            $this->resourcesNamespace,
-            $this->resourcesDirectory,
+            $this->resourcesNamespace, /** @phpstan-ignore-line */
+            $this->resourcesDirectory, /** @phpstan-ignore-line */
         ] = $this->getClusterResourcesLocation();
     }
 

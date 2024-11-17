@@ -1,8 +1,8 @@
 <?php
 
 use Filament\Tests\TestCase;
-
 use Illuminate\Support\Arr;
+
 use function PHPUnit\Framework\assertFileExists;
 
 uses(TestCase::class);

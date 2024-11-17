@@ -4,8 +4,8 @@ use Filament\Commands\MakeRelationManagerCommand;
 use Filament\Facades\Filament;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Filament\Tests\TestCase;
-
 use Illuminate\Support\Arr;
+
 use function PHPUnit\Framework\assertFileExists;
 
 uses(TestCase::class);
