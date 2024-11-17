@@ -15,6 +15,10 @@ beforeEach(function () {
     $this->withoutMockingConsoleOutput();
 });
 
+afterEach(function () {
+    config()->set('filament.file_generation.flags', []);
+});
+
 it('can generate a cluster class', function () {
     $this->artisan('make:filament-cluster', [
         'name' => 'Blog',

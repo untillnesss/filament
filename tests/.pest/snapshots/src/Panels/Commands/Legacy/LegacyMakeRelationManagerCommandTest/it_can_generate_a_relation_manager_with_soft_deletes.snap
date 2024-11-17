@@ -1,29 +1,19 @@
 <?php
 
-namespace App\Filament\Resources\UserResource\Pages;
+namespace App\Filament\Resources\UserResource\RelationManagers;
 
-use App\Filament\Resources\UserResource;
 use Filament\Actions;
 use Filament\Forms;
-use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schema\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ManageUserTeams extends ManageRelatedRecords
+class TeamsRelationManager extends RelationManager
 {
-    protected static string $resource = UserResource::class;
-
     protected static string $relationship = 'teams';
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static function getNavigationLabel(): string
-    {
-        return 'Teams';
-    }
 
     public function form(Schema $schema): Schema
     {

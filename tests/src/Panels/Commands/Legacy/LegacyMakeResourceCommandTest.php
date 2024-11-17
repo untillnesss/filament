@@ -21,6 +21,10 @@ beforeEach(function () {
     MakeResourceCommand::$shouldCheckModelsForSoftDeletes = false;
 });
 
+afterEach(function () {
+    config()->set('filament.file_generation.flags', []);
+});
+
 it('can generate a resource class', function () {
     $this->artisan('make:filament-resource', [
         'name' => 'Post',

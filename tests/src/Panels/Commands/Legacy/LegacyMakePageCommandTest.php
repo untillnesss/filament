@@ -346,7 +346,7 @@ $generateManageRelatedRecordsPageCommandQuestions = [
     'relatedModel' => 'Filament couldn\'t automatically find the related model for the [teams] relationship. What is the fully qualified class name of the related model?',
     'titleAttribute' => 'What is the title attribute? This is the attribute that will be used to uniquely identify each record in the table.',
     'isGeneratedTable' => 'Would you like to generate the table columns based on the attributes of the model?',
-    'hasViewOperation' => 'Would you like a view modal for the table?',
+    'hasViewOperation' => 'Would you like to generate an infolist and view modal for the table?',
     'isSoftDeletable' => 'Does the related model use soft deletes?',
     'relationshipType' => 'What type of relationship is this?',
 ];

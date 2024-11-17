@@ -59,7 +59,7 @@ class MakeRelationManagerCommand extends Command
     protected string $path;
 
     /**
-     * @var ?class-string
+     * @var class-string
      */
     protected string $resourceFqn;
 
@@ -532,11 +532,9 @@ class MakeRelationManagerCommand extends Command
             return;
         }
 
-        $this->fqn = (string) str($this->resourceFqn)
-            ->beforeLast('\\')
-            ->append("\\RelationManagers\\{$basename}");
+        $this->fqn = "{$this->resourceFqn}\\RelationManagers\\{$basename}";
         $this->path = (string) str((new ReflectionClass($this->resourceFqn))->getFileName())
-            ->beforeLast(DIRECTORY_SEPARATOR)
+            ->beforeLast('.')
             ->append("/RelationManagers/{$basename}.php");
     }
 

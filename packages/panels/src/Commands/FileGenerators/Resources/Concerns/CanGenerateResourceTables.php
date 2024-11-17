@@ -60,8 +60,8 @@ trait CanGenerateResourceTables
         $modifyQueryOutput = '';
 
         if ($this->isSoftDeletable() && $this->hasTableModifyQueryForSoftDeletes()) {
-            $this->importUnlessPartial(Builder::class);
-            $this->importUnlessPartial(SoftDeletingScope::class);
+            $this->namespace->addUse(Builder::class);
+            $this->namespace->addUse(SoftDeletingScope::class);
 
             $modifyQueryOutput = <<<PHP
 
