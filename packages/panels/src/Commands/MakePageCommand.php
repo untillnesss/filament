@@ -21,6 +21,7 @@ use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Resources\Pages\Page as ResourcePage;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Support\Commands\Concerns\CanAskForViewLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -54,6 +56,7 @@ class MakePageCommand extends Command
     use CanAskForRelatedResource;
     use CanAskForResource;
     use CanAskForSchema;
+    use CanAskForViewLocation;
     use CanCheckFileGenerationFlags;
     use CanManipulateFiles;
     use HasCluster;
@@ -73,6 +76,8 @@ class MakePageCommand extends Command
     protected string $fqnEnd;
 
     protected ?string $view = null;
+
+    protected ?string $viewPath = null;
 
     protected bool $hasResource;
 
@@ -349,12 +354,21 @@ class MakePageCommand extends Command
         $this->fqn = $this->pagesNamespace . '\\' . $this->fqnEnd;
 
         if ((! $this->hasResource) || ($this->resourcePageType === ResourcePage::class)) {
-            $this->view = str($this->fqn)
-                ->replaceFirst('App\\', '')
-                ->replace('\\', '/')
-                ->explode('/')
-                ->map(Str::kebab(...))
-                ->implode('.');
+            [
+                $this->view,
+                $this->viewPath,
+            ] = $this->askForViewLocation(
+                str($this->fqn)
+                    ->whenContains(
+                        'Filament\\',
+                        fn (Stringable $fqn) => $fqn->after('Filament\\')->prepend('Filament\\'),
+                        fn (Stringable $fqn) => $fqn->replaceFirst('App\\', ''),
+                    )
+                    ->replace('\\', '/')
+                    ->explode('/')
+                    ->map(Str::kebab(...))
+                    ->implode('.'),
+            );
         }
     }
 
@@ -635,17 +649,10 @@ class MakePageCommand extends Command
             return;
         }
 
-        $path = resource_path(
-            (string) str($this->view)
-                ->replace('.', '/')
-                ->prepend('views/')
-                ->append('.blade.php'),
-        );
-
-        if (! $this->option('force') && $this->checkForCollision($path)) {
+        if (! $this->option('force') && $this->checkForCollision($this->viewPath)) {
             throw new InvalidCommandOutput;
         }
 
-        $this->copyStubToApp('PageView', $path);
+        $this->copyStubToApp('PageView', $this->viewPath);
     }
 }

@@ -24,7 +24,7 @@ class ClusterClassGenerator extends ClassGenerator
     public function getImports(): array
     {
         return [
-            Cluster::class,
+            $this->getExtends(),
         ];
     }
 

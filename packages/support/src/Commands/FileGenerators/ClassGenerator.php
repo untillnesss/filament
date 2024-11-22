@@ -31,6 +31,10 @@ abstract class ClassGenerator implements FileGenerator
             $class->setExtends($extends);
         }
 
+        foreach ($this->getImplements() as $implement) {
+            $class->addImplement($implement);
+        }
+
         $this->addTraitsToClass($class);
         $this->addPropertiesToClass($class);
         $this->addMethodsToClass($class);
@@ -57,6 +61,14 @@ abstract class ClassGenerator implements FileGenerator
     public function getExtends(): ?string
     {
         return null;
+    }
+
+    /**
+     * @return array<class-string>
+     */
+    public function getImplements(): array
+    {
+        return [];
     }
 
     /**
