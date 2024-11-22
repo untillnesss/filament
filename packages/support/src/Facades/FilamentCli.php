@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static void registerComponentLocation(string $directory, string $namespace, ?string $viewNamespace = null)
- * @method static array<string, string> getComponentLocations()
+ * @method static array<string, array{path: string, viewNamespace: ?string}> getComponentLocations()
  *
  * @see CliManager
  */

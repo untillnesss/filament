@@ -26,6 +26,7 @@ use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
+use Filament\Support\Facades\FilamentCli;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -354,11 +355,17 @@ class MakePageCommand extends Command
         $this->fqn = $this->pagesNamespace . '\\' . $this->fqnEnd;
 
         if ((! $this->hasResource) || ($this->resourcePageType === ResourcePage::class)) {
+            $componentLocations = FilamentCli::getComponentLocations();
+
+            $matchingComponentLocationNamespaces = collect($componentLocations)
+                ->keys()
+                ->filter(fn (string $namespace): bool => str($this->fqn)->startsWith($namespace));
+
             [
                 $this->view,
                 $this->viewPath,
             ] = $this->askForViewLocation(
-                str($this->fqn)
+                view: str($this->fqn)
                     ->whenContains(
                         'Filament\\',
                         fn (Stringable $fqn) => $fqn->after('Filament\\')->prepend('Filament\\'),
@@ -368,6 +375,10 @@ class MakePageCommand extends Command
                     ->explode('/')
                     ->map(Str::kebab(...))
                     ->implode('.'),
+                question: 'Where would you like to create the Blade view for the page?',
+                defaultNamespace: (count($matchingComponentLocationNamespaces) === 1)
+                    ? $componentLocations[Arr::first($matchingComponentLocationNamespaces)]['viewNamespace'] ?? null
+                    : null,
             );
         }
     }

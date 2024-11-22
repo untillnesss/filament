@@ -4,6 +4,7 @@ namespace Filament\Support\Commands\Concerns;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Arr;
+use Illuminate\View\FileViewFinder;
 
 use function Laravel\Prompts\select;
 
@@ -21,11 +22,17 @@ trait CanAskForViewLocation
 
         $paths = [];
 
-        if (str(Arr::first(config('view.paths')))->startsWith(base_path())) {
-            $paths[''] = Arr::first(config('view.paths'));
+        /** @var array<string> $viewPaths */
+        $viewPaths = config('view.paths') ?? [];
+
+        if (str(Arr::first($viewPaths))->startsWith(base_path())) {
+            $paths[''] = Arr::first($viewPaths);
         }
 
-        foreach ($viewFactory->getFinder()->getHints() as $namespace => $hintPaths) {
+        /** @var FileViewFinder $viewFinder */
+        $viewFinder = $viewFactory->getFinder();
+
+        foreach ($viewFinder->getHints() as $namespace => $hintPaths) {
             foreach ($hintPaths as $path) {
                 if (! str($path)->startsWith(base_path())) {
                     continue;

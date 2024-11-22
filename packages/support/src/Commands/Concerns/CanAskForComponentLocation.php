@@ -12,7 +12,7 @@ trait CanAskForComponentLocation
      * @return array{
      *     0: string,
      *     1: string,
-     *     3: ?string,
+     *     2: ?string,
      * }
      */
     protected function askForComponentLocation(string $path, string $question = 'Where would you like to create the component?'): array
