@@ -21,7 +21,7 @@ beforeEach(function () {
     $this->withoutMockingConsoleOutput();
 
     $this->artisan('make:filament-resource', [
-        'name' => 'Team',
+        'model' => 'Team',
         '--model-namespace' => 'Filament\\Tests\\Models',
         '--view' => true,
         '--panel' => 'admin',
@@ -29,7 +29,7 @@ beforeEach(function () {
     ]);
 
     $this->artisan('make:filament-resource', [
-        'name' => 'User',
+        'model' => 'User',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);

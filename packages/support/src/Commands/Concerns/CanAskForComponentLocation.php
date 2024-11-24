@@ -25,7 +25,7 @@ trait CanAskForComponentLocation
             return [
                 "App\\{$pathNamespace}",
                 app_path($path),
-                null,
+                '',
             ];
         }
 

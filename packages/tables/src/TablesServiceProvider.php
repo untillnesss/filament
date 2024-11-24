@@ -23,7 +23,7 @@ class TablesServiceProvider extends PackageServiceProvider
             ->name('filament-tables')
             ->hasCommands([
                 Commands\MakeColumnCommand::class,
-                Commands\MakeTableCommand::class,
+                Commands\MakeLivewireTableCommand::class,
             ])
             ->hasTranslations()
             ->hasViews();

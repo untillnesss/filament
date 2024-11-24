@@ -1,22 +1,64 @@
 <?php
 
-namespace Filament\Tables\Commands\Concerns;
+namespace Filament\Tables\Commands\FileGenerators\Concerns;
 
-use Filament\Tables;
+use Filament\Actions\BulkActionGroup;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Nette\PhpGenerator\Literal;
 
 trait CanGenerateTables
 {
     /**
-     * @param  string|class-string<Model>  $model
+     * @param  ?class-string<Model>  $model
      */
-    protected function getResourceTableColumns(string $model): string
+    public function generateTableMethodBody(?string $model = null): string
     {
-        $model = $this->parseModel($model);
+        $this->importUnlessPartial(BulkActionGroup::class);
+
+        return <<<PHP
+            return \$table
+                ->query(fn (): {$this->simplifyFqn(Builder::class)} => {$this->simplifyFqn($model)}::query())
+                ->columns([
+                    {$this->outputTableColumns($model)}
+                ])
+                ->filters([
+                    //
+                ])
+                ->headerActions([
+                    //
+                ])
+                ->actions([
+                    //
+                ])
+                ->bulkActions([
+                    {$this->simplifyFqn(BulkActionGroup::class)}::make([
+                        //
+                    ]),
+                ]);
+            PHP;
+    }
+
+    /**
+     * @param  ?class-string<Model>  $model
+     * @return array<string>
+     */
+    public function getTableColumns(?string $model = null): array
+    {
+        if (! $this->isGenerated()) {
+            return [];
+        }
 
         if (blank($model)) {
-            return '//';
+            return [];
+        }
+
+        if (! class_exists($model)) {
+            return [];
         }
 
         $schema = $this->getModelSchema($model);
@@ -73,18 +115,18 @@ trait CanGenerateTables
             }
 
             if ($type['name'] === 'boolean') {
-                $columnData['type'] = Tables\Columns\IconColumn::class;
+                $columnData['type'] = IconColumn::class;
                 $columnData['boolean'] = [];
             } else {
                 $columnData['type'] = match (true) {
-                    $columnName === 'image', str($columnName)->startsWith('image_'), str($columnName)->contains('_image_'), str($columnName)->endsWith('_image') => Tables\Columns\ImageColumn::class,
-                    default => Tables\Columns\TextColumn::class,
+                    $columnName === 'image', str($columnName)->startsWith('image_'), str($columnName)->contains('_image_'), str($columnName)->endsWith('_image') => ImageColumn::class,
+                    default => TextColumn::class,
                 };
 
                 if (in_array($type['name'], [
                     'string',
                     'char',
-                ]) && ($columnData['type'] === Tables\Columns\TextColumn::class)) {
+                ]) && ($columnData['type'] === TextColumn::class)) {
                     $columnData['searchable'] = [];
                 }
 
@@ -127,55 +169,39 @@ trait CanGenerateTables
                 $columnData['toggleable'] = ['isToggledHiddenByDefault' => true];
             }
 
+            $this->importUnlessPartial($columnData['type']);
+
             $columns[$columnName] = $columnData;
         }
 
-        $output = count($columns) ? '' : '//';
+        return array_map(
+            function (array $columnData, string $columnName): string {
+                $column = (string) new Literal("{$this->simplifyFqn($columnData['type'])}::make(?)", [$columnName]);
 
-        foreach ($columns as $columnName => $columnData) {
-            // Constructor
-            $output .= (string) str($columnData['type'])->after('Filament\\');
-            $output .= '::make(\'';
-            $output .= $columnName;
-            $output .= '\')';
+                unset($columnData['type']);
 
-            unset($columnData['type']);
+                foreach ($columnData as $methodName => $parameters) {
+                    $column .= new Literal(PHP_EOL . "            ->{$methodName}(...?:)", [$parameters]);
+                }
 
-            // Configuration
-            foreach ($columnData as $methodName => $parameters) {
-                $output .= PHP_EOL;
-                $output .= '    ->';
-                $output .= $methodName;
-                $output .= '(';
-                $output .= collect($parameters)
-                    ->map(function (mixed $parameterValue, int | string $parameterName): string {
-                        $parameterValue = match (true) {
-                            /** @phpstan-ignore-next-line */
-                            is_bool($parameterValue) => $parameterValue ? 'true' : 'false',
-                            /** @phpstan-ignore-next-line */
-                            is_null($parameterValue) => 'null',
-                            is_numeric($parameterValue) => $parameterValue,
-                            default => "'{$parameterValue}'",
-                        };
+                return "{$column},";
+            },
+            $columns,
+            array_keys($columns),
+        );
+    }
 
-                        if (is_numeric($parameterName)) {
-                            return $parameterValue;
-                        }
+    /**
+     * @param  ?class-string<Model>  $model
+     */
+    public function outputTableColumns(?string $model = null): string
+    {
+        $columns = $this->getTableColumns($model);
 
-                        return "{$parameterName}: {$parameterValue}";
-                    })
-                    ->implode(', ');
-                $output .= ')';
-            }
-
-            // Termination
-            $output .= ',';
-
-            if (! (array_key_last($columns) === $columnName)) {
-                $output .= PHP_EOL;
-            }
+        if (empty($columns)) {
+            return '//';
         }
 
-        return $output;
+        return implode(PHP_EOL . '        ', $columns);
     }
 }

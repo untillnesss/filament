@@ -16,7 +16,7 @@ use function Laravel\Prompts\text;
 #[AsCommand(name: 'make:filament-livewire-form', aliases: [
     'make:livewire-form',
 ])]
-class MakeFormCommand extends Command
+class MakeLivewireFormCommand extends Command
 {
     use CanGenerateForms;
     use CanIndentStrings;

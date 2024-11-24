@@ -116,7 +116,7 @@ class MakeResourceCommand extends Command
     {
         return [
             new InputArgument(
-                name: 'name',
+                name: 'model',
                 mode: InputArgument::OPTIONAL,
                 description: 'The name of the model to generate the resource for, optionally prefixed with directories',
             ),
@@ -275,7 +275,7 @@ class MakeResourceCommand extends Command
             ->map(fn (string $class): string => str($class)->after("{$modelNamespace}\\"))
             ->all();
 
-        $this->modelFqnEnd = (string) str($this->argument('name') ?? suggest(
+        $this->modelFqnEnd = (string) str($this->argument('model') ?? suggest(
             label: 'What is the model name?',
             options: function (string $search) use ($modelFqns): array {
                 $search = str($search)->trim()->replace(['\\', '/'], '');

@@ -133,7 +133,7 @@ it('can generate a page class in a resource', function () {
     $this->withoutMockingConsoleOutput();
 
     $this->artisan('make:filament-resource', [
-        'name' => 'User',
+        'model' => 'User',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -165,7 +165,7 @@ it('can generate a page view in a resource', function () {
     $this->withoutMockingConsoleOutput();
 
     $this->artisan('make:filament-resource', [
-        'name' => 'User',
+        'model' => 'User',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -197,7 +197,7 @@ it('can generate a create page class in a resource', function () {
     $this->withoutMockingConsoleOutput();
 
     $this->artisan('make:filament-resource', [
-        'name' => 'User',
+        'model' => 'User',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -231,7 +231,7 @@ it('can generate an edit page class in a resource', function () {
     $this->withoutMockingConsoleOutput();
 
     $this->artisan('make:filament-resource', [
-        'name' => 'User',
+        'model' => 'User',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -265,7 +265,7 @@ it('can generate a view page class in a resource', function () {
     $this->withoutMockingConsoleOutput();
 
     $this->artisan('make:filament-resource', [
-        'name' => 'User',
+        'model' => 'User',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -297,7 +297,7 @@ it('can generate a view page class in a resource', function () {
 
 $runGenerateManageRelatedRecordsPageCommand = function (TestCase $testCase): PendingCommand {
     $testCase->artisan('make:filament-resource', [
-        'name' => 'Team',
+        'model' => 'Team',
         '--view' => true,
         '--panel' => 'admin',
         '--no-interaction' => true,
@@ -306,7 +306,7 @@ $runGenerateManageRelatedRecordsPageCommand = function (TestCase $testCase): Pen
         ->expectsQuestion('Does the model use soft deletes?', false);
 
     $testCase->artisan('make:filament-resource', [
-        'name' => 'User',
+        'model' => 'User',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ])
