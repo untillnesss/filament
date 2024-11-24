@@ -21,7 +21,7 @@ use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\TraitUse;
 
-class LivewireTableClassGenerator extends ClassGenerator
+class LivewireTableComponentClassGenerator extends ClassGenerator
 {
     use CanGenerateTables;
     use CanReadModelSchemas;

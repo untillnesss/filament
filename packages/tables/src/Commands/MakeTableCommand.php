@@ -2,14 +2,12 @@
 
 namespace Filament\Tables\Commands;
 
-use Filament\Support\Commands\Concerns\CanAskForLivewireComponentLocation;
-use Filament\Support\Commands\Concerns\CanAskForViewLocation;
+use Filament\Support\Commands\Concerns\CanAskForComponentLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
-use Filament\Tables\Commands\FileGenerators\LivewireTableComponentClassGenerator;
+use Filament\Tables\Commands\FileGenerators\TableClassGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,27 +16,17 @@ use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\suggest;
 use function Laravel\Prompts\text;
 
-#[AsCommand(name: 'make:filament-livewire-table', aliases: [
-    'filament:livewire-table',
-    'make:livewire-table',
+#[AsCommand(name: 'make:filament-table', aliases: [
+    'filament:table',
 ])]
-class MakeLivewireTableCommand extends Command
+class MakeTableCommand extends Command
 {
-    use CanAskForLivewireComponentLocation;
-    use CanAskForViewLocation;
+    use CanAskForComponentLocation;
     use CanManipulateFiles;
 
-    protected $description = 'Create a new Livewire component containing a Filament table';
+    protected $description = 'Create a new Filament table class';
 
-    protected $name = 'make:filament-livewire-table';
-
-    /**
-     * @var array<string>
-     */
-    protected $aliases = [
-        'filament:livewire-table',
-        'make:livewire-table',
-    ];
+    protected $name = 'make:filament-table';
 
     /**
      * @var class-string
@@ -58,9 +46,12 @@ class MakeLivewireTableCommand extends Command
 
     protected bool $isGenerated;
 
-    protected ?string $view = null;
-
-    protected ?string $viewPath = null;
+    /**
+     * @var array<string>
+     */
+    protected $aliases = [
+        'filament:table',
+    ];
 
     /**
      * @return array<InputArgument>
@@ -71,7 +62,7 @@ class MakeLivewireTableCommand extends Command
             new InputArgument(
                 name: 'name',
                 mode: InputArgument::OPTIONAL,
-                description: 'The name of the Livewire component to generate, optionally prefixed with directories',
+                description: 'The name of the table class to generate, optionally prefixed with directories',
             ),
             new InputArgument(
                 name: 'model',
@@ -117,13 +108,12 @@ class MakeLivewireTableCommand extends Command
 
             $this->configureLocation();
 
-            $this->createLivewireComponent();
-            $this->createView();
+            $this->createTable();
         } catch (InvalidCommandOutput) {
             return static::INVALID;
         }
 
-        $this->components->info("Livewire component [{$this->fqn}] created successfully.");
+        $this->components->info("Table [{$this->fqn}] created successfully.");
 
         return static::SUCCESS;
     }
@@ -131,7 +121,7 @@ class MakeLivewireTableCommand extends Command
     protected function configureFqnEnd(): void
     {
         $this->fqnEnd = (string) str($this->argument('name') ?? text(
-            label: 'What is the Livewire component name?',
+            label: 'What is the Table name?',
             placeholder: 'BlogPostsTable',
             required: true,
         ))
@@ -190,8 +180,8 @@ class MakeLivewireTableCommand extends Command
         [
             $namespace,
             $path,
-            $viewNamespace,
-        ] = $this->askForLivewireComponentLocation(
+        ] = $this->askForComponentLocation(
+            path: 'Tables',
             question: 'Where would you like to create the table?',
         );
 
@@ -199,46 +189,18 @@ class MakeLivewireTableCommand extends Command
         $this->path = (string) str("{$path}\\{$this->fqnEnd}.php")
             ->replace('\\', '/')
             ->replace('//', '/');
-
-        [
-            $this->view,
-            $this->viewPath,
-        ] = $this->askForViewLocation(
-            str($this->fqn)
-                ->afterLast('\\Livewire\\')
-                ->prepend('Livewire\\')
-                ->replace('\\', '/')
-                ->explode('/')
-                ->map(Str::kebab(...))
-                ->implode('.'),
-            defaultNamespace: $viewNamespace,
-        );
     }
 
-    protected function createLivewireComponent(): void
+    protected function createTable(): void
     {
         if (! $this->option('force') && $this->checkForCollision($this->path)) {
             throw new InvalidCommandOutput;
         }
 
-        $this->writeFile($this->path, app(LivewireTableComponentClassGenerator::class, [
+        $this->writeFile($this->path, app(TableClassGenerator::class, [
             'fqn' => $this->fqn,
             'modelFqn' => $this->modelFqn,
             'isGenerated' => $this->isGenerated,
-            'view' => $this->view,
         ]));
-    }
-
-    protected function createView(): void
-    {
-        if (blank($this->view)) {
-            return;
-        }
-
-        if (! $this->option('force') && $this->checkForCollision($this->viewPath)) {
-            throw new InvalidCommandOutput;
-        }
-
-        $this->copyStubToApp('LivewireTableView', $this->viewPath);
     }
 }

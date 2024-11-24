@@ -24,6 +24,7 @@ class TablesServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 Commands\MakeColumnCommand::class,
                 Commands\MakeLivewireTableCommand::class,
+                Commands\MakeTableCommand::class,
             ])
             ->hasTranslations()
             ->hasViews();

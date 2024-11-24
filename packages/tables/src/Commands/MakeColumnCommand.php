@@ -136,7 +136,7 @@ class MakeColumnCommand extends Command
             $path,
             $viewNamespace,
         ] = $this->askForComponentLocation(
-            path: 'Filament/Tables/Columns',
+            path: 'Tables/Columns',
             question: 'Where would you like to create the column?',
         );
 
@@ -154,8 +154,8 @@ class MakeColumnCommand extends Command
             $this->viewPath,
         ] = $this->askForViewLocation(
             str($this->fqn)
-                ->afterLast('\\Filament\\Tables\\Columns\\')
-                ->prepend('Filament\\Tables\\Columns\\')
+                ->afterLast('\\Tables\\Columns\\')
+                ->prepend('Tables\\Columns\\')
                 ->replace('\\', '/')
                 ->explode('/')
                 ->map(Str::kebab(...))
