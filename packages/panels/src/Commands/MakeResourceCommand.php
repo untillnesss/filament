@@ -2,10 +2,6 @@
 
 namespace Filament\Commands;
 
-use Filament\Commands\Concerns\CanAskForResource;
-use Filament\Commands\Concerns\HasCluster;
-use Filament\Commands\Concerns\HasPanel;
-use Filament\Commands\Concerns\HasResourcesLocation;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceCreateRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceEditRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceListRecordsPageClassGenerator;
@@ -16,7 +12,11 @@ use Filament\Commands\FileGenerators\Resources\Schemas\ResourceFormSchemaClassGe
 use Filament\Commands\FileGenerators\Resources\Schemas\ResourceInfolistSchemaClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Schemas\ResourceTableClassGenerator;
 use Filament\Resources\Pages\Page;
+use Filament\Support\Commands\Concerns\CanAskForResource;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
+use Filament\Support\Commands\Concerns\HasCluster;
+use Filament\Support\Commands\Concerns\HasPanel;
+use Filament\Support\Commands\Concerns\HasResourcesLocation;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
@@ -267,46 +267,51 @@ class MakeResourceCommand extends Command
 
     protected function configureModel(): void
     {
-        $modelNamespace = $this->option('model-namespace') ?? 'App\\Models';
+        if ($this->argument('model')) {
+            $this->modelFqnEnd = (string) str($this->argument('model'))
+                ->trim('/')
+                ->trim('\\')
+                ->trim(' ')
+                ->when(
+                    fn (Stringable $model): bool => str($model)->endsWith('Resource'),
+                    fn (Stringable $model): Stringable => str($model)->beforeLast('Resource'),
+                )
+                ->studly()
+                ->replace('/', '\\');
 
-        $modelFqns = collect(get_declared_classes())
-            ->filter(fn (string $class): bool => is_subclass_of($class, Model::class) &&
-                str($class)->startsWith("{$modelNamespace}\\"))
-            ->map(fn (string $class): string => str($class)->after("{$modelNamespace}\\"))
-            ->all();
+            if (blank($this->modelFqnEnd)) {
+                $this->modelFqnEnd = 'Resource';
+            }
 
-        $this->modelFqnEnd = (string) str($this->argument('model') ?? suggest(
-            label: 'What is the model name?',
-            options: function (string $search) use ($modelFqns): array {
-                $search = str($search)->trim()->replace(['\\', '/'], '');
+            $modelNamespace = $this->option('model-namespace') ?? 'App\\Models';
 
-                if (blank($search)) {
-                    return $modelFqns;
-                }
+            $this->modelFqn = "{$modelNamespace}\\{$this->modelFqnEnd}";
+        } else {
+            $modelFqns = collect(get_declared_classes())
+                ->filter(fn (string $class): bool => is_subclass_of($class, Model::class) &&
+                    (! str((new ReflectionClass($class))->getFileName())->startsWith(base_path('vendor'))))
+                ->all();
 
-                return array_filter(
-                    $modelFqns,
-                    fn (string $class): bool => str($class)->replace(['\\', '/'], '')->contains($search, ignoreCase: true),
-                );
-            },
-            placeholder: 'BlogPost',
-            required: true,
-        ))
-            ->trim('/')
-            ->trim('\\')
-            ->trim(' ')
-            ->when(
-                fn (Stringable $model): bool => str($model)->endsWith('Resource'),
-                fn (Stringable $model): Stringable => str($model)->beforeLast('Resource'),
-            )
-            ->studly()
-            ->replace('/', '\\');
+            $this->modelFqn = suggest(
+                label: 'What is the model?',
+                options: function (string $search) use ($modelFqns): array {
+                    $search = str($search)->trim()->replace(['\\', '/'], '');
 
-        if (blank($this->modelFqnEnd)) {
-            $this->modelFqnEnd = 'Resource';
+                    if (blank($search)) {
+                        return $modelFqns;
+                    }
+
+                    return array_filter(
+                        $modelFqns,
+                        fn (string $class): bool => str($class)->replace(['\\', '/'], '')->contains($search, ignoreCase: true),
+                    );
+                },
+                placeholder: 'App\\Models\\BlogPost',
+                required: true,
+            );
+
+            $this->modelFqnEnd = class_basename($this->modelFqn);
         }
-
-        $this->modelFqn = "{$modelNamespace}\\{$this->modelFqnEnd}";
 
         if ($this->option('model')) {
             $this->callSilently('make:model', [

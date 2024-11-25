@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Commands\Concerns;
+namespace Filament\Support\Commands\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +15,7 @@ trait CanAskForRelatedModel
     {
         $modelFqns = array_filter(
             get_declared_classes(),
-            fn (string $modelFqn): bool => is_subclass_of($modelFqn, Model::class),
+            fn (string $class): bool => is_subclass_of($class, Model::class),
         );
 
         return search(

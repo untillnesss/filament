@@ -2,8 +2,8 @@
 
 namespace Filament\Commands;
 
-use Filament\Commands\Concerns\HasPanel;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
+use Filament\Support\Commands\Concerns\HasPanel;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Filament\Support\Commands\Exceptions\SuccessCommandOutput;
 use Illuminate\Console\Command;

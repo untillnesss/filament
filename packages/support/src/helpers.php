@@ -47,7 +47,8 @@ if (! function_exists('Filament\Support\get_model_label')) {
      */
     function get_model_label(string $model): string
     {
-        return (string) str(class_basename($model))
+        return (string) str($model)
+            ->classBasename()
             ->kebab()
             ->replace('-', ' ');
     }

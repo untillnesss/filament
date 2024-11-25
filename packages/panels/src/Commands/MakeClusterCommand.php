@@ -2,9 +2,9 @@
 
 namespace Filament\Commands;
 
-use Filament\Commands\Concerns\HasPanel;
 use Filament\Commands\FileGenerators\ClusterClassGenerator;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
+use Filament\Support\Commands\Concerns\HasPanel;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;

@@ -1,24 +1,37 @@
 <?php
 
-namespace Filament\Commands\Concerns;
+namespace Filament\Support\Commands\Concerns;
 
 use Filament\Facades\Filament;
 use Filament\Panel;
 use Illuminate\Support\Arr;
 
+use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 
 trait HasPanel
 {
     protected ?Panel $panel;
 
-    protected function configurePanel(string $question): void
+    protected function configurePanel(string $question, ?string $initialQuestion = null): void
     {
+        if (! class_exists(Panel::class)) {
+            $this->panel = null;
+
+            return;
+        }
+
         $panelName = $this->option('panel');
 
         $this->panel = filled($panelName) ? Filament::getPanel($panelName, isStrict: false) : null;
 
         if ($this->panel) {
+            return;
+        }
+
+        if (filled($initialQuestion) && (! confirm(label: $initialQuestion))) {
+            $this->panel = null;
+
             return;
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Commands\Concerns;
+namespace Filament\Support\Commands\Concerns;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\suggest;

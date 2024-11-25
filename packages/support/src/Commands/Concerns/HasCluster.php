@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\Commands\Concerns;
+namespace Filament\Support\Commands\Concerns;
 
 use Filament\Clusters\Cluster;
 use ReflectionClass;

@@ -8,6 +8,7 @@ use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Filament\Tables\Commands\FileGenerators\TableClassGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
+use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -134,16 +135,28 @@ class MakeTableCommand extends Command
 
     protected function configureModel(): void
     {
-        $modelNamespace = $this->option('model-namespace') ?? 'App\\Models';
+        if ($this->argument('model')) {
+            $this->modelFqnEnd = (string) str($this->argument('model'))
+                ->trim('/')
+                ->trim('\\')
+                ->trim(' ')
+                ->studly()
+                ->replace('/', '\\');
+
+            $modelNamespace = $this->option('model-namespace') ?? 'App\\Models';
+
+            $this->modelFqn = "{$modelNamespace}\\{$this->modelFqnEnd}";
+
+            return;
+        }
 
         $modelFqns = collect(get_declared_classes())
             ->filter(fn (string $class): bool => is_subclass_of($class, Model::class) &&
-                str($class)->startsWith("{$modelNamespace}\\"))
-            ->map(fn (string $class): string => str($class)->after("{$modelNamespace}\\"))
+                (! str((new ReflectionClass($class))->getFileName())->startsWith(base_path('vendor'))))
             ->all();
 
-        $this->modelFqnEnd = (string) str($this->argument('model') ?? suggest(
-            label: 'What is the model name?',
+        $this->modelFqn = suggest(
+            label: 'What is the model?',
             options: function (string $search) use ($modelFqns): array {
                 $search = str($search)->trim()->replace(['\\', '/'], '');
 
@@ -156,15 +169,11 @@ class MakeTableCommand extends Command
                     fn (string $class): bool => str($class)->replace(['\\', '/'], '')->contains($search, ignoreCase: true),
                 );
             },
-            placeholder: 'BlogPost',
-        ))
-            ->trim('/')
-            ->trim('\\')
-            ->trim(' ')
-            ->studly()
-            ->replace('/', '\\');
+            placeholder: 'App\\Models\\BlogPost',
+            required: true,
+        );
 
-        $this->modelFqn = "{$modelNamespace}\\{$this->modelFqnEnd}";
+        $this->modelFqnEnd = class_basename($this->modelFqn);
     }
 
     protected function configureIsGenerated(): void

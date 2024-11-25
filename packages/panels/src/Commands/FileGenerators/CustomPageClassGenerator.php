@@ -3,9 +3,9 @@
 namespace Filament\Commands\FileGenerators;
 
 use Filament\Clusters\Cluster;
-use Filament\Commands\FileGenerators\Concerns\CanGenerateViewProperty;
 use Filament\Pages\Page;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
+use Filament\Support\Commands\FileGenerators\Concerns\CanGenerateViewProperty;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Property;

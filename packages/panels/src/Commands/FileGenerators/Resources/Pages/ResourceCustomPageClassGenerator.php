@@ -2,11 +2,11 @@
 
 namespace Filament\Commands\FileGenerators\Resources\Pages;
 
-use Filament\Commands\FileGenerators\Concerns\CanGenerateViewProperty;
 use Filament\Commands\FileGenerators\Resources\Pages\Concerns\CanGenerateResourceProperty;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
+use Filament\Support\Commands\FileGenerators\Concerns\CanGenerateViewProperty;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\TraitUse;

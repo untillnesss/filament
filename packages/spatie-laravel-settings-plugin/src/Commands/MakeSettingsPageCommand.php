@@ -2,11 +2,11 @@
 
 namespace Filament\Commands;
 
-use Filament\Commands\Concerns\HasCluster;
-use Filament\Commands\Concerns\HasClusterPagesLocation;
-use Filament\Commands\Concerns\HasPanel;
 use Filament\Commands\FileGenerators\SettingsPageClassGenerator;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
+use Filament\Support\Commands\Concerns\HasCluster;
+use Filament\Support\Commands\Concerns\HasClusterPagesLocation;
+use Filament\Support\Commands\Concerns\HasPanel;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
@@ -170,7 +170,7 @@ class MakeSettingsPageCommand extends Command
 
         $settingsFqns = array_filter(
             get_declared_classes(),
-            fn (string $modelFqn): bool => is_subclass_of($modelFqn, Settings::class),
+            fn (string $class): bool => is_subclass_of($class, Settings::class),
         );
 
         $this->settingsFqn = search(

@@ -2,14 +2,6 @@
 
 namespace Filament\Commands;
 
-use Filament\Commands\Concerns\CanAskForRelatedModel;
-use Filament\Commands\Concerns\CanAskForRelatedResource;
-use Filament\Commands\Concerns\CanAskForResource;
-use Filament\Commands\Concerns\CanAskForSchema;
-use Filament\Commands\Concerns\HasCluster;
-use Filament\Commands\Concerns\HasClusterPagesLocation;
-use Filament\Commands\Concerns\HasPanel;
-use Filament\Commands\Concerns\HasResourcesLocation;
 use Filament\Commands\FileGenerators\CustomPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceCreateRecordPageClassGenerator;
 use Filament\Commands\FileGenerators\Resources\Pages\ResourceCustomPageClassGenerator;
@@ -21,8 +13,16 @@ use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Resources\Pages\Page as ResourcePage;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Support\Commands\Concerns\CanAskForRelatedModel;
+use Filament\Support\Commands\Concerns\CanAskForRelatedResource;
+use Filament\Support\Commands\Concerns\CanAskForResource;
+use Filament\Support\Commands\Concerns\CanAskForSchema;
 use Filament\Support\Commands\Concerns\CanAskForViewLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
+use Filament\Support\Commands\Concerns\HasCluster;
+use Filament\Support\Commands\Concerns\HasClusterPagesLocation;
+use Filament\Support\Commands\Concerns\HasPanel;
+use Filament\Support\Commands\Concerns\HasResourcesLocation;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
@@ -136,7 +136,7 @@ class MakePageCommand extends Command
                 name: 'panel',
                 shortcut: null,
                 mode: InputOption::VALUE_REQUIRED,
-                description: 'The panel to create the resource in',
+                description: 'The panel to create the page in',
             ),
             new InputOption(
                 name: 'resource',
