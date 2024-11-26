@@ -7,7 +7,7 @@ use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceForms
 use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceTables;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Filament\Tables\Table;

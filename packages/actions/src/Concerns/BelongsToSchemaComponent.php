@@ -2,7 +2,7 @@
 
 namespace Filament\Actions\Concerns;
 
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Component;
 
 trait BelongsToSchemaComponent
 {

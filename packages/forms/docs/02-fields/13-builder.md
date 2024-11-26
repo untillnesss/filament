@@ -465,7 +465,7 @@ Builder::make('content')
 
 ### Adding extra item actions to a builder
 
-You may add new [action buttons](../../schema/actions) to the header of each builder item by passing `Action` objects into `extraItemActions()`:
+You may add new [action buttons](../../schemas/actions) to the header of each builder item by passing `Action` objects into `extraItemActions()`:
 
 ```php
 use Filament\Actions\Action;

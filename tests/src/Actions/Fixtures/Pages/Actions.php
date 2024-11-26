@@ -6,7 +6,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 class Actions extends Page
 {

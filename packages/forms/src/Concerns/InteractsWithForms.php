@@ -5,9 +5,9 @@ namespace Filament\Forms\Concerns;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Concerns\InteractsWithSchemas;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 

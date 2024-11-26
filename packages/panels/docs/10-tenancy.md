@@ -122,7 +122,7 @@ namespace App\Filament\Pages\Tenancy;
 use App\Models\Team;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Tenancy\RegisterTenant;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 class RegisterTeam extends RegisterTenant
 {
@@ -182,7 +182,7 @@ namespace App\Filament\Pages\Tenancy;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Tenancy\EditTenantProfile;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 class EditTeamProfile extends EditTenantProfile
 {

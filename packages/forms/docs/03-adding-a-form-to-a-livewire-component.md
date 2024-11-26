@@ -42,8 +42,8 @@ namespace App\Livewire;
 
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Concerns\InteractsWithSchemas;
-use Filament\Schema\Contracts\HasSchemas;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
@@ -98,7 +98,7 @@ Finally, in your Livewire component's view, render the form:
 </div>
 ```
 
-> `<x-filament-actions::modals />` is used to render form component [action modals](../schema/actions). The code can be put anywhere outside the `<form>` element, as long as it's within the Livewire component.
+> `<x-filament-actions::modals />` is used to render form component [action modals](../schemas/actions). The code can be put anywhere outside the `<form>` element, as long as it's within the Livewire component.
 
 Visit your Livewire component in the browser, and you should see the form components from `schema()`:
 
@@ -141,7 +141,7 @@ It is advised to always pass the model to the form when there is one. As explain
 To pass the model to the form, use the `$form->model()` method:
 
 ```php
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public Post $post;
 
@@ -162,7 +162,7 @@ In some cases, the form's model is not available until the form has been submitt
 
 ```php
 use App\Models\Post;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {
@@ -196,7 +196,7 @@ In all of our previous examples, we've been saving the form's data to the public
 ```php
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public ?string $title = null;
 
@@ -233,7 +233,7 @@ Each of these forms can now be defined within the Livewire component, using a me
 ```php
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function editPostForm(Schema $form): Schema
 {

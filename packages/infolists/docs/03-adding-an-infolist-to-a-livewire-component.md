@@ -28,8 +28,8 @@ Route::get('products/{product}', ViewProduct::class);
 You must use the `InteractsWithSchemas` trait, and implement the `HasSchemas` interface on your Livewire component class:
 
 ```php
-use Filament\Schema\Concerns\InteractsWithSchemas;
-use Filament\Schema\Contracts\HasSchemas;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
 use Livewire\Component;
 
 class ViewProduct extends Component implements HasSchemas
@@ -45,7 +45,7 @@ class ViewProduct extends Component implements HasSchemas
 Next, add a method to the Livewire component which accepts an `$infolist` object, modifies it, and returns it:
 
 ```php
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function productInfolist(Schema $infolist): Schema
 {
@@ -71,7 +71,7 @@ Either pass an Eloquent model instance to the `record()` method of the infolist,
 
 ```php
 use Filament\Infolists\Components\TextEntry;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function productInfolist(Schema $infolist): Schema
 {
@@ -89,7 +89,7 @@ Alternatively, you can pass an array of data to the `state()` method of the info
 
 ```php
 use Filament\Infolists\Components\TextEntry;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function productInfolist(Schema $infolist): Schema
 {

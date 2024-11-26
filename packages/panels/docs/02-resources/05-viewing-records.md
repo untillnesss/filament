@@ -24,7 +24,7 @@ By default, the View page will display a disabled form with the record's data. I
 
 ```php
 use Filament\Infolists;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public static function infolist(Schema $infolist): Schema
 {
@@ -38,7 +38,7 @@ public static function infolist(Schema $infolist): Schema
 }
 ```
 
-The `schema()` method is used to define the structure of your infolist. It is an array of [entries](../../infolists/entries#available-entries) and [layout components](../../schema/layout#available-layout-components), in the order they should appear in your infolist.
+The `schema()` method is used to define the structure of your infolist. It is an array of [entries](../../infolists/entries#available-entries) and [layout components](../../schemas/layout#available-layout-components), in the order they should appear in your infolist.
 
 Check out the Infolists docs for a [guide](../../infolists/getting-started) on how to build infolists with Filament.
 
@@ -135,7 +135,7 @@ public static function getPages(): array
 Now, you can define the `infolist()` or `form()` for this page, which can contain other components that are not present on the main View page:
 
 ```php
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function infolist(Schema $infolist): Schema
 {

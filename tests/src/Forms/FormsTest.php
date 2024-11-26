@@ -1,9 +1,9 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Section;
-use Filament\Schema\Components\Wizard;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Wizard;
+use Filament\Schemas\Schema;
 use Filament\Tests\Forms\Fixtures\Livewire;
 use Filament\Tests\TestCase;
 

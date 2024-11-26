@@ -5,7 +5,7 @@ namespace Filament\Tables\Concerns;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

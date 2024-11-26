@@ -159,7 +159,7 @@ It's possible to target a file upload component to only handle a certain subset 
 For example, you could scope the field to only handle media that has certain custom properties:
 
 ```php
-use Filament\Schema\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Illuminate\Support\Collection;
 

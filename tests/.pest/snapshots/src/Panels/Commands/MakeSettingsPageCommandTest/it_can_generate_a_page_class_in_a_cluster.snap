@@ -4,7 +4,7 @@ namespace App\Filament\Clusters\Site\Pages;
 
 use App\Filament\Clusters\Site\SiteCluster;
 use Filament\Pages\SettingsPage;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tests\Panels\Commands\Settings;
 
 class ManageSettings extends SettingsPage

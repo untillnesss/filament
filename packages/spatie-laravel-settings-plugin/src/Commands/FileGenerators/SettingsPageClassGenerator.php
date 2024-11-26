@@ -10,7 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Pages\SettingsPage;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Illuminate\Support\Str;
 use Nette\PhpGenerator\ClassType;

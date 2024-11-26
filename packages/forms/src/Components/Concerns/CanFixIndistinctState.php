@@ -3,8 +3,8 @@
 namespace Filament\Forms\Components\Concerns;
 
 use Closure;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Support\Arr;
 
 trait CanFixIndistinctState

@@ -7,7 +7,7 @@ use App\Filament\Resources\Posts\Schemas\PostForm;
 use App\Filament\Resources\Posts\Schemas\PostInfolist;
 use App\Filament\Resources\Posts\Tables\PostsTable;
 use Filament\Resources\Resource;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Tests\Models\Post;
 

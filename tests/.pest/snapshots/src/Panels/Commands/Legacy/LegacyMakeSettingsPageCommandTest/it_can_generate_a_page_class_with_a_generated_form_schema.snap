@@ -4,7 +4,7 @@ namespace App\Filament\Pages;
 
 use Filament\Forms;
 use Filament\Pages\SettingsPage;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tests\Panels\Commands\Legacy\Settings;
 use Filament\Tests\Panels\Commands\Legacy\SettingsPropertyEnum;
 

@@ -6,7 +6,7 @@ use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceForms
 use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceTables;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Filament\Tables\Table;

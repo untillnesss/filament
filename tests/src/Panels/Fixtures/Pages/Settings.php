@@ -5,7 +5,7 @@ namespace Filament\Tests\Panels\Fixtures\Pages;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 class Settings extends Page
 {

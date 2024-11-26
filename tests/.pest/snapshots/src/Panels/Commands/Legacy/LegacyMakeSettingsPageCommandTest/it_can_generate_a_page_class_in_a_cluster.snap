@@ -5,7 +5,7 @@ namespace App\Filament\Clusters\Site\Pages;
 use App\Filament\Clusters\Site;
 use Filament\Forms;
 use Filament\Pages\SettingsPage;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tests\Panels\Commands\Legacy\Settings;
 
 class ManageSettings extends SettingsPage

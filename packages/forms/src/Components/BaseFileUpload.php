@@ -3,10 +3,8 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use Filament\Schema\Components\Attributes\Exposed;
-use Filament\Schema\Components\StateCasts\FileUploadStateCast;
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Attributes\Exposed;
+use Filament\Schemas\Components\StateCasts\FileUploadStateCast;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -625,21 +623,23 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
             return;
         }
 
-        $this->evaluate(function (BaseFileUpload $component, Get $get, Set $set) use ($file, $statePath) {
-            if (! $component->isMultiple()) {
-                $set($statePath, null);
+        $set = $this->makeSetUtility();
 
-                return;
-            }
+        if (! $this->isMultiple()) {
+            $set($statePath, null);
 
-            $fileNames = $get($statePath) ?? [];
+            return;
+        }
 
-            if (array_key_exists($file, $fileNames)) {
-                unset($fileNames[$file]);
-            }
+        $get = $this->makeGetUtility();
 
-            $set($statePath, $fileNames);
-        });
+        $fileNames = $get($statePath) ?? [];
+
+        if (array_key_exists($file, $fileNames)) {
+            unset($fileNames[$file]);
+        }
+
+        $set($statePath, $fileNames);
     }
 
     /**
@@ -750,18 +750,20 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
             return;
         }
 
-        $this->evaluate(function (BaseFileUpload $component, Get $get, Set $set) use ($file, $fileName, $statePath) {
-            if (! $component->isMultiple()) {
-                $set($statePath, $fileName);
+        $set = $this->makeSetUtility();
 
-                return;
-            }
+        if (! $this->isMultiple()) {
+            $set($statePath, $fileName);
 
-            $fileNames = $get($statePath) ?? [];
-            $fileNames[$file] = $fileName;
+            return;
+        }
 
-            $set($statePath, $fileNames);
-        });
+        $get = $this->makeGetUtility();
+
+        $fileNames = $get($statePath) ?? [];
+        $fileNames[$file] = $fileName;
+
+        $set($statePath, $fileNames);
     }
 
     /**

@@ -14,10 +14,10 @@ use Filament\MultiFactorAuthentication\GoogleTwoFactor\Actions\SetUpGoogleTwoFac
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthenticationRecovery;
 use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
-use Filament\Schema\Components\Actions;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

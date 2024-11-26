@@ -8,7 +8,7 @@ use App\Filament\Resources\Users\Resources\Blog\Posts\Schemas\PostForm;
 use App\Filament\Resources\Users\Resources\Blog\Posts\Tables\PostsTable;
 use App\Filament\Resources\Users\UserResource;
 use Filament\Resources\Resource;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Tests\Models\Blog\Post;
 

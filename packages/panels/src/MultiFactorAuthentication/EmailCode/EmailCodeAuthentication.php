@@ -14,8 +14,8 @@ use Filament\MultiFactorAuthentication\EmailCode\Notifications\VerifyEmailCodeAu
 use Filament\MultiFactorAuthentication\Providers\Contracts\HasBeforeChallengeHook;
 use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Notifications\Notification;
-use Filament\Schema\Components\Actions;
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Component;
 use Illuminate\Contracts\Auth\Authenticatable;
 use PragmaRX\Google2FAQRCode\Google2FA;
 

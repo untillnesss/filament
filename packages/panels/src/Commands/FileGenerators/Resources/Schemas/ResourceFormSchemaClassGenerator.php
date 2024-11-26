@@ -3,7 +3,7 @@
 namespace Filament\Commands\FileGenerators\Resources\Schemas;
 
 use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceForms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Illuminate\Database\Eloquent\Model;

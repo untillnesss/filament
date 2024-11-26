@@ -3,7 +3,7 @@
 namespace Filament\Tables\Contracts;
 
 use Filament\Actions\Action;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Support\Contracts\TranslatableContentDriver;
 use Filament\Tables\Filters\Indicator;
 use Filament\Tables\Grouping\Group;

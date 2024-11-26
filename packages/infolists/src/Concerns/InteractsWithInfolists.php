@@ -3,7 +3,7 @@
 namespace Filament\Infolists\Concerns;
 
 use Filament\Actions\Action;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 trait InteractsWithInfolists
 {

@@ -155,7 +155,7 @@ class MakeColumnCommand extends Command
         ] = $this->askForViewLocation(
             str($this->fqn)
                 ->afterLast('\\Tables\\Columns\\')
-                ->prepend('Tables\\Columns\\')
+                ->prepend('Filament\\Tables\\Columns\\')
                 ->replace('\\', '/')
                 ->explode('/')
                 ->map(Str::kebab(...))

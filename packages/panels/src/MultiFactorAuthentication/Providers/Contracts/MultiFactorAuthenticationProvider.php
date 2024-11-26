@@ -2,7 +2,7 @@
 
 namespace Filament\MultiFactorAuthentication\Providers\Contracts;
 
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Component;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 interface MultiFactorAuthenticationProvider

@@ -11,8 +11,8 @@ use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFac
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthenticationRecovery;
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\GoogleTwoFactorAuthentication;
 use Filament\Notifications\Notification;
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\MaxWidth;
 use Illuminate\Support\Facades\DB;
 

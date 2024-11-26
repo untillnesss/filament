@@ -6,7 +6,7 @@ use App\Filament\Resources\Blog\PostResource\Pages;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tests\Models\Blog\Post;

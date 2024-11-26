@@ -3,7 +3,7 @@
 namespace App\Filament\Pages\Site;
 
 use Filament\Pages\SettingsPage;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tests\Panels\Commands\Settings;
 
 class ManageSettings extends SettingsPage

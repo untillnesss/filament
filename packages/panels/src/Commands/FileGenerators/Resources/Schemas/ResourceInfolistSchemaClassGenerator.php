@@ -2,7 +2,7 @@
 
 namespace Filament\Commands\FileGenerators\Resources\Schemas;
 
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;

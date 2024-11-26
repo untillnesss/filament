@@ -5,7 +5,7 @@ namespace Filament\Actions;
 use Closure;
 use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Schema\Contracts\HasSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;

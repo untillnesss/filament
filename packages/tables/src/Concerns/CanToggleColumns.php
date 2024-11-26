@@ -3,7 +3,7 @@
 namespace Filament\Tables\Concerns;
 
 use Filament\Forms\Components\Checkbox;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Arr;
 
 /**

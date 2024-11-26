@@ -2,7 +2,7 @@
 
 namespace Filament\Resources\Concerns;
 
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;

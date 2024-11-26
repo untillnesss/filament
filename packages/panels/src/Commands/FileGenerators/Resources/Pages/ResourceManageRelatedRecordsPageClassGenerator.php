@@ -7,7 +7,7 @@ use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceTable
 use Filament\Commands\FileGenerators\Resources\Pages\Concerns\CanGenerateResourceProperty;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Filament\Tables\Table;

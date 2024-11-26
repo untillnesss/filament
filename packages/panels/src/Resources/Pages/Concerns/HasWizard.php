@@ -4,8 +4,8 @@ namespace Filament\Resources\Pages\Concerns;
 
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Schema\Components\Wizard;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Wizard;
+use Filament\Schemas\Schema;
 
 trait HasWizard
 {

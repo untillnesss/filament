@@ -3,7 +3,7 @@
 namespace Filament\Forms\Components\Concerns;
 
 use Closure;
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Component;
 
 trait CanLimitItemsLength
 {
