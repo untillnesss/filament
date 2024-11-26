@@ -1,14 +1,13 @@
 <?php
 
-namespace Filament\Schemas\Commands\FileGenerators;
+namespace Filament\Forms\Commands\FileGenerators;
 
-use Filament\Schemas\Components\Component;
+use Filament\Forms\Components\Field;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
 use Nette\PhpGenerator\ClassType;
-use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\Property;
 
-class LayoutComponentClassGenerator extends ClassGenerator
+class FieldClassGenerator extends ClassGenerator
 {
     final public function __construct(
         protected string $fqn,
@@ -37,17 +36,12 @@ class LayoutComponentClassGenerator extends ClassGenerator
 
     public function getExtends(): string
     {
-        return Component::class;
+        return Field::class;
     }
 
     protected function addPropertiesToClass(ClassType $class): void
     {
         $this->addViewPropertyToClass($class);
-    }
-
-    protected function addMethodsToClass(ClassType $class): void
-    {
-        $this->addMakeMethodToClass($class);
     }
 
     protected function addViewPropertyToClass(ClassType $class): void
@@ -60,27 +54,12 @@ class LayoutComponentClassGenerator extends ClassGenerator
 
     protected function configureViewProperty(Property $property): void {}
 
-    protected function addMakeMethodToClass(ClassType $class): void
-    {
-        $method = $class->addMethod('make')
-            ->setPublic()
-            ->setStatic()
-            ->setReturnType('static')
-            ->setBody(<<<'PHP'
-                return app(static::class);
-                PHP);
-
-        $this->configureMakeMethod($method);
-    }
-
-    protected function configureMakeMethod(Method $method): void {}
-
     public function getFqn(): string
     {
         return $this->fqn;
     }
 
-    public function getView(): string
+    public function getView(): ?string
     {
         return $this->view;
     }

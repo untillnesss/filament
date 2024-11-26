@@ -13,7 +13,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:filament-schema-layout', aliases: [
@@ -45,11 +44,9 @@ class MakeLayoutComponentCommand extends Command
 
     protected string $path;
 
-    protected bool $hasEmbeddedView;
+    protected string $view;
 
-    protected ?string $view = null;
-
-    protected ?string $viewPath = null;
+    protected string $viewPath;
 
     /**
      * @var array<string>
@@ -89,12 +86,6 @@ class MakeLayoutComponentCommand extends Command
     {
         return [
             new InputOption(
-                name: 'embedded-view',
-                shortcut: 'E',
-                mode: InputOption::VALUE_NONE,
-                description: 'Define embedded HTML inside the class instead of using a separate Blade view file',
-            ),
-            new InputOption(
                 name: 'force',
                 shortcut: 'F',
                 mode: InputOption::VALUE_NONE,
@@ -107,7 +98,6 @@ class MakeLayoutComponentCommand extends Command
     {
         try {
             $this->configureFqnEnd();
-            $this->configureHasEmbeddedView();
 
             $this->configureLocation();
 
@@ -136,15 +126,6 @@ class MakeLayoutComponentCommand extends Command
             ->replace('/', '\\');
     }
 
-    protected function configureHasEmbeddedView(): void
-    {
-        $this->hasEmbeddedView = $this->option('embedded-view') || confirm(
-            label: 'Do you want to embed the HTML of the view in the component class?',
-            default: false,
-            hint: 'Defining the HTML of the component in the class instead of in a Blade view file improves the performance of the component, but doesn\'t allow you to use Blade syntax.',
-        );
-    }
-
     protected function configureLocation(): void
     {
         [
@@ -160,10 +141,6 @@ class MakeLayoutComponentCommand extends Command
         $this->path = (string) str("{$path}\\{$this->fqnEnd}.php")
             ->replace('\\', '/')
             ->replace('//', '/');
-
-        if ($this->hasEmbeddedView) {
-            return;
-        }
 
         [
             $this->view,
@@ -188,7 +165,6 @@ class MakeLayoutComponentCommand extends Command
 
         $this->writeFile($this->path, app(LayoutComponentClassGenerator::class, [
             'fqn' => $this->fqn,
-            'hasEmbeddedView' => $this->hasEmbeddedView,
             'view' => $this->view,
         ]));
     }
