@@ -16,6 +16,7 @@ class SchemaServiceProvider extends PackageServiceProvider
             ->name('filament-schema')
             ->hasCommands([
                 Commands\MakeLayoutComponentCommand::class,
+                Commands\MakeLivewireSchemaCommand::class,
                 Commands\MakeSchemaCommand::class,
             ])
             ->hasTranslations()
