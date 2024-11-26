@@ -14,7 +14,9 @@ use Symfony\Component\Console\Input\InputOption;
 use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:filament-schema', aliases: [
+    'filament:infolist',
     'filament:schema',
+    'make:filament-infolist',
 ])]
 class MakeSchemaCommand extends Command
 {
@@ -38,7 +40,9 @@ class MakeSchemaCommand extends Command
      * @var array<string>
      */
     protected $aliases = [
+        'filament:infolist',
         'filament:schema',
+        'make:filament-infolist',
     ];
 
     /**
