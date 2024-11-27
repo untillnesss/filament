@@ -4,7 +4,7 @@ namespace Filament\Tables\Commands\FileGenerators;
 
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
-use Filament\Tables\Commands\FileGenerators\Concerns\CanGenerateTables;
+use Filament\Tables\Commands\FileGenerators\Concerns\CanGenerateModelTables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +13,7 @@ use Nette\PhpGenerator\Method;
 
 class TableClassGenerator extends ClassGenerator
 {
-    use CanGenerateTables;
+    use CanGenerateModelTables;
     use CanReadModelSchemas;
 
     /**

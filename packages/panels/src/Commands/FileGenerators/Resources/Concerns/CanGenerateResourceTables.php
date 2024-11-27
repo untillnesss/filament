@@ -20,7 +20,7 @@ use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Commands\FileGenerators\Concerns\CanGenerateTables;
+use Filament\Tables\Commands\FileGenerators\Concerns\CanGenerateModelTables;
 use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,7 +30,7 @@ use Nette\PhpGenerator\Literal;
 
 trait CanGenerateResourceTables
 {
-    use CanGenerateTables;
+    use CanGenerateModelTables;
 
     /**
      * @param  ?class-string<Model>  $model

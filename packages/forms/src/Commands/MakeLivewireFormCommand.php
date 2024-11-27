@@ -2,118 +2,302 @@
 
 namespace Filament\Forms\Commands;
 
-use Filament\Forms\Commands\Concerns\CanGenerateForms;
-use Filament\Support\Commands\Concerns\CanIndentStrings;
+use Filament\Forms\Commands\FileGenerators\LivewireFormComponentClassGenerator;
+use Filament\Support\Commands\Concerns\CanAskForLivewireComponentLocation;
+use Filament\Support\Commands\Concerns\CanAskForViewLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Concerns\CanReadModelSchemas;
+use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
+use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
+use function Laravel\Prompts\suggest;
 use function Laravel\Prompts\text;
 
 #[AsCommand(name: 'make:filament-livewire-form', aliases: [
+    'filament:livewire-form',
     'make:livewire-form',
 ])]
 class MakeLivewireFormCommand extends Command
 {
-    use CanGenerateForms;
-    use CanIndentStrings;
+    use CanAskForLivewireComponentLocation;
+    use CanAskForViewLocation;
     use CanManipulateFiles;
-    use CanReadModelSchemas;
 
     protected $description = 'Create a new Livewire component containing a Filament form';
 
-    protected $signature = 'make:filament-livewire-form {name?} {model?} {--E|edit} {--G|generate} {--F|force}';
+    protected $name = 'make:filament-livewire-form';
 
     /**
      * @var array<string>
      */
     protected $aliases = [
+        'filament:livewire-form',
         'make:livewire-form',
     ];
 
+    /**
+     * @var class-string
+     */
+    protected string $fqn;
+
+    protected string $fqnEnd;
+
+    protected string $path;
+
+    /**
+     * @var ?class-string<Model>
+     */
+    protected ?string $modelFqn = null;
+
+    protected ?string $modelFqnEnd = null;
+
+    protected ?bool $isEdit = null;
+
+    protected ?bool $isGenerated = null;
+
+    protected string $submitAction;
+
+    protected ?string $view = null;
+
+    protected ?string $viewPath = null;
+
+    /**
+     * @return array<InputArgument>
+     */
+    protected function getArguments(): array
+    {
+        return [
+            new InputArgument(
+                name: 'name',
+                mode: InputArgument::OPTIONAL,
+                description: 'The name of the Livewire component to generate, optionally prefixed with directories',
+            ),
+            new InputArgument(
+                name: 'model',
+                mode: InputArgument::OPTIONAL,
+                description: 'The name of the model to generate the form for, optionally prefixed with directories',
+            ),
+        ];
+    }
+
+    /**
+     * @return array<InputOption>
+     */
+    protected function getOptions(): array
+    {
+        return [
+            new InputOption(
+                name: 'edit',
+                shortcut: 'E',
+                mode: InputOption::VALUE_NONE,
+                description: 'Generate the form to edit the model instead of creating it',
+            ),
+            new InputOption(
+                name: 'generate',
+                shortcut: 'G',
+                mode: InputOption::VALUE_NONE,
+                description: 'Generate the form fields based on the attributes of a model',
+            ),
+            new InputOption(
+                name: 'model-namespace',
+                shortcut: null,
+                mode: InputOption::VALUE_REQUIRED,
+                description: 'The namespace of the model class, [App\\Models] by default',
+            ),
+            new InputOption(
+                name: 'force',
+                shortcut: 'F',
+                mode: InputOption::VALUE_NONE,
+                description: 'Overwrite the contents of the files if they already exist',
+            ),
+        ];
+    }
+
     public function handle(): int
     {
-        $component = (string) str($this->argument('name') ?? text(
-            label: 'What is the form name?',
-            placeholder: 'Products/CreateProduct',
+        try {
+            $this->configureFqnEnd();
+            $this->configureModel();
+            $this->configureIsEdit();
+            $this->configureIsGenerated();
+
+            $this->configureLocation();
+            $this->configureSubmitAction();
+
+            $this->createLivewireComponent();
+            $this->createView();
+        } catch (InvalidCommandOutput) {
+            return static::INVALID;
+        }
+
+        $this->components->info("Livewire component [{$this->fqn}] created successfully.");
+
+        return static::SUCCESS;
+    }
+
+    protected function configureFqnEnd(): void
+    {
+        $this->fqnEnd = (string) str($this->argument('name') ?? text(
+            label: 'What is the Livewire component name?',
+            placeholder: 'CreateBlogPost',
             required: true,
         ))
             ->trim('/')
             ->trim('\\')
             ->trim(' ')
+            ->studly()
             ->replace('/', '\\');
-        $componentClass = (string) str($component)->classBasename();
-        $componentNamespace = str($component)->contains('\\') ?
-            (string) str($component)->beforeLast('\\') :
-            '';
+    }
 
-        $view = str($component)
-            ->replace('\\', '/')
-            ->prepend('Livewire/')
-            ->explode('/')
-            ->map(fn ($segment) => Str::lower(Str::kebab($segment)))
-            ->implode('.');
+    protected function configureModel(): void
+    {
+        if ($this->argument('model')) {
+            $this->modelFqnEnd = (string) str($this->argument('model'))
+                ->trim('/')
+                ->trim('\\')
+                ->trim(' ')
+                ->studly()
+                ->replace('/', '\\');
 
-        $model = (string) str($this->argument('model') ??
-                text(
-                    label: 'What is the model name?',
-                    placeholder: 'Product',
-                    required: $this->option('edit')
-                ))->replace('/', '\\');
-        $modelClass = (string) str($model)->classBasename();
+            $modelNamespace = $this->option('model-namespace') ?? 'App\\Models';
 
-        if ($this->option('edit')) {
-            $isEditForm = true;
-        } elseif (filled($model)) {
-            $isEditForm = select(
-                label: 'Which namespace would you like to create this in?',
-                options: [
-                    'Create',
-                    'Edit',
-                ]
-            ) === 'Edit';
-        } else {
-            $isEditForm = false;
+            $this->modelFqn = "{$modelNamespace}\\{$this->modelFqnEnd}";
+
+            return;
         }
 
-        $path = (string) str($component)
-            ->prepend('/')
-            ->prepend(app_path('Livewire/'))
-            ->replace('\\', '/')
-            ->replace('//', '/')
-            ->append('.php');
+        if (! confirm(
+            label: 'Would you like to create a form for a model?',
+            default: false,
+        )) {
+            return;
+        }
 
-        $viewPath = resource_path(
-            (string) str($view)
-                ->replace('.', '/')
-                ->prepend('views/')
-                ->append('.blade.php'),
+        $modelFqns = collect(get_declared_classes())
+            ->filter(fn (string $class): bool => is_subclass_of($class, Model::class) &&
+                (! str((new ReflectionClass($class))->getFileName())->startsWith(base_path('vendor'))))
+            ->all();
+
+        $this->modelFqn = suggest(
+            label: 'What is the model?',
+            options: function (string $search) use ($modelFqns): array {
+                $search = str($search)->trim()->replace(['\\', '/'], '');
+
+                if (blank($search)) {
+                    return $modelFqns;
+                }
+
+                return array_filter(
+                    $modelFqns,
+                    fn (string $class): bool => str($class)->replace(['\\', '/'], '')->contains($search, ignoreCase: true),
+                );
+            },
+            placeholder: 'App\\Models\\BlogPost',
+            required: true,
         );
 
-        if (! $this->option('force') && $this->checkForCollision([$path, $viewPath])) {
-            return static::INVALID;
+        $this->modelFqnEnd = class_basename($this->modelFqn);
+    }
+
+    protected function configureIsEdit(): void
+    {
+        if (blank($this->modelFqn)) {
+            return;
         }
 
-        $this->copyStubToApp(filled($model) ? ($isEditForm ? 'EditForm' : 'CreateForm') : 'Form', $path, [
-            'class' => $componentClass,
-            'model' => $model,
-            'modelClass' => $modelClass,
-            'namespace' => 'App\\Livewire' . ($componentNamespace !== '' ? "\\{$componentNamespace}" : ''),
-            'schema' => $this->indentString((filled($model) && $this->option('generate')) ? $this->getResourceFormSchema(
-                'App\\Models\\' . $model,
-            ) : '//', 4),
-            'view' => $view,
+        $this->isEdit = $this->option('edit') || (select(
+            label: 'What would you like the form to do?',
+            options: [
+                'create' => 'Create a new model record',
+                'edit' => 'Edit an existing model record',
+            ],
+            default: 'create',
+        ) === 'edit');
+    }
+
+    protected function configureIsGenerated(): void
+    {
+        if (blank($this->modelFqn)) {
+            return;
+        }
+
+        $this->isGenerated = $this->option('generate') || confirm(
+            label: 'Would you like to generate the form fields based on the attributes of the model?',
+            default: false,
+        );
+    }
+
+    protected function configureLocation(): void
+    {
+        [
+            $namespace,
+            $path,
+            $viewNamespace,
+        ] = $this->askForLivewireComponentLocation(
+            question: 'Where would you like to create the form?',
+        );
+
+        $this->fqn = "{$namespace}\\{$this->fqnEnd}";
+        $this->path = (string) str("{$path}\\{$this->fqnEnd}.php")
+            ->replace('\\', '/')
+            ->replace('//', '/');
+
+        [
+            $this->view,
+            $this->viewPath,
+        ] = $this->askForViewLocation(
+            str($this->fqn)
+                ->afterLast('\\Livewire\\')
+                ->prepend('Livewire\\')
+                ->replace('\\', '/')
+                ->explode('/')
+                ->map(Str::kebab(...))
+                ->implode('.'),
+            defaultNamespace: $viewNamespace,
+        );
+    }
+
+    protected function configureSubmitAction(): void
+    {
+        $this->submitAction = filled($this->modelFqn)
+            ? ($this->isEdit ? 'save' : 'create')
+            : 'submit';
+    }
+
+    protected function createLivewireComponent(): void
+    {
+        if (! $this->option('force') && $this->checkForCollision($this->path)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->writeFile($this->path, app(LivewireFormComponentClassGenerator::class, [
+            'fqn' => $this->fqn,
+            'submitAction' => $this->submitAction,
+            'modelFqn' => $this->modelFqn,
+            'isGenerated' => $this->isGenerated,
+            'view' => $this->view,
+        ]));
+    }
+
+    protected function createView(): void
+    {
+        if (blank($this->view)) {
+            return;
+        }
+
+        if (! $this->option('force') && $this->checkForCollision($this->viewPath)) {
+            throw new InvalidCommandOutput;
+        }
+
+        $this->copyStubToApp('LivewireFormView', $this->viewPath, [
+            'submitAction' => $this->submitAction,
         ]);
-
-        $this->copyStubToApp('FormView', $viewPath, [
-            'submitAction' => filled($model) ? ($isEditForm ? 'save' : 'create') : 'submit',
-        ]);
-
-        $this->components->info("Filament form [{$path}] created successfully.");
-
-        return static::SUCCESS;
     }
 }

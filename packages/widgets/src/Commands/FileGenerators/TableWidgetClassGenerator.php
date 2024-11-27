@@ -4,7 +4,7 @@ namespace Filament\Widgets\Commands\FileGenerators;
 
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
-use Filament\Tables\Commands\FileGenerators\Concerns\CanGenerateTables;
+use Filament\Tables\Commands\FileGenerators\Concerns\CanGenerateModelTables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +14,7 @@ use Nette\PhpGenerator\Method;
 
 class TableWidgetClassGenerator extends ClassGenerator
 {
-    use CanGenerateTables;
+    use CanGenerateModelTables;
     use CanReadModelSchemas;
 
     /**
@@ -83,9 +83,9 @@ class TableWidgetClassGenerator extends ClassGenerator
     }
 
     /**
-     * @return ?class-string<Model>
+     * @return class-string<Model>
      */
-    public function getModelFqn(): ?string
+    public function getModelFqn(): string
     {
         return $this->modelFqn;
     }

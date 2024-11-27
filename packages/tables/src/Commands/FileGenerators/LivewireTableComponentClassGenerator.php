@@ -8,7 +8,7 @@ use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
-use Filament\Tables\Commands\FileGenerators\Concerns\CanGenerateTables;
+use Filament\Tables\Commands\FileGenerators\Concerns\CanGenerateModelTables;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
@@ -23,7 +23,7 @@ use Nette\PhpGenerator\TraitUse;
 
 class LivewireTableComponentClassGenerator extends ClassGenerator
 {
-    use CanGenerateTables;
+    use CanGenerateModelTables;
     use CanReadModelSchemas;
 
     /**
@@ -153,9 +153,9 @@ class LivewireTableComponentClassGenerator extends ClassGenerator
     }
 
     /**
-     * @return ?class-string<Model>
+     * @return class-string<Model>
      */
-    public function getModelFqn(): ?string
+    public function getModelFqn(): string
     {
         return $this->modelFqn;
     }

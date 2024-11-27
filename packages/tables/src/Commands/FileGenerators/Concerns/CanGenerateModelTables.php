@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Nette\PhpGenerator\Literal;
 
-trait CanGenerateTables
+trait CanGenerateModelTables
 {
     /**
      * @param  ?class-string<Model>  $model
