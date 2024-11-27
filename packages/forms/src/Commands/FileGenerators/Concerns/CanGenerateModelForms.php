@@ -206,4 +206,9 @@ trait CanGenerateModelForms
 
         return implode(PHP_EOL . '        ', $components);
     }
+
+    public function isGenerated(): bool
+    {
+        return true;
+    }
 }

@@ -94,7 +94,7 @@ class MakeSchemaCommand extends Command
     protected function configureFqnEnd(): void
     {
         $this->fqnEnd = (string) str($this->argument('name') ?? text(
-            label: 'What is the Schema name?',
+            label: 'What is the schema name?',
             placeholder: 'BlogPostSchema',
             required: true,
         ))

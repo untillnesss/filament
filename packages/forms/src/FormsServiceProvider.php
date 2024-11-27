@@ -20,6 +20,7 @@ class FormsServiceProvider extends PackageServiceProvider
             ->name('filament-forms')
             ->hasCommands([
                 Commands\MakeFieldCommand::class,
+                Commands\MakeFormCommand::class,
                 Commands\MakeLivewireFormCommand::class,
             ])
             ->hasTranslations()

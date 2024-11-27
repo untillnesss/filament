@@ -1,11 +1,11 @@
 <?php
 
-namespace Filament\Tables\Commands;
+namespace Filament\Forms\Commands;
 
+use Filament\Forms\Commands\FileGenerators\FormSchemaClassGenerator;
 use Filament\Support\Commands\Concerns\CanAskForComponentLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
-use Filament\Tables\Commands\FileGenerators\TableClassGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
@@ -17,17 +17,24 @@ use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\suggest;
 use function Laravel\Prompts\text;
 
-#[AsCommand(name: 'make:filament-table', aliases: [
-    'filament:table',
+#[AsCommand(name: 'make:filament-form', aliases: [
+    'filament:form',
 ])]
-class MakeTableCommand extends Command
+class MakeFormCommand extends Command
 {
     use CanAskForComponentLocation;
     use CanManipulateFiles;
 
-    protected $description = 'Create a new Filament table class';
+    protected $description = 'Create a new Filament form schema class';
 
-    protected $name = 'make:filament-table';
+    protected $name = 'make:filament-form';
+
+    /**
+     * @var array<string>
+     */
+    protected $aliases = [
+        'filament:form',
+    ];
 
     /**
      * @var class-string
@@ -39,20 +46,11 @@ class MakeTableCommand extends Command
     protected string $path;
 
     /**
-     * @var class-string<Model>
+     * @var ?class-string<Model>
      */
-    protected string $modelFqn;
+    protected ?string $modelFqn = null;
 
-    protected string $modelFqnEnd;
-
-    protected bool $isGenerated;
-
-    /**
-     * @var array<string>
-     */
-    protected $aliases = [
-        'filament:table',
-    ];
+    protected ?string $modelFqnEnd = null;
 
     /**
      * @return array<InputArgument>
@@ -63,12 +61,12 @@ class MakeTableCommand extends Command
             new InputArgument(
                 name: 'name',
                 mode: InputArgument::OPTIONAL,
-                description: 'The name of the table class to generate, optionally prefixed with directories',
+                description: 'The name of the form schema class to generate, optionally prefixed with directories',
             ),
             new InputArgument(
                 name: 'model',
                 mode: InputArgument::OPTIONAL,
-                description: 'The name of the model to generate the table for, optionally prefixed with directories',
+                description: 'The name of the model to generate the form for, optionally prefixed with directories',
             ),
         ];
     }
@@ -79,12 +77,6 @@ class MakeTableCommand extends Command
     protected function getOptions(): array
     {
         return [
-            new InputOption(
-                name: 'generate',
-                shortcut: 'G',
-                mode: InputOption::VALUE_NONE,
-                description: 'Generate the table columns based on the attributes of a model',
-            ),
             new InputOption(
                 name: 'model-namespace',
                 shortcut: null,
@@ -105,16 +97,15 @@ class MakeTableCommand extends Command
         try {
             $this->configureFqnEnd();
             $this->configureModel();
-            $this->configureIsGenerated();
 
             $this->configureLocation();
 
-            $this->createTable();
+            $this->createSchema();
         } catch (InvalidCommandOutput) {
             return static::INVALID;
         }
 
-        $this->components->info("Table [{$this->fqn}] created successfully.");
+        $this->components->info("Form schema [{$this->fqn}] created successfully.");
 
         return static::SUCCESS;
     }
@@ -122,8 +113,8 @@ class MakeTableCommand extends Command
     protected function configureFqnEnd(): void
     {
         $this->fqnEnd = (string) str($this->argument('name') ?? text(
-            label: 'What is the table name?',
-            placeholder: 'BlogPostsTable',
+            label: 'What is the form schema name?',
+            placeholder: 'BlogPostForm',
             required: true,
         ))
             ->trim('/')
@@ -147,6 +138,13 @@ class MakeTableCommand extends Command
 
             $this->modelFqn = "{$modelNamespace}\\{$this->modelFqnEnd}";
 
+            return;
+        }
+
+        if (! confirm(
+            label: 'Would you like to create a form for a model?',
+            default: false,
+        )) {
             return;
         }
 
@@ -176,22 +174,14 @@ class MakeTableCommand extends Command
         $this->modelFqnEnd = class_basename($this->modelFqn);
     }
 
-    protected function configureIsGenerated(): void
-    {
-        $this->isGenerated = $this->option('generate') || confirm(
-            label: 'Would you like to generate the table columns based on the attributes of the model?',
-            default: false,
-        );
-    }
-
     protected function configureLocation(): void
     {
         [
             $namespace,
             $path,
         ] = $this->askForComponentLocation(
-            path: 'Tables',
-            question: 'Where would you like to create the table?',
+            path: 'Schemas',
+            question: 'Where would you like to create the form schema?',
         );
 
         $this->fqn = "{$namespace}\\{$this->fqnEnd}";
@@ -200,16 +190,15 @@ class MakeTableCommand extends Command
             ->replace('//', '/');
     }
 
-    protected function createTable(): void
+    protected function createSchema(): void
     {
         if (! $this->option('force') && $this->checkForCollision($this->path)) {
             throw new InvalidCommandOutput;
         }
 
-        $this->writeFile($this->path, app(TableClassGenerator::class, [
+        $this->writeFile($this->path, app(FormSchemaClassGenerator::class, [
             'fqn' => $this->fqn,
             'modelFqn' => $this->modelFqn,
-            'isGenerated' => $this->isGenerated,
         ]));
     }
 }
