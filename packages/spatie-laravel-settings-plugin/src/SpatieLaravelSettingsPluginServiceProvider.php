@@ -2,7 +2,6 @@
 
 namespace Filament;
 
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 
 class SpatieLaravelSettingsPluginServiceProvider extends ServiceProvider
@@ -13,12 +12,6 @@ class SpatieLaravelSettingsPluginServiceProvider extends ServiceProvider
             $this->commands([
                 Commands\MakeSettingsPageCommand::class,
             ]);
-
-            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
-                $this->publishes([
-                    $file->getRealPath() => base_path("stubs/filament/{$file->getFilename()}"),
-                ], 'filament-stubs');
-            }
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'filament-spatie-laravel-settings-plugin');

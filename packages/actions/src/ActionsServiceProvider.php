@@ -3,7 +3,6 @@
 namespace Filament\Actions;
 
 use Filament\Actions\Testing\TestsActions;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Routing\Router;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Package;
@@ -36,14 +35,6 @@ class ActionsServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        if ($this->app->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
-                $this->publishes([
-                    $file->getRealPath() => base_path("stubs/filament/{$file->getFilename()}"),
-                ], 'filament-stubs');
-            }
-        }
-
         Testable::mixin(new TestsActions);
     }
 }

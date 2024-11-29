@@ -401,7 +401,7 @@ Repeater::make('qualifications')
 
 <AutoScreenshot name="forms/fields/repeater/grid" alt="Repeater with a 2 column grid of items" version="4.x" />
 
-This method accepts the same options as the `columns()` method of the [grid](../../schema/layout/grid). This allows you to responsively customize the number of grid columns at various breakpoints.
+This method accepts the same options as the `columns()` method of the [grid](../../schemas/layout/grid). This allows you to responsively customize the number of grid columns at various breakpoints.
 
 ## Adding a label to repeater items based on their content
 
@@ -631,7 +631,7 @@ Repeater::make('members')
 
 ### Adding extra item actions to a repeater
 
-You may add new [action buttons](../../schema/actions) to the header of each repeater item by passing `Action` objects into `extraItemActions()`:
+You may add new [action buttons](../../schemas/actions) to the header of each repeater item by passing `Action` objects into `extraItemActions()`:
 
 ```php
 use Filament\Actions\Action;

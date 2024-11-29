@@ -3,7 +3,7 @@
 namespace Filament\Actions\Concerns;
 
 use Closure;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 trait CanBeMounted
 {

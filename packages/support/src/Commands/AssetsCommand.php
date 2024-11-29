@@ -15,7 +15,7 @@ class AssetsCommand extends Command
 
     protected $description = 'Set up Filament assets';
 
-    protected $signature = 'filament:assets';
+    protected $name = 'filament:assets';
 
     /** @var array<string> */
     protected array $publishedAssets = [];

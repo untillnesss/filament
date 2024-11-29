@@ -6,8 +6,8 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Placeholder;
-use Filament\Schema\Components\Decorations\IconDecoration;
-use Filament\Schema\Components\Decorations\TextDecoration;
+use Filament\Schemas\Components\Decorations\IconDecoration;
+use Filament\Schemas\Components\Decorations\TextDecoration;
 use Illuminate\Contracts\Support\Htmlable;
 
 trait HasHint

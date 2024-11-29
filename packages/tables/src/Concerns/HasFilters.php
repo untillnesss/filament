@@ -2,7 +2,7 @@
 
 namespace Filament\Tables\Concerns;
 
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tables\Filters\BaseFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;

@@ -33,13 +33,13 @@ From a UX perspective, this solution is only suitable if your related model only
 
 > These are compatible with `BelongsTo`, `HasOne` and `MorphOne` relationships.
 
-All layout form components ([Grid](../../schema/layout/grid#grid-component), [Section](../../schema/layout/section), [Fieldset](../../schema/layout/fieldset), etc.) have a [`relationship()` method](../../forms/advanced#saving-data-to-relationships). When you use this, all fields within that layout are saved to the related model instead of the owner's model:
+All layout form components ([Grid](../../schemas/layout/grid#grid-component), [Section](../../schemas/layout/section), [Fieldset](../../schemas/layout/fieldset), etc.) have a [`relationship()` method](../../forms/advanced#saving-data-to-relationships). When you use this, all fields within that layout are saved to the related model instead of the owner's model:
 
 ```php
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Fieldset;
+use Filament\Schemas\Components\Fieldset;
 
 Fieldset::make('Metadata')
     ->relationship('metadata')
@@ -77,7 +77,7 @@ This will create a `CategoryResource/RelationManagers/PostsRelationManager.php` 
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -199,7 +199,7 @@ For `BelongsToMany` and `MorphToMany` relationships, you may also add pivot tabl
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {
@@ -226,7 +226,7 @@ For `BelongsToMany` and `MorphToMany` relationships, you may also edit pivot tab
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {
@@ -597,7 +597,7 @@ However, if you're inside a `static` method like `form()` or `table()`, `$this` 
 ```php
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {
@@ -779,7 +779,7 @@ You may decide that you want a resource's form and table to be identical to a re
 
 ```php
 use App\Filament\Resources\Blog\PostResource;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
 public function form(Schema $form): Schema

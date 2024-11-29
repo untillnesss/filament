@@ -49,7 +49,7 @@ trait HasComponents
     protected array $pageNamespaces = [];
 
     /**
-     * @var array<class-string>
+     * @var array<class-string<Cluster>>
      */
     protected array $clusters = [];
 
@@ -223,10 +223,7 @@ trait HasComponents
      */
     public function getPageDirectories(): array
     {
-        return [
-            ...array_map(fn (string $fileName): string => ((string) str($fileName)->beforeLast('.php')) . DIRECTORY_SEPARATOR . 'Pages', array_keys($this->clusters)),
-            ...$this->pageDirectories,
-        ];
+        return $this->pageDirectories;
     }
 
     /**
@@ -234,10 +231,7 @@ trait HasComponents
      */
     public function getPageNamespaces(): array
     {
-        return [
-            ...array_map(fn (string $namespace): string => "{$namespace}\Pages", array_values($this->clusters)),
-            ...$this->pageNamespaces,
-        ];
+        return $this->pageNamespaces;
     }
 
     public function discoverClusters(string $in, string $for): static
@@ -269,6 +263,14 @@ trait HasComponents
         );
 
         return $this;
+    }
+
+    /**
+     * @return array<class-string<Cluster>>
+     */
+    public function getClusters(): array
+    {
+        return $this->clusters;
     }
 
     /**
@@ -311,10 +313,7 @@ trait HasComponents
      */
     public function getResourceDirectories(): array
     {
-        return [
-            ...array_map(fn (string $fileName): string => ((string) str($fileName)->beforeLast('.php')) . DIRECTORY_SEPARATOR . 'Resources', array_keys($this->clusters)),
-            ...$this->resourceDirectories,
-        ];
+        return $this->resourceDirectories;
     }
 
     /**
@@ -322,10 +321,7 @@ trait HasComponents
      */
     public function getResourceNamespaces(): array
     {
-        return [
-            ...array_map(fn (string $namespace): string => "{$namespace}\Resources", array_values($this->clusters)),
-            ...$this->resourceNamespaces,
-        ];
+        return $this->resourceNamespaces;
     }
 
     public function discoverWidgets(string $in, string $for): static

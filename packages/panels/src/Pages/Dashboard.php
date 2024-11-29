@@ -3,9 +3,9 @@
 namespace Filament\Pages;
 
 use Filament\Facades\Filament;
-use Filament\Schema\Components\Grid;
-use Filament\Schema\Components\NestedSchema;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\NestedSchema;
+use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;

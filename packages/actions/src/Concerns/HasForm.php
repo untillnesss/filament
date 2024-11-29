@@ -3,8 +3,8 @@
 namespace Filament\Actions\Concerns;
 
 use Closure;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Schema;
 
 trait HasForm
 {

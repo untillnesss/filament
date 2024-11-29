@@ -3,17 +3,7 @@
 namespace Filament\Infolists\Concerns;
 
 use Filament\Actions\Action;
-use Filament\Schema\Schema;
-use Exception;
-use Filament\Actions\Contracts\HasActions;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Support\Exceptions\Cancel;
-use Filament\Support\Exceptions\Halt;
-use Filament\Tables\Contracts\HasTable;
-use Illuminate\Validation\ValidationException;
-use Throwable;
-
-use function Livewire\store;
+use Filament\Schemas\Schema;
 
 trait InteractsWithInfolists
 {
@@ -36,7 +26,7 @@ trait InteractsWithInfolists
     /**
      * @return array<string, Schema>
      *
-     *@deprecated Use `getCachedSchemas()` instead.
+     * @deprecated Use `getCachedSchemas()` instead.
      */
     public function getCachedInfolists(): array
     {

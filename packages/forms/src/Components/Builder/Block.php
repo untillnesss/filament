@@ -5,7 +5,7 @@ namespace Filament\Forms\Components\Builder;
 use Closure;
 use Exception;
 use Filament\Forms\Components\Concerns;
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Component;
 use Illuminate\Contracts\Support\Htmlable;
 
 class Block extends Component

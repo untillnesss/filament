@@ -2,10 +2,10 @@
 
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Section;
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tests\Forms\Fixtures\Livewire;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Str;

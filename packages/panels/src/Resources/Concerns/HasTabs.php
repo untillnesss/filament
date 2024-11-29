@@ -2,9 +2,9 @@
 
 namespace Filament\Resources\Concerns;
 
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Tabs;
-use Filament\Schema\Components\Tabs\Tab;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
 trait HasTabs

@@ -1,7 +1,7 @@
 <?php
 
-use Filament\Schema\Components\Component;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Schema;
 use Filament\Tests\Forms\Fixtures\Livewire;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Str;

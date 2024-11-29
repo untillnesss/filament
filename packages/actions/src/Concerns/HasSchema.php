@@ -3,9 +3,9 @@
 namespace Filament\Actions\Concerns;
 
 use Closure;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Wizard;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Wizard;
+use Filament\Schemas\Schema;
 
 trait HasSchema
 {

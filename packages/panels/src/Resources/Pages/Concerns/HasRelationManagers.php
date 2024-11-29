@@ -6,11 +6,11 @@ use Filament\Resources\Pages\Enums\ContentTabPosition;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\RelationManagers\RelationManagerConfiguration;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Group;
-use Filament\Schema\Components\Livewire;
-use Filament\Schema\Components\Tabs;
-use Filament\Schema\Components\Tabs\Tab;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Livewire;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Support\Arr;
 use Livewire\Attributes\Url;
 

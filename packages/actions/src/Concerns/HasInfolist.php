@@ -3,7 +3,7 @@
 namespace Filament\Actions\Concerns;
 
 use Closure;
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Component;
 
 trait HasInfolist
 {

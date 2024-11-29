@@ -3,6 +3,7 @@
 namespace Filament\Support\Commands;
 
 use Composer\InstalledVersions;
+use Filament\Support\Commands\Concerns\CanOpenUrlInBrowser;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -12,9 +13,11 @@ use Symfony\Component\Console\Attribute\AsCommand;
 ])]
 class MakeIssueCommand extends Command
 {
-    protected $signature = 'make:filament-issue';
+    use CanOpenUrlInBrowser;
 
     protected $description = 'Generates a link to the Filament issue page and pre-fills the version numbers.';
+
+    protected $name = 'make:filament-issue';
 
     /**
      * @var array<string>
@@ -34,29 +37,6 @@ class MakeIssueCommand extends Command
             'php-version' => PHP_VERSION,
         ]);
 
-        $result = $this->openUrlInBrowser($url);
-
-        if ($result !== 0) {
-            $this->components->error('An error occurred while trying to open the issue page in your browser.');
-            $this->output->writeln('  <comment>Please open the following URL in your browser:</>');
-            $this->output->writeln('  <href="' . $url . '">' . $url . '</>');
-        }
-    }
-
-    public function openUrlInBrowser(string $url): int
-    {
-        $result = -1;
-
-        if (PHP_OS_FAMILY === 'Darwin') {
-            exec('open "' . $url . '"', result_code: $result);
-        }
-        if (PHP_OS_FAMILY === 'Linux') {
-            exec('xdg-open "' . $url . '"', result_code: $result);
-        }
-        if (PHP_OS_FAMILY === 'Windows') {
-            exec('start "" "' . $url . '"', result_code: $result);
-        }
-
-        return $result;
+        $this->openUrlInBrowser($url);
     }
 }

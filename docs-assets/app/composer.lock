@@ -1454,13 +1454,13 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Filament\\Schema\\SchemaServiceProvider"
+                        "Filament\\Schemas\\SchemaServiceProvider"
                     ]
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Filament\\Schema\\": "src"
+                    "Filament\\Schemas\\": "src"
                 }
             },
             "license": [

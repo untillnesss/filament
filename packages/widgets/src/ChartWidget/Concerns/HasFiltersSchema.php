@@ -3,7 +3,7 @@
 namespace Filament\Widgets\ChartWidget\Concerns;
 
 use Filament\Actions\Action;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
 
 trait HasFiltersSchema

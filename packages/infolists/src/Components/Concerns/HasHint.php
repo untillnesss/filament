@@ -5,8 +5,8 @@ namespace Filament\Infolists\Components\Concerns;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\Entry;
-use Filament\Schema\Components\Decorations\IconDecoration;
-use Filament\Schema\Components\Decorations\TextDecoration;
+use Filament\Schemas\Components\Decorations\IconDecoration;
+use Filament\Schemas\Components\Decorations\TextDecoration;
 use Illuminate\Contracts\Support\Htmlable;
 
 trait HasHint

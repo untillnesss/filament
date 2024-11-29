@@ -4,8 +4,8 @@ namespace Filament\Actions;
 
 use Closure;
 use Filament\Notifications\Notification;
-use Filament\Schema\Components\Actions\ActionContainer;
-use Filament\Schema\Components\Actions\ActionContainer as InfolistActionContainer;
+use Filament\Schemas\Components\Actions\ActionContainer;
+use Filament\Schemas\Components\Actions\ActionContainer as InfolistActionContainer;
 use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\HasBadge;
 use Filament\Support\Concerns\HasColor;
