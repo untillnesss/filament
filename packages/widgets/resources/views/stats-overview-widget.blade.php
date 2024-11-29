@@ -35,10 +35,12 @@
         </div>
     @endif
 
-    <div @class([
-        'fi-wi-stats-overview-stats-grid',
-        'fi-grid-cols-' . $columns,
-    ])>
+    <div
+        @class([
+            'fi-wi-stats-overview-stats-grid',
+            'fi-grid-cols-' . $columns,
+        ])
+    >
         @foreach ($this->getCachedStats() as $stat)
             {{ $stat }}
         @endforeach

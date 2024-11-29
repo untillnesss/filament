@@ -75,7 +75,10 @@ export default function textInputTableColumn({ name, recordKey, state }) {
 
             return [null, undefined].includes(this.$refs.serverState.value)
                 ? ''
-                : this.$refs.serverState.value.replaceAll('\\'+String.fromCharCode(34), String.fromCharCode(34))
+                : this.$refs.serverState.value.replaceAll(
+                      '\\' + String.fromCharCode(34),
+                      String.fromCharCode(34),
+                  )
         },
 
         getNormalizedState: function () {
