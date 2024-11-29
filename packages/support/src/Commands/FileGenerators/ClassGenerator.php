@@ -2,6 +2,7 @@
 
 namespace Filament\Support\Commands\FileGenerators;
 
+use Filament\Actions\Exports\Exporter;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\Contracts\FileGenerator;
 use Nette\PhpGenerator\ClassType;
@@ -60,7 +61,7 @@ abstract class ClassGenerator implements FileGenerator
      */
     public function getExtends(): ?string
     {
-        return null;
+        return Exporter::class;
     }
 
     /**

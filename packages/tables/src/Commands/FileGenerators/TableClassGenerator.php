@@ -74,9 +74,9 @@ class TableClassGenerator extends ClassGenerator
     }
 
     /**
-     * @return ?class-string<Model>
+     * @return class-string<Model>
      */
-    public function getModelFqn(): ?string
+    public function getModelFqn(): string
     {
         return $this->modelFqn;
     }
