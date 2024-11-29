@@ -1,20 +1,36 @@
 .fi-wi-stats-overview {
-    @apply grid gap-6;
+    @apply grid gap-y-4;
 
-    &.fi-grid-cols-1 {
-        @apply md:grid-cols-1;
+    & .fi-wi-stats-overview-header {
+        @apply grid gap-y-1;
+
+        & .fi-wi-stats-overview-header-heading {
+            @apply text-base font-semibold leading-6 text-gray-950 dark:text-white;
+        }
+
+        & .fi-wi-stats-overview-header-description {
+            @apply overflow-hidden break-words text-sm text-gray-500 dark:text-gray-400;
+        }
     }
 
-    &.fi-grid-cols-2 {
-        @apply md:grid-cols-2;
-    }
+    & .fi-wi-stats-overview-stats-grid {
+        @apply grid gap-6;
 
-    &.fi-grid-cols-3 {
-        @apply md:grid-cols-3;
-    }
+        &.fi-grid-cols-1 {
+            @apply md:grid-cols-1;
+        }
 
-    &.fi-grid-cols-4 {
-        @apply md:grid-cols-2 xl:grid-cols-4;
+        &.fi-grid-cols-2 {
+            @apply md:grid-cols-2;
+        }
+
+        &.fi-grid-cols-3 {
+            @apply md:grid-cols-3;
+        }
+
+        &.fi-grid-cols-4 {
+            @apply md:grid-cols-2 xl:grid-cols-4;
+        }
     }
 }
 

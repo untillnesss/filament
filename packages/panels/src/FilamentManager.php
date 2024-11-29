@@ -273,6 +273,11 @@ class FilamentManager
         return $this->getCurrentPanel()->getMaxContentWidth();
     }
 
+    public function getSimplePageMaxContentWidth(): MaxWidth | string | null
+    {
+        return $this->getCurrentPanel()->getSimplePageMaxContentWidth();
+    }
+
     /**
      * @param  class-string<Model>|Model  $model
      */

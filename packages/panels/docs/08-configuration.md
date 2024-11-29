@@ -115,6 +115,20 @@ public function panel(Panel $panel): Panel
 }
 ```
 
+If you'd like to set the max content width for pages of the type `SimplePage`, like login and registration pages, you may do so using the `simplePageMaxContentWidth()` method. The default is `Large`:
+
+```php
+use Filament\Panel;
+use Filament\Support\Enums\MaxWidth;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->simplePageMaxContentWidth(MaxWidth::Small);
+}
+```
+
 ## Setting the default sub-navigation position
 
 Sub-navigation is rendered at the start of each page by default. It can be customized per-page, per-resource and per-cluster, but you can also customize it for the entire panel at once using the `subNavigationPosition()` method. The value may be `SubNavigationPosition::Start`, `SubNavigationPosition::End`, or `SubNavigationPosition::Top` to render the sub-navigation as tabs:
@@ -246,7 +260,7 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePost extends CreateRecord
 {
     protected ?bool $hasDatabaseTransactions = false;
-    
+
     // ...
 }
 ```
@@ -270,7 +284,7 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePost extends CreateRecord
 {
     protected ?bool $hasDatabaseTransactions = true;
-    
+
     // ...
 }
 ```
