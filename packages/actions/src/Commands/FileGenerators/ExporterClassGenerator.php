@@ -54,7 +54,7 @@ class ExporterClassGenerator extends ClassGenerator
         return class_basename($this->getFqn());
     }
 
-    public function getExtends(): ?string
+    public function getExtends(): string
     {
         return Exporter::class;
     }
