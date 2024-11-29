@@ -6,7 +6,7 @@ use Filament\Schemas\Commands\FileGenerators\LayoutComponentClassGenerator;
 use Filament\Support\Commands\Concerns\CanAskForComponentLocation;
 use Filament\Support\Commands\Concerns\CanAskForViewLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -103,7 +103,7 @@ class MakeLayoutComponentCommand extends Command
 
             $this->createLayoutComponent();
             $this->createView();
-        } catch (InvalidCommandOutput) {
+        } catch (FailureCommandOutput) {
             return static::FAILURE;
         }
 
@@ -160,7 +160,7 @@ class MakeLayoutComponentCommand extends Command
     protected function createLayoutComponent(): void
     {
         if (! $this->option('force') && $this->checkForCollision($this->path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($this->path, app(LayoutComponentClassGenerator::class, [
@@ -176,7 +176,7 @@ class MakeLayoutComponentCommand extends Command
         }
 
         if (! $this->option('force') && $this->checkForCollision($this->viewPath)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->copyStubToApp('LayoutComponentView', $this->viewPath);

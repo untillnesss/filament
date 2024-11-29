@@ -5,7 +5,7 @@ namespace Filament\Tables\Commands;
 use Filament\Support\Commands\Concerns\CanAskForComponentLocation;
 use Filament\Support\Commands\Concerns\CanAskForViewLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Filament\Tables\Commands\FileGenerators\ColumnClassGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -97,7 +97,7 @@ class MakeColumnCommand extends Command
 
             $this->createColumn();
             $this->createView();
-        } catch (InvalidCommandOutput) {
+        } catch (FailureCommandOutput) {
             return static::FAILURE;
         }
 
@@ -167,7 +167,7 @@ class MakeColumnCommand extends Command
     protected function createColumn(): void
     {
         if (! $this->option('force') && $this->checkForCollision($this->path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($this->path, app(ColumnClassGenerator::class, [
@@ -184,7 +184,7 @@ class MakeColumnCommand extends Command
         }
 
         if (! $this->option('force') && $this->checkForCollision($this->viewPath)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->copyStubToApp('ColumnView', $this->viewPath);

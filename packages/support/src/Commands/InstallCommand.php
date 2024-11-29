@@ -7,7 +7,7 @@ use Filament\PanelProvider;
 use Filament\Support\Commands\Concerns\CanGeneratePanels;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\CanOpenUrlInBrowser;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
@@ -66,7 +66,7 @@ class InstallCommand extends Command
             $this->installAdminPanel();
             $this->installScaffolding();
             $this->installUpgradeCommand();
-        } catch (InvalidCommandOutput) {
+        } catch (FailureCommandOutput) {
             return static::FAILURE;
         }
 
@@ -86,7 +86,7 @@ class InstallCommand extends Command
         if (! class_exists(PanelProvider::class)) {
             $this->components->error('Please require [filament/filament] before attempting to install the Panel Builder.');
 
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->generatePanel(defaultId: 'admin', isForced: $this->option('force'));

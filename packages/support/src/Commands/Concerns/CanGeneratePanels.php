@@ -4,7 +4,7 @@ namespace Filament\Support\Commands\Concerns;
 
 use Filament\Commands\FileGenerators\PanelProviderClassGenerator;
 use Filament\Facades\Filament;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -37,7 +37,7 @@ trait CanGeneratePanels
         );
 
         if (! $isForced && $this->checkForCollision([$path])) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $fqn = "App\\Providers\\Filament\\{$basename}";
