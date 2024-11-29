@@ -3,6 +3,7 @@
 namespace Filament\Actions\Commands\FileGenerators;
 
 use Filament\Actions\Exports\ExportColumn;
+use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
@@ -51,6 +52,11 @@ class ExporterClassGenerator extends ClassGenerator
     public function getBasename(): string
     {
         return class_basename($this->getFqn());
+    }
+
+    public function getExtends(): ?string
+    {
+        return Exporter::class;
     }
 
     protected function addPropertiesToClass(ClassType $class): void
