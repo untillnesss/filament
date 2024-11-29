@@ -11,6 +11,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -97,23 +98,26 @@ class ExportCsv implements ShouldQueue
         DB::transaction(function () use ($csv, $filePath, $processedRows, $successfulRows) {
             $this->export::query()
                 ->whereKey($this->export->getKey())
+                ->lockForUpdate()
                 ->update([
-                    'processed_rows' => DB::raw('processed_rows + ' . $processedRows),
-                    'successful_rows' => DB::raw('successful_rows + ' . $successfulRows),
+                    'processed_rows' => new Expression('processed_rows + ' . $processedRows),
+                    'successful_rows' => new Expression('successful_rows + ' . $successfulRows),
                 ]);
 
             $this->export::query()
                 ->whereKey($this->export->getKey())
                 ->whereColumn('processed_rows', '>', 'total_rows')
+                ->lockForUpdate()
                 ->update([
-                    'processed_rows' => DB::raw('total_rows'),
+                    'processed_rows' => new Expression('total_rows'),
                 ]);
 
             $this->export::query()
                 ->whereKey($this->export->getKey())
                 ->whereColumn('successful_rows', '>', 'total_rows')
+                ->lockForUpdate()
                 ->update([
-                    'successful_rows' => DB::raw('total_rows'),
+                    'successful_rows' => new Expression('total_rows'),
                 ]);
 
             $this->export->getFileDisk()->put($filePath, $csv->toString(), Filesystem::VISIBILITY_PRIVATE);
