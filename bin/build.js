@@ -77,7 +77,7 @@ const corePackages = [
     'forms',
     'notifications',
     'panels',
-    'schema',
+    'schemas',
     'support',
     'tables',
 ]

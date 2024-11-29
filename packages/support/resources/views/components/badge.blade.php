@@ -137,6 +137,16 @@
     </span>
 
     @if ($isDeletable)
+        @php
+            $deleteButtonWireTarget = $deleteButton->attributes->whereStartsWith(['wire:target', 'wire:click'])->filter(fn ($value): bool => filled($value))->first();
+
+            $deleteButtonHasLoadingIndicator = filled($deleteButtonWireTarget);
+
+            if ($deleteButtonHasLoadingIndicator) {
+                $deleteButtonLoadingIndicatorTarget = html_entity_decode($deleteButtonWireTarget, ENT_QUOTES);
+            }
+        @endphp
+
         <button
             type="button"
             {{
@@ -154,7 +164,21 @@
                     ])
             }}
         >
-            {{ \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'badge.delete-button') }}
+            {{
+                \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'badge.delete-button', attributes: (new \Illuminate\View\ComponentAttributeBag([
+                    'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $deleteButtonHasLoadingIndicator,
+                    'wire:target' => $deleteButtonHasLoadingIndicator ? $deleteButtonLoadingIndicatorTarget : false,
+                ])))
+            }}
+
+            @if ($deleteButtonHasLoadingIndicator)
+                {{
+                    \Filament\Support\generate_loading_indicator_html((new \Illuminate\View\ComponentAttributeBag([
+                        'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
+                        'wire:target' => $deleteButtonLoadingIndicatorTarget,
+                    ])))
+                }}
+            @endif
 
             @if (filled($label = $deleteButton->attributes->get('label')))
                 <span class="sr-only">
