@@ -4,7 +4,7 @@ namespace Filament\Commands;
 
 use Filament\Support\Commands\Concerns\CanGeneratePanels;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -68,7 +68,7 @@ class MakePanelCommand extends Command
                 placeholderId: 'app',
                 isForced: $this->option('force'),
             );
-        } catch (InvalidCommandOutput) {
+        } catch (FailureCommandOutput) {
             return static::FAILURE;
         }
 

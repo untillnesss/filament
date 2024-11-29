@@ -5,7 +5,7 @@ namespace Filament\Forms\Commands;
 use Filament\Forms\Commands\FileGenerators\FormSchemaClassGenerator;
 use Filament\Support\Commands\Concerns\CanAskForComponentLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
@@ -101,8 +101,8 @@ class MakeFormCommand extends Command
             $this->configureLocation();
 
             $this->createSchema();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         }
 
         $this->components->info("Form schema [{$this->fqn}] created successfully.");
@@ -193,7 +193,7 @@ class MakeFormCommand extends Command
     protected function createSchema(): void
     {
         if (! $this->option('force') && $this->checkForCollision($this->path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($this->path, app(FormSchemaClassGenerator::class, [

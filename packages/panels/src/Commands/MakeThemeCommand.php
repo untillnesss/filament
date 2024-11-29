@@ -4,7 +4,7 @@ namespace Filament\Commands;
 
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\HasPanel;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Filament\Support\Commands\Exceptions\SuccessCommandOutput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
@@ -88,8 +88,8 @@ class MakeThemeCommand extends Command
             $this->abortIfNotVite();
 
             $this->createPostcssConfig();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         } catch (SuccessCommandOutput) {
             return static::SUCCESS;
         }
@@ -113,7 +113,7 @@ class MakeThemeCommand extends Command
         if ($pmVersionExistCode !== 0) {
             $this->error('Node.js is not installed. Please install before continuing.');
 
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->info("Using {$this->pm} v{$pmVersion[0]}");
@@ -140,7 +140,7 @@ class MakeThemeCommand extends Command
             $cssFilePath,
             $tailwindConfigFilePath,
         ])) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $classPathPrefix = (string) str(Arr::first($this->panel->getPageDirectories()))

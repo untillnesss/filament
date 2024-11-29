@@ -5,7 +5,7 @@ namespace Filament\Actions\Commands;
 use Filament\Actions\Commands\FileGenerators\ImporterClassGenerator;
 use Filament\Support\Commands\Concerns\CanAskForComponentLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Stringable;
@@ -111,8 +111,8 @@ class MakeImporterCommand extends Command
             $this->configureLocation();
 
             $this->createImporter();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         }
 
         $this->components->info("Importer [{$this->fqn}] created successfully.");
@@ -218,7 +218,7 @@ class MakeImporterCommand extends Command
     protected function createImporter(): void
     {
         if (! $this->option('force') && $this->checkForCollision($this->path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($this->path, app(ImporterClassGenerator::class, [

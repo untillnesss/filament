@@ -9,7 +9,7 @@ use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\HasCluster;
 use Filament\Support\Commands\Concerns\HasPanel;
 use Filament\Support\Commands\Concerns\HasResourcesLocation;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Facades\FilamentCli;
 use Filament\Widgets\ChartWidget;
@@ -176,8 +176,8 @@ class MakeWidgetCommand extends Command
             $this->createStatsOverviewWidget();
             $this->createTableWidget();
             $this->createView();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         }
 
         $this->components->info("Filament widget [{$this->fqn}] created successfully.");
@@ -389,7 +389,7 @@ class MakeWidgetCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(CustomWidgetClassGenerator::class, [
@@ -424,7 +424,7 @@ class MakeWidgetCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ChartWidgetClassGenerator::class, [
@@ -444,7 +444,7 @@ class MakeWidgetCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(StatsOverviewWidgetClassGenerator::class, [
@@ -490,7 +490,7 @@ class MakeWidgetCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(TableWidgetClassGenerator::class, [
@@ -507,7 +507,7 @@ class MakeWidgetCommand extends Command
         }
 
         if (! $this->option('force') && $this->checkForCollision($this->viewPath)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->copyStubToApp('WidgetView', $this->viewPath);

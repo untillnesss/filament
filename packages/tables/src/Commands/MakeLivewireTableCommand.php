@@ -5,7 +5,7 @@ namespace Filament\Tables\Commands;
 use Filament\Support\Commands\Concerns\CanAskForLivewireComponentLocation;
 use Filament\Support\Commands\Concerns\CanAskForViewLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Filament\Tables\Commands\FileGenerators\LivewireTableComponentClassGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
@@ -120,8 +120,8 @@ class MakeLivewireTableCommand extends Command
 
             $this->createLivewireComponent();
             $this->createView();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         }
 
         $this->components->info("Livewire component [{$this->fqn}] created successfully.");
@@ -227,7 +227,7 @@ class MakeLivewireTableCommand extends Command
     protected function createLivewireComponent(): void
     {
         if (! $this->option('force') && $this->checkForCollision($this->path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($this->path, app(LivewireTableComponentClassGenerator::class, [
@@ -245,7 +245,7 @@ class MakeLivewireTableCommand extends Command
         }
 
         if (! $this->option('force') && $this->checkForCollision($this->viewPath)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->copyStubToApp('LivewireTableView', $this->viewPath);

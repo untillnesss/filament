@@ -23,7 +23,7 @@ use Filament\Support\Commands\Concerns\HasCluster;
 use Filament\Support\Commands\Concerns\HasClusterPagesLocation;
 use Filament\Support\Commands\Concerns\HasPanel;
 use Filament\Support\Commands\Concerns\HasResourcesLocation;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Filament\Support\Facades\FilamentCli;
@@ -179,8 +179,8 @@ class MakePageCommand extends Command
             $this->createResourceViewPage();
             $this->createResourceManageRelatedRecordsPage();
             $this->createView();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         }
 
         $this->components->info("Filament page [{$this->fqn}] created successfully.");
@@ -394,7 +394,7 @@ class MakePageCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(CustomPageClassGenerator::class, [
@@ -415,7 +415,7 @@ class MakePageCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceCustomPageClassGenerator::class, [
@@ -440,7 +440,7 @@ class MakePageCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceCreateRecordPageClassGenerator::class, [
@@ -460,7 +460,7 @@ class MakePageCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceEditRecordPageClassGenerator::class, [
@@ -485,7 +485,7 @@ class MakePageCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceViewRecordPageClassGenerator::class, [
@@ -505,7 +505,7 @@ class MakePageCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $relationship = text(
@@ -661,7 +661,7 @@ class MakePageCommand extends Command
         }
 
         if (! $this->option('force') && $this->checkForCollision($this->viewPath)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->copyStubToApp('PageView', $this->viewPath);

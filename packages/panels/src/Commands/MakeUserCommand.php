@@ -73,7 +73,7 @@ class MakeUserCommand extends Command
         if (! Filament::getCurrentPanel()) {
             $this->error('Filament has not been installed yet: php artisan filament:install --panels');
 
-            return static::INVALID;
+            return static::FAILURE;
         }
 
         $user = $this->createUser();

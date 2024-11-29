@@ -11,7 +11,7 @@ use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\HasCluster;
 use Filament\Support\Commands\Concerns\HasPanel;
 use Filament\Support\Commands\Concerns\HasResourcesLocation;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Illuminate\Console\Command;
@@ -287,8 +287,8 @@ class MakeRelationManagerCommand extends Command
             $this->configureLocation();
 
             $this->createRelationManager();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         }
 
         $this->components->info("Filament relation manager [{$this->fqn}] created successfully.");
@@ -541,7 +541,7 @@ class MakeRelationManagerCommand extends Command
     protected function createRelationManager(): void
     {
         if (! $this->option('force') && $this->checkForCollision($this->path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($this->path, app(RelationManagerClassGenerator::class, [

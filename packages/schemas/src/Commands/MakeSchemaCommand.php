@@ -5,7 +5,7 @@ namespace Filament\Schemas\Commands;
 use Filament\Schemas\Commands\FileGenerators\SchemaClassGenerator;
 use Filament\Support\Commands\Concerns\CanAskForComponentLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -82,8 +82,8 @@ class MakeSchemaCommand extends Command
             $this->configureLocation();
 
             $this->createSchema();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         }
 
         $this->components->info("Schema [{$this->fqn}] created successfully.");
@@ -124,7 +124,7 @@ class MakeSchemaCommand extends Command
     protected function createSchema(): void
     {
         if (! $this->option('force') && $this->checkForCollision($this->path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($this->path, app(SchemaClassGenerator::class, [

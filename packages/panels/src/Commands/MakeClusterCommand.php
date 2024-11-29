@@ -5,7 +5,7 @@ namespace Filament\Commands;
 use Filament\Commands\FileGenerators\ClusterClassGenerator;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\HasPanel;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Illuminate\Console\Command;
@@ -98,8 +98,8 @@ class MakeClusterCommand extends Command
             $this->configureFqn();
 
             $this->createClass();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         }
 
         $this->components->info("Filament cluster [{$this->fqn}] created successfully.");
@@ -192,7 +192,7 @@ class MakeClusterCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ClusterClassGenerator::class, [

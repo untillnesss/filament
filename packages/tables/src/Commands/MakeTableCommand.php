@@ -4,7 +4,7 @@ namespace Filament\Tables\Commands;
 
 use Filament\Support\Commands\Concerns\CanAskForComponentLocation;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Filament\Tables\Commands\FileGenerators\TableClassGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
@@ -110,8 +110,8 @@ class MakeTableCommand extends Command
             $this->configureLocation();
 
             $this->createTable();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         }
 
         $this->components->info("Table [{$this->fqn}] created successfully.");
@@ -203,7 +203,7 @@ class MakeTableCommand extends Command
     protected function createTable(): void
     {
         if (! $this->option('force') && $this->checkForCollision($this->path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($this->path, app(TableClassGenerator::class, [

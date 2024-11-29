@@ -17,7 +17,7 @@ use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Filament\Support\Commands\Concerns\HasCluster;
 use Filament\Support\Commands\Concerns\HasPanel;
 use Filament\Support\Commands\Concerns\HasResourcesLocation;
-use Filament\Support\Commands\Exceptions\InvalidCommandOutput;
+use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Filament\Support\Commands\FileGenerators\FileGenerationFlag;
 use Illuminate\Console\Command;
@@ -252,8 +252,8 @@ class MakeResourceCommand extends Command
             $this->createCreatePage();
             $this->createEditPage();
             $this->createViewPage();
-        } catch (InvalidCommandOutput) {
-            return static::INVALID;
+        } catch (FailureCommandOutput) {
+            return static::FAILURE;
         }
 
         $this->components->info("Filament resource [{$this->fqn}] created successfully.");
@@ -350,7 +350,7 @@ class MakeResourceCommand extends Command
         if ($this->isNested && $this->isSimple) {
             $this->components->error('Nested resources cannot be simple, you can use the relation manager or relation page on the parent resource to open modals for each operation.');
 
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
     }
 
@@ -520,7 +520,7 @@ class MakeResourceCommand extends Command
         $path = "{$this->directory}/Schemas/{$modelBasename}Form.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->formSchemaFqn = "{$this->namespace}\\Schemas\\{$modelBasename}Form";
@@ -547,7 +547,7 @@ class MakeResourceCommand extends Command
         $path = "{$this->directory}/Schemas/{$modelBasename}Infolist.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->infolistSchemaFqn = "{$this->namespace}\\Schemas\\{$modelBasename}Infolist";
@@ -569,7 +569,7 @@ class MakeResourceCommand extends Command
         $path = "{$this->directory}/Tables/{$pluralModelBasename}Table.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->tableFqn = "{$this->namespace}\\Tables\\{$pluralModelBasename}Table";
@@ -591,7 +591,7 @@ class MakeResourceCommand extends Command
             ->replace('//', '/');
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceClassGenerator::class, [
@@ -622,7 +622,7 @@ class MakeResourceCommand extends Command
         $path = "{$this->directory}/Pages/Manage{$pluralModelBasename}.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceManageRecordsPageClassGenerator::class, [
@@ -647,7 +647,7 @@ class MakeResourceCommand extends Command
         $path = "{$this->directory}/Pages/List{$pluralModelBasename}.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceListRecordsPageClassGenerator::class, [
@@ -667,7 +667,7 @@ class MakeResourceCommand extends Command
         $path = "{$this->directory}/Pages/Create{$modelBasename}.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceCreateRecordPageClassGenerator::class, [
@@ -687,7 +687,7 @@ class MakeResourceCommand extends Command
         $path = "{$this->directory}/Pages/Edit{$modelBasename}.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceEditRecordPageClassGenerator::class, [
@@ -709,7 +709,7 @@ class MakeResourceCommand extends Command
         $path = "{$this->directory}/Pages/View{$modelBasename}.php";
 
         if (! $this->option('force') && $this->checkForCollision($path)) {
-            throw new InvalidCommandOutput;
+            throw new FailureCommandOutput;
         }
 
         $this->writeFile($path, app(ResourceViewRecordPageClassGenerator::class, [
