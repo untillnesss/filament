@@ -26,7 +26,7 @@ trait InteractsWithInfolists
     /**
      * @return array<string, Schema>
      *
-     *@deprecated Use `getCachedSchemas()` instead.
+     * @deprecated Use `getCachedSchemas()` instead.
      */
     public function getCachedInfolists(): array
     {
