@@ -142,7 +142,7 @@ class ImportAction extends Action
                 ->columns(1)
                 ->inlineLabel()
                 ->schema(function (Get $get) use ($action): array {
-                    $csvFile = Arr::first((array) ($get('file') ?? []));
+                    $csvFile = $get('file');
 
                     if (! $csvFile instanceof TemporaryUploadedFile) {
                         return [];
@@ -171,7 +171,7 @@ class ImportAction extends Action
                     );
                 })
                 ->statePath('columnMap')
-                ->visible(fn (Get $get): bool => Arr::first((array) ($get('file') ?? [])) instanceof TemporaryUploadedFile),
+                ->visible(fn (Get $get): bool => $get('file') instanceof TemporaryUploadedFile),
         ], $action->getImporter()::getOptionsFormComponents()));
 
         $this->action(function (ImportAction $action, array $data) {
