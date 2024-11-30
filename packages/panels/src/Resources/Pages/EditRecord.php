@@ -351,9 +351,15 @@ class EditRecord extends Page
 
     protected function getCancelFormAction(): Action
     {
+        $url = $this->previousUrl ?? $this->getResourceUrl();
+
         return Action::make('cancel')
             ->label(__('filament-panels::resources/pages/edit-record.form.actions.cancel.label'))
-            ->alpineClickHandler('document.referrer ? window.history.back() : (window.location.href = ' . Js::from($this->previousUrl ?? $this->getResourceUrl()) . ')')
+            ->alpineClickHandler(
+                FilamentView::hasSpaMode($url)
+                    ? 'document.referrer ? window.history.back() : Livewire.navigate(' . Js::from($url) . ')'
+                    : 'document.referrer ? window.history.back() : (window.location.href = ' . Js::from($url) . ')',
+            )
             ->color('gray');
     }
 
