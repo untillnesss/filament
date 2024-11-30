@@ -144,8 +144,7 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
     {
         $user ??= Filament::auth()->user();
 
-        /** @var HasGoogleTwoFactorAuthenticationRecovery $user */
-        foreach ($this->getRecoveryCodes($user) as $hashedRecoveryCode) {
+        foreach ($this->getRecoveryCodes($user) as $hashedRecoveryCode) { /** @phpstan-ignore-line */
             if (Hash::check($recoveryCode, $hashedRecoveryCode)) {
                 return true;
             }

@@ -182,7 +182,7 @@ abstract class Importer
             $rules[$columnName] = $column->getDataValidationRules();
 
             if (
-                $column->isArray() &&
+                $column->isMultiple() &&
                 count($nestedRecursiveRules = $column->getNestedRecursiveDataValidationRules())
             ) {
                 $rules["{$columnName}.*"] = $nestedRecursiveRules;
@@ -252,6 +252,26 @@ abstract class Importer
     public function saveRecord(): void
     {
         $this->record->save();
+
+        foreach ($this->getCachedColumns() as $column) {
+            $columnName = $column->getName();
+
+            if (blank($this->columnMap[$columnName] ?? null)) {
+                continue;
+            }
+
+            if (! array_key_exists($columnName, $this->data)) {
+                continue;
+            }
+
+            $state = $this->data[$columnName];
+
+            if (blank($state) && $column->isBlankStateIgnored()) {
+                continue;
+            }
+
+            $column->saveRelationships($state);
+        }
     }
 
     /**
