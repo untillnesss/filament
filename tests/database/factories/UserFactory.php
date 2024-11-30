@@ -6,6 +6,7 @@ use Filament\MultiFactorAuthentication\EmailCode\EmailCodeAuthentication;
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\GoogleTwoFactorAuthentication;
 use Filament\Tests\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserFactory extends Factory
@@ -32,13 +33,19 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function hasGoogleTwoFactorAuthentication(): self
+    /**
+     * @param  ?array<string>  $recoveryCodes
+     */
+    public function hasGoogleTwoFactorAuthentication(?array $recoveryCodes = null): self
     {
         $googleTwoFactorAuthentication = GoogleTwoFactorAuthentication::make();
 
         return $this->state(fn (): array => [
             'google_two_factor_authentication_secret' => $googleTwoFactorAuthentication->generateSecret(),
-            'google_two_factor_authentication_recovery_codes' => $googleTwoFactorAuthentication->generateRecoveryCodes(),
+            'google_two_factor_authentication_recovery_codes' => array_map(
+                fn (string $code): string => Hash::make($code),
+                $recoveryCodes ?? $googleTwoFactorAuthentication->generateRecoveryCodes(),
+            ),
         ]);
     }
 }

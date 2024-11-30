@@ -20,6 +20,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use PragmaRX\Google2FAQRCode\Google2FA;
 
@@ -89,7 +90,16 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
      */
     public function saveRecoveryCodes(HasGoogleTwoFactorAuthenticationRecovery $user, ?array $codes): void
     {
-        $user->saveGoogleTwoFactorAuthenticationRecoveryCodes($codes);
+        if (! is_array($codes)) {
+            $user->saveGoogleTwoFactorAuthenticationRecoveryCodes(null);
+
+            return;
+        }
+
+        $user->saveGoogleTwoFactorAuthenticationRecoveryCodes(array_map(
+            fn (string $code): string => Hash::make($code),
+            $codes,
+        ));
     }
 
     public function generateSecret(): string
@@ -135,8 +145,13 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
         $user ??= Filament::auth()->user();
 
         /** @var HasGoogleTwoFactorAuthenticationRecovery $user */
+        foreach ($this->getRecoveryCodes($user) as $hashedRecoveryCode) {
+            if (Hash::check($recoveryCode, $hashedRecoveryCode)) {
+                return true;
+            }
+        }
 
-        return in_array($recoveryCode, $this->getRecoveryCodes($user));
+        return false;
     }
 
     /**

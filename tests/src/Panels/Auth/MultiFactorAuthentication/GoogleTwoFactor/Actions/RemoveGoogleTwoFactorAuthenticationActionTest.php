@@ -16,8 +16,12 @@ uses(TestCase::class);
 beforeEach(function () {
     Filament::setCurrentPanel('google-two-factor-authentication');
 
+    $googleTwoFactorAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+
+    $this->recoveryCodes = $googleTwoFactorAuthentication->generateRecoveryCodes();
+
     actingAs(User::factory()
-        ->hasGoogleTwoFactorAuthentication()
+        ->hasGoogleTwoFactorAuthentication($this->recoveryCodes)
         ->create());
 });
 
@@ -58,8 +62,6 @@ it('can remove authentication when valid challenge code is used', function () {
 it('can remove authentication when a valid recovery code is used', function () {
     $user = auth()->user();
 
-    $recoveryCodes = $user->getGoogleTwoFactorAuthenticationRecoveryCodes();
-
     expect($user->hasGoogleTwoFactorAuthentication())
         ->toBeTrue();
 
@@ -76,7 +78,7 @@ it('can remove authentication when a valid recovery code is used', function () {
         ->callAction(TestAction::make('useRecoveryCode')
             ->schemaComponent('mountedActionSchema0.code'))
         ->setActionData([
-            'recoveryCode' => Arr::first($recoveryCodes),
+            'recoveryCode' => Arr::first($this->recoveryCodes),
         ])
         ->callMountedAction()
         ->assertHasNoActionErrors();
@@ -237,8 +239,6 @@ it('will not remove authentication with a recovery code if recovery is disabled'
 
     $user = auth()->user();
 
-    $recoveryCodes = $user->getGoogleTwoFactorAuthenticationRecoveryCodes();
-
     expect($user->hasGoogleTwoFactorAuthentication())
         ->toBeTrue();
 
@@ -253,7 +253,7 @@ it('will not remove authentication with a recovery code if recovery is disabled'
         ->callAction(
             TestAction::make('removeGoogleTwoFactorAuthentication')
                 ->schemaComponent('form.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
-            ['recoveryCode' => Arr::first($recoveryCodes)],
+            ['recoveryCode' => Arr::first($this->recoveryCodes)],
         )
         ->assertHasActionErrors();
 
