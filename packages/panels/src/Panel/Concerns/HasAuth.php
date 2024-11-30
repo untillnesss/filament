@@ -3,7 +3,7 @@
 namespace Filament\Panel\Concerns;
 
 use Closure;
-use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
+use Filament\MultiFactorAuthentication\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Pages\Auth\EditProfile;
 use Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
 use Filament\Pages\Auth\Login;

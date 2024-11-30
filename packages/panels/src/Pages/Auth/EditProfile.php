@@ -7,7 +7,7 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
-use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
+use Filament\MultiFactorAuthentication\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns;
 use Filament\Pages\Page;

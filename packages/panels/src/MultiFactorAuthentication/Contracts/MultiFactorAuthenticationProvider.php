@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament\MultiFactorAuthentication\Providers\Contracts;
+namespace Filament\MultiFactorAuthentication\Contracts;
 
 use Filament\Schemas\Components\Component;
 use Illuminate\Contracts\Auth\Authenticatable;

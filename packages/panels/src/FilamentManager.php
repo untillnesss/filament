@@ -15,7 +15,7 @@ use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasTenants;
-use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
+use Filament\MultiFactorAuthentication\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;

@@ -10,7 +10,7 @@ use Filament\Enums\ThemeMode;
 use Filament\FilamentManager;
 use Filament\GlobalSearch\Providers\Contracts\GlobalSearchProvider;
 use Filament\Models\Contracts\HasTenants;
-use Filament\MultiFactorAuthentication\Providers\Contracts\MultiFactorAuthenticationProvider;
+use Filament\MultiFactorAuthentication\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages\Enums\SubNavigationPosition;
