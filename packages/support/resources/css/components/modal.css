@@ -34,7 +34,7 @@
 
     &:not(.fi-modal-slide-over) {
         &:not(.fi-width-screen) {
-            & .fi-modal-header {
+            & .fi-modal-overlay {
                 @apply overflow-y-auto;
             }
 

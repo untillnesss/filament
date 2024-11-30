@@ -72,7 +72,6 @@
         x-on:{{ $closeQuietlyEventName }}.window="if (($event.detail.id === @js($id)) && isOpen) closeQuietly()"
         x-on:{{ $openEventName }}.window="if (($event.detail.id === @js($id)) && (! isOpen)) open()"
     @endif
-    x-trap.noscroll{{ $autofocus ? '' : '.noautofocus' }}="isOpen"
     x-bind:class="{
         'fi-modal-open': isOpen,
     }"
@@ -91,7 +90,11 @@
         </div>
     @endif
 
-    <div x-cloak x-show="isOpen">
+    <div
+        x-cloak
+        x-show="isOpen"
+        x-trap.noscroll{{ $autofocus ? '' : '.noautofocus' }}="isOpen"
+    >
         <div
             aria-hidden="true"
             x-show="isOpen"
