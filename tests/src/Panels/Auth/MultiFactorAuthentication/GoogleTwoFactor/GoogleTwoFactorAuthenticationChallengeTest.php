@@ -98,7 +98,7 @@ it('will authenticate the user after a valid recovery code is used', function ()
     $googleTwoFactorAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
-        ->hasGoogleTwoFactorAuthentication()
+        ->hasGoogleTwoFactorAuthentication($recoveryCodes = $googleTwoFactorAuthentication->generateRecoveryCodes())
         ->create();
 
     livewire(Login::class)
@@ -113,7 +113,7 @@ it('will authenticate the user after a valid recovery code is used', function ()
             ->schemaComponent("multiFactorChallengeForm.{$googleTwoFactorAuthentication->getId()}.code"))
         ->fillForm([
             $googleTwoFactorAuthentication->getId() => [
-                'recoveryCode' => Arr::random($googleTwoFactorAuthentication->getRecoveryCodes($userToAuthenticate)),
+                'recoveryCode' => Arr::random($recoveryCodes),
             ],
         ], 'multiFactorChallengeForm')
         ->call('authenticate')
@@ -321,7 +321,7 @@ it('will not authenticate the user with a valid recovery code if recovery is dis
         ->recoverable(false);
 
     $userToAuthenticate = User::factory()
-        ->hasGoogleTwoFactorAuthentication()
+        ->hasGoogleTwoFactorAuthentication($recoveryCodes = $googleTwoFactorAuthentication->generateRecoveryCodes())
         ->create();
 
     livewire(Login::class)
@@ -334,7 +334,7 @@ it('will not authenticate the user with a valid recovery code if recovery is dis
         ->assertNoRedirect()
         ->fillForm([
             $googleTwoFactorAuthentication->getId() => [
-                'recoveryCode' => Arr::random($googleTwoFactorAuthentication->getRecoveryCodes($userToAuthenticate)),
+                'recoveryCode' => Arr::random($recoveryCodes),
             ],
         ], 'multiFactorChallengeForm')
         ->call('authenticate')

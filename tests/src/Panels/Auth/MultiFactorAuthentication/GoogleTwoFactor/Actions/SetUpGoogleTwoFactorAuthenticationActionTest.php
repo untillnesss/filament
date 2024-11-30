@@ -6,6 +6,7 @@ use Filament\Pages\Auth\EditProfile;
 use Filament\Tests\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 use function Filament\Tests\livewire;
@@ -94,8 +95,12 @@ it('can save the secret and recovery codes to the user when the action is submit
 
     expect($user->getGoogleTwoFactorAuthenticationRecoveryCodes())
         ->toBeArray()
-        ->toHaveCount(8)
-        ->toBe($recoveryCodes);
+        ->toHaveCount(8);
+
+    foreach ($user->getGoogleTwoFactorAuthenticationRecoveryCodes() as $hashedRecoveryCode) {
+        expect(Hash::check(array_shift($recoveryCodes), $hashedRecoveryCode))
+            ->toBeTrue();
+    }
 });
 
 it('will not set up authentication when an invalid code is used', function () {
