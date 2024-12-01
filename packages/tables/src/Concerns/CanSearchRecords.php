@@ -142,6 +142,8 @@ trait CanSearchRecords
                         $isFirst,
                     );
                 }
+
+                $this->getTable()->applyExtraSearchConstraints($query, $searchWord, $isFirst);
             });
         }
 
