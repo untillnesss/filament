@@ -71,12 +71,12 @@ class ExportCompletion implements ShouldQueue
             ->when(
                 $failedRowsCount < $this->export->total_rows,
                 fn (Notification $notification) => $notification->actions(array_map(
-                    fn (ExportFormat $format): NotificationAction => $format->getDownloadNotificationAction($this->export, $authGuard),
+                    fn (ExportFormat $format): NotificationAction => $format->getDownloadNotificationAction($this->export, $this->authGuard),
                     $this->formats,
                 )),
             )
             ->when(
-                (filled($this->connection) && ($this->connection === 'sync')) ||
+                ($this->connection === 'sync') ||
                     (blank($this->connection) && (config('queue.default') === 'sync')),
                 fn (Notification $notification) => $notification
                     ->persistent()

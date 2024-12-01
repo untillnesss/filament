@@ -310,7 +310,8 @@ class ImportAction extends Action
                             ]),
                         )
                         ->when(
-                            ($jobConnection === 'sync') || (blank($jobConnection) && (config('queue.default') === 'sync')),
+                            ($jobConnection === 'sync') ||
+                                (blank($jobConnection) && (config('queue.default') === 'sync')),
                             fn (Notification $notification) => $notification
                                 ->persistent()
                                 ->send(),
@@ -319,7 +320,10 @@ class ImportAction extends Action
                 })
                 ->dispatch();
 
-            if (($jobConnection !== 'sync') || (blank($jobConnection) && (config('queue.default') !== 'sync'))) {
+            if (
+                (filled($jobConnection) && ($jobConnection !== 'sync')) ||
+                (blank($jobConnection) && (config('queue.default') !== 'sync'))
+            ) {
                 Notification::make()
                     ->title($action->getSuccessNotificationTitle())
                     ->body(trans_choice('filament-actions::import.notifications.started.body', $import->total_rows, [
@@ -672,6 +676,12 @@ class ImportAction extends Action
             return Filament::getAuthGuard();
         }
 
-        return auth()->name;
+        $authGuard = auth();
+
+        if (! property_exists($authGuard, 'name')) {
+            return config('auth.defaults.guard') ?? 'web';
+        }
+
+        return $authGuard->name;
     }
 }

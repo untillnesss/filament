@@ -443,6 +443,12 @@ trait CanExportRecords
             return Filament::getAuthGuard();
         }
 
-        return auth()->name;
+        $authGuard = auth();
+
+        if (! property_exists($authGuard, 'name')) {
+            return config('auth.defaults.guard') ?? 'web';
+        }
+
+        return $authGuard->name;
     }
 }
