@@ -13,6 +13,7 @@ use Filament\Actions\Exports\Jobs\CreateXlsxFile;
 use Filament\Actions\Exports\Jobs\ExportCompletion;
 use Filament\Actions\Exports\Jobs\PrepareCsvExport;
 use Filament\Actions\Exports\Models\Export;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Fieldset;
@@ -61,6 +62,8 @@ trait CanExportRecords
     protected ?Closure $modifyQueryUsing = null;
 
     protected bool | Closure $hasColumnMapping = true;
+
+    protected string | Closure | null $authGuard = null;
 
     protected function setUp(): void
     {
@@ -144,7 +147,9 @@ trait CanExportRecords
                 return;
             }
 
-            $user = auth()->user();
+            $authGuard = $action->getAuthGuard();
+
+            $user = auth($authGuard)->user();
 
             if ($action->hasColumnMapping()) {
                 $columnMap = collect($data['columnMap'])
@@ -223,6 +228,7 @@ trait CanExportRecords
                     ),
                 ...(($hasXlsx && (! $hasCsv)) ? [$makeCreateXlsxFileJob()] : []),
                 app(ExportCompletion::class, [
+                    'authGuard' => $authGuard,
                     'export' => $export,
                     'columnMap' => $columnMap,
                     'formats' => $formats,
@@ -416,5 +422,33 @@ trait CanExportRecords
     public function hasColumnMapping(): bool
     {
         return (bool) $this->evaluate($this->hasColumnMapping);
+    }
+
+    public function authGuard(string | Closure | null $authGuard): static
+    {
+        $this->authGuard = $authGuard;
+
+        return $this;
+    }
+
+    public function getAuthGuard(): string
+    {
+        $guard = $this->evaluate($this->authGuard);
+
+        if (filled($guard)) {
+            return $guard;
+        }
+
+        if (class_exists(Filament::class) && Filament::isServing()) {
+            return Filament::getAuthGuard();
+        }
+
+        $authGuard = auth();
+
+        if (! property_exists($authGuard, 'name')) {
+            return config('auth.defaults.guard') ?? 'web';
+        }
+
+        return $authGuard->name;
     }
 }

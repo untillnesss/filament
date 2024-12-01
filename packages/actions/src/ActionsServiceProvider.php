@@ -30,7 +30,7 @@ class ActionsServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        app(Router::class)->middlewareGroup('filament.actions', ['web', 'auth']);
+        app(Router::class)->middlewareGroup('filament.actions', ['web']);
     }
 
     public function packageBooted(): void
