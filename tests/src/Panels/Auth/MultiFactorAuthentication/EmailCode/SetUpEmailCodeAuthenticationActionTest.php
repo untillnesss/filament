@@ -24,7 +24,7 @@ beforeEach(function () {
 });
 
 it('can generate a secret when the action is mounted', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $livewire = livewire(EditProfile::class)
         ->mountAction(TestAction::make('setUpEmailCodeAuthentication')
@@ -58,7 +58,7 @@ it('can generate a secret when the action is mounted', function () {
 });
 
 it('can save the secret to the user when the action is submitted', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -102,7 +102,7 @@ it('can resend the code to the user', function () {
 });
 
 it('will not set up authentication when an invalid code is used', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -159,7 +159,7 @@ test('codes are required', function () {
 });
 
 test('codes must be 6 digits', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
