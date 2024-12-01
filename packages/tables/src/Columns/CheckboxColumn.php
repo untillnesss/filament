@@ -49,6 +49,7 @@ class CheckboxColumn extends Column implements Editable, HasEmbeddedView
         $inputAttributes = $this->getExtraInputAttributeBag()
             ->merge([
                 'disabled' => $isDisabled,
+                'wire:loading.attr' => 'disabled',
                 'x-bind:disabled' => $isDisabled ? null : 'isLoading',
             ], escape: false)
             ->class([
