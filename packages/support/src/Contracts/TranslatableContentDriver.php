@@ -32,5 +32,5 @@ interface TranslatableContentDriver
      */
     public function updateRecord(Model $record, array $data): Model;
 
-    public function applySearchConstraintToQuery(Builder $query, string $column, string $search, string $whereClause, ?bool $isCaseInsensitivityForced = null): Builder;
+    public function applySearchConstraintToQuery(Builder $query, string $column, string $search, string $whereClause, ?bool $isSearchForcedCaseInsensitive = null): Builder;
 }

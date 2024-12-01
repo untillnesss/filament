@@ -200,6 +200,63 @@ TextColumn::make('full_name')
     })
 ```
 
+#### Adding extra searchable columns to the table
+
+You may allow the table to search with extra columns that are not present in the table by passing an array of column names to the `searchable()` method:
+
+```php
+use Filament\Tables\Table;
+
+public function table(Table $table): Table
+{
+    return $table
+        ->columns([
+            // ...
+        ])
+        ->searchable(['id']);
+}
+```
+
+You may use dot notation to search within relationships:
+
+```php
+use Filament\Tables\Table;
+
+public function table(Table $table): Table
+{
+    return $table
+        ->columns([
+            // ...
+        ])
+        ->searchable(['id', 'author.id']);
+}
+```
+
+You may also pass custom functions to search using:
+
+```php
+use Filament\Tables\Table;
+
+public function table(Table $table): Table
+{
+    return $table
+        ->columns([
+            // ...
+        ])
+        ->searchable([
+            'id',
+            'author.id',
+            function (Builder $query, string $search): Builder {
+                if (! is_numeric($search)) {
+                    return $query;
+                }
+            
+                return $query->whereYear('published_at', $search);
+            },
+        ]);
+}
+```
+
 #### Customizing the table search field placeholder
 
 You may customize the placeholder in the search field using the `searchPlaceholder()` method on the `$table`:
