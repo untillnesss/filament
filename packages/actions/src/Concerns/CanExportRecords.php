@@ -246,7 +246,7 @@ trait CanExportRecords
                 )
                 ->dispatch();
 
-            if ($jobConnection !== 'sync') {
+            if (($jobConnection !== 'sync') || (blank($jobConnection) && (config('queue.default') !== 'sync'))) {
                 Notification::make()
                     ->title($action->getSuccessNotificationTitle())
                     ->body(trans_choice('filament-actions::export.notifications.started.body', $export->total_rows, [
