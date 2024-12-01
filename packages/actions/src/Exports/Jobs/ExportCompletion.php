@@ -33,8 +33,9 @@ class ExportCompletion implements ShouldQueue
     public function __construct(
         protected Export $export,
         protected array $columnMap,
-        protected array $formats = [],
-        protected array $options = [],
+        protected array $formats,
+        protected array $options,
+        protected string $authGuard,
     ) {
         $this->exporter = $this->export->getExporter(
             $this->columnMap,
@@ -70,7 +71,7 @@ class ExportCompletion implements ShouldQueue
             ->when(
                 $failedRowsCount < $this->export->total_rows,
                 fn (Notification $notification) => $notification->actions(array_map(
-                    fn (ExportFormat $format): NotificationAction => $format->getDownloadNotificationAction($this->export),
+                    fn (ExportFormat $format): NotificationAction => $format->getDownloadNotificationAction($this->export, $authGuard),
                     $this->formats,
                 )),
             )
