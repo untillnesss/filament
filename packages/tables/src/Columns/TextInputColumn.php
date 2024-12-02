@@ -92,6 +92,7 @@ class TextInputColumn extends Column implements Editable, HasEmbeddedView
             ->merge([
                 'disabled' => $isDisabled,
                 'wire:loading.attr' => 'disabled',
+                'wire:target' => implode(',', \Filament\Tables\Table::LOADING_TARGETS),
                 'x-bind:disabled' => $isDisabled ? null : 'isLoading',
                 'inputmode' => $this->getInputMode(),
                 'placeholder' => $this->getPlaceholder(),
