@@ -1,9 +1,17 @@
 .fi-btn {
-    @apply relative inline-grid grid-flow-col items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold outline-none transition duration-75 focus-visible:ring-2;
+    @apply relative inline-grid grid-flow-col items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold outline-none transition duration-75;
+
+    &:not(.fi-disabled):not([disabled]) {
+        @apply focus-visible:ring-2;
+    }
 
     &.fi-disabled,
     &[disabled] {
-        @apply pointer-events-none opacity-70;
+        @apply opacity-70 cursor-default;
+
+        &:not(div) {
+            @apply pointer-events-none;
+        }
     }
 
     & > .fi-icon {
@@ -35,10 +43,18 @@
     }
 
     &.fi-outlined {
-        @apply text-gray-950 shadow-sm ring-1 ring-gray-300 hover:bg-gray-400/10 focus-visible:ring-gray-400/40 dark:text-white dark:ring-gray-700;
+        @apply text-gray-950 shadow-sm ring-1 ring-gray-300 dark:text-white dark:ring-gray-700;
+
+        &:not(.fi-disabled):not([disabled]) {
+            @apply hover:bg-gray-400/10 focus-visible:ring-gray-400/40;
+        }
 
         &.fi-color-custom {
-            @apply text-custom-600 ring-custom-600 hover:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-500;
+            @apply text-custom-600 ring-custom-600 dark:text-custom-400 dark:ring-custom-500;
+
+            &:not(.fi-disabled):not([disabled]) {
+                @apply hover:bg-custom-400/10;
+            }
 
             & > .fi-icon {
                 @apply text-custom-600 dark:text-custom-400;
@@ -47,15 +63,27 @@
     }
 
     &:not(.fi-outlined) {
-        @apply bg-white text-gray-950 hover:bg-gray-50 dark:bg-white/5 dark:text-white dark:hover:bg-white/10;
+        @apply bg-white text-gray-950 dark:bg-white/5 dark:text-white;
+
+        &:not(.fi-disabled):not([disabled]) {
+            @apply hover:bg-gray-50 dark:hover:bg-white/10;
+        }
 
         &label {
-            @apply [input:checked+&]:bg-gray-400 [input:checked+&]:text-white [input:checked+&]:ring-0 [input:checked+&]:hover:bg-gray-300 dark:[input:checked+&]:bg-gray-600 dark:[input:checked+&]:hover:bg-gray-500;
+            @apply [input:checked+&]:bg-gray-400 [input:checked+&]:text-white [input:checked+&]:ring-0 dark:[input:checked+&]:bg-gray-600;
+
+            &:not(.fi-disabled):not([disabled]) {
+                @apply [input:checked+&]:hover:bg-gray-300 dark:[input:checked+&]:hover:bg-gray-500;
+            }
         }
 
         &.fi-color-custom {
             &:not(label) {
-                @apply bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50;
+                @apply bg-custom-600 text-white dark:bg-custom-500;
+
+                &:not(.fi-disabled):not([disabled]) {
+                    @apply hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50;
+                }
 
                 & > .fi-icon {
                     @apply text-white;
@@ -63,7 +91,11 @@
             }
 
             &label {
-                @apply [input:checked+&]:bg-custom-600 [input:checked+&]:text-white [input:checked+&]:ring-0 [input:checked+&]:hover:bg-custom-500 dark:[input:checked+&]:bg-custom-500 dark:[input:checked+&]:hover:bg-custom-400 [input:checked:focus-visible+&]:ring-custom-500/50 dark:[input:checked:focus-visible+&]:ring-custom-400/50 [input:focus-visible+&]:z-10 [input:focus-visible+&]:ring-2 [input:focus-visible+&]:ring-gray-950/10 dark:[input:focus-visible+&]:ring-white/20;
+                @apply [input:checked+&]:bg-custom-600 [input:checked+&]:text-white [input:checked+&]:ring-0 dark:[input:checked+&]:bg-custom-500;
+
+                &:not(.fi-disabled):not([disabled]) {
+                    @apply [input:checked+&]:hover:bg-custom-500 dark:[input:checked+&]:hover:bg-custom-400 [input:checked:focus-visible+&]:ring-custom-500/50 dark:[input:checked:focus-visible+&]:ring-custom-400/50 [input:focus-visible+&]:z-10 [input:focus-visible+&]:ring-2 [input:focus-visible+&]:ring-gray-950/10 dark:[input:focus-visible+&]:ring-white/20;
+                }
             }
         }
     }

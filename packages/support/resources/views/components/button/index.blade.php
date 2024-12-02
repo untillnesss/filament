@@ -2,6 +2,7 @@
     use Filament\Support\Enums\ActionSize;
     use Filament\Support\Enums\IconPosition;
     use Filament\Support\Enums\IconSize;
+    use Illuminate\View\ComponentAttributeBag;
 @endphp
 
 @props([
@@ -57,6 +58,10 @@
 
     if ($hasLoadingIndicator) {
         $loadingIndicatorTarget = html_entity_decode($wireTarget ?: $form, ENT_QUOTES);
+    }
+
+    if ($disabled && filled($tooltip)) {
+        $tag = 'div';
     }
 @endphp
 
@@ -120,8 +125,9 @@
     {{
         $attributes
             ->merge([
+                'aria-disabled' => $disabled ? 'true' : null,
                 'aria-label' => $labelSrOnly ? trim(strip_tags($slot->toHtml())) : null,
-                'disabled' => $disabled,
+                'disabled' => $tag === 'button' ? $disabled : false,
                 'form' => $formId,
                 'type' => $tag === 'button' ? $type : null,
                 'wire:loading.attr' => $tag === 'button' ? 'disabled' : null,
@@ -129,6 +135,12 @@
                 'x-bind:disabled' => $hasFormProcessingLoadingIndicator ? 'isProcessing' : null,
                 'x-bind:aria-label' => ($labelSrOnly && $hasFormProcessingLoadingIndicator) ? ('isProcessing ? processingMessage : ' . \Illuminate\Support\Js::from(trim(strip_tags($slot->toHtml())))) : null,
             ], escape: false)
+            ->when(
+                $disabled && filled($tooltip),
+                fn (ComponentAttributeBag $attributes) => $attributes->filter(
+                    fn (mixed $value, string $key): bool => ! str($key)->startsWith(['x-on:', 'wire:click']),
+                ),
+            )
             ->class([
                 'fi-btn',
                 'fi-disabled' => $disabled,
