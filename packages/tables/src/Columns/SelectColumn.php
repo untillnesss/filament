@@ -57,10 +57,10 @@ class SelectColumn extends Column implements Editable, HasEmbeddedView
 
         $attributes = $this->getExtraAttributeBag()
             ->merge([
-                'ax-load' => FilamentView::hasSpaMode()
+                'x-load' => FilamentView::hasSpaMode()
                     ? 'visible || event (ax-modal-opened)'
                     : true,
-                'ax-load-src' => FilamentAsset::getAlpineComponentSrc('columns/select', 'filament/tables'),
+                'x-load-src' => FilamentAsset::getAlpineComponentSrc('columns/select', 'filament/tables'),
                 'x-data' => 'selectTableColumn({
                     name: ' . Js::from($this->getName()) . ',
                     recordKey: ' . Js::from($this->getRecordKey()) . ',

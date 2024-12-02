@@ -100,11 +100,11 @@
     @endif
     x-ignore
     @if (FilamentView::hasSpaMode())
-        ax-load="visible"
+        x-load="visible"
     @else
-        ax-load
+        x-load
     @endif
-    ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('table', 'filament/tables') }}"
+    x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('table', 'filament/tables') }}"
     x-data="table"
     @class([
         'fi-ta',
