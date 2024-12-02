@@ -8,6 +8,7 @@
     :collapsed="$isCollapsed()"
     :collapsible="$isCollapsible() && (! $isAside)"
     :compact="$isCompact()"
+    :contained="$isContained()"
     :content-before="$isFormBefore()"
     :description="$getDescription()"
     :footer="$getDecorations($schemaComponent::FOOTER_DECORATIONS)"

@@ -15,6 +15,7 @@ use Filament\Schemas\Components\Contracts\CanConcealComponents;
 use Filament\Schemas\Components\Contracts\CanEntangleWithSingularRelationships;
 use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
 use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
+use Filament\Support\Concerns\CanBeContained;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Filament\Support\Concerns\HasIcon;
 use Filament\Support\Concerns\HasIconColor;
@@ -25,6 +26,7 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
 {
     use CanBeCollapsed;
     use CanBeCompacted;
+    use CanBeContained;
     use EntanglesStateWithSingularRelationship;
     use HasDescription;
     use HasExtraAlpineAttributes;
