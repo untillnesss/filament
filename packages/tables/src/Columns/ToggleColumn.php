@@ -60,6 +60,12 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
         $buttonAttributes = (new ComponentAttributeBag)
             ->merge([
                 'disabled' => $this->isDisabled(),
+                'x-tooltip' => filled($tooltip = $this->getTooltip($state))
+                    ? '{
+                        content: ' . Js::from($tooltip) . ',
+                        theme: $store.theme,
+                    }'
+                    : null,
             ], escape: false)
             ->class(['fi-toggle']);
 
