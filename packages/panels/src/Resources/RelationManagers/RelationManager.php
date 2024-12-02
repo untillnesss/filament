@@ -13,6 +13,7 @@ use Filament\Resources\Concerns\InteractsWithRelationshipTable;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\RenderHook;
 use Filament\Schemas\Components\TableBuilder;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Concerns\CanBeLazy;
 use Filament\Support\Enums\IconPosition;
@@ -134,6 +135,16 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
     protected function getViewData(): array
     {
         return [];
+    }
+
+    public static function getTabComponent(Model $ownerRecord, string $pageClass): Tab
+    {
+        return Tab::make(static::class::getTitle($ownerRecord, $pageClass))
+            ->badge(static::class::getBadge($ownerRecord, $pageClass))
+            ->badgeColor(static::class::getBadgeColor($ownerRecord, $pageClass))
+            ->badgeTooltip(static::class::getBadgeTooltip($ownerRecord, $pageClass))
+            ->icon(static::class::getIcon($ownerRecord, $pageClass))
+            ->iconPosition(static::class::getIconPosition($ownerRecord, $pageClass));
     }
 
     public static function getIcon(Model $ownerRecord, string $pageClass): ?string

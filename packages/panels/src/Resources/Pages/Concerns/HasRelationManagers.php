@@ -71,6 +71,12 @@ trait HasRelationManagers
         return false;
     }
 
+    public function getContentTabComponent(): Tab
+    {
+        return Tab::make($this->getContentTabLabel())
+            ->icon($this->getContentTabIcon());
+    }
+
     public function getContentTabLabel(): ?string
     {
         return null;
@@ -121,8 +127,7 @@ trait HasRelationManagers
                     $tabKey = strval($tabKey);
 
                     if (blank($tabKey) && $hasCombinedRelationManagerTabsWithContent) {
-                        return Tab::make($this->getContentTabLabel())
-                            ->icon($this->getContentTabIcon())
+                        return $this->getContentTabComponent()
                             ->schema($this->getContentComponents());
                     }
 
@@ -130,12 +135,7 @@ trait HasRelationManagers
                         $manager->ownerRecord($ownerRecord);
                         $manager->pageClass(static::class);
 
-                        return Tab::make($manager->getLabel())
-                            ->badge($manager->getBadge())
-                            ->badgeColor($manager->getBadgeColor())
-                            ->badgeTooltip($manager->getBadgeTooltip())
-                            ->icon($manager->getIcon())
-                            ->iconPosition($manager->getIconPosition())
+                        return $manager->getTabComponent()
                             ->schema(fn (): array => collect($manager->getManagers())
                                 ->map(fn ($groupedManager, $groupedManagerKey): Livewire => Livewire::make(
                                     $normalizedGroupedManagerClass = $this->normalizeRelationManagerClass($groupedManager),
@@ -146,12 +146,7 @@ trait HasRelationManagers
 
                     $normalizedManagerClass = $this->normalizeRelationManagerClass($manager);
 
-                    return Tab::make($normalizedManagerClass::getTitle($ownerRecord, static::class))
-                        ->badge($normalizedManagerClass::getBadge($ownerRecord, static::class))
-                        ->badgeColor($normalizedManagerClass::getBadgeColor($ownerRecord, static::class))
-                        ->badgeTooltip($normalizedManagerClass::getBadgeTooltip($ownerRecord, static::class))
-                        ->icon($normalizedManagerClass::getIcon($ownerRecord, static::class))
-                        ->iconPosition($normalizedManagerClass::getIconPosition($ownerRecord, static::class))
+                    return $normalizedManagerClass::getTabComponent($ownerRecord, static::class)
                         ->schema(fn (): array => [
                             Livewire::make(
                                 $normalizedManagerClass,
