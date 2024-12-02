@@ -44,6 +44,7 @@
                             ->gridColumn($schemaComponent->getColumnSpan(), $schemaComponent->getColumnStart(), $isHidden)
                             ->merge([
                                 'wire:key' => $schemaComponent->getLivewireKey(),
+                                ...(($pollingInterval = $schemaComponent->getPollingInterval()) ? ["wire:poll.{$pollingInterval}" => "partiallyRenderSchemaComponent('{$schemaComponent->getKey()}')"] : []),
                             ], escape: false)
                             ->class([
                                 match ($maxWidth = $schemaComponent->getMaxWidth()) {

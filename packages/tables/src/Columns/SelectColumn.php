@@ -78,6 +78,12 @@ class SelectColumn extends Column implements Editable, HasEmbeddedView
                 'wire:loading.attr' => 'disabled',
                 'wire:target' => implode(',', Table::LOADING_TARGETS),
                 'x-bind:disabled' => $isDisabled ? null : 'isLoading',
+                'x-tooltip' => filled($tooltip = $this->getTooltip($state))
+                    ? '{
+                        content: ' . Js::from($tooltip) . ',
+                        theme: $store.theme,
+                    }'
+                    : null,
             ], escape: false)
             ->class([
                 'fi-select-input',

@@ -100,6 +100,12 @@ class TextInputColumn extends Column implements Editable, HasEmbeddedView
                 'step' => $this->getStep(),
                 'type' => $type,
                 'x-mask' . ($mask instanceof RawJs ? ':dynamic' : '') => filled($mask) ? $mask : null,
+                'x-tooltip' => filled($tooltip = $this->getTooltip($state))
+                    ? '{
+                        content: ' . Js::from($tooltip) . ',
+                        theme: $store.theme,
+                    }'
+                    : null,
             ], escape: false)
             ->class([
                 'fi-input',

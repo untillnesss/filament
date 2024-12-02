@@ -10,6 +10,7 @@ use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
 use League\Flysystem\UnableToCheckFileExistence;
 use Throwable;
@@ -349,7 +350,17 @@ class ImageColumn extends Column implements HasEmbeddedView
                 'fi-inline' => $this->isInline(),
             ]);
 
-        if (empty($state)) {
+        if (blank($state)) {
+            $attributes = $attributes
+                ->merge([
+                    'x-tooltip' => filled($tooltip = $this->getEmptyTooltip())
+                        ? '{
+                            content: ' . Js::from($tooltip) . ',
+                            theme: $store.theme,
+                        }'
+                        : null,
+                ], escape: false);
+
             $placeholder = $this->getPlaceholder();
 
             ob_start(); ?>
@@ -407,6 +418,12 @@ class ImageColumn extends Column implements HasEmbeddedView
                     <?= $this->getExtraImgAttributeBag()
                         ->merge([
                             'src' => filled($stateItem) ? $this->getImageUrl($stateItem) : $defaultImageUrl,
+                            'x-tooltip' => filled($tooltip = $this->getTooltip($stateItem))
+                                ? '{
+                                    content: ' . Js::from($tooltip) . ',
+                                    theme: $store.theme,
+                                }'
+                                : null,
                         ])
                         ->style([
                             "height: {$height}" => $height,

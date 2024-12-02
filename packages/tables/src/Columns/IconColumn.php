@@ -10,6 +10,7 @@ use Filament\Tables\Columns\IconColumn\Enums\IconColumnSize;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
 
 use function Filament\Support\generate_icon_html;
@@ -254,7 +255,17 @@ class IconColumn extends Column implements HasEmbeddedView
                 'fi-inline' => $this->isInline(),
             ]);
 
-        if (empty($state)) {
+        if (blank($state)) {
+            $attributes = $attributes
+                ->merge([
+                    'x-tooltip' => filled($tooltip = $this->getEmptyTooltip())
+                        ? '{
+                            content: ' . Js::from($tooltip) . ',
+                            theme: $store.theme,
+                        }'
+                        : null,
+                ], escape: false);
+
             $placeholder = $this->getPlaceholder();
 
             ob_start(); ?>
@@ -290,6 +301,14 @@ class IconColumn extends Column implements HasEmbeddedView
                 ?>
 
                 <?= generate_icon_html($this->getIcon($stateItem), attributes: (new ComponentAttributeBag)
+                    ->merge([
+                        'x-tooltip' => filled($tooltip = $this->getTooltip($stateItem))
+                            ? '{
+                                content: ' . Js::from($tooltip) . ',
+                                theme: $store.theme,
+                            }'
+                            : null,
+                    ], escape: false)
                     ->class([
                         match ($color) {
                             null, 'gray' => null,

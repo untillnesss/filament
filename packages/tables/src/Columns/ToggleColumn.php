@@ -62,6 +62,12 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
                 'disabled' => $this->isDisabled(),
                 'wire:loading.attr' => 'disabled',
                 'wire:target' => implode(',', \Filament\Tables\Table::LOADING_TARGETS),
+                'x-tooltip' => filled($tooltip = $this->getTooltip($state))
+                    ? '{
+                        content: ' . Js::from($tooltip) . ',
+                        theme: $store.theme,
+                    }'
+                    : null,
             ], escape: false)
             ->class(['fi-toggle']);
 
