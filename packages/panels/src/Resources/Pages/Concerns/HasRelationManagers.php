@@ -74,8 +74,7 @@ trait HasRelationManagers
     public function getContentTabComponent(): Tab
     {
         return Tab::make($this->getContentTabLabel())
-            ->icon($this->getContentTabIcon())
-            ->schema($this->getContentComponents());
+            ->icon($this->getContentTabIcon());
     }
 
     public function getContentTabLabel(): ?string
@@ -128,7 +127,8 @@ trait HasRelationManagers
                     $tabKey = strval($tabKey);
 
                     if (blank($tabKey) && $hasCombinedRelationManagerTabsWithContent) {
-                        return $this->getContentTabComponent();
+                        return $this->getContentTabComponent()
+                            ->schema($this->getContentComponents());
                     }
 
                     if ($manager instanceof RelationGroup) {
