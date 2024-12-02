@@ -21,7 +21,7 @@ beforeEach(function () {
 });
 
 it('can render the challenge form after valid login credentials are successfully used', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasEmailCodeAuthentication()
@@ -52,7 +52,7 @@ it('can render the challenge form after valid login credentials are successfully
 });
 
 it('will authenticate the user after a valid challenge code is used', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasEmailCodeAuthentication()
@@ -79,7 +79,7 @@ it('will authenticate the user after a valid challenge code is used', function (
 });
 
 it('can resend the code to the user', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasEmailCodeAuthentication()
@@ -140,7 +140,7 @@ it('will not render the challenge form if a user does not have multi-factor auth
 });
 
 it('will not authenticate the user when an invalid challenge code is used', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasEmailCodeAuthentication()
@@ -171,7 +171,7 @@ it('will not authenticate the user when an invalid challenge code is used', func
 });
 
 test('challenge codes are required', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasEmailCodeAuthentication()
@@ -200,7 +200,7 @@ test('challenge codes are required', function () {
 });
 
 test('challenge codes must be numeric', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasEmailCodeAuthentication()
@@ -229,7 +229,7 @@ test('challenge codes must be numeric', function () {
 });
 
 test('challenge codes must be 6 digits', function () {
-    $emailCodeAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasEmailCodeAuthentication()
