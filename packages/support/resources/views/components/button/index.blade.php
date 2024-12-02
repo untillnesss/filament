@@ -59,10 +59,6 @@
     if ($hasLoadingIndicator) {
         $loadingIndicatorTarget = html_entity_decode($wireTarget ?: $form, ENT_QUOTES);
     }
-
-    if ($disabled && filled($tooltip)) {
-        $tag = 'div';
-    }
 @endphp
 
 @if ($labeledFrom)
@@ -89,7 +85,7 @@
 @endif
 
 <{{ $tag }}
-    @if ($tag === 'a')
+    @if (($tag === 'a') && (! ($disabled && filled($tooltip))))
         {{ \Filament\Support\generate_href_html($href, $target === '_blank', $spaMode) }}
     @endif
     @if ($keyBindings)
@@ -127,7 +123,7 @@
             ->merge([
                 'aria-disabled' => $disabled ? 'true' : null,
                 'aria-label' => $labelSrOnly ? trim(strip_tags($slot->toHtml())) : null,
-                'disabled' => $tag === 'button' ? $disabled : false,
+                'disabled' => $disabled && blank($tooltip),
                 'form' => $formId,
                 'type' => $tag === 'button' ? $type : null,
                 'wire:loading.attr' => $tag === 'button' ? 'disabled' : null,
@@ -138,7 +134,7 @@
             ->when(
                 $disabled && filled($tooltip),
                 fn (ComponentAttributeBag $attributes) => $attributes->filter(
-                    fn (mixed $value, string $key): bool => ! str($key)->startsWith(['x-on:', 'wire:click']),
+                    fn (mixed $value, string $key): bool => ! str($key)->startsWith(['href', 'x-on:', 'wire:click']),
                 ),
             )
             ->class([

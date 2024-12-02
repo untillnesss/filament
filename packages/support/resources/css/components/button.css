@@ -7,9 +7,9 @@
 
     &.fi-disabled,
     &[disabled] {
-        @apply opacity-70 cursor-default;
+        @apply cursor-default opacity-70;
 
-        &:not(div) {
+        &:not([x-tooltip]) {
             @apply pointer-events-none;
         }
     }
