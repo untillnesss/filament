@@ -16,6 +16,9 @@ export default function selectTableColumn({ name, recordKey, state }) {
                                 return
                             }
 
+                            // DEBUGGING: REMOVE THIS LINE
+                            console.log(this.$root.closest('[wire\\:id]'));
+
                             if (
                                 component.id !==
                                 this.$root.closest('[wire\\:id]').attributes[
