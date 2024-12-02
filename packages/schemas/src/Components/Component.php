@@ -10,6 +10,7 @@ use Filament\Schemas\Components\Concerns\CanBeHidden;
 use Filament\Schemas\Components\Concerns\CanBeLiberatedFromContainerGrid;
 use Filament\Schemas\Components\Concerns\CanBeRepeated;
 use Filament\Schemas\Components\Concerns\CanPartiallyRender;
+use Filament\Schemas\Components\Concerns\CanPoll;
 use Filament\Schemas\Components\Concerns\CanSpanColumns;
 use Filament\Schemas\Components\Concerns\Cloneable;
 use Filament\Schemas\Components\Concerns\HasActions;
@@ -44,6 +45,7 @@ class Component extends ViewComponent
     use CanBeRepeated;
     use CanGrow;
     use CanPartiallyRender;
+    use CanPoll;
     use CanSpanColumns;
     use Cloneable;
     use HasActions;

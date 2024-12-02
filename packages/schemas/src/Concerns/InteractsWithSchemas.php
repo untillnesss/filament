@@ -77,6 +77,11 @@ trait InteractsWithSchemas
         return $component->{$method}(...$arguments);
     }
 
+    public function partiallyRenderSchemaComponent(string $componentKey): void
+    {
+        $this->getSchemaComponent($componentKey)?->partiallyRender();
+    }
+
     public function getSchemaComponentFileAttachment(string $componentKey): ?TemporaryUploadedFile
     {
         return data_get($this->componentFileAttachments, $componentKey);
