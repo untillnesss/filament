@@ -31,6 +31,8 @@ trait CanSearchRecords
 
     protected bool | Closure $isSearchOnBlur = false;
 
+    protected bool | Closure $shouldSplitSearchTerms = true;
+
     public function persistSearchInSession(bool | Closure $condition = true): static
     {
         $this->persistsSearchInSession = $condition;
@@ -251,5 +253,17 @@ trait CanSearchRecords
         }
 
         return $relationship;
+    }
+
+    public function splitSearchTerms(bool | Closure $condition = true): static
+    {
+        $this->shouldSplitSearchTerms = $condition;
+
+        return $this;
+    }
+
+    public function shouldSplitSearchTerms(): bool
+    {
+        return (bool) $this->evaluate($this->shouldSplitSearchTerms);
     }
 }
