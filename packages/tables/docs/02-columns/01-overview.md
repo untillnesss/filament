@@ -362,6 +362,23 @@ public function table(Table $table): Table
 }
 ```
 
+### Disabling search term splitting
+
+By default, the table search will split the search term into individual words and search for each word separately. This allows for more flexible search queries. However, it can have a negative impact on performance when large datasets are involved. You can disable this behavior using the `splitSearchTerms(false)` method on the table:
+
+```php
+use Filament\Tables\Table;
+
+public function table(Table $table): Table
+{
+    return $table
+        ->columns([
+            // ...
+        ])
+        ->splitSearchTerms(false);
+}
+```
+
 ## Column actions and URLs
 
 When a cell is clicked, you may run an "action", or open a URL.
