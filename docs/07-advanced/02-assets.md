@@ -338,7 +338,6 @@ Finally, you can load this asynchronous Alpine component in your view using `x-l
 
 ```blade
 <div
-    x-ignore
     x-load
     x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('test-component') }}"
     x-data="testComponent({

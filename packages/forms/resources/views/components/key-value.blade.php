@@ -43,7 +43,6 @@
             x-data="keyValueFormComponent({
                         state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                     })"
-            x-ignore
             {{
                 $attributes
                     ->merge($getExtraAlpineAttributes(), escape: false)

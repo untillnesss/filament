@@ -52,7 +52,6 @@
                                 })
                             },
                         })"
-                x-ignore
                 wire:ignore
                 {{ $getExtraAlpineAttributeBag() }}
             >

@@ -116,7 +116,6 @@
                     },
                 })"
         wire:ignore
-        x-ignore
         {{
             $attributes
                 ->merge([

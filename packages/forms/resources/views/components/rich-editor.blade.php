@@ -33,7 +33,6 @@
                 x-data="richEditorFormComponent({
                             state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')", isOptimisticallyLive: false) }},
                         })"
-                x-ignore
                 x-on:trix-attachment-add="
                     if (! $event.attachment.file) return
 

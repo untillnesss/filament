@@ -61,7 +61,6 @@
                         state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                         splitKeys: @js($getSplitKeys()),
                     })"
-            x-ignore
             {{ $getExtraAlpineAttributeBag() }}
         >
             <x-filament::input

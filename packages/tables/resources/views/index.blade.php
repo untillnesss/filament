@@ -98,7 +98,6 @@
     @if (! $isLoaded)
         wire:init="loadTable"
     @endif
-    x-ignore
     @if (FilamentView::hasSpaMode())
         x-load="visible"
     @else
