@@ -22,7 +22,7 @@ beforeEach(function () {
 });
 
 it('can generate new recovery codes when valid challenge code is used', function () {
-    $googleTwoFactorAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -114,7 +114,7 @@ it('can generate new recovery codes when the current user\'s password is used', 
 });
 
 it('will not generate new recovery codes when an invalid code is used', function () {
-    $googleTwoFactorAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -162,7 +162,7 @@ test('codes are required without the user\'s current password', function () {
 });
 
 test('codes must be 6 digits', function () {
-    $googleTwoFactorAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
