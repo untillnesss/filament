@@ -12,6 +12,7 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
 use Filament\Support\RawJs;
 use Filament\Tables\Columns\Contracts\Editable;
+use Filament\Tables\Table;
 use Illuminate\Support\Js;
 
 class TextInputColumn extends Column implements Editable, HasEmbeddedView
@@ -92,7 +93,7 @@ class TextInputColumn extends Column implements Editable, HasEmbeddedView
             ->merge([
                 'disabled' => $isDisabled,
                 'wire:loading.attr' => 'disabled',
-                'wire:target' => implode(',', \Filament\Tables\Table::LOADING_TARGETS),
+                'wire:target' => implode(',', Table::LOADING_TARGETS),
                 'x-bind:disabled' => $isDisabled ? null : 'isLoading',
                 'inputmode' => $this->getInputMode(),
                 'placeholder' => $this->getPlaceholder(),

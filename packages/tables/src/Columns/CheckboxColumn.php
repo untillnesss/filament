@@ -7,6 +7,7 @@ use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
 use Filament\Tables\Columns\Contracts\Editable;
+use Filament\Tables\Table;
 use Illuminate\Support\Js;
 
 class CheckboxColumn extends Column implements Editable, HasEmbeddedView
@@ -50,7 +51,7 @@ class CheckboxColumn extends Column implements Editable, HasEmbeddedView
             ->merge([
                 'disabled' => $isDisabled,
                 'wire:loading.attr' => 'disabled',
-                'wire:target' => implode(',', \Filament\Tables\Table::LOADING_TARGETS),
+                'wire:target' => implode(',', Table::LOADING_TARGETS),
                 'x-bind:disabled' => $isDisabled ? null : 'isLoading',
             ], escape: false)
             ->class([
