@@ -6,6 +6,7 @@ use Closure;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Concerns\CanOpenUrl;
 use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
 use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Concerns\HasPlaceholder;
@@ -14,11 +15,11 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class Entry extends Component
 {
+    use CanOpenUrl;
     use Concerns\HasExtraEntryWrapperAttributes;
     use Concerns\HasHelperText;
     use Concerns\HasHint;
     use Concerns\HasName;
-    use \Filament\Schemas\Components\Concerns\CanOpenUrl;
     use HasAlignment;
     use HasPlaceholder;
     use HasTooltip;
