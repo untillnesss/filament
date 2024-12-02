@@ -8,6 +8,7 @@ use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
 use Filament\Tables\Columns\Contracts\Editable;
+use Filament\Tables\Table;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
@@ -61,7 +62,7 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
             ->merge([
                 'disabled' => $this->isDisabled(),
                 'wire:loading.attr' => 'disabled',
-                'wire:target' => implode(',', \Filament\Tables\Table::LOADING_TARGETS),
+                'wire:target' => implode(',', Table::LOADING_TARGETS),
                 'x-tooltip' => filled($tooltip = $this->getTooltip($state))
                     ? '{
                         content: ' . Js::from($tooltip) . ',
