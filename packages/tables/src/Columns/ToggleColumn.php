@@ -60,6 +60,8 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
         $buttonAttributes = (new ComponentAttributeBag)
             ->merge([
                 'disabled' => $this->isDisabled(),
+                'wire:loading.attr' => 'disabled',
+                'wire:target' => implode(',', \Filament\Tables\Table::LOADING_TARGETS),
             ], escape: false)
             ->class(['fi-toggle']);
 
