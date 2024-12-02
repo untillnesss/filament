@@ -33,7 +33,7 @@ class CheckboxColumn extends Column implements Editable, HasEmbeddedView
         $attributes = $this->getExtraAttributeBag()
             ->merge([
                 'x-load' => FilamentView::hasSpaMode()
-                    ? 'visible || event (ax-modal-opened)'
+                    ? 'visible || event (x-modal-opened)'
                     : true,
                 'x-load-src' => FilamentAsset::getAlpineComponentSrc('columns/checkbox', 'filament/tables'),
                 'x-data' => 'checkboxTableColumn({

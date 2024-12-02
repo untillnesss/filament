@@ -113,7 +113,7 @@
             <div
                 x-ignore
                 @if (FilamentView::hasSpaMode())
-                    {{-- format-ignore-start --}}x-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
+                    {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
                 @else
                     x-load
                 @endif

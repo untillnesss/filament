@@ -5,6 +5,7 @@ import Sortable from './sortable'
 import Tooltip from '@ryangjchandler/alpine-tooltip'
 import dropdown from './components/dropdown.js'
 import modal from './components/modal.js'
+import AsyncAlpine from 'async-alpine';
 
 import '../css/components/actions.css'
 import '../css/components/avatar.css'
@@ -69,6 +70,7 @@ document.addEventListener('alpine:init', () => {
     window.Alpine.plugin(AlpineLazyLoadAssets)
     window.Alpine.plugin(Sortable)
     window.Alpine.plugin(Tooltip)
+    window.Alpine.plugin(AsyncAlpine);
     window.Alpine.data('filamentDropdown', dropdown)
     window.Alpine.data('filamentModal', modal)
 })

@@ -19,7 +19,7 @@ export default ({ id }) => ({
         this.$nextTick(() => {
             this.isOpen = true
 
-            this.$dispatch('ax-modal-opened')
+            this.$dispatch('x-modal-opened')
         })
     },
 })
