@@ -14,11 +14,11 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class Entry extends Component
 {
-    use Concerns\CanOpenUrl;
     use Concerns\HasExtraEntryWrapperAttributes;
     use Concerns\HasHelperText;
     use Concerns\HasHint;
     use Concerns\HasName;
+    use \Filament\Schemas\Components\Concerns\CanOpenUrl;
     use HasAlignment;
     use HasPlaceholder;
     use HasTooltip;

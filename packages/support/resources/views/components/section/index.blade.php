@@ -11,6 +11,7 @@
     'collapsed' => false,
     'collapsible' => false,
     'compact' => false,
+    'contained' => true,
     'contentBefore' => false,
     'description' => null,
     'footer' => null,
@@ -43,7 +44,8 @@
     {{
         $attributes->class([
             'fi-section',
-            'fi-section-has-content-before' => filled($contentBefore),
+            'fi-section-not-contained' => ! $contained,
+            'fi-section-has-content-before' => $contentBefore,
             'fi-section-has-header' => $hasHeader,
             'fi-aside' => $aside,
             'fi-compact' => $compact,
