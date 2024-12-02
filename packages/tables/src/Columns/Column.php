@@ -11,13 +11,12 @@ use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Concerns\HasCellState;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Filament\Support\Concerns\HasPlaceholder;
-use Filament\Support\Concerns\HasTooltip;
 use Filament\Support\Concerns\HasVerticalAlignment;
 use Filament\Support\Enums\Alignment;
+use Filament\Tables\Columns\Concerns\HasTooltip;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
 
 use function Filament\Support\generate_href_html;
@@ -157,12 +156,6 @@ class Column extends ViewComponent
 
         $attributes = $attributes
             ->merge([
-                'x-tooltip' => filled($tooltip = $this->getTooltip())
-                    ? '{
-                        content: ' . Js::from($tooltip) . ',
-                        theme: $store.theme,
-                    }'
-                    : null,
                 'type' => ($wrapperTag === 'button') ? 'button' : null,
                 'wire:click' => $wireClickAction = match (true) {
                     ($wrapperTag !== 'button') => null,

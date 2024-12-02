@@ -75,6 +75,12 @@ class SelectColumn extends Column implements Editable, HasEmbeddedView
             ->merge([
                 'disabled' => $isDisabled,
                 'x-bind:disabled' => $isDisabled ? null : 'isLoading',
+                'x-tooltip' => filled($tooltip = $this->getTooltip($state))
+                    ? '{
+                        content: ' . Js::from($tooltip) . ',
+                        theme: $store.theme,
+                    }'
+                    : null,
             ], escape: false)
             ->class([
                 'fi-select-input',

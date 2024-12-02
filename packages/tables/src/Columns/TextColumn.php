@@ -183,7 +183,17 @@ class TextColumn extends Column implements HasEmbeddedView
                 'fi-inline' => $this->isInline(),
             ]);
 
-        if (empty($state)) {
+        if (blank($state)) {
+            $attributes = $attributes
+                ->merge([
+                    'x-tooltip' => filled($tooltip = $this->getEmptyTooltip())
+                        ? '{
+                            content: ' . Js::from($tooltip) . ',
+                            theme: $store.theme,
+                        }'
+                        : null,
+                ], escape: false);
+
             $placeholder = $this->getPlaceholder();
 
             ob_start(); ?>
@@ -302,6 +312,12 @@ class TextColumn extends Column implements HasEmbeddedView
                                     timeout: {$copyMessageDurationJs},
                                 })
                                 JS
+                            : null,
+                        'x-tooltip' => filled($tooltip = $this->getTooltip($stateItem))
+                            ? '{
+                                content: ' . Js::from($tooltip) . ',
+                                theme: $store.theme,
+                            }'
                             : null,
                     ], escape: false)
                     ->class([
