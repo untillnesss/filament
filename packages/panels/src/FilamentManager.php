@@ -968,4 +968,9 @@ class FilamentManager
     {
         return $this->getCurrentPanel()->getMultiFactorAuthenticationProviders();
     }
+
+    public function isAuthorizationStrict(): bool
+    {
+        return $this->getCurrentPanel()->isAuthorizationStrict();
+    }
 }

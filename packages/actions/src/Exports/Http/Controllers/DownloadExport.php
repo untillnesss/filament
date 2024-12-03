@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-use function Filament\authorize;
-
 class DownloadExport
 {
     public function __invoke(Request $request, Export $export): StreamedResponse
@@ -20,14 +18,18 @@ class DownloadExport
                 : null,
         )->check(), 401);
 
-        if (filled(Gate::getPolicyFor($export::class))) {
-            authorize('view', $export);
+        $user = auth(
+            $request->hasValidSignature(absolute: false)
+                ? $request->query('authGuard')
+                : null,
+        )->user();
+
+        $exportPolicy = Gate::getPolicyFor($export::class);
+
+        if (filled($exportPolicy) && method_exists($exportPolicy, 'view')) {
+            Gate::forUser($user)->authorize('view', $export);
         } else {
-            abort_unless($export->user()->is(auth(
-                $request->hasValidSignature(absolute: false)
-                    ? $request->query('authGuard')
-                    : null,
-            )->user()), 403);
+            abort_unless($export->user()->is($user), 403);
         }
 
         $format = ExportFormat::tryFrom($request->query('format'));
