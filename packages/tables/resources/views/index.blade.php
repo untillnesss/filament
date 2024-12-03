@@ -1211,11 +1211,13 @@
                                         >
                                             {{ $columnLabel }}
 
-                                            {{ \Filament\Support\generate_icon_html(($isColumnActivelySorted && $sortDirection === 'asc') ? 'heroicon-m-chevron-up' : 'heroicon-m-chevron-down', alias: match (true) {
-                                                $isColumnActivelySorted && ($sortDirection === 'asc') => 'tables::header-cell.sort-asc-button',
-                                                $isColumnActivelySorted && ($sortDirection === 'desc') => 'tables::header-cell.sort-desc-button',
-                                                default => 'tables::header-cell.sort-button',
-                                            }) }}
+                                            {{
+                                                \Filament\Support\generate_icon_html(($isColumnActivelySorted && $sortDirection === 'asc') ? 'heroicon-m-chevron-up' : 'heroicon-m-chevron-down', alias: match (true) {
+                                                    $isColumnActivelySorted && ($sortDirection === 'asc') => 'tables::header-cell.sort-asc-button',
+                                                    $isColumnActivelySorted && ($sortDirection === 'desc') => 'tables::header-cell.sort-desc-button',
+                                                    default => 'tables::header-cell.sort-button',
+                                                })
+                                            }}
                                         </button>
                                     @else
                                         {{ $columnLabel }}
