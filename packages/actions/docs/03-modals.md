@@ -79,14 +79,14 @@ Action::make('updateAuthor')
 
 ### Using a wizard as a modal form
 
-You may create a [multistep form wizard](../schema/layout/wizard) inside a modal. Instead of using a `form()`, define a `steps()` array and pass your `Step` objects:
+You may create a [multistep form wizard](../schemas/layout/wizard) inside a modal. Instead of using a `form()`, define a `steps()` array and pass your `Step` objects:
 
 ```php
 use Filament\Actions\Action;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schema\Components\Wizard\Step;
+use Filament\Schemas\Components\Wizard\Step;
 
 Action::make('create')
     ->steps([
@@ -363,7 +363,7 @@ You may execute code within a closure when the modal opens, by passing it to the
 
 ```php
 use Filament\Actions\Action;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 Action::make('create')
     ->mountUsing(function (Schema $form) {

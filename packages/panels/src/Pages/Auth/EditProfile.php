@@ -7,13 +7,18 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
+use Filament\MultiFactorAuthentication\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns;
 use Filament\Pages\Page;
 use Filament\Panel;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Decorations\FormActionsDecorations;
+use Filament\Schemas\Components\Form;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\NestedSchema;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
@@ -29,14 +34,13 @@ use Throwable;
 use function Filament\Support\is_app_url;
 
 /**
- * @property Schema $form
+ * @property-read Schema $form
  */
 class EditProfile extends Page
 {
     use Concerns\CanUseDatabaseTransactions;
     use Concerns\HasMaxWidth;
     use Concerns\HasTopbar;
-    use Concerns\InteractsWithFormActions;
 
     /**
      * @var array<string, mixed> | null
@@ -44,6 +48,8 @@ class EditProfile extends Page
     public ?array $data = [];
 
     protected static bool $isDiscovered = false;
+
+    protected static string $view;
 
     public function getLayout(): string
     {
@@ -267,6 +273,18 @@ class EditProfile extends Page
             ->dehydrated(false);
     }
 
+    protected function getCurrentPasswordFormComponent(): Component
+    {
+        return TextInput::make('currentPassword')
+            ->label(__('filament-panels::pages/auth/edit-profile.form.current_password.label'))
+            ->password()
+            ->currentPassword(guard: Filament::getAuthGuard())
+            ->revealable(filament()->arePasswordsRevealable())
+            ->required()
+            ->visible(fn (Get $get): bool => filled($get('password')))
+            ->dehydrated(false);
+    }
+
     public function form(Schema $form): Schema
     {
         return $form;
@@ -285,6 +303,8 @@ class EditProfile extends Page
                         $this->getEmailFormComponent(),
                         $this->getPasswordFormComponent(),
                         $this->getPasswordConfirmationFormComponent(),
+                        $this->getCurrentPasswordFormComponent(),
+                        ...$this->getMultiFactorAuthenticationFormComponents(),
                     ])
                     ->operation('edit')
                     ->model($this->getUser())
@@ -348,9 +368,15 @@ class EditProfile extends Page
      */
     public function backAction(): Action
     {
+        $url = filament()->getUrl();
+
         return Action::make('back')
             ->label(__('filament-panels::pages/auth/edit-profile.actions.cancel.label'))
-            ->alpineClickHandler('document.referrer ? window.history.back() : (window.location.href = ' . Js::from(filament()->getUrl()) . ')')
+            ->alpineClickHandler(
+                FilamentView::hasSpaMode($url)
+                    ? 'document.referrer ? window.history.back() : Livewire.navigate(' . Js::from($url) . ')'
+                    : 'document.referrer ? window.history.back() : (window.location.href = ' . Js::from($url) . ')',
+            )
             ->color('gray');
     }
 
@@ -360,5 +386,44 @@ class EditProfile extends Page
             'hasTopbar' => $this->hasTopbar(),
             'maxWidth' => $this->getMaxWidth(),
         ];
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getFormContentComponent(),
+            ]);
+    }
+
+    public function getFormContentComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('save')
+            ->footer(FormActionsDecorations::make($this->getFormActions())
+                ->alignment($this->getFormActionsAlignment())
+                ->fullWidth($this->hasFullWidthFormActions())
+                ->sticky((! static::isSimple()) && $this->areFormActionsSticky()));
+    }
+
+    /**
+     * @return array<Component>
+     */
+    public function getMultiFactorAuthenticationFormComponents(): array
+    {
+        $providers = Filament::getMultiFactorAuthenticationProviders();
+
+        if (empty($providers)) {
+            return [];
+        }
+
+        $user = Filament::auth()->user();
+
+        return collect($providers)
+            ->sort(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): int => $multiFactorAuthenticationProvider->isEnabled($user) ? 0 : 1)
+            ->map(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): Component => Group::make($multiFactorAuthenticationProvider->getManagementFormComponents())
+                ->statePath($multiFactorAuthenticationProvider->getId()))
+            ->all();
     }
 }

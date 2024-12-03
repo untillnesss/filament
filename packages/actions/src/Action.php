@@ -4,8 +4,8 @@ namespace Filament\Actions;
 
 use Closure;
 use Filament\Notifications\Notification;
-use Filament\Schema\Components\Actions\ActionContainer;
-use Filament\Schema\Components\Actions\ActionContainer as InfolistActionContainer;
+use Filament\Schemas\Components\Actions\ActionContainer;
+use Filament\Schemas\Components\Actions\ActionContainer as InfolistActionContainer;
 use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\HasBadge;
 use Filament\Support\Concerns\HasColor;
@@ -19,10 +19,13 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Js;
 use Illuminate\Support\Str;
+use Illuminate\View\ComponentAttributeBag;
+use Illuminate\View\ComponentSlot;
 use Livewire\Drawer\Utils;
 
 class Action extends ViewComponent implements Arrayable
@@ -74,15 +77,15 @@ class Action extends ViewComponent implements Arrayable
 
     protected bool | Closure $isBulk = false;
 
-    public const BADGE_VIEW = 'filament-actions::badge-action';
+    public const BADGE_VIEW = 'filament::components.badge';
 
-    public const BUTTON_VIEW = 'filament-actions::button-action';
+    public const BUTTON_VIEW = 'filament::components.button.index';
 
-    public const GROUPED_VIEW = 'filament-actions::grouped-action';
+    public const GROUPED_VIEW = 'filament::components.dropdown.list.item';
 
-    public const ICON_BUTTON_VIEW = 'filament-actions::icon-button-action';
+    public const ICON_BUTTON_VIEW = 'filament::components.icon-button';
 
-    public const LINK_VIEW = 'filament-actions::link-action';
+    public const LINK_VIEW = 'filament::components.link';
 
     protected string $evaluationIdentifier = 'action';
 
@@ -560,7 +563,7 @@ class Action extends ViewComponent implements Arrayable
      */
     protected static function isViewSafe(string $view): bool
     {
-        return Str::startsWith($view, 'filament-actions::');
+        return Str::startsWith($view, 'filament::');
     }
 
     public function shouldMarkAsRead(): bool
@@ -597,5 +600,114 @@ class Action extends ViewComponent implements Arrayable
         return new HtmlString(Utils::insertAttributesIntoHtmlRoot($this->renderModal()->render(), [
             'wire:partial' => "action-modals.{$this->getNestingIndex()}",
         ]));
+    }
+
+    /**
+     * @param  array<string, mixed>  $props
+     */
+    protected function renderActionBladeComponentView(array $props = []): View
+    {
+        $isDisabled = $this->isDisabled();
+        $url = $this->getUrl();
+        $shouldPostToUrl = $this->shouldPostToUrl();
+
+        return view(
+            $this->getView(),
+            [
+                'attributes' => (new ComponentAttributeBag([
+                    'action' => $shouldPostToUrl ? $url : null,
+                    'method' => $shouldPostToUrl ? 'post' : null,
+                    'wire:click' => $this->getLivewireClickHandler(),
+                    'x-on:click' => $this->getAlpineClickHandler(),
+                ]))
+                    ->merge($this->getExtraAttributes(), escape: false)
+                    ->class($props['class'] ?? []),
+                'color' => $this->getColor(),
+                'disabled' => $isDisabled,
+                'form' => $this->getFormToSubmit(),
+                'formId' => $this->getFormId(),
+                'href' => ($isDisabled || $shouldPostToUrl) ? null : $url,
+                'icon' => $props['icon'] ?? $this->getIcon(),
+                'iconSize' => $this->getIconSize(),
+                'keyBindings' => $this->getKeyBindings(),
+                'labelSrOnly' => $this->isLabelHidden(),
+                'tag' => $url ? $shouldPostToUrl ? 'form' : 'a' : 'button',
+                'target' => ($url && $this->shouldOpenUrlInNewTab()) ? '_blank' : null,
+                'tooltip' => $this->getTooltip(),
+                'type' => $this->canSubmitForm() ? 'submit' : 'button',
+                ...Arr::except($props, ['class']),
+                ...$this->viewData,
+            ],
+        );
+    }
+
+    protected function renderBadge(): View
+    {
+        return $this->renderActionBladeComponentView([
+            'class' => 'fi-ac-badge-action',
+            'iconPosition' => $this->getIconPosition(),
+            'size' => $this->getSize(),
+            'slot' => new ComponentSlot(e($this->getLabel())),
+        ]);
+    }
+
+    protected function renderButton(): View
+    {
+        return $this->renderActionBladeComponentView([
+            'badge' => $this->getBadge(),
+            'badgeColor' => $this->getBadgeColor(),
+            'class' => 'fi-ac-btn-action',
+            'iconPosition' => $this->getIconPosition(),
+            'labeledFrom' => $this->getLabeledFromBreakpoint(),
+            'outlined' => $this->isOutlined(),
+            'size' => $this->getSize(),
+            'slot' => new ComponentSlot(e($this->getLabel())),
+        ]);
+    }
+
+    protected function renderGrouped(): View
+    {
+        return $this->renderActionBladeComponentView([
+            'badge' => $this->getBadge(),
+            'badgeColor' => $this->getBadgeColor(),
+            'class' => 'fi-ac-grouped-action',
+            'icon' => $this->getGroupedIcon(),
+            'slot' => new ComponentSlot(e($this->getLabel())),
+        ]);
+    }
+
+    protected function renderIconButton(): View
+    {
+        return $this->renderActionBladeComponentView([
+            'badge' => $this->getBadge(),
+            'badgeColor' => $this->getBadgeColor(),
+            'class' => 'fi-ac-icon-btn-action',
+            'label' => $this->getLabel(),
+            'size' => $this->getSize(),
+        ]);
+    }
+
+    protected function renderLink(): View
+    {
+        return $this->renderActionBladeComponentView([
+            'badge' => $this->getBadge(),
+            'badgeColor' => $this->getBadgeColor(),
+            'class' => 'fi-ac-link-action',
+            'iconPosition' => $this->getIconPosition(),
+            'size' => $this->getSize(),
+            'slot' => new ComponentSlot(e($this->getLabel())),
+        ]);
+    }
+
+    public function render(): View
+    {
+        return match ($this->getView()) {
+            static::BADGE_VIEW => $this->renderBadge(),
+            static::BUTTON_VIEW => $this->renderButton(),
+            static::GROUPED_VIEW => $this->renderGrouped(),
+            static::ICON_BUTTON_VIEW => $this->renderIconButton(),
+            static::LINK_VIEW => $this->renderLink(),
+            default => parent::render(),
+        };
     }
 }

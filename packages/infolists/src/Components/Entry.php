@@ -5,8 +5,9 @@ namespace Filament\Infolists\Components;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Decorations\Layouts\DecorationsLayout;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Concerns\CanOpenUrl;
+use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
 use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Concerns\HasPlaceholder;
 use Filament\Support\Concerns\HasTooltip;
@@ -14,7 +15,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class Entry extends Component
 {
-    use Concerns\CanOpenUrl;
+    use CanOpenUrl;
     use Concerns\HasExtraEntryWrapperAttributes;
     use Concerns\HasHelperText;
     use Concerns\HasHint;

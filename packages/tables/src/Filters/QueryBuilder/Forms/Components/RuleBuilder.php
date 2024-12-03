@@ -6,8 +6,8 @@ use Exception;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Repeater;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Schema;
 use Filament\Tables\Filters\QueryBuilder\Concerns\HasConstraints;
 use Filament\Tables\Filters\QueryBuilder\Constraints\Constraint;
 use Illuminate\Support\Str;
@@ -69,7 +69,7 @@ class RuleBuilder extends Builder
                                 ])
                                 ->addAction(fn (Action $action) => $action
                                     ->label(__('filament-tables::filters/query-builder.actions.add_rule_group.label'))
-                                    ->icon('heroicon-s-plus'))
+                                    ->icon('heroicon-m-plus'))
                                 ->labelBetweenItems(__('filament-tables::filters/query-builder.item_separators.or'))
                                 ->collapsible()
                                 ->expandAllAction(fn (Action $action) => $action->hidden())
@@ -112,7 +112,7 @@ class RuleBuilder extends Builder
             })
             ->addAction(fn (Action $action) => $action
                 ->label(__('filament-tables::filters/query-builder.actions.add_rule.label'))
-                ->icon('heroicon-s-plus'))
+                ->icon('heroicon-m-plus'))
             ->addBetweenAction(fn (Action $action) => $action->hidden())
             ->label(__('filament-tables::filters/query-builder.form.rules.label'))
             ->hiddenLabel()

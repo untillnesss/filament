@@ -5,17 +5,18 @@ namespace Filament\Forms\Components;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Decorations\Layouts\AlignDecorations;
-use Filament\Schema\Components\Decorations\Layouts\DecorationsLayout;
-use Filament\Schema\Components\StateCasts\Contracts\StateCast;
-use Filament\Schema\Components\StateCasts\EnumStateCast;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
+use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
+use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
+use Filament\Schemas\Components\StateCasts\EnumStateCast;
 
 class Field extends Component implements Contracts\HasValidationRules
 {
     use Concerns\CanBeAutofocused;
     use Concerns\CanBeMarkedAsRequired;
     use Concerns\CanBeValidated;
+    use Concerns\CanDisableGrammarly;
     use Concerns\HasEnum;
     use Concerns\HasExtraFieldWrapperAttributes;
     use Concerns\HasHelperText;

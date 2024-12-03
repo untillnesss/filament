@@ -125,7 +125,7 @@ Resource classes contain a `form()` method that is used to build the forms on th
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public static function form(Schema $form): Schema
 {
@@ -138,7 +138,7 @@ public static function form(Schema $form): Schema
 }
 ```
 
-The `schema()` method is used to define the structure of your form. It is an array of [fields](../../forms/fields#available-fields) and [layout components](../../schema/layout#available-layout-components), in the order they should appear in your form.
+The `schema()` method is used to define the structure of your form. It is an array of [fields](../../forms/fields#available-fields) and [layout components](../../schemas/layout#available-layout-components), in the order they should appear in your form.
 
 Check out the Forms docs for a [guide](../../forms/getting-started) on how to build forms with Filament.
 

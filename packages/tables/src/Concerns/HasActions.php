@@ -4,7 +4,7 @@ namespace Filament\Tables\Concerns;
 
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
 trait HasActions

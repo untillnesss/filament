@@ -8,15 +8,16 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ReplicateAction;
 use Filament\Actions\RestoreAction;
-use Filament\Pages\Concerns\InteractsWithFormActions;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\NestedSchema;
+use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 /**
- * @property Schema $form
+ * @property-read Schema $form
  */
 class ViewRecord extends Page
 {
@@ -24,12 +25,6 @@ class ViewRecord extends Page
     use Concerns\InteractsWithRecord {
         configureAction as configureActionRecord;
     }
-    use InteractsWithFormActions;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::resources.pages.view-record';
 
     /**
      * @var array<string, mixed> | null
@@ -228,5 +223,48 @@ class ViewRecord extends Page
     public static function shouldRegisterNavigation(array $parameters = []): bool
     {
         return parent::shouldRegisterNavigation($parameters) && static::getResource()::canView($parameters['record']);
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                ...($this->hasCombinedRelationManagerTabsWithContent() ? [] : $this->getContentComponents()),
+                $this->getRelationManagersContentComponent(),
+            ]);
+    }
+
+    /**
+     * @return array<Component>
+     */
+    public function getContentComponents(): array
+    {
+        return [
+            $this->hasInfolist()
+                ? $this->getInfolistContentComponent()
+                : $this->getFormContentComponent(),
+        ];
+    }
+
+    public function getFormContentComponent(): Component
+    {
+        return NestedSchema::make('form');
+    }
+
+    public function getInfolistContentComponent(): Component
+    {
+        return NestedSchema::make('infolist');
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPageClasses(): array
+    {
+        return [
+            'fi-resource-view-record-page',
+            'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
+            "fi-resource-record-{$this->getRecord()->getKey()}",
+        ];
     }
 }

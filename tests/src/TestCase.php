@@ -9,7 +9,7 @@ use Filament\FilamentServiceProvider;
 use Filament\Forms\FormsServiceProvider;
 use Filament\Infolists\InfolistsServiceProvider;
 use Filament\Notifications\NotificationsServiceProvider;
-use Filament\Schema\SchemaServiceProvider;
+use Filament\Schemas\SchemaServiceProvider;
 use Filament\SpatieLaravelSettingsPluginServiceProvider;
 use Filament\SpatieLaravelTranslatablePluginServiceProvider;
 use Filament\Support\SupportServiceProvider;
@@ -47,11 +47,13 @@ abstract class TestCase extends BaseTestCase
             WidgetsServiceProvider::class,
             AdminPanelProvider::class,
             CustomPanelProvider::class,
-            SlugsPanelProvider::class,
-            SingleDomainPanel::class,
-            MultiDomainPanel::class,
-            TenancyPanelProvider::class,
+            EmailCodeAuthenticationPanelProvider::class,
+            GoogleTwoFactorAuthenticationPanelProvider::class,
             DomainTenancyPanelProvider::class,
+            MultiDomainPanel::class,
+            SingleDomainPanel::class,
+            SlugsPanelProvider::class,
+            TenancyPanelProvider::class,
         ];
 
         sort($providers);

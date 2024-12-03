@@ -164,7 +164,7 @@ ToggleButtons::make('technologies')
 
 <AutoScreenshot name="forms/fields/toggle-buttons/columns" alt="Toggle buttons with 2 columns" version="4.x" />
 
-This method accepts the same options as the `columns()` method of the [grid](../../schema/layout/grid). This allows you to responsively customize the number of columns at various breakpoints.
+This method accepts the same options as the `columns()` method of the [grid](../../schemas/layout/grid). This allows you to responsively customize the number of columns at various breakpoints.
 
 ### Setting the grid direction
 

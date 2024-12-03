@@ -4,7 +4,7 @@ namespace Filament\Infolists\Components;
 
 use Closure;
 use Filament\Infolists\Components\TextEntry\Enums\TextEntrySize;
-use Filament\Schema\Components\Contracts\HasAffixActions;
+use Filament\Schemas\Components\Contracts\HasAffixActions;
 use Filament\Support\Concerns\CanBeCopied;
 use Filament\Support\Concerns\HasFontFamily;
 use Filament\Support\Concerns\HasLineClamp;

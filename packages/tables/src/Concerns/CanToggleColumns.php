@@ -3,11 +3,11 @@
 namespace Filament\Tables\Concerns;
 
 use Filament\Forms\Components\Checkbox;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Arr;
 
 /**
- * @property Schema $toggleTableColumnForm
+ * @property-read Schema $toggleTableColumnForm
  */
 trait CanToggleColumns
 {

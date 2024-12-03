@@ -6,3 +6,4 @@ fi-sidebar-item-button fi-sidebar-item-btn
 fi-sidebar-group-collapse-button fi-sidebar-group-collapse-btn
 fi-sidebar-group-button fi-sidebar-group-btn
 fi-sidebar-group-collapse-button fi-sidebar-group-collapse-btn
+fi-input-wrp-input fi-input-wrp-content-ctn

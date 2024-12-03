@@ -6,10 +6,10 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages\Dashboard;
 use Filament\Tests\Panels\Fixtures\Pages\Settings;
-use Filament\Tests\Panels\Fixtures\Resources\PostCategoryResource;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource;
-use Filament\Tests\Panels\Fixtures\Resources\ProductResource;
-use Filament\Tests\Panels\Fixtures\Resources\UserResource;
+use Filament\Tests\Panels\Fixtures\Resources\PostCategories\PostCategoryResource;
+use Filament\Tests\Panels\Fixtures\Resources\Posts\PostResource;
+use Filament\Tests\Panels\Fixtures\Resources\Shop\Products\ProductResource;
+use Filament\Tests\Panels\Fixtures\Resources\Users\UserResource;
 use Filament\Tests\Panels\Navigation\TestCase;
 
 uses(TestCase::class);

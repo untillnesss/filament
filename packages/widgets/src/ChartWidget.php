@@ -2,8 +2,8 @@
 
 namespace Filament\Widgets;
 
-use Filament\Schema\Concerns\InteractsWithSchemas;
-use Filament\Schema\Contracts\HasSchemas;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Support\RawJs;
 use Illuminate\Contracts\Support\Htmlable;
 use Livewire\Attributes\Locked;

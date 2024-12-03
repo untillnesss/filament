@@ -173,6 +173,21 @@ Builder::make('content')
     ->addActionLabel('Add a new block')
 ```
 
+### Aligning the add action button
+
+By default, the add action is aligned in the center. You may adjust this using the `addActionAlignment()` method, passing an `Alignment` option of `Alignment::Start` or `Alignment::End`:
+
+```php
+use Filament\Forms\Components\Builder;
+use Filament\Support\Enums\Alignment;
+
+Builder::make('content')
+    ->schema([
+        // ...
+    ])
+    ->addActionAlignment(Alignment::Start)
+```
+
 ### Preventing the user from adding items
 
 You may prevent the user from adding items to the builder using the `addable(false)` method:
@@ -450,7 +465,7 @@ Builder::make('content')
 
 ### Adding extra item actions to a builder
 
-You may add new [action buttons](../../schema/actions) to the header of each builder item by passing `Action` objects into `extraItemActions()`:
+You may add new [action buttons](../../schemas/actions) to the header of each builder item by passing `Action` objects into `extraItemActions()`:
 
 ```php
 use Filament\Actions\Action;

@@ -7,6 +7,7 @@ use Filament\Actions\Exports\Downloaders\Contracts\Downloader;
 use Filament\Actions\Exports\Downloaders\CsvDownloader;
 use Filament\Actions\Exports\Downloaders\XlsxDownloader;
 use Filament\Actions\Exports\Models\Export;
+use Illuminate\Support\Facades\URL;
 
 enum ExportFormat: string
 {
@@ -22,11 +23,11 @@ enum ExportFormat: string
         };
     }
 
-    public function getDownloadNotificationAction(Export $export): NotificationAction
+    public function getDownloadNotificationAction(Export $export, string $authGuard): NotificationAction
     {
         return NotificationAction::make("download_{$this->value}")
             ->label(__("filament-actions::export.notifications.completed.actions.download_{$this->value}.label"))
-            ->url(route('filament.exports.download', ['export' => $export, 'format' => $this], absolute: false), shouldOpenInNewTab: true)
+            ->url(URL::signedRoute('filament.exports.download', ['authGuard' => $authGuard, 'export' => $export, 'format' => $this], absolute: false), shouldOpenInNewTab: true)
             ->markAsRead();
     }
 }

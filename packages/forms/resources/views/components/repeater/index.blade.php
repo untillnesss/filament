@@ -1,5 +1,7 @@
 @php
     use Filament\Actions\Action;
+    use Filament\Support\Enums\Alignment;
+    use Illuminate\View\ComponentAttributeBag;
 
     $containers = $getChildComponentContainers();
 
@@ -63,17 +65,17 @@
 
         @if (count($containers))
             <ul>
-                <x-filament::grid
-                    :default="$getGridColumns('default')"
-                    :sm="$getGridColumns('sm')"
-                    :md="$getGridColumns('md')"
-                    :lg="$getGridColumns('lg')"
-                    :xl="$getGridColumns('xl')"
-                    :two-xl="$getGridColumns('2xl')"
-                    :wire:end.stop="'mountAction(\'reorder\', { items: $event.target.sortable.toArray() }, { schemaComponent: \'' . $key . '\' })'"
+                <div
                     x-sortable
-                    :data-sortable-animation-duration="$getReorderAnimationDuration()"
-                    class="items-start gap-4"
+                    {{
+                        (new ComponentAttributeBag)
+                            ->grid($getGridColumns())
+                            ->merge([
+                                'data-sortable-animation-duration' => $getReorderAnimationDuration(),
+                                'wire:end.stop' => 'mountAction(\'reorder\', { items: $event.target.sortable.toArray() }, { schemaComponent: \'' . $key . '\' })',
+                            ], escape: false)
+                            ->class(['items-start gap-4'])
+                    }}
                 >
                     @foreach ($containers as $uuid => $item)
                         @php
@@ -233,12 +235,22 @@
                             @endif
                         @endif
                     @endforeach
-                </x-filament::grid>
+                </div>
             </ul>
         @endif
 
         @if ($isAddable && $addAction->isVisible())
-            <div class="flex justify-center">
+            <div
+                @class([
+                    'flex',
+                    match ($getAddActionAlignment()) {
+                        Alignment::Start, Alignment::Left => 'justify-start',
+                        Alignment::Center, null => 'justify-center',
+                        Alignment::End, Alignment::Right => 'justify-end',
+                        default => $alignment,
+                    },
+                ])
+            >
                 {{ $addAction }}
             </div>
         @endif

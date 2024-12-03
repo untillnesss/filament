@@ -4,7 +4,7 @@ namespace Filament\Actions;
 
 use Closure;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Schema\Contracts\HasSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Database\Eloquent\Model;
 

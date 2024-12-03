@@ -24,12 +24,17 @@ use Filament\Resources\Concerns\InteractsWithRelationshipTable;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\RelationManagers\RelationManagerConfiguration;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\RenderHook;
+use Filament\Schemas\Components\TableBuilder;
+use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Url;
 
 use function Filament\authorize;
@@ -41,11 +46,6 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
         configureAction as configureActionRecord;
     }
     use InteractsWithRelationshipTable;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::resources.pages.manage-related-records';
 
     public ?string $previousUrl = null;
 
@@ -107,6 +107,10 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
      */
     public static function canAccess(array $parameters = []): bool
     {
+        if ($relatedResource = static::getRelatedResource()) {
+            return $relatedResource::canAccess();
+        }
+
         $record = $parameters['record'] ?? null;
 
         if (! $record) {
@@ -131,6 +135,19 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
         return static::$breadcrumb ?? static::getTitle();
     }
 
+    public function getTitle(): string | Htmlable
+    {
+        if (filled(static::$title)) {
+            return static::$title;
+        }
+
+        if ($relatedResource = static::getRelatedResource()) {
+            return $relatedResource::getTitleCasePluralModelLabel();
+        }
+
+        return parent::getTitle();
+    }
+
     /**
      * @return class-string<Page>
      */
@@ -147,6 +164,11 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
     protected function configureAction(Action $action): void
     {
         $this->configureActionRecord($action);
+
+        match (true) {
+            $action instanceof CreateAction => $this->configureCreateAction($action),
+            default => null,
+        };
     }
 
     protected function configureTableAction(Action $action): void
@@ -188,6 +210,12 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
                 return $form;
             });
+
+        $relatedResource = static::getRelatedResource();
+
+        if ($relatedResource && $relatedResource::hasPage('create')) {
+            $action->url(fn (): string => $relatedResource::getUrl('create', shouldGuessMissingParameters: true));
+        }
     }
 
     protected function configureDeleteAction(DeleteAction $action): void
@@ -217,6 +245,12 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
                 return $form;
             });
+
+        $relatedResource = static::getRelatedResource();
+
+        if ($relatedResource && $relatedResource::hasPage('edit')) {
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('edit', ['record' => $record], shouldGuessMissingParameters: true));
+        }
     }
 
     protected function configureForceDeleteAction(ForceDeleteAction $action): void
@@ -251,6 +285,12 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
                 return $form;
             });
+
+        $relatedResource = static::getRelatedResource();
+
+        if ($relatedResource && $relatedResource::hasPage('view')) {
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('view', ['record' => $record], shouldGuessMissingParameters: true));
+        }
     }
 
     protected function configureTableBulkAction(BulkAction $action): void
@@ -299,6 +339,14 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
     {
         if (static::shouldSkipAuthorization()) {
             return true;
+        }
+
+        if ($relatedResource = static::getRelatedResource()) {
+            $method = 'can' . Str::lcfirst($action);
+
+            return method_exists($relatedResource, $method)
+                ? $relatedResource::{$method}($record)
+                : $relatedResource::can($action, $record);
         }
 
         $model = $this->getTable()->getModel();
@@ -382,10 +430,6 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
     protected function canReorder(): bool
     {
-        if ($relatedResource = static::getRelatedResource()) {
-            return $relatedResource::canReorder();
-        }
-
         return $this->can('reorder');
     }
 
@@ -428,5 +472,31 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
     protected function getForms(): array
     {
         return [];
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Group::make([
+                    $this->getTabsContentComponent(),
+                    RenderHook::make(PanelsRenderHook::RESOURCE_PAGES_MANAGE_RELATED_RECORDS_TABLE_BEFORE),
+                    TableBuilder::make(),
+                    RenderHook::make(PanelsRenderHook::RESOURCE_PAGES_MANAGE_RELATED_RECORDS_TABLE_AFTER),
+                ])->visible(! empty($this->table->getColumns())),
+                $this->getRelationManagersContentComponent(),
+            ]);
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPageClasses(): array
+    {
+        return [
+            'fi-resource-manage-related-records-page',
+            'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
+            "fi-resource-record-{$this->getRecord()->getKey()}",
+        ];
     }
 }

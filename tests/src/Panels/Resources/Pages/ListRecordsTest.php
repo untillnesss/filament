@@ -3,9 +3,9 @@
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tests\Models\Post;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource\Pages\ListPosts;
-use Filament\Tests\Panels\Fixtures\Resources\UserResource;
+use Filament\Tests\Panels\Fixtures\Resources\Posts\Pages\ListPosts;
+use Filament\Tests\Panels\Fixtures\Resources\Posts\PostResource;
+use Filament\Tests\Panels\Fixtures\Resources\Users\UserResource;
 use Filament\Tests\Panels\Resources\TestCase;
 
 use function Filament\Tests\livewire;

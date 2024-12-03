@@ -16,7 +16,7 @@ jobs:
           - infolists
           - notifications
           - panels
-          - schema
+          - schemas
           - spark-billing-provider
           - spatie-laravel-google-fonts-plugin
           - spatie-laravel-media-library-plugin

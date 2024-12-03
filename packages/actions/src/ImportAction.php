@@ -9,12 +9,13 @@ use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Jobs\ImportCsv;
 use Filament\Actions\Imports\Models\Import;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
-use Filament\Schema\Components\Fieldset;
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\ChunkIterator;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Bus\PendingBatch;
@@ -24,6 +25,7 @@ use Illuminate\Filesystem\AwsS3V3Adapter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\File;
@@ -65,6 +67,8 @@ class ImportAction extends Action
      * @var array<string | array<mixed> | Closure>
      */
     protected array $fileValidationRules = [];
+
+    protected string | Closure | null $authGuard = null;
 
     protected function setUp(): void
     {
@@ -142,7 +146,7 @@ class ImportAction extends Action
                 ->columns(1)
                 ->inlineLabel()
                 ->schema(function (Get $get) use ($action): array {
-                    $csvFile = Arr::first((array) ($get('file') ?? []));
+                    $csvFile = $get('file');
 
                     if (! $csvFile instanceof TemporaryUploadedFile) {
                         return [];
@@ -171,7 +175,7 @@ class ImportAction extends Action
                     );
                 })
                 ->statePath('columnMap')
-                ->visible(fn (Get $get): bool => Arr::first((array) ($get('file') ?? [])) instanceof TemporaryUploadedFile),
+                ->visible(fn (Get $get): bool => $get('file') instanceof TemporaryUploadedFile),
         ], $action->getImporter()::getOptionsFormComponents()));
 
         $this->action(function (ImportAction $action, array $data) {
@@ -208,7 +212,9 @@ class ImportAction extends Action
                 return;
             }
 
-            $user = auth()->user();
+            $authGuard = $action->getAuthGuard();
+
+            $user = auth($authGuard)->user();
 
             $import = app(Import::class);
             $import->user()->associate($user);
@@ -265,7 +271,7 @@ class ImportAction extends Action
                     filled($jobBatchName = $importer->getJobBatchName()),
                     fn (PendingBatch $batch) => $batch->name($jobBatchName),
                 )
-                ->finally(function () use ($import, $columnMap, $options) {
+                ->finally(function () use ($authGuard, $columnMap, $import, $jobConnection, $options) {
                     $import->touch('completed_at');
 
                     event(new ImportCompleted($import, $columnMap, $options));
@@ -299,21 +305,33 @@ class ImportAction extends Action
                                         'count' => Number::format($failedRowsCount),
                                     ]))
                                     ->color('danger')
-                                    ->url(route('filament.imports.failed-rows.download', ['import' => $import], absolute: false), shouldOpenInNewTab: true)
+                                    ->url(URL::signedRoute('filament.imports.failed-rows.download', ['authGuard' => $authGuard, 'import' => $import], absolute: false), shouldOpenInNewTab: true)
                                     ->markAsRead(),
                             ]),
                         )
-                        ->sendToDatabase($import->user, isEventDispatched: true);
+                        ->when(
+                            ($jobConnection === 'sync') ||
+                                (blank($jobConnection) && (config('queue.default') === 'sync')),
+                            fn (Notification $notification) => $notification
+                                ->persistent()
+                                ->send(),
+                            fn (Notification $notification) => $notification->sendToDatabase($import->user, isEventDispatched: true),
+                        );
                 })
                 ->dispatch();
 
-            Notification::make()
-                ->title($action->getSuccessNotificationTitle())
-                ->body(trans_choice('filament-actions::import.notifications.started.body', $import->total_rows, [
-                    'count' => Number::format($import->total_rows),
-                ]))
-                ->success()
-                ->send();
+            if (
+                (filled($jobConnection) && ($jobConnection !== 'sync')) ||
+                (blank($jobConnection) && (config('queue.default') !== 'sync'))
+            ) {
+                Notification::make()
+                    ->title($action->getSuccessNotificationTitle())
+                    ->body(trans_choice('filament-actions::import.notifications.started.body', $import->total_rows, [
+                        'count' => Number::format($import->total_rows),
+                    ]))
+                    ->success()
+                    ->send();
+            }
         });
 
         $this->registerModalActions([
@@ -389,7 +407,7 @@ class ImportAction extends Action
             $s3Adapter = Storage::disk($fileDisk)->getAdapter();
 
             invade($s3Adapter)->client->registerStreamWrapper(); /** @phpstan-ignore-line */
-            $fileS3Path = 's3://' . config("filesystems.disks.{$fileDisk}.bucket") . '/' . $filePath;
+            $fileS3Path = (string) str('s3://' . config("filesystems.disks.{$fileDisk}.bucket") . '/' . $filePath)->replace('\\', '/');
 
             $resource = fopen($fileS3Path, mode: 'r', context: stream_context_create([
                 's3' => [
@@ -637,5 +655,33 @@ class ImportAction extends Action
         }
 
         return $fileRules;
+    }
+
+    public function authGuard(string | Closure | null $authGuard): static
+    {
+        $this->authGuard = $authGuard;
+
+        return $this;
+    }
+
+    public function getAuthGuard(): string
+    {
+        $guard = $this->evaluate($this->authGuard);
+
+        if (filled($guard)) {
+            return $guard;
+        }
+
+        if (class_exists(Filament::class) && Filament::isServing()) {
+            return Filament::getAuthGuard();
+        }
+
+        $authGuard = auth();
+
+        if (! property_exists($authGuard, 'name')) {
+            return config('auth.defaults.guard') ?? 'web';
+        }
+
+        return $authGuard->name;
     }
 }

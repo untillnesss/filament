@@ -10,11 +10,12 @@ use Filament\Enums\ThemeMode;
 use Filament\Events\ServingFilament;
 use Filament\Events\TenantSet;
 use Filament\Exceptions\NoDefaultPanelSetException;
-use Filament\GlobalSearch\Contracts\GlobalSearchProvider;
+use Filament\GlobalSearch\Providers\Contracts\GlobalSearchProvider;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasTenants;
+use Filament\MultiFactorAuthentication\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
@@ -272,6 +273,11 @@ class FilamentManager
         return $this->getCurrentPanel()->getMaxContentWidth();
     }
 
+    public function getSimplePageMaxContentWidth(): MaxWidth | string | null
+    {
+        return $this->getCurrentPanel()->getSimplePageMaxContentWidth();
+    }
+
     /**
      * @param  class-string<Model>|Model  $model
      */
@@ -425,7 +431,7 @@ class FilamentManager
         return app($this->getDefaultAvatarProvider())->get($tenant);
     }
 
-    public function getTenantBillingProvider(): ?Billing\Providers\Contracts\Provider
+    public function getTenantBillingProvider(): ?Billing\Providers\Contracts\BillingProvider
     {
         return $this->getCurrentPanel()->getTenantBillingProvider();
     }
@@ -619,6 +625,11 @@ class FilamentManager
         return $this->getCurrentPanel()->hasDatabaseNotifications();
     }
 
+    public function hasLazyLoadedDatabaseNotifications(): bool
+    {
+        return $this->getCurrentPanel()->hasLazyLoadedDatabaseNotifications();
+    }
+
     public function hasEmailVerification(): bool
     {
         return $this->getCurrentPanel()->hasEmailVerification();
@@ -747,8 +758,12 @@ class FilamentManager
         $this->currentDomain = $domain;
     }
 
-    public function setCurrentPanel(?Panel $panel): void
+    public function setCurrentPanel(Panel | string | null $panel): void
     {
+        if (is_string($panel)) {
+            $panel = $this->getPanel($panel);
+        }
+
         $this->currentPanel = $panel;
     }
 
@@ -939,5 +954,18 @@ class FilamentManager
         }
 
         return request()->getHost();
+    }
+
+    public function getTenancyScopeName(): string
+    {
+        return $this->getCurrentPanel()->getTenancyScopeName();
+    }
+
+    /**
+     * @return array<MultiFactorAuthenticationProvider>
+     */
+    public function getMultiFactorAuthenticationProviders(): array
+    {
+        return $this->getCurrentPanel()->getMultiFactorAuthenticationProviders();
     }
 }

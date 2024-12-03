@@ -4,7 +4,7 @@ namespace Filament\Forms\Components;
 
 use Closure;
 use Filament\Actions\Action;
-use Filament\Schema\Components\StateCasts\KeyValueStateCast;
+use Filament\Schemas\Components\StateCasts\KeyValueStateCast;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Filament\Support\Concerns\HasReorderAnimationDuration;
 use Filament\Support\Enums\ActionSize;

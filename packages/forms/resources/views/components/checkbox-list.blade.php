@@ -1,5 +1,7 @@
 @php
-    $gridDirection = $getGridDirection() ?? 'column';
+    use Filament\Support\Enums\GridDirection;
+
+    $gridDirection = $getGridDirection() ?? GridDirection::Column;
     $isBulkToggleable = $isBulkToggleable();
     $isDisabled = $isDisabled();
     $isSearchable = $isSearchable();
@@ -143,23 +145,18 @@
             @endif
         @endif
 
-        <x-filament::grid
-            :default="$getColumns('default')"
-            :sm="$getColumns('sm')"
-            :md="$getColumns('md')"
-            :lg="$getColumns('lg')"
-            :xl="$getColumns('xl')"
-            :two-xl="$getColumns('2xl')"
-            :direction="$gridDirection"
-            :x-show="$isSearchable ? 'visibleCheckboxListOptions.length' : null"
-            :attributes="
-                \Filament\Support\prepare_inherited_attributes($attributes)
-                    ->merge($getExtraAttributes(), escape: false)
+        <div
+            {{
+                $getExtraAttributeBag()
+                    ->grid($getColumns(), $gridDirection)
+                    ->merge([
+                        'x-show' => $isSearchable ? 'visibleCheckboxListOptions.length' : null,
+                    ], escape: false)
                     ->class([
                         'fi-fo-checkbox-list gap-4',
-                        '-mt-4' => $gridDirection === 'column',
+                        '-mt-4' => $gridDirection === GridDirection::Column,
                     ])
-            "
+            }}
         >
             @forelse ($getOptions() as $value => $label)
                 <div
@@ -177,7 +174,7 @@
                         "
                     @endif
                     @class([
-                        'break-inside-avoid pt-4' => $gridDirection === 'column',
+                        'break-inside-avoid pt-4' => $gridDirection === GridDirection::Column,
                     ])
                 >
                     <label
@@ -202,7 +199,11 @@
                             <span
                                 class="fi-fo-checkbox-list-option-label overflow-hidden break-words font-medium text-gray-950 dark:text-white"
                             >
-                                {{ $label }}
+                                @if ($isHtmlAllowed())
+                                    {!! $label !!}
+                                @else
+                                    {{ $label }}
+                                @endif
                             </span>
 
                             @if ($hasDescription($value))
@@ -218,7 +219,7 @@
             @empty
                 <div wire:key="{{ $getLivewireKey() }}.empty"></div>
             @endforelse
-        </x-filament::grid>
+        </div>
 
         @if ($isSearchable)
             <div

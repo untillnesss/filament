@@ -4,7 +4,7 @@ namespace Filament\Panel\Concerns;
 
 use Closure;
 use Filament\Actions\Action;
-use Filament\Billing\Providers\Contracts\Provider as BillingProvider;
+use Filament\Billing\Providers\Contracts\BillingProvider;
 use Filament\Facades\Filament;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Facades\FilamentIcon;
@@ -376,5 +376,10 @@ trait HasTenancy
         return (string) str($this->getTenantModel())
             ->classBasename()
             ->camel();
+    }
+
+    public function getTenancyScopeName(): string
+    {
+        return "{$this->getId()}_tenancy";
     }
 }

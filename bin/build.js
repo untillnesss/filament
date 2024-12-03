@@ -77,7 +77,7 @@ const corePackages = [
     'forms',
     'notifications',
     'panels',
-    'schema',
+    'schemas',
     'support',
     'tables',
 ]
@@ -138,6 +138,38 @@ compile({
     ...defaultOptions,
     entryPoints: [`./packages/tables/resources/js/components/table.js`],
     outfile: `./packages/tables/dist/components/table.js`,
+})
+
+compile({
+    ...defaultOptions,
+    entryPoints: [
+        `./packages/tables/resources/js/components/columns/checkbox.js`,
+    ],
+    outfile: `./packages/tables/dist/components/columns/checkbox.js`,
+})
+
+compile({
+    ...defaultOptions,
+    entryPoints: [
+        `./packages/tables/resources/js/components/columns/select.js`,
+    ],
+    outfile: `./packages/tables/dist/components/columns/select.js`,
+})
+
+compile({
+    ...defaultOptions,
+    entryPoints: [
+        `./packages/tables/resources/js/components/columns/text-input.js`,
+    ],
+    outfile: `./packages/tables/dist/components/columns/text-input.js`,
+})
+
+compile({
+    ...defaultOptions,
+    entryPoints: [
+        `./packages/tables/resources/js/components/columns/toggle.js`,
+    ],
+    outfile: `./packages/tables/dist/components/columns/toggle.js`,
 })
 
 compile({

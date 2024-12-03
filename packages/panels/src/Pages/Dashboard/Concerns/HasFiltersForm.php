@@ -2,7 +2,7 @@
 
 namespace Filament\Pages\Dashboard\Concerns;
 
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 trait HasFiltersForm
 {

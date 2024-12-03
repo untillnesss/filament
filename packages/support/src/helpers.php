@@ -3,6 +3,7 @@
 namespace Filament\Support;
 
 use Filament\Support\Facades\FilamentColor;
+use Filament\Support\Facades\FilamentIcon;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Connection;
@@ -46,7 +47,8 @@ if (! function_exists('Filament\Support\get_model_label')) {
      */
     function get_model_label(string $model): string
     {
-        return (string) str(class_basename($model))
+        return (string) str($model)
+            ->classBasename()
             ->kebab()
             ->replace('-', ' ');
     }
@@ -157,6 +159,65 @@ if (! function_exists('Filament\Support\generate_href_html')) {
         }
 
         return new HtmlString($html);
+    }
+}
+
+if (! function_exists('Filament\Support\generate_icon_html')) {
+    function generate_icon_html(string | Htmlable | null $icon, ?string $alias = null, ?ComponentAttributeBag $attributes = null): ?Htmlable
+    {
+        if (filled($alias)) {
+            $icon = FilamentIcon::resolve($alias) ?: $icon;
+        }
+
+        if (blank($icon)) {
+            return null;
+        }
+
+        $attributes = ($attributes ?? new ComponentAttributeBag)->class(['fi-icon']);
+
+        if ($icon instanceof Htmlable) {
+            return new HtmlString(<<<HTML
+                <span {$attributes->toHtml()}>
+                    {$icon->toHtml()}
+                </span>
+                HTML);
+        }
+
+        if (str_contains($icon, '/')) {
+            return new HtmlString(<<<HTML
+                <img src="{$icon}" {$attributes->toHtml()} />
+                HTML);
+        }
+
+        return svg($icon, $attributes->get('class'), array_filter($attributes->except('class')->getAttributes()));
+    }
+}
+
+if (! function_exists('Filament\Support\generate_loading_indicator_html')) {
+    function generate_loading_indicator_html(?ComponentAttributeBag $attributes = null): Htmlable
+    {
+        $attributes = ($attributes ?? new ComponentAttributeBag)->class(['fi-icon fi-loading-indicator']);
+
+        return new HtmlString(<<<HTML
+            <svg
+                fill="none"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                {$attributes->toHtml()}
+            >
+                <path
+                    clip-rule="evenodd"
+                    d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                    fill-rule="evenodd"
+                    fill="currentColor"
+                    opacity="0.2"
+                ></path>
+                <path
+                    d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z"
+                    fill="currentColor"
+                ></path>
+            </svg>
+            HTML);
     }
 }
 

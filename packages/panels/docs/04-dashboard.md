@@ -121,8 +121,8 @@ Now, in your new `app/Filament/Pages/Dashboard.php` file, you may add the `HasFi
 use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
-use Filament\Schema\Components\Section;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class Dashboard extends BaseDashboard
 {

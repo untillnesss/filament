@@ -6,7 +6,7 @@ use Closure;
 use Filament\Forms\Components\Contracts\CanBeLengthConstrained;
 use Filament\Forms\Components\Contracts\HasNestedRecursiveValidationRules;
 use Filament\Forms\Components\Field;
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Component;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -534,7 +534,7 @@ trait CanBeValidated
         return $this;
     }
 
-    public function distinct(): static
+    public function distinct(bool | Closure $condition = true): static
     {
         $this->rule(static function (Field $component, mixed $state) {
             return function (string $attribute, mixed $value, Closure $fail) use ($component, $state) {
@@ -610,7 +610,7 @@ trait CanBeValidated
 
                 $fail(__($validationMessages['distinct'] ?? 'validation.distinct', ['attribute' => $component->getValidationAttribute()]));
             };
-        });
+        }, $condition);
 
         return $this;
     }

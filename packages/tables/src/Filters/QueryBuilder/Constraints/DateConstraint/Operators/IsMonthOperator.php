@@ -3,7 +3,7 @@
 namespace Filament\Tables\Filters\QueryBuilder\Constraints\DateConstraint\Operators;
 
 use Filament\Forms\Components\Select;
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Component;
 use Filament\Tables\Filters\QueryBuilder\Constraints\Operators\Operator;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -56,7 +56,7 @@ class IsMonthOperator extends Operator
     {
         return collect(range(1, 12))
             ->mapWithKeys(fn (int $month): array => [
-                $month => now()->setMonth($month)->getTranslatedMonthName(),
+                $month => now()->setMonth($month)->setDay(1)->getTranslatedMonthName(),
             ])
             ->all();
     }

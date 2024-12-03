@@ -1,7 +1,7 @@
 <?php
 
 use Filament\Resources\Form;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 function (Form $form) {
     //

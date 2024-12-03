@@ -11,14 +11,19 @@ use Filament\Infolists;
 use Filament\Pages\Page;
 use Filament\Resources\Concerns\InteractsWithRelationshipTable;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\RenderHook;
+use Filament\Schemas\Components\TableBuilder;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
 use Filament\Support\Concerns\CanBeLazy;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -132,6 +137,16 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
         return [];
     }
 
+    public static function getTabComponent(Model $ownerRecord, string $pageClass): Tab
+    {
+        return Tab::make(static::class::getTitle($ownerRecord, $pageClass))
+            ->badge(static::class::getBadge($ownerRecord, $pageClass))
+            ->badgeColor(static::class::getBadgeColor($ownerRecord, $pageClass))
+            ->badgeTooltip(static::class::getBadgeTooltip($ownerRecord, $pageClass))
+            ->icon(static::class::getIcon($ownerRecord, $pageClass))
+            ->iconPosition(static::class::getIconPosition($ownerRecord, $pageClass));
+    }
+
     public static function getIcon(Model $ownerRecord, string $pageClass): ?string
     {
         return static::$icon;
@@ -221,7 +236,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('create')) {
-            $action->url(fn (): string => $relatedResource::getUrl('create', [$relatedResource::getParentResourceRegistration()->getParentRouteParameterName() => $this->getOwnerRecord()]));
+            $action->url(fn (): string => $relatedResource::getUrl('create', shouldGuessMissingParameters: true));
         }
     }
 
@@ -256,7 +271,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('edit')) {
-            $action->url(fn (Model $record): string => $relatedResource::getUrl('edit', ['record' => $record]));
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('edit', ['record' => $record], shouldGuessMissingParameters: true));
         }
     }
 
@@ -296,7 +311,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
         $relatedResource = static::getRelatedResource();
 
         if ($relatedResource && $relatedResource::hasPage('view')) {
-            $action->url(fn (Model $record): string => $relatedResource::getUrl('view', ['record' => $record]));
+            $action->url(fn (Model $record): string => $relatedResource::getUrl('view', ['record' => $record], shouldGuessMissingParameters: true));
         }
     }
 
@@ -346,6 +361,14 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
     {
         if (static::shouldSkipAuthorization()) {
             return true;
+        }
+
+        if ($relatedResource = static::getRelatedResource()) {
+            $method = 'can' . Str::lcfirst($action);
+
+            return method_exists($relatedResource, $method)
+                ? $relatedResource::{$method}($record)
+                : $relatedResource::can($action, $record);
         }
 
         $model = $this->getTable()->getModel();
@@ -525,6 +548,10 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
             return true;
         }
 
+        if ($relatedResource = static::getRelatedResource()) {
+            return $relatedResource::canAccess();
+        }
+
         $model = $ownerRecord->{static::getRelationshipName()}()->getQuery()->getModel()::class;
 
         try {
@@ -560,5 +587,16 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
         }
 
         return $properties;
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getTabsContentComponent(),
+                RenderHook::make(PanelsRenderHook::RESOURCE_RELATION_MANAGER_BEFORE),
+                TableBuilder::make(),
+                RenderHook::make(PanelsRenderHook::RESOURCE_RELATION_MANAGER_AFTER),
+            ]);
     }
 }

@@ -14,14 +14,16 @@ use Filament\Actions\ReplicateAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Resources\Concerns\HasTabs;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\RenderHook;
+use Filament\Schemas\Components\TableBuilder;
+use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -34,11 +36,6 @@ class ListRecords extends Page implements Tables\Contracts\HasTable
     use Tables\Concerns\InteractsWithTable {
         makeTable as makeBaseTable;
     }
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::resources.pages.list-records';
 
     #[Url]
     public bool $isTableReordering = false;
@@ -124,8 +121,6 @@ class ListRecords extends Page implements Tables\Contracts\HasTable
 
         if ($parentRecord = $this->getParentRecord()) {
             $action->relationship(fn (): Relation => $resource::getParentResourceRegistration()->getRelationship($parentRecord));
-        } elseif (static::getResource()::isScopedToTenant()) {
-            $action->relationship(($tenant = Filament::getTenant()) ? fn (): Relation => static::getResource()::getTenantRelationship($tenant) : null);
         }
 
         if ($resource::hasPage('create')) {
@@ -366,5 +361,27 @@ class ListRecords extends Page implements Tables\Contracts\HasTable
         }
 
         return [];
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getTabsContentComponent(),
+                RenderHook::make(PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABLE_BEFORE),
+                TableBuilder::make(),
+                RenderHook::make(PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABLE_AFTER),
+            ]);
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPageClasses(): array
+    {
+        return [
+            'fi-resource-list-records-page',
+            'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
+        ];
     }
 }

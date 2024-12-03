@@ -180,13 +180,13 @@ Alternatively, if you're editing records in a modal action, check out the [Actio
 
 ## Saving a part of the form independently
 
-You may want to allow the user to save a part of the form independently of the rest of the form. One way to do this is with a [section action in the header or footer](../../schema/layout/section#adding-actions-to-the-sections-header-or-footer). From the `action()` method, you can call `saveFormComponentOnly()`, passing in the `Section` component that you want to save:
+You may want to allow the user to save a part of the form independently of the rest of the form. One way to do this is with a [section action in the header or footer](../../schemas/layout/section#adding-actions-to-the-sections-header-or-footer). From the `action()` method, you can call `saveFormComponentOnly()`, passing in the `Section` component that you want to save:
 
 ```php
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Schema\Components\Section;
+use Filament\Schemas\Components\Section;
 
 Section::make('Rate limiting')
     ->schema([
@@ -354,7 +354,7 @@ public static function getPages(): array
 Now, you can define the `form()` for this page, which can contain other fields that are not present on the main Edit page:
 
 ```php
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {

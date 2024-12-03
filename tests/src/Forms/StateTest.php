@@ -2,10 +2,10 @@
 
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Section;
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tests\Forms\Fixtures\Livewire;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Str;
@@ -486,6 +486,25 @@ test('hidden components are excluded from state dehydration except if they are m
                 ->default(Str::random())
                 ->hidden()
                 ->dehydratedWhenHidden(),
+        ])
+        ->fill();
+
+    expect($container)
+        ->dehydrateState()->not()->toBe([]);
+
+    $container = Schema::make(Livewire::make())
+        ->statePath('data')
+        ->components([
+            (new Component)
+                ->id('parent')
+                ->hidden()
+                ->dehydratedWhenHidden()
+                ->childComponents([
+                    (new Component)
+                        ->id('child')
+                        ->statePath(Str::random())
+                        ->default(Str::random()),
+                ]),
         ])
         ->fill();
 

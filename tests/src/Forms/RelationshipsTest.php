@@ -1,7 +1,7 @@
 <?php
 
 use Filament\Forms\Components\Field;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tests\Forms\Fixtures\Livewire;
 use Filament\Tests\Models\Post;
 use Filament\Tests\TestCase;

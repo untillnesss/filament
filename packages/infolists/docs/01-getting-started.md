@@ -48,15 +48,15 @@ use Filament\Infolists\Components\TextEntry;
 ]
 ```
 
-You can learn more about columns and spans in the [layout documentation](../schema/layout/grid). You can even make them responsive!
+You can learn more about columns and spans in the [layout documentation](../schemas/layout/grid). You can even make them responsive!
 
 ## Using layout components
 
-The Infolist Builder allows you to use [layout components](../schema/layout#available-layout-components) inside the schema array to control how entries are displayed. `Section` is a layout component, and it allows you to add a heading and description to a set of entries. It can also allow entries inside it to collapse, which saves space in long infolists.
+The Infolist Builder allows you to use [layout components](../schemas/layout#available-layout-components) inside the schema array to control how entries are displayed. `Section` is a layout component, and it allows you to add a heading and description to a set of entries. It can also allow entries inside it to collapse, which saves space in long infolists.
 
 ```php
 use Filament\Infolists\Components\TextEntry;
-use Filament\Schema\Components\Section;
+use Filament\Schemas\Components\Section;
 
 [
     TextEntry::make('title'),
@@ -77,7 +77,7 @@ In this example, you can see how the `Section` component has its own `schema()` 
 ```php
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Schema\Components\Section;
+use Filament\Schemas\Components\Section;
 
 Section::make('Media')
     ->description('Images used in the page layout.')
@@ -94,4 +94,4 @@ This section now contains an [`ImageEntry`](entries/image) and a [`TextEntry`](e
 Now you've finished reading this guide, where to next? Here are some suggestions:
 
 - [Explore the available entries to display data in your infolist.](entries#available-entries)
-- [Discover how to build complex, responsive layouts without touching CSS.](../schema/layout)
+- [Discover how to build complex, responsive layouts without touching CSS.](../schemas/layout)
