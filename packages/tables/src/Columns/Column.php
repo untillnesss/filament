@@ -37,7 +37,6 @@ class Column extends ViewComponent
     use Concerns\CanBeToggled;
     use Concerns\CanCallAction;
     use Concerns\CanOpenUrl;
-    use Concerns\CanSpanColumns;
     use Concerns\CanWrapHeader;
     use Concerns\HasExtraCellAttributes;
     use Concerns\HasExtraHeaderAttributes;
@@ -47,6 +46,7 @@ class Column extends ViewComponent
     use Concerns\HasRowLoopObject;
     use Concerns\HasWidth;
     use Concerns\InteractsWithTableQuery;
+    use \Filament\Support\Concerns\CanSpanColumns;
     use HasAlignment;
     use HasCellState;
     use HasExtraAttributes;
