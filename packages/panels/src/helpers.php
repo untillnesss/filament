@@ -2,6 +2,7 @@
 
 namespace Filament;
 
+use Exception;
 use Filament\Facades\Filament;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Access\Response;
@@ -24,28 +25,31 @@ if (! function_exists('Filament\authorize')) {
 
         $policy = Gate::getPolicyFor($model);
 
-        if (
-            ($policy === null) ||
-            (! method_exists($policy, $action))
-        ) {
-            /** @var bool | Response | null $response */
-            $response = invade(Gate::forUser($user))->callBeforeCallbacks( /** @phpstan-ignore-line */
-                $user,
-                $action,
-                [$model],
-            );
-
-            if ($response === false) {
-                throw new AuthorizationException;
-            }
-
-            if (! $response instanceof Response) {
-                return Response::allow();
-            }
-
-            return $response->authorize();
+        if (filled($policy) && method_exists($policy, $action)) {
+            return Gate::forUser($user)->authorize($action, $model);
         }
 
-        return Gate::forUser($user)->authorize($action, $model);
+        if (Filament::isAuthorizationStrict()) {
+            throw new Exception(blank($policy)
+                ? "Strict authorization mode is enabled, but no policy was found for [{$model}]."
+                : "Strict authorization mode is enabled, but no [{$action}()] method was found on [{$policy}].");
+        }
+
+        /** @var bool | Response | null $response */
+        $response = invade(Gate::forUser($user))->callBeforeCallbacks( /** @phpstan-ignore-line */
+            $user,
+            $action,
+            [$model],
+        );
+
+        if ($response === false) {
+            throw new AuthorizationException;
+        }
+
+        if (! $response instanceof Response) {
+            return Response::allow();
+        }
+
+        return $response->authorize();
     }
 }

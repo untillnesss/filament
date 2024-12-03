@@ -389,3 +389,20 @@ public function panel(Panel $panel): Panel
         ->broadcasting(false);
 }
 ```
+
+## Strict authorization mode
+
+By default, when Filament authorizes the user access to a resource, it will first check if the policy exists for that model, and if it does, it will check if a method exists on the policy to perform the action. If the policy or policy method does not exist, it will grant the user access to the resource, as it assumes you have not set up authorization yet, or you do not require it.
+
+If you would prefer Filament to throw an exception if the policy or policy method does not exist, you can enable strict authorization mode using the `strictAuthorization()` method:
+
+```php
+use Filament\Panel;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->strictAuthorization();
+}
+```
