@@ -11,7 +11,7 @@ return [
             ],
 
             'add' => [
-                'label' => ':label ekle',
+                'label' => ':label\'e ekle',
             ],
 
             'add_between' => [
@@ -185,6 +185,15 @@ return [
 
             ],
 
+            'svg' => [
+
+                'messages' => [
+                    'confirmation' => 'SVG dosyalarını düzenlemek ölçeklendirme yaptığınızda kalite kaybına neden olabileceği için tavsiye edilmez.\n Devam etmek istediğinize emin misiniz?',
+                    'disabled' => 'SVG dosyalarını düzenlemek ölçeklendirme yaptığınızda kalite kaybına neden olduğu için engellendi.',
+                ],
+
+            ],
+
         ],
 
     ],
@@ -241,12 +250,25 @@ return [
 
     ],
 
+    'radio' => [
+
+        'boolean' => [
+            'true' => 'Evet',
+            'false' => 'Hayır',
+        ],
+
+    ],
+
     'repeater' => [
 
         'actions' => [
 
             'add' => [
                 'label' => ':label\'e ekle',
+            ],
+
+            'add_between' => [
+                'label' => 'Arasına yerleştir',
             ],
 
             'delete' => [
@@ -345,7 +367,7 @@ return [
                         ],
 
                         'create_another' => [
-                            'label' => 'Oluştur & yeni oluştur',
+                            'label' => 'Oluştur & Yeni oluştur',
                         ],
 
                     ],
@@ -381,7 +403,7 @@ return [
 
         'loading_message' => 'Yükleniyor...',
 
-        'max_items_message' => 'Sadece :count seçilebilir.',
+        'max_items_message' => 'Sadece :count adet seçilebilir.',
 
         'no_search_results_message' => 'Arama kriterlerinize uyan seçenek yok.',
 
@@ -397,18 +419,27 @@ return [
         'placeholder' => 'Yeni etiket',
     ],
 
-    'wizard' => [
+    'text_input' => [
 
         'actions' => [
 
-            'previous_step' => [
-                'label' => 'Geri',
+            'hide_password' => [
+                'label' => 'Şifreyi gizle',
             ],
 
-            'next_step' => [
-                'label' => 'İleri',
+            'show_password' => [
+                'label' => 'Şifreyi göster',
             ],
 
+        ],
+
+    ],
+
+    'toggle_buttons' => [
+
+        'boolean' => [
+            'true' => 'Evet',
+            'false' => 'Hayır',
         ],
 
     ],

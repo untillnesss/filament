@@ -3,7 +3,6 @@
 namespace Filament\Actions\Contracts;
 
 use Filament\Actions\Action;
-use Filament\Support\Contracts\TranslatableContentDriver;
 
 interface HasActions
 {
@@ -12,7 +11,14 @@ interface HasActions
      */
     public function getAction(string | array $name): ?Action;
 
-    public function getActiveActionsLocale(): ?string;
+    /**
+     * @param  array<string, mixed>  $arguments
+     * @param  array<string, mixed>  $context
+     */
+    public function mountAction(string $name, array $arguments = [], array $context = []): mixed;
 
-    public function makeFilamentTranslatableContentDriver(): ?TranslatableContentDriver;
+    /**
+     * @param  array<string, mixed>  $arguments
+     */
+    public function mergeMountedActionArguments(array $arguments): void;
 }

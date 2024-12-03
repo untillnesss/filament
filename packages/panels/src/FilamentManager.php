@@ -4,19 +4,22 @@ namespace Filament;
 
 use Closure;
 use Exception;
+use Filament\Actions\Action;
 use Filament\Contracts\Plugin;
 use Filament\Enums\ThemeMode;
 use Filament\Events\ServingFilament;
 use Filament\Events\TenantSet;
 use Filament\Exceptions\NoDefaultPanelSetException;
-use Filament\GlobalSearch\Contracts\GlobalSearchProvider;
+use Filament\GlobalSearch\Providers\Contracts\GlobalSearchProvider;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasTenants;
+use Filament\MultiFactorAuthentication\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
+use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Support\Assets\Theme;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Facades\FilamentAsset;
@@ -156,9 +159,29 @@ class FilamentManager
         return $this->getCurrentPanel()->getFontFamily();
     }
 
+    public function getMonoFontFamily(): string
+    {
+        return $this->getCurrentPanel()->getMonoFontFamily();
+    }
+
+    public function getSerifFontFamily(): string
+    {
+        return $this->getCurrentPanel()->getSerifFontFamily();
+    }
+
     public function getFontHtml(): Htmlable
     {
         return $this->getCurrentPanel()->getFontHtml();
+    }
+
+    public function getMonoFontHtml(): Htmlable
+    {
+        return $this->getCurrentPanel()->getMonoFontHtml();
+    }
+
+    public function getSerifFontHtml(): Htmlable
+    {
+        return $this->getCurrentPanel()->getSerifFontHtml();
     }
 
     public function getFontProvider(): string
@@ -166,9 +189,29 @@ class FilamentManager
         return $this->getCurrentPanel()->getFontProvider();
     }
 
+    public function getMonoFontProvider(): string
+    {
+        return $this->getCurrentPanel()->getMonoFontProvider();
+    }
+
+    public function getSerifFontProvider(): string
+    {
+        return $this->getCurrentPanel()->getSerifFontProvider();
+    }
+
     public function getFontUrl(): ?string
     {
         return $this->getCurrentPanel()->getFontUrl();
+    }
+
+    public function getMonoFontUrl(): ?string
+    {
+        return $this->getCurrentPanel()->getMonoFontUrl();
+    }
+
+    public function getSerifFontUrl(): ?string
+    {
+        return $this->getCurrentPanel()->getSerifFontUrl();
     }
 
     public function getGlobalSearchDebounce(): string
@@ -204,6 +247,11 @@ class FilamentManager
         return $this->getCurrentPanel()?->getId();
     }
 
+    public function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return $this->getCurrentPanel()?->getSubNavigationPosition();
+    }
+
     /**
      * @param  array<mixed>  $parameters
      */
@@ -225,6 +273,14 @@ class FilamentManager
         return $this->getCurrentPanel()->getMaxContentWidth();
     }
 
+    public function getSimplePageMaxContentWidth(): MaxWidth | string | null
+    {
+        return $this->getCurrentPanel()->getSimplePageMaxContentWidth();
+    }
+
+    /**
+     * @param  class-string<Model>|Model  $model
+     */
     public function getModelResource(string | Model $model): ?string
     {
         return $this->getCurrentPanel()->getModelResource($model);
@@ -375,7 +431,7 @@ class FilamentManager
         return app($this->getDefaultAvatarProvider())->get($tenant);
     }
 
-    public function getTenantBillingProvider(): ?Billing\Providers\Contracts\Provider
+    public function getTenantBillingProvider(): ?Billing\Providers\Contracts\BillingProvider
     {
         return $this->getCurrentPanel()->getTenantBillingProvider();
     }
@@ -389,13 +445,16 @@ class FilamentManager
     }
 
     /**
-     * @return array<MenuItem>
+     * @return array<Action>
      */
     public function getTenantMenuItems(): array
     {
         return $this->getCurrentPanel()->getTenantMenuItems();
     }
 
+    /**
+     * @return class-string<Model>|null
+     */
     public function getTenantModel(): ?string
     {
         return $this->getCurrentPanel()->getTenantModel();
@@ -485,7 +544,7 @@ class FilamentManager
     }
 
     /**
-     * @return array<MenuItem>
+     * @return array<Action>
      */
     public function getUserMenuItems(): array
     {
@@ -699,8 +758,12 @@ class FilamentManager
         $this->currentDomain = $domain;
     }
 
-    public function setCurrentPanel(?Panel $panel): void
+    public function setCurrentPanel(Panel | string | null $panel): void
     {
+        if (is_string($panel)) {
+            $panel = $this->getPanel($panel);
+        }
+
         $this->currentPanel = $panel;
     }
 
@@ -891,5 +954,18 @@ class FilamentManager
         }
 
         return request()->getHost();
+    }
+
+    public function getTenancyScopeName(): string
+    {
+        return $this->getCurrentPanel()->getTenancyScopeName();
+    }
+
+    /**
+     * @return array<MultiFactorAuthenticationProvider>
+     */
+    public function getMultiFactorAuthenticationProviders(): array
+    {
+        return $this->getCurrentPanel()->getMultiFactorAuthenticationProviders();
     }
 }

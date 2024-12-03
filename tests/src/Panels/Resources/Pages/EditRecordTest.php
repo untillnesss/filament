@@ -2,8 +2,8 @@
 
 use Filament\Actions\DeleteAction;
 use Filament\Tests\Models\Post;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource\Pages\EditPost;
+use Filament\Tests\Panels\Fixtures\Resources\Posts\Pages\EditPost;
+use Filament\Tests\Panels\Fixtures\Resources\Posts\PostResource;
 use Filament\Tests\Panels\Resources\TestCase;
 use Illuminate\Support\Str;
 

@@ -3,7 +3,7 @@
 namespace Filament\Forms\Components\Concerns;
 
 use Closure;
-use Filament\Forms\Components\Component;
+use Filament\Schemas\Components\Component;
 
 trait CanLimitItemsLength
 {
@@ -15,12 +15,22 @@ trait CanLimitItemsLength
     {
         $this->maxItems = $count;
 
-        $this->rule('array');
+        $this->rule('array', static function (Component $component): bool {
+            /** @var static $component */
+            $count = $component->getMaxItems();
+
+            return $count !== null;
+        });
         $this->rule(static function (Component $component): string {
             /** @var static $component */
             $count = $component->getMaxItems();
 
             return "max:{$count}";
+        }, static function (Component $component): bool {
+            /** @var static $component */
+            $count = $component->getMaxItems();
+
+            return $count !== null;
         });
 
         return $this;
@@ -30,12 +40,22 @@ trait CanLimitItemsLength
     {
         $this->minItems = $count;
 
-        $this->rule('array');
+        $this->rule('array', static function (Component $component): bool {
+            /** @var static $component */
+            $count = $component->getMinItems();
+
+            return $count !== null;
+        });
         $this->rule(static function (Component $component): string {
             /** @var static $component */
             $count = $component->getMinItems();
 
             return "min:{$count}";
+        }, static function (Component $component): bool {
+            /** @var static $component */
+            $count = $component->getMinItems();
+
+            return $count !== null;
         });
 
         return $this;
@@ -53,7 +73,7 @@ trait CanLimitItemsLength
 
     public function getItemsCount(): int
     {
-        $state = $this->getState();
+        $state = $this->getRawState();
 
         return is_array($state) ? count($state) : 0;
     }

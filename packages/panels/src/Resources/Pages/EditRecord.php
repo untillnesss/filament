@@ -9,14 +9,14 @@ use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ReplicateAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\ComponentContainer;
-use Filament\Forms\Components\Component;
-use Filament\Forms\Form;
-use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\CanUseDatabaseTransactions;
 use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
-use Filament\Pages\Concerns\InteractsWithFormActions;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Decorations\FormActionsDecorations;
+use Filament\Schemas\Components\Form;
+use Filament\Schemas\Components\NestedSchema;
+use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Support\Facades\FilamentView;
@@ -29,7 +29,7 @@ use Throwable;
 use function Filament\Support\is_app_url;
 
 /**
- * @property Form $form
+ * @property-read Schema $form
  */
 class EditRecord extends Page
 {
@@ -39,12 +39,6 @@ class EditRecord extends Page
         configureAction as configureActionRecord;
     }
     use HasUnsavedDataChangesAlert;
-    use InteractsWithFormActions;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::resources.pages.edit-record';
 
     /**
      * @var array<string, mixed> | null
@@ -185,7 +179,7 @@ class EditRecord extends Page
 
             $this->callHook('beforeValidate');
 
-            $data = ComponentContainer::make($component->getLivewire())
+            $data = Schema::make($component->getLivewire())
                 ->schema([$component])
                 ->model($component->getRecord())
                 ->statePath($this->getFormStatePath())
@@ -282,11 +276,11 @@ class EditRecord extends Page
 
         $action
             ->authorize($resource::canView($this->getRecord()))
-            ->infolist(fn (Infolist $infolist): Infolist => static::getResource()::infolist($infolist->columns(2)))
-            ->form(fn (Form $form): Form => static::getResource()::form($form));
+            ->infolist(fn (Schema $infolist): Schema => static::getResource()::infolist($infolist->columns(2)))
+            ->form(fn (Schema $form): Schema => static::getResource()::form($form));
 
         if ($resource::hasPage('view')) {
-            $action->url(fn (): string => static::getResource()::getUrl('view', ['record' => $this->getRecord()]));
+            $action->url(fn (): string => $this->getResourceUrl('view'));
         }
     }
 
@@ -296,7 +290,7 @@ class EditRecord extends Page
 
         $action
             ->authorize($resource::canForceDelete($this->getRecord()))
-            ->successRedirectUrl($resource::getUrl('index'));
+            ->successRedirectUrl($this->getResourceUrl());
     }
 
     protected function configureReplicateAction(ReplicateAction $action): void
@@ -317,7 +311,7 @@ class EditRecord extends Page
 
         $action
             ->authorize($resource::canDelete($this->getRecord()))
-            ->successRedirectUrl($resource::getUrl('index'));
+            ->successRedirectUrl($this->getResourceUrl());
     }
 
     public function getTitle(): string | Htmlable
@@ -357,25 +351,31 @@ class EditRecord extends Page
 
     protected function getCancelFormAction(): Action
     {
+        $url = $this->previousUrl ?? $this->getResourceUrl();
+
         return Action::make('cancel')
             ->label(__('filament-panels::resources/pages/edit-record.form.actions.cancel.label'))
-            ->alpineClickHandler('document.referrer ? window.history.back() : (window.location.href = ' . Js::from($this->previousUrl ?? static::getResource()::getUrl()) . ')')
+            ->alpineClickHandler(
+                FilamentView::hasSpaMode($url)
+                    ? 'document.referrer ? window.history.back() : Livewire.navigate(' . Js::from($url) . ')'
+                    : 'document.referrer ? window.history.back() : (window.location.href = ' . Js::from($url) . ')',
+            )
             ->color('gray');
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form;
     }
 
     /**
-     * @return array<int | string, string | Form>
+     * @return array<int | string, string | Schema>
      */
     protected function getForms(): array
     {
         return [
             'form' => $this->form(static::getResource()::form(
-                $this->makeForm()
+                $this->makeSchema()
                     ->operation('edit')
                     ->model($this->getRecord())
                     ->statePath($this->getFormStatePath())
@@ -398,5 +398,52 @@ class EditRecord extends Page
     public static function shouldRegisterNavigation(array $parameters = []): bool
     {
         return parent::shouldRegisterNavigation($parameters) && static::getResource()::canEdit($parameters['record']);
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                ...($this->hasCombinedRelationManagerTabsWithContent() ? [] : $this->getContentComponents()),
+                $this->getRelationManagersContentComponent(),
+            ]);
+    }
+
+    /**
+     * @return array<Component>
+     */
+    public function getContentComponents(): array
+    {
+        return [
+            $this->getFormContentComponent(),
+        ];
+    }
+
+    public function getFormContentComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('save')
+            ->footer(FormActionsDecorations::make($this->getFormActions())
+                ->alignment($this->getFormActionsAlignment())
+                ->fullWidth($this->hasFullWidthFormActions())
+                ->sticky($this->areFormActionsSticky()));
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPageClasses(): array
+    {
+        return [
+            'fi-resource-edit-record-page',
+            'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
+            "fi-resource-record-{$this->getRecord()->getKey()}",
+        ];
+    }
+
+    protected function hasFullWidthFormActions(): bool
+    {
+        return false;
     }
 }

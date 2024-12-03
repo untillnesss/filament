@@ -10,6 +10,10 @@ return [
 
     'columns' => [
 
+        'actions' => [
+            'label' => 'Hành động|Hành động',
+        ],
+
         'text' => [
 
             'actions' => [
@@ -18,6 +22,7 @@ return [
             ],
 
             'more_list_items' => 'và :count cột khác',
+
         ],
 
     ],
@@ -223,5 +228,7 @@ return [
         ],
 
     ],
+
+    'default_model_label' => 'bản ghi',
 
 ];
