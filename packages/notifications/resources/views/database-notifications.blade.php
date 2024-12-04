@@ -1,7 +1,7 @@
 @php
     $notifications = $this->getNotifications();
     $unreadNotificationsCount = $this->getUnreadNotificationsCount();
-    $markAllNotificationsAsReadAction = $this->getMarkAllNotificationsAsReadAction();
+    $markAllNotificationsAsReadAction = $this->markAllNotificationsAsReadAction();
 @endphp
 
 <div

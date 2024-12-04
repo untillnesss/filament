@@ -26,7 +26,7 @@ class DatabaseNotifications extends BaseComponent
         return view('filament-panels::components.topbar.database-notifications-trigger');
     }
 
-    public function getMarkAllNotificationsAsReadAction(): Action
+    public function markAllNotificationsAsReadAction(): Action
     {
         return Filament::getDatabaseNotificationsMarkAllAsReadAction();
     }

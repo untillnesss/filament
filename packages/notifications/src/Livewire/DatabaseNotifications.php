@@ -4,6 +4,8 @@ namespace Filament\Notifications\Livewire;
 
 use Carbon\CarbonInterface;
 use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -17,9 +19,10 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class DatabaseNotifications extends Component
+class DatabaseNotifications extends Component implements HasActions
 {
     use WithPagination;
+    use InteractsWithActions;
 
     public static bool $isPaginated = true;
 
@@ -116,7 +119,7 @@ class DatabaseNotifications extends Component
         return view($viewPath);
     }
 
-    public function getMarkAllNotificationsAsReadAction(): Action
+    public function markAllNotificationsAsReadAction(): Action
     {
         if ($action = static::$markAllNotificationsAsReadAction) {
             return $action;
