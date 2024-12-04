@@ -21,8 +21,8 @@ use Livewire\WithPagination;
 
 class DatabaseNotifications extends Component implements HasActions
 {
-    use WithPagination;
     use InteractsWithActions;
+    use WithPagination;
 
     public static bool $isPaginated = true;
 
