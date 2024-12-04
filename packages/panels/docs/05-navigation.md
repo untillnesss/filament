@@ -462,6 +462,8 @@ public function panel(Panel $panel): Panel
 }
 ```
 
+<AutoScreenshot name="panels/navigation/user-menu" alt="User menu with custom menu item" version="3.x" />
+
 ### Customizing the profile link
 
 To customize the user profile link at the start of the user menu, register a new item with the `profile` array key:

@@ -7,6 +7,7 @@ use App\Livewire\Infolists\EntriesDemo;
 use App\Livewire\NotificationsDemo;
 use App\Livewire\Schema\LayoutDemo;
 use App\Livewire\TablesDemo;
+use App\Livewire\Topbar;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,3 +28,4 @@ Route::get('/infolists/entries', EntriesDemo::class);
 Route::get('/schema/layout', LayoutDemo::class);
 Route::get('/notifications', NotificationsDemo::class);
 Route::get('/tables', TablesDemo::class);
+Route::get('/topbar', Topbar::class);
