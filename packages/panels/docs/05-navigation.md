@@ -1,6 +1,7 @@
 ---
 title: Navigation
 ---
+import AutoScreenshot from "@components/AutoScreenshot.astro"
 
 ## Overview
 
