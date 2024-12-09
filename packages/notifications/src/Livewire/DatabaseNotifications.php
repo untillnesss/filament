@@ -21,7 +21,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class DatabaseNotifications extends Component implements HasForms, HasActions
+class DatabaseNotifications extends Component implements HasActions, HasForms
 {
     use InteractsWithActions;
     use InteractsWithForms;
