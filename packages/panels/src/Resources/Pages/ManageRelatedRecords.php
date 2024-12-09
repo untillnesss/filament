@@ -5,7 +5,6 @@ namespace Filament\Resources\Pages;
 use Filament\Actions\Action;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\AttachAction;
-use Filament\Actions\BulkAction;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -42,9 +41,7 @@ use function Filament\authorize;
 class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 {
     use Concerns\HasRelationManagers;
-    use Concerns\InteractsWithRecord {
-        configureAction as configureActionRecord;
-    }
+    use Concerns\InteractsWithRecord;
     use InteractsWithRelationshipTable;
 
     public ?string $previousUrl = null;
@@ -163,16 +160,6 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
     protected function configureAction(Action $action): void
     {
-        $this->configureActionRecord($action);
-
-        match (true) {
-            $action instanceof CreateAction => $this->configureCreateAction($action),
-            default => null,
-        };
-    }
-
-    protected function configureTableAction(Action $action): void
-    {
         match (true) {
             $action instanceof AssociateAction => $this->configureAssociateAction($action),
             $action instanceof AttachAction => $this->configureAttachAction($action),
@@ -185,6 +172,11 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
             $action instanceof ReplicateAction => $this->configureReplicateAction($action),
             $action instanceof RestoreAction => $this->configureRestoreAction($action),
             $action instanceof ViewAction => $this->configureViewAction($action),
+            $action instanceof DeleteBulkAction => $this->configureDeleteBulkAction($action),
+            $action instanceof DetachBulkAction => $this->configureDetachBulkAction($action),
+            $action instanceof DissociateBulkAction => $this->configureDissociateBulkAction($action),
+            $action instanceof ForceDeleteBulkAction => $this->configureForceDeleteBulkAction($action),
+            $action instanceof RestoreBulkAction => $this->configureRestoreBulkAction($action),
             default => null,
         };
     }
@@ -291,18 +283,6 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
         if ($relatedResource && $relatedResource::hasPage('view')) {
             $action->url(fn (Model $record): string => $relatedResource::getUrl('view', ['record' => $record], shouldGuessMissingParameters: true));
         }
-    }
-
-    protected function configureTableBulkAction(BulkAction $action): void
-    {
-        match (true) {
-            $action instanceof DeleteBulkAction => $this->configureDeleteBulkAction($action),
-            $action instanceof DetachBulkAction => $this->configureDetachBulkAction($action),
-            $action instanceof DissociateBulkAction => $this->configureDissociateBulkAction($action),
-            $action instanceof ForceDeleteBulkAction => $this->configureForceDeleteBulkAction($action),
-            $action instanceof RestoreBulkAction => $this->configureRestoreBulkAction($action),
-            default => null,
-        };
     }
 
     protected function configureDeleteBulkAction(DeleteBulkAction $action): void
@@ -498,5 +478,14 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
             'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
             "fi-resource-record-{$this->getRecord()->getKey()}",
         ];
+    }
+
+    public function getDefaultActionSuccessRedirectUrl(Action $action): ?string
+    {
+        if ($action->getTable()) {
+            return null;
+        }
+
+        return parent::getDefaultActionSuccessRedirectUrl($action);
     }
 }

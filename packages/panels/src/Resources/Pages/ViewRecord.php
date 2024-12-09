@@ -2,12 +2,11 @@
 
 namespace Filament\Resources\Pages;
 
+use Closure;
 use Filament\Actions\Action;
-use Filament\Actions\DeleteAction;
+use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteAction;
-use Filament\Actions\ReplicateAction;
-use Filament\Actions\RestoreAction;
+use Filament\Actions\ViewAction;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\NestedSchema;
 use Filament\Schemas\Schema;
@@ -22,9 +21,7 @@ use Illuminate\Support\Arr;
 class ViewRecord extends Page
 {
     use Concerns\HasRelationManagers;
-    use Concerns\InteractsWithRecord {
-        configureAction as configureActionRecord;
-    }
+    use Concerns\InteractsWithRecord;
 
     /**
      * @var array<string, mixed> | null
@@ -114,61 +111,13 @@ class ViewRecord extends Page
         return $data;
     }
 
-    protected function configureAction(Action $action): void
+    public function getDefaultActionSchemaResolver(Action $action): ?Closure
     {
-        $this->configureActionRecord($action);
-
-        match (true) {
-            $action instanceof DeleteAction => $this->configureDeleteAction($action),
-            $action instanceof EditAction => $this->configureEditAction($action),
-            $action instanceof ForceDeleteAction => $this->configureForceDeleteAction($action),
-            $action instanceof ReplicateAction => $this->configureReplicateAction($action),
-            $action instanceof RestoreAction => $this->configureRestoreAction($action),
+        return match (true) {
+            $action instanceof CreateAction, $action instanceof EditAction => fn (Schema $schema): Schema => static::getResource()::form($schema->columns(2)),
+            $action instanceof ViewAction => fn (Schema $schema): Schema => static::getResource()::infolist($this->form(static::getResource()::form($schema->columns(2)))),
             default => null,
         };
-    }
-
-    protected function configureEditAction(EditAction $action): void
-    {
-        $resource = static::getResource();
-
-        $action
-            ->authorize($resource::canEdit($this->getRecord()))
-            ->form(fn (Schema $form): Schema => static::getResource()::form($form));
-
-        if ($resource::hasPage('edit')) {
-            $action->url(fn (): string => $this->getResourceUrl('edit'));
-        }
-    }
-
-    protected function configureForceDeleteAction(ForceDeleteAction $action): void
-    {
-        $resource = static::getResource();
-
-        $action
-            ->authorize($resource::canForceDelete($this->getRecord()))
-            ->successRedirectUrl($this->getResourceUrl());
-    }
-
-    protected function configureReplicateAction(ReplicateAction $action): void
-    {
-        $action
-            ->authorize(static::getResource()::canReplicate($this->getRecord()));
-    }
-
-    protected function configureRestoreAction(RestoreAction $action): void
-    {
-        $action
-            ->authorize(static::getResource()::canRestore($this->getRecord()));
-    }
-
-    protected function configureDeleteAction(DeleteAction $action): void
-    {
-        $resource = static::getResource();
-
-        $action
-            ->authorize($resource::canDelete($this->getRecord()))
-            ->successRedirectUrl($this->getResourceUrl());
     }
 
     public function getTitle(): string | Htmlable

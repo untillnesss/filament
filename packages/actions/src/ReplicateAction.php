@@ -68,6 +68,7 @@ class ReplicateAction extends Action
             }
         });
 
+        $this->tableIcon(FilamentIcon::resolve('actions::replicate-action') ?? 'heroicon-m-square-2-stack');
         $this->groupedIcon(FilamentIcon::resolve('actions::replicate-action.grouped') ?? 'heroicon-m-square-2-stack');
     }
 

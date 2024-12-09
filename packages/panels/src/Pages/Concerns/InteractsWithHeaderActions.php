@@ -2,7 +2,6 @@
 
 namespace Filament\Pages\Concerns;
 
-use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use InvalidArgumentException;
@@ -16,11 +15,7 @@ trait InteractsWithHeaderActions
 
     public function cacheInteractsWithHeaderActions(): void
     {
-        /** @var array<string, Action | ActionGroup> */
-        $actions = Action::configureUsing(
-            Closure::fromCallable([$this, 'configureAction']),
-            fn (): array => $this->getHeaderActions(),
-        );
+        $actions = $this->getHeaderActions();
 
         foreach ($actions as $action) {
             if ($action instanceof ActionGroup) {

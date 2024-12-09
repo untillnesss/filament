@@ -291,7 +291,7 @@
                 @apply px-6;
             }
         }
-        
+
         &.fi-modal-window-has-close-button {
             & .fi-modal-heading {
                 @apply me-5;

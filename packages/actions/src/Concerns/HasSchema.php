@@ -40,7 +40,7 @@ trait HasSchema
 
     public function getSchema(Schema $schema): ?Schema
     {
-        $modifiedSchema = $this->evaluate($this->schema, [
+        $modifiedSchema = $this->evaluate($this->schema ?? $this->getHasActionsLivewire()?->getDefaultActionSchemaResolver($this), [
             'form' => $schema,
             'schema' => $schema,
             'infolist' => $schema,

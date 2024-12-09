@@ -4,6 +4,7 @@ namespace Filament\Actions\Concerns;
 
 use Closure;
 use Filament\Notifications\Notification;
+use Illuminate\Auth\Access\Response;
 
 trait CanNotify
 {
@@ -11,17 +12,21 @@ trait CanNotify
 
     protected Notification | Closure | null $successNotification = null;
 
+    protected Notification | Closure | null $unauthorizedNotification = null;
+
     protected string | Closure | null $failureNotificationTitle = null;
 
     protected string | Closure | null $successNotificationTitle = null;
 
+    protected string | Closure | null $unauthorizedNotificationTitle = null;
+
     public function sendFailureNotification(): static
     {
         $notification = $this->evaluate($this->failureNotification, [
-            'notification' => Notification::make()
+            'notification' => $notification = Notification::make()
                 ->danger()
                 ->title($this->getFailureNotificationTitle()),
-        ]);
+        ]) ?? $notification;
 
         if (filled($notification?->getTitle())) {
             $notification->send();
@@ -55,10 +60,10 @@ trait CanNotify
     public function sendSuccessNotification(): static
     {
         $notification = $this->evaluate($this->successNotification, [
-            'notification' => Notification::make()
+            'notification' => $notification = Notification::make()
                 ->success()
                 ->title($this->getSuccessNotificationTitle()),
-        ]);
+        ]) ?? $notification;
 
         if (filled($notification?->getTitle())) {
             $notification->send();
@@ -89,6 +94,35 @@ trait CanNotify
         return $this;
     }
 
+    public function sendUnauthorizedNotification(Response $response): static
+    {
+        $notification = $this->evaluate($this->unauthorizedNotification, [
+            'notification' => $notification = Notification::make()
+                ->danger()
+                ->title($this->getUnauthorizedNotificationTitle() ?? $response->message()),
+        ]) ?? $notification;
+
+        if (filled($notification?->getTitle())) {
+            $notification->send();
+        }
+
+        return $this;
+    }
+
+    public function unauthorizedNotification(Notification | Closure | null $notification): static
+    {
+        $this->unauthorizedNotification = $notification;
+
+        return $this;
+    }
+
+    public function unauthorizedNotificationTitle(string | Closure | null $title): static
+    {
+        $this->unauthorizedNotificationTitle = $title;
+
+        return $this;
+    }
+
     public function getSuccessNotificationTitle(): ?string
     {
         return $this->evaluate($this->successNotificationTitle);
@@ -97,5 +131,10 @@ trait CanNotify
     public function getFailureNotificationTitle(): ?string
     {
         return $this->evaluate($this->failureNotificationTitle);
+    }
+
+    public function getUnauthorizedNotificationTitle(): ?string
+    {
+        return $this->evaluate($this->unauthorizedNotificationTitle);
     }
 }

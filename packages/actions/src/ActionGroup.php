@@ -459,7 +459,7 @@ class ActionGroup extends ViewComponent implements Arrayable, HasEmbeddedView
             'badge' => $this->getBadge(),
             'badgeColor' => $this->getBadgeColor(),
             'class' => 'fi-ac-grouped-group',
-            'icon' => $this->getGroupedIcon(),
+            'icon' => $this->getIcon(),
             'slot' => new ComponentSlot(e($this->getLabel())),
         ];
     }
