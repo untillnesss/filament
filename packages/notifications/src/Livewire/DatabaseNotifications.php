@@ -6,6 +6,8 @@ use Carbon\CarbonInterface;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -19,9 +21,10 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class DatabaseNotifications extends Component implements HasActions
+class DatabaseNotifications extends Component implements HasForms, HasActions
 {
     use InteractsWithActions;
+    use InteractsWithForms;
     use WithPagination;
 
     public static bool $isPaginated = true;

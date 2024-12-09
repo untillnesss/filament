@@ -1,7 +1,6 @@
 @php
     $notifications = $this->getNotifications();
     $unreadNotificationsCount = $this->getUnreadNotificationsCount();
-    $markAllNotificationsAsReadAction = $this->markAllNotificationsAsReadAction();
 @endphp
 
 <div
@@ -19,7 +18,7 @@
     <x-filament-notifications::database.modal
         :notifications="$notifications"
         :unread-notifications-count="$unreadNotificationsCount"
-        :mark-all-notifications-as-read-action="$markAllNotificationsAsReadAction"
+        :mark-all-notifications-as-read-action="$this->markAllNotificationsAsReadAction"
     />
 
     @if ($broadcastChannel = $this->getBroadcastChannel())
