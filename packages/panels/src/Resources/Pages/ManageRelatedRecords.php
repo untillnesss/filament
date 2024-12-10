@@ -29,11 +29,9 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Livewire\Attributes\Url;
 
 use function Filament\authorize;
-use function Filament\get_authorization_response;
 
 class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 {
@@ -153,31 +151,6 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
     public function getOwnerRecord(): Model
     {
         return $this->getRecord();
-    }
-
-    public function getAuthorizationResponse(string $action, ?Model $record = null): Response
-    {
-        if (static::shouldSkipAuthorization()) {
-            return Response::allow();
-        }
-
-        if (
-            ($relatedResource = static::getRelatedResource()) &&
-            (blank($record) || ($record::class === $relatedResource::getModel()))
-        ) {
-            $method = 'get' . Str::lcfirst($action) . 'AuthorizationResponse';
-
-            return method_exists($relatedResource, $method)
-                ? $relatedResource::{$method}($record)
-                : $relatedResource::getAuthorizationResponse($action, $record);
-        }
-
-        return get_authorization_response($action, $record ?? $this->getTable()->getModel(), static::shouldCheckPolicyExistence());
-    }
-
-    protected function can(string $action, ?Model $record = null): bool
-    {
-        return $this->getAuthorizationResponse($action, $record)->allowed();
     }
 
     public function form(Schema $form): Schema

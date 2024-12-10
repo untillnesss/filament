@@ -148,7 +148,7 @@ trait CanBeAuthorized
         $message = $this->getAuthorizationMessage();
 
         if (filled($message)) {
-            invade($response)->message = $message;
+            invade($response)->message = $message; /** @phpstan-ignore-line */
 
             return $response;
         }

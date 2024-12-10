@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
 
+use function Filament\get_authorization_response;
+
 trait InteractsWithRelationshipTable
 {
     use HasTabs;
@@ -291,7 +293,7 @@ trait InteractsWithRelationshipTable
 
     protected function canEdit(Model $record): bool
     {
-        return $this->getUpdateAuthorizationResponse($record)->allowed();
+        return $this->getEditAuthorizationResponse($record)->allowed();
     }
 
     protected function canForceDelete(Model $record): bool
@@ -332,5 +334,30 @@ trait InteractsWithRelationshipTable
     protected function canView(Model $record): bool
     {
         return $this->getViewAuthorizationResponse($record)->allowed();
+    }
+
+    public function getAuthorizationResponse(string $action, ?Model $record = null): Response
+    {
+        if (static::shouldSkipAuthorization()) {
+            return Response::allow();
+        }
+
+        if (
+            ($relatedResource = static::getRelatedResource()) &&
+            (blank($record) || ($record::class === $relatedResource::getModel()))
+        ) {
+            $method = 'get' . Str::lcfirst($action) . 'AuthorizationResponse';
+
+            return method_exists($relatedResource, $method)
+                ? $relatedResource::{$method}($record)
+                : $relatedResource::getAuthorizationResponse($action, $record);
+        }
+
+        return get_authorization_response($action, $record ?? $this->getTable()->getModel(), static::shouldCheckPolicyExistence());
+    }
+
+    protected function can(string $action, ?Model $record = null): bool
+    {
+        return $this->getAuthorizationResponse($action, $record)->allowed();
     }
 }

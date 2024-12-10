@@ -24,6 +24,9 @@ trait CanCustomizeProcess
         return $this->evaluate($this->using ?? $default, $parameters);
     }
 
+    /**
+     * @param  array<string, mixed>  $parameters
+     */
     public function processIndividualRecords(?Closure $default, array $parameters = []): void
     {
         $shouldAuthorizeIndividualRecords = $this->shouldAuthorizeIndividualRecords();

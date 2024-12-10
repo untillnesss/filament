@@ -24,6 +24,9 @@ trait CanNotify
 
     protected string | Closure | null $failureNotificationMissingMessage = null;
 
+    /**
+     * @param  array<string>  $messages
+     */
     public function sendFailureNotification(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): static
     {
         $notification = $this->evaluate($this->failureNotification, [
@@ -158,6 +161,9 @@ trait CanNotify
         return $this->evaluate($this->successNotificationTitle);
     }
 
+    /**
+     * @param  array<string>  $messages
+     */
     public function getFailureNotificationTitle(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): ?string
     {
         return $this->evaluate($this->failureNotificationTitle, [
@@ -169,6 +175,9 @@ trait CanNotify
         ]);
     }
 
+    /**
+     * @param  array<string>  $messages
+     */
     public function getFailureNotificationBody(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): ?string
     {
         return $this->evaluate($this->failureNotificationBody, [
@@ -186,6 +195,9 @@ trait CanNotify
         );
     }
 
+    /**
+     * @param  array<string>  $messages
+     */
     public function getFailureNotificationMissingMessage(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): ?string
     {
         return $this->evaluate($this->failureNotificationMissingMessage, [

@@ -538,6 +538,9 @@ class Action extends ViewComponent implements Arrayable
         $this->dispatchSuccessRedirect();
     }
 
+    /**
+     * @param  array<string>  $messages
+     */
     public function failure(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): void
     {
         $this->sendFailureNotification($successCount, $totalCount, $missingMessageCount, $messages);
