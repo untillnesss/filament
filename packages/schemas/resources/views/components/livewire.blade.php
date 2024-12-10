@@ -1,4 +1,4 @@
-@if (filled($id = $getId()) || filled($extraAttributes = $getExtraAttributes))
+@if (filled($id = $getId()) || filled($extraAttributes = $getExtraAttributes()))
     <div
         {{
             $attributes

@@ -4,6 +4,7 @@ namespace Filament\Actions\Concerns;
 
 use BackedEnum;
 use Closure;
+use Exception;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -144,11 +145,19 @@ trait CanBeAuthorized
             return $response;
         }
 
-        if (filled($response->message())) {
+        $message = $this->getAuthorizationMessage();
+
+        if (filled($message)) {
+            invade($response)->message = $message;
+
             return $response;
         }
 
-        return Response::deny($this->getAuthorizationMessage(), $response->code());
+        if (blank($response->message())) {
+            throw new Exception('An authorization was denied without a message.');
+        }
+
+        return $response;
     }
 
     public function authorizationMessage(string | Closure | null $message): static
@@ -198,5 +207,42 @@ trait CanBeAuthorized
         }
 
         return $this->isAuthorized();
+    }
+
+    protected bool | string | Closure | null $authorizeIndividualRecords = null;
+
+    public function authorizeIndividualRecords(bool | string | Closure | null $callback = true): static
+    {
+        $this->authorizeIndividualRecords = $callback;
+
+        return $this;
+    }
+
+    public function getIndividualRecordAuthorizationResponse(Model $record): Response
+    {
+        if (is_string($this->authorizeIndividualRecords)) {
+            return Gate::inspect($this->authorizeIndividualRecords, $record);
+        }
+
+        $resolver = ($this->authorizeIndividualRecords instanceof Closure)
+            ? $this->authorizeIndividualRecords
+            : $this->getHasActionsLivewire()->getDefaultActionIndividualRecordAuthorizationResponseResolver($this);
+
+        if (! $resolver) {
+            throw new Exception('No function was passed to [authorizeIndividualRecords()].');
+        }
+
+        $response = $resolver($record);
+
+        if ($response instanceof Response) {
+            return $response;
+        }
+
+        return $response ? Response::allow() : Response::deny();
+    }
+
+    public function shouldAuthorizeIndividualRecords(): bool
+    {
+        return filled($this->authorizeIndividualRecords) && ($this->authorizeIndividualRecords !== false);
     }
 }

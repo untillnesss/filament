@@ -48,4 +48,6 @@ interface HasActions
     public function getDefaultActionSchemaResolver(Action $action): ?Closure;
 
     public function getDefaultActionAuthorizationResponse(Action $action): ?Response;
+
+    public function getDefaultActionIndividualRecordAuthorizationResponseResolver(Action $action): ?Closure;
 }

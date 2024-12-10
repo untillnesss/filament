@@ -272,15 +272,25 @@ class CreateRecord extends Page
     protected function getForms(): array
     {
         return [
-            'form' => $this->form(static::getResource()::form(
+            'form' => $this->configureForm(
                 $this->makeSchema()
                     ->operation('create')
                     ->model($this->getModel())
-                    ->statePath($this->getFormStatePath())
-                    ->columns($this->hasInlineLabels() ? 1 : 2)
-                    ->inlineLabel($this->hasInlineLabels()),
-            )),
+                    ->statePath($this->getFormStatePath()),
+            ),
         ];
+    }
+
+    public function configureForm(Schema $form): Schema
+    {
+        $form->columns($this->hasInlineLabels() ? 1 : 2);
+        $form->inlineLabel($this->hasInlineLabels());
+
+        static::getResource()::form($form);
+
+        $this->form($form);
+
+        return $form;
     }
 
     protected function getRedirectUrl(): string

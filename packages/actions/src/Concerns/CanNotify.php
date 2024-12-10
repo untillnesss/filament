@@ -20,12 +20,27 @@ trait CanNotify
 
     protected string | Closure | null $unauthorizedNotificationTitle = null;
 
-    public function sendFailureNotification(): static
+    protected string | Closure | null $failureNotificationBody = null;
+
+    protected string | Closure | null $failureNotificationMissingMessage = null;
+
+    public function sendFailureNotification(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): static
     {
         $notification = $this->evaluate($this->failureNotification, [
+            'isPartial' => $successCount > 0,
+            'messages' => $messages,
+            'missingMessageCount' => $missingMessageCount,
             'notification' => $notification = Notification::make()
-                ->danger()
-                ->title($this->getFailureNotificationTitle()),
+                ->when(
+                    $successCount,
+                    fn (Notification $notification) => $notification->warning(),
+                    fn (Notification $notification) => $notification->danger(),
+                )
+                ->title($this->getFailureNotificationTitle($successCount, $totalCount, $missingMessageCount, $messages))
+                ->body($this->getFailureNotificationBody($successCount, $totalCount, $missingMessageCount, $messages))
+                ->persistent(),
+            'successCount' => $successCount,
+            'totalCount' => $totalCount,
         ]) ?? $notification;
 
         if (filled($notification?->getTitle())) {
@@ -53,6 +68,20 @@ trait CanNotify
     public function failureNotificationTitle(string | Closure | null $title): static
     {
         $this->failureNotificationTitle = $title;
+
+        return $this;
+    }
+
+    public function failureNotificationBody(string | Closure | null $body): static
+    {
+        $this->failureNotificationBody = $body;
+
+        return $this;
+    }
+
+    public function failureNotificationMissingMessage(string | Closure | null $message): static
+    {
+        $this->failureNotificationMissingMessage = $message;
 
         return $this;
     }
@@ -99,7 +128,8 @@ trait CanNotify
         $notification = $this->evaluate($this->unauthorizedNotification, [
             'notification' => $notification = Notification::make()
                 ->danger()
-                ->title($this->getUnauthorizedNotificationTitle() ?? $response->message()),
+                ->title($this->getUnauthorizedNotificationTitle() ?? $response->message())
+                ->persistent(),
         ]) ?? $notification;
 
         if (filled($notification?->getTitle())) {
@@ -128,9 +158,43 @@ trait CanNotify
         return $this->evaluate($this->successNotificationTitle);
     }
 
-    public function getFailureNotificationTitle(): ?string
+    public function getFailureNotificationTitle(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): ?string
     {
-        return $this->evaluate($this->failureNotificationTitle);
+        return $this->evaluate($this->failureNotificationTitle, [
+            'isPartial' => $successCount > 0,
+            'messages' => $messages,
+            'missingMessageCount' => $missingMessageCount,
+            'successCount' => $successCount,
+            'totalCount' => $totalCount,
+        ]);
+    }
+
+    public function getFailureNotificationBody(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): ?string
+    {
+        return $this->evaluate($this->failureNotificationBody, [
+            'isPartial' => $successCount > 0,
+            'messages' => $messages,
+            'missingMessageCount' => $missingMessageCount,
+            'successCount' => $successCount,
+            'totalCount' => $totalCount,
+        ]) ?? implode(
+            ' ',
+            [
+                ...($missingMessageCount ? [$this->getFailureNotificationMissingMessage($successCount, $totalCount, $missingMessageCount, $messages)] : []),
+                ...$messages,
+            ],
+        );
+    }
+
+    public function getFailureNotificationMissingMessage(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): ?string
+    {
+        return $this->evaluate($this->failureNotificationMissingMessage, [
+            'isPartial' => $successCount > 0,
+            'messages' => $messages,
+            'missingMessageCount' => $missingMessageCount,
+            'successCount' => $successCount,
+            'totalCount' => $totalCount,
+        ]);
     }
 
     public function getUnauthorizedNotificationTitle(): ?string

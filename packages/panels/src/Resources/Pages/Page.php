@@ -2,6 +2,7 @@
 
 namespace Filament\Resources\Pages;
 
+use Closure;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
@@ -281,6 +282,16 @@ abstract class Page extends BasePage
             $action instanceof DeleteBulkAction => static::getResource()::getDeleteAnyAuthorizationResponse(),
             $action instanceof ForceDeleteBulkAction => static::getResource()::getForceDeleteAnyAuthorizationResponse(),
             $action instanceof RestoreBulkAction => static::getResource()::getRestoreAnyAuthorizationResponse(),
+            default => null,
+        };
+    }
+
+    public function getDefaultActionIndividualRecordAuthorizationResponseResolver(Action $action): ?Closure
+    {
+        return match (true) {
+            $action instanceof DeleteBulkAction => fn (Model $record): Response => static::getResource()::getDeleteAuthorizationResponse($record),
+            $action instanceof ForceDeleteBulkAction => fn (Model $record): Response => static::getResource()::getForceDeleteAuthorizationResponse($record),
+            $action instanceof RestoreBulkAction => fn (Model $record): Response => static::getResource()::getRestoreAuthorizationResponse($record),
             default => null,
         };
     }

@@ -253,11 +253,23 @@ class EditRecord extends Page
         return $data;
     }
 
+    public function configureForm(Schema $form): Schema
+    {
+        $form->columns($this->hasInlineLabels() ? 1 : 2);
+        $form->inlineLabel($this->hasInlineLabels());
+
+        static::getResource()::form($form);
+
+        $this->form($form);
+
+        return $form;
+    }
+
     public function getDefaultActionSchemaResolver(Action $action): ?Closure
     {
         return match (true) {
             $action instanceof CreateAction => fn (Schema $schema): Schema => static::getResource()::form($schema->columns(2)),
-            $action instanceof EditAction => fn (Schema $schema): Schema => $this->form(static::getResource()::form($schema->columns(2))),
+            $action instanceof EditAction => fn (Schema $schema): Schema => $this->configureForm($schema),
             $action instanceof ViewAction => fn (Schema $schema): Schema => static::getResource()::infolist(static::getResource()::form($schema->columns(2))),
             default => null,
         };
@@ -323,14 +335,12 @@ class EditRecord extends Page
     protected function getForms(): array
     {
         return [
-            'form' => $this->form(static::getResource()::form(
+            'form' => $this->configureForm(
                 $this->makeSchema()
                     ->operation('edit')
                     ->model($this->getRecord())
-                    ->statePath($this->getFormStatePath())
-                    ->columns($this->hasInlineLabels() ? 1 : 2)
-                    ->inlineLabel($this->hasInlineLabels()),
-            )),
+                    ->statePath($this->getFormStatePath()),
+            ),
         ];
     }
 

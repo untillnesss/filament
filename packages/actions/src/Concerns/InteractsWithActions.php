@@ -708,4 +708,9 @@ trait InteractsWithActions
     {
         return null;
     }
+
+    public function getDefaultActionIndividualRecordAuthorizationResponseResolver(Action $action): ?Closure
+    {
+        return null;
+    }
 }

@@ -16,7 +16,7 @@ trait BelongsToLivewire
         return $this;
     }
 
-    public function getLivewire(): object
+    public function getLivewire(): ?object
     {
         if (isset($this->livewire)) {
             return $this->livewire;
@@ -30,7 +30,7 @@ trait BelongsToLivewire
             return $livewire;
         }
 
-        return $this->getGroup()->getLivewire();
+        return $this->getGroup()?->getLivewire();
     }
 
     public function getHasActionsLivewire(): ?HasActions

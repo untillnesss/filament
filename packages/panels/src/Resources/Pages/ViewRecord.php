@@ -115,7 +115,7 @@ class ViewRecord extends Page
     {
         return match (true) {
             $action instanceof CreateAction, $action instanceof EditAction => fn (Schema $schema): Schema => static::getResource()::form($schema->columns(2)),
-            $action instanceof ViewAction => fn (Schema $schema): Schema => static::getResource()::infolist($this->form(static::getResource()::form($schema->columns(2)))),
+            $action instanceof ViewAction => fn (Schema $schema): Schema => $this->hasInfolist() ? $this->configureInfolist($schema) : $this->configureForm($schema),
             default => null,
         };
     }
@@ -136,21 +136,41 @@ class ViewRecord extends Page
         return $form;
     }
 
+    public function configureForm(Schema $form): Schema
+    {
+        $form->columns($this->hasInlineLabels() ? 1 : 2);
+        $form->inlineLabel($this->hasInlineLabels());
+
+        static::getResource()::form($form);
+
+        $this->form($form);
+
+        return $form;
+    }
+
+    public function configureInfolist(Schema $infolist): Schema
+    {
+        $infolist->columns($this->hasInlineLabels() ? 1 : 2);
+        $infolist->inlineLabel($this->hasInlineLabels());
+
+        static::getResource()::infolist($infolist);
+
+        return $infolist;
+    }
+
     /**
      * @return array<int | string, string | Schema>
      */
     protected function getForms(): array
     {
         return [
-            'form' => $this->form(static::getResource()::form(
+            'form' => $this->configureForm(
                 $this->makeSchema()
                     ->operation('view')
                     ->disabled()
                     ->model($this->getRecord())
-                    ->statePath($this->getFormStatePath())
-                    ->columns($this->hasInlineLabels() ? 1 : 2)
-                    ->inlineLabel($this->hasInlineLabels()),
-            )),
+                    ->statePath($this->getFormStatePath()),
+            ),
         ];
     }
 
@@ -161,11 +181,9 @@ class ViewRecord extends Page
 
     public function infolist(): Schema
     {
-        return static::getResource()::infolist(
+        return $this->configureInfolist(
             $this->makeSchema()
-                ->record($this->getRecord())
-                ->columns($this->hasInlineLabels() ? 1 : 2)
-                ->inlineLabel($this->hasInlineLabels()),
+                ->record($this->getRecord()),
         );
     }
 
