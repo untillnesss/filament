@@ -20,6 +20,8 @@ trait CanBeAuthorized
 
     protected bool | Closure $hasAuthorizationNotification = false;
 
+    protected bool | string | Closure | null $authorizeIndividualRecords = null;
+
     /**
      * @param  Model | class-string | array<mixed> | null  $arguments
      */
@@ -208,8 +210,6 @@ trait CanBeAuthorized
 
         return $this->isAuthorized();
     }
-
-    protected bool | string | Closure | null $authorizeIndividualRecords = null;
 
     public function authorizeIndividualRecords(bool | string | Closure | null $callback = true): static
     {
