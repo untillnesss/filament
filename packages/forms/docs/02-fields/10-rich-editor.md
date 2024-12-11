@@ -35,9 +35,9 @@ RichEditor::make('content')
         'link',
         'orderedList',
         'redo',
+        'strike',
         'sub',
         'sup',
-        'strike',
         'underline',
         'undo',
     ])

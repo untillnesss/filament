@@ -396,10 +396,10 @@ return [
             'ordered_list' => 'Numbered list',
             'redo' => 'Redo',
             'strike' => 'Strikethrough',
-            'underline' => 'Underline',
-            'undo' => 'Undo',
             'sub' => 'Subscript',
             'sup' => 'Superscript',
+            'underline' => 'Underline',
+            'undo' => 'Undo',
         ],
 
     ],
