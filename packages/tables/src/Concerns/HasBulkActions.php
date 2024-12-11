@@ -196,7 +196,7 @@ trait HasBulkActions
         $table = $this->getTable();
 
         if (
-            $shouldFetchSelectedRecords ||
+            (! $shouldFetchSelectedRecords) ||
             (! ($table->getRelationship() instanceof BelongsToMany && $table->allowsDuplicates()))
         ) {
             if (! $table->hasQuery()) {
