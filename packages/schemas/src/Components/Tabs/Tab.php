@@ -39,7 +39,7 @@ class Tab extends Component implements CanConcealComponents
     {
         parent::setUp();
 
-        $this->key(fn (Tab $component): string => Str::slug($component->getLabel()));
+        $this->key(fn (Tab $component): string => Str::slug(Str::transliterate($component->getLabel(), strict: true)));
     }
 
     /**

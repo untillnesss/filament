@@ -168,7 +168,7 @@ class MenuItem extends Component
         $label = $this->getLabel();
         $postAction = $this->getPostAction();
 
-        return ($action ?? Action::make(Str::slug($label)))
+        return ($action ?? Action::make(Str::slug(Str::transliterate($label, strict: true))))
             ->color($this->getColor())
             ->icon($this->getIcon())
             ->label($label)
