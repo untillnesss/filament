@@ -46,7 +46,7 @@ class TestsFormComponentActions
 
     public function assertFormComponentActionDataSet(): Closure
     {
-        return function (array $data): static {
+        return function (array | Closure $data): static {
             $this->assertActionDataSet($data);
 
             return $this;

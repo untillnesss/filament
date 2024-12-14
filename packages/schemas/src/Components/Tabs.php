@@ -60,7 +60,7 @@ class Tabs extends Component
                 return null;
             }
 
-            return Str::slug($label);
+            return Str::slug(Str::transliterate($label, strict: true));
         });
     }
 

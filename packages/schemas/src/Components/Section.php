@@ -87,7 +87,7 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
                 return null;
             }
 
-            return Str::slug($heading);
+            return Str::slug(Str::transliterate($heading, strict: true));
         });
 
         $this->afterHeader(fn (Section $component): array => $component->getHeaderActions());
