@@ -14,9 +14,14 @@ use Filament\SpatieLaravelSettingsPluginServiceProvider;
 use Filament\SpatieLaravelTranslatablePluginServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
+use Filament\Tests\Models\Department;
+use Filament\Tests\Models\Ticket;
 use Filament\Tests\Models\User;
+use Filament\Tests\Policies\DepartmentPolicy;
+use Filament\Tests\Policies\TicketPolicy;
 use Filament\Widgets\WidgetsServiceProvider;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Gate;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -63,6 +68,9 @@ abstract class TestCase extends BaseTestCase
 
     protected function defineEnvironment($app): void
     {
+        Gate::policy(Ticket::class, TicketPolicy::class);
+        Gate::policy(Department::class, DepartmentPolicy::class);
+
         $app['config']->set('auth.providers.users.model', User::class);
         $app['config']->set('view.paths', [
             ...$app['config']->get('view.paths'),
