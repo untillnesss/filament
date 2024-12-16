@@ -14,7 +14,7 @@ beforeEach(function () {
 
     $this->artisan('make:filament-resource', [
         'model' => 'Team',
-        '--model-namespace' => 'Filament\\Tests\\Models',
+        '--model-namespace' => 'Filament\\Tests\\Fixtures\\Models',
         '--view' => true,
         '--panel' => 'admin',
         '--no-interaction' => true,
@@ -102,7 +102,7 @@ it('can generate a relation manager with a generated form schema and table colum
         'recordTitleAttribute' => 'name',
         '--attach' => true,
         '--generate' => true,
-        '--related-model' => 'Filament\\Tests\\Models\\Team',
+        '--related-model' => 'Filament\\Tests\\Fixtures\\Models\\Team',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
