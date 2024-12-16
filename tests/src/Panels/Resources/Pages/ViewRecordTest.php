@@ -1,8 +1,11 @@
 <?php
 
+use Filament\Facades\Filament;
 use Filament\Tests\Fixtures\Models\Post;
+use Filament\Tests\Fixtures\Models\TicketMessage;
 use Filament\Tests\Fixtures\Resources\Posts\Pages\ViewPost;
 use Filament\Tests\Fixtures\Resources\Posts\PostResource;
+use Filament\Tests\Fixtures\Resources\TicketMessages\TicketMessageResource;
 use Filament\Tests\Panels\Resources\TestCase;
 use Illuminate\Support\Str;
 
@@ -57,4 +60,24 @@ it('can refresh data', function () {
     $page->assertFormSet([
         'title' => $newPostTitle,
     ]);
+});
+
+it('can ticket messages page without a policy', function () {
+    $message = TicketMessage::factory()
+        ->create();
+
+    $this->get(TicketMessageResource::getUrl('view', ['record' => $message]))
+        ->assertSuccessful();
+});
+
+it('does not render ticket messages page without a policy if authorization is strict', function () {
+    Filament::getCurrentPanel()->strictAuthorization();
+
+    $message = TicketMessage::factory()
+        ->create();
+
+    $this->get(TicketMessageResource::getUrl('view', ['record' => $message]))
+        ->assertServerError();
+
+    Filament::getCurrentPanel()->strictAuthorization(false);
 });

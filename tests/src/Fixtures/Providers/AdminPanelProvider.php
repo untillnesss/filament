@@ -11,9 +11,12 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Tests\Fixtures\Pages\Actions;
 use Filament\Tests\Fixtures\Pages\Settings;
+use Filament\Tests\Fixtures\Resources\Departments\DepartmentResource;
 use Filament\Tests\Fixtures\Resources\PostCategories\PostCategoryResource;
 use Filament\Tests\Fixtures\Resources\Posts\PostResource;
 use Filament\Tests\Fixtures\Resources\Shop\Products\ProductResource;
+use Filament\Tests\Fixtures\Resources\TicketMessages\TicketMessageResource;
+use Filament\Tests\Fixtures\Resources\Tickets\TicketResource;
 use Filament\Tests\Fixtures\Resources\Users\UserResource;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -34,9 +37,12 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->emailVerification()
             ->resources([
+                DepartmentResource::class,
                 PostResource::class,
                 PostCategoryResource::class,
                 ProductResource::class,
+                TicketResource::class,
+                TicketMessageResource::class,
                 UserResource::class,
             ])
             ->pages([

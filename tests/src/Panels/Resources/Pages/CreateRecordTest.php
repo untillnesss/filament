@@ -1,9 +1,11 @@
 <?php
 
+use Filament\Facades\Filament;
 use Filament\Tests\Fixtures\Models\Post;
 use Filament\Tests\Fixtures\Resources\Posts\Pages\CreateAnotherPreservingDataPost;
 use Filament\Tests\Fixtures\Resources\Posts\Pages\CreatePost;
 use Filament\Tests\Fixtures\Resources\Posts\PostResource;
+use Filament\Tests\Fixtures\Resources\TicketMessages\TicketMessageResource;
 use Filament\Tests\Panels\Resources\TestCase;
 
 use function Filament\Tests\livewire;
@@ -146,4 +148,18 @@ it('can validate input', function () {
         ])
         ->call('create')
         ->assertHasFormErrors(['title' => 'required']);
+});
+
+it('can ticket messages page without a policy', function () {
+    $this->get(TicketMessageResource::getUrl('create'))
+        ->assertSuccessful();
+});
+
+it('does not render ticket messages page without a policy if authorization is strict', function () {
+    Filament::getCurrentPanel()->strictAuthorization();
+
+    $this->get(TicketMessageResource::getUrl('create'))
+        ->assertServerError();
+
+    Filament::getCurrentPanel()->strictAuthorization(false);
 });

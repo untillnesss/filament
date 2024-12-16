@@ -2,8 +2,8 @@
 
 namespace Filament\Tests\Fixtures\Policies;
 
-use App\Models\User;
 use Filament\Tests\Fixtures\Models\Ticket;
+use Filament\Tests\Fixtures\Models\User;
 
 class TicketPolicy
 {

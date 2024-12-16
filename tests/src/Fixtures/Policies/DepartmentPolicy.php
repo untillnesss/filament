@@ -2,8 +2,8 @@
 
 namespace Filament\Tests\Fixtures\Policies;
 
-use App\Models\User;
 use Filament\Tests\Fixtures\Models\Department;
+use Filament\Tests\Fixtures\Models\User;
 
 class DepartmentPolicy
 {

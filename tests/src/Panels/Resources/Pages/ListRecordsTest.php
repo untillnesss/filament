@@ -2,9 +2,12 @@
 
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Facades\Filament;
 use Filament\Tests\Fixtures\Models\Post;
+use Filament\Tests\Fixtures\Models\TicketMessage;
 use Filament\Tests\Fixtures\Resources\Posts\Pages\ListPosts;
 use Filament\Tests\Fixtures\Resources\Posts\PostResource;
+use Filament\Tests\Fixtures\Resources\TicketMessages\TicketMessageResource;
 use Filament\Tests\Fixtures\Resources\Users\UserResource;
 use Filament\Tests\Panels\Resources\TestCase;
 
@@ -114,4 +117,24 @@ it('can bulk delete posts', function () {
     foreach ($posts as $post) {
         assertSoftDeleted($post);
     }
+});
+
+it('can render ticket messages page without a policy', function () {
+    TicketMessage::factory(10)
+        ->create();
+
+    $this->get(TicketMessageResource::getUrl('index'))
+        ->assertSuccessful();
+});
+
+it('does not render ticket messages page without a policy if authorization is strict', function () {
+    Filament::getCurrentPanel()->strictAuthorization();
+
+    TicketMessage::factory(10)
+        ->create();
+
+    $this->get(TicketMessageResource::getUrl('index'))
+        ->assertServerError();
+
+    Filament::getCurrentPanel()->strictAuthorization(false);
 });
