@@ -10,7 +10,7 @@ use App\Filament\Resources\Users\UserResource;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Filament\Tests\Models\Blog\Post;
+use Filament\Tests\Fixtures\Models\Blog\Post;
 
 class PostResource extends Resource
 {
