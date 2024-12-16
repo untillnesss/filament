@@ -20,7 +20,7 @@ beforeEach(function () {
 it('can generate a resource class', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -33,7 +33,7 @@ it('can generate a resource class', function () {
 it('can generate a resource form', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -47,7 +47,7 @@ it('can generate a resource infolist', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--view' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -60,7 +60,7 @@ it('can generate a resource infolist', function () {
 it('can generate a resource table', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -73,7 +73,7 @@ it('can generate a resource table', function () {
 it('can generate a resource list page', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -86,7 +86,7 @@ it('can generate a resource list page', function () {
 it('can generate a resource create page', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -99,7 +99,7 @@ it('can generate a resource create page', function () {
 it('can generate a resource edit page', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -113,7 +113,7 @@ it('can generate a resource view page', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--view' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -127,7 +127,7 @@ it('can generate a resource class with embedded form', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--embed-schemas' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -142,7 +142,7 @@ it('can generate a resource class with embedded infolist', function () {
         'model' => 'Post',
         '--embed-schemas' => true,
         '--view' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -156,7 +156,7 @@ it('can generate a resource class with embedded table', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--embed-table' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -170,7 +170,7 @@ it('can generate the resource form content', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--generate' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -184,7 +184,7 @@ it('can generate the resource table content', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--generate' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -200,7 +200,7 @@ it('can generate the form and table content embedded in a resource class', funct
         '--embed-schemas' => true,
         '--embed-table' => true,
         '--generate' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -214,7 +214,7 @@ it('can generate a resource class with soft deletes', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--soft-deletes' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -228,7 +228,7 @@ it('can generate a resource table with soft deletes', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--soft-deletes' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -242,7 +242,7 @@ it('can generate a resource edit page with soft deletes', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--soft-deletes' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -268,7 +268,7 @@ it('can generate a simple resource class', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--simple' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -286,7 +286,7 @@ it('can generate a simple resource manage page', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--simple' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -302,7 +302,7 @@ it('can generate a simple resource class without embedded schemas and table', fu
         '--not-embedded' => true,
         '--simple' => true,
         '--view' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -315,7 +315,7 @@ it('can generate a simple resource class without embedded schemas and table', fu
 it('can generate a resource class in a nested directory', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Blog/Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -328,7 +328,7 @@ it('can generate a resource class in a nested directory', function () {
 it('can generate a resource form in a nested directory', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Blog/Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -342,7 +342,7 @@ it('can generate a resource infolist in a nested directory', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Blog/Post',
         '--view' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -355,7 +355,7 @@ it('can generate a resource infolist in a nested directory', function () {
 it('can generate a resource table in a nested directory', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Blog/Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -368,7 +368,7 @@ it('can generate a resource table in a nested directory', function () {
 it('can generate a resource list page in a nested directory', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Blog/Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -381,7 +381,7 @@ it('can generate a resource list page in a nested directory', function () {
 it('can generate a resource create page in a nested directory', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Blog/Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -394,7 +394,7 @@ it('can generate a resource create page in a nested directory', function () {
 it('can generate a resource edit page in a nested directory', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Blog/Post',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -408,7 +408,7 @@ it('can generate a resource view page in a nested directory', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Blog/Post',
         '--view' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -422,7 +422,7 @@ it('can generate a simple resource manage page in a nested directory', function 
     $this->artisan('make:filament-resource', [
         'model' => 'Blog/Post',
         '--simple' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -452,7 +452,7 @@ it('can generate a nested resource class', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--nested' => 'Users',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -482,7 +482,7 @@ it('can generate a nested resource class with a plural parent resource name', fu
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--nested' => 'Users',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -512,7 +512,7 @@ it('can generate a nested resource class with a parent resource name with `Resou
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--nested' => 'UserResource',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -542,7 +542,7 @@ it('can generate a nested resource form', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--nested' => 'Users',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -573,7 +573,7 @@ it('can generate a nested resource infolist', function () {
         'model' => 'Post',
         '--nested' => 'Users',
         '--view' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -603,7 +603,7 @@ it('can generate a nested resource create page', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--nested' => 'Users',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -633,7 +633,7 @@ it('can generate a nested resource edit page', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Post',
         '--nested' => 'Users',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -664,7 +664,7 @@ it('can generate a nested resource view page', function () {
         'model' => 'Post',
         '--nested' => 'Users',
         '--view' => true,
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
@@ -694,7 +694,7 @@ it('can generate a nested resource class in a nested directory', function () {
     $this->artisan('make:filament-resource', [
         'model' => 'Blog/Post',
         '--nested' => 'Users',
-        '--model-namespace' => 'Filament\Tests\Models',
+        '--model-namespace' => 'Filament\Tests\Fixtures\Models',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);
