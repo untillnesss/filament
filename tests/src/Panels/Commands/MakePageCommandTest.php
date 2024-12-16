@@ -305,7 +305,7 @@ $runGenerateManageRelatedRecordsPageCommand = function (TestCase $testCase): Pen
         ->expectsQuestion('Would you like to generate the form schema and table columns based on the attributes of the model?', false)
         ->expectsQuestion('Does the model use soft deletes?', false);
 
-    require_once __DIR__ . '/../../Models/Team.php';
+    require_once __DIR__ . '/../../Fixtures/Models/Team.php';
     require_once app_path('Filament/Resources/Teams/TeamResource.php');
     require_once app_path('Filament/Resources/Teams/Pages/ListTeams.php');
     require_once app_path('Filament/Resources/Teams/Pages/CreateTeam.php');

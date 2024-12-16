@@ -2,8 +2,8 @@
 
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\Testing\Fixtures\TestAction;
-use Filament\Tests\Models\Post;
-use Filament\Tests\Tables\Fixtures\PostsTable;
+use Filament\Tests\Fixtures\Livewire\PostsTable;
+use Filament\Tests\Fixtures\Models\Post;
 use Filament\Tests\Tables\TestCase;
 use Illuminate\Support\Str;
 

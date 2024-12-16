@@ -26,7 +26,7 @@ beforeEach(function () {
         '--no-interaction' => true,
     ]);
 
-    require_once __DIR__ . '/../../Models/Team.php';
+    require_once __DIR__ . '/../../Fixtures/Models/Team.php';
     require_once app_path('Filament/Resources/Teams/TeamResource.php');
     require_once app_path('Filament/Resources/Teams/Pages/ListTeams.php');
     require_once app_path('Filament/Resources/Teams/Pages/CreateTeam.php');

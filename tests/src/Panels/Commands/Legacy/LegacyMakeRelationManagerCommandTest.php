@@ -34,7 +34,7 @@ beforeEach(function () {
         '--no-interaction' => true,
     ]);
 
-    require_once __DIR__ . '/../../../Models/Team.php';
+    require_once __DIR__ . '/../../../Fixtures/Models/Team.php';
     require_once app_path('Filament/Resources/TeamResource.php');
     require_once app_path('Filament/Resources/TeamResource/Pages/ListTeams.php');
     require_once app_path('Filament/Resources/TeamResource/Pages/CreateTeam.php');

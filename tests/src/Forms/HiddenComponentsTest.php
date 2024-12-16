@@ -3,7 +3,7 @@
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
-use Filament\Tests\Forms\Fixtures\Livewire;
+use Filament\Tests\Fixtures\Livewire\Livewire;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Str;
 

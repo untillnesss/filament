@@ -1,12 +1,12 @@
 <?php
 
 use Filament\Facades\Filament;
-use Filament\Tests\Models\Post;
-use Filament\Tests\Panels\Fixtures\Resources\PostCategories\PostCategoryResource;
-use Filament\Tests\Panels\Fixtures\Resources\Posts\PostResource;
-use Filament\Tests\Panels\Fixtures\Resources\Shop\OrderInvoiceResource;
-use Filament\Tests\Panels\Fixtures\Resources\Shop\OrderResource;
-use Filament\Tests\Panels\Fixtures\Resources\Shop\Products\ProductResource;
+use Filament\Tests\Fixtures\Models\Post;
+use Filament\Tests\Fixtures\Resources\PostCategories\PostCategoryResource;
+use Filament\Tests\Fixtures\Resources\Posts\PostResource;
+use Filament\Tests\Fixtures\Resources\Shop\OrderInvoiceResource;
+use Filament\Tests\Fixtures\Resources\Shop\OrderResource;
+use Filament\Tests\Fixtures\Resources\Shop\Products\ProductResource;
 use Filament\Tests\Panels\Resources\TestCase;
 use Illuminate\Database\Eloquent\Builder;
 

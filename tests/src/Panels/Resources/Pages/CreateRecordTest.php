@@ -1,9 +1,9 @@
 <?php
 
-use Filament\Tests\Models\Post;
-use Filament\Tests\Panels\Fixtures\Resources\Posts\Pages\CreateAnotherPreservingDataPost;
-use Filament\Tests\Panels\Fixtures\Resources\Posts\Pages\CreatePost;
-use Filament\Tests\Panels\Fixtures\Resources\Posts\PostResource;
+use Filament\Tests\Fixtures\Models\Post;
+use Filament\Tests\Fixtures\Resources\Posts\Pages\CreateAnotherPreservingDataPost;
+use Filament\Tests\Fixtures\Resources\Posts\Pages\CreatePost;
+use Filament\Tests\Fixtures\Resources\Posts\PostResource;
 use Filament\Tests\Panels\Resources\TestCase;
 
 use function Filament\Tests\livewire;
