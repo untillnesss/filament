@@ -9,7 +9,7 @@ use App\Filament\Resources\Posts\Tables\PostsTable;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Filament\Tests\Models\Post;
+use Filament\Tests\Fixtures\Models\Post;
 
 class PostResource extends Resource
 {

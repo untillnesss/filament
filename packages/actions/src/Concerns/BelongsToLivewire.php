@@ -2,6 +2,7 @@
 
 namespace Filament\Actions\Concerns;
 
+use Filament\Actions\Contracts\HasActions;
 use Livewire\Component;
 
 trait BelongsToLivewire
@@ -15,7 +16,7 @@ trait BelongsToLivewire
         return $this;
     }
 
-    public function getLivewire(): object
+    public function getLivewire(): ?object
     {
         if (isset($this->livewire)) {
             return $this->livewire;
@@ -29,6 +30,17 @@ trait BelongsToLivewire
             return $livewire;
         }
 
-        return $this->getGroup()->getLivewire();
+        return $this->getGroup()?->getLivewire();
+    }
+
+    public function getHasActionsLivewire(): ?HasActions
+    {
+        $livewire = $this->getLivewire();
+
+        if (! $livewire instanceof HasActions) {
+            return null;
+        }
+
+        return $livewire;
     }
 }

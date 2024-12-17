@@ -4,7 +4,7 @@ use Filament\Actions\Testing\Fixtures\TestAction;
 use Filament\Facades\Filament;
 use Filament\MultiFactorAuthentication\EmailCode\Notifications\VerifyEmailCodeAuthentication;
 use Filament\Pages\Auth\Login;
-use Filament\Tests\Models\User;
+use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Notification;

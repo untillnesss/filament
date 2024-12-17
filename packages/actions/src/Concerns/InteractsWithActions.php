@@ -12,7 +12,9 @@ use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Cancel;
 use Filament\Support\Exceptions\Halt;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Url;
@@ -106,6 +108,15 @@ trait InteractsWithActions
         }
 
         try {
+            if (
+                $action->hasAuthorizationNotification() &&
+                ($response = $action->getAuthorizationResponseWithMessage())->denied()
+            ) {
+                $action->sendUnauthorizedNotification($response);
+
+                throw new Cancel;
+            }
+
             $hasSchema = $this->mountedActionHasSchema(mountedAction: $action);
 
             if ($hasSchema) {
@@ -151,6 +162,13 @@ trait InteractsWithActions
         }
 
         if ($action->isDisabled()) {
+            return null;
+        }
+
+        if (
+            $action->hasAuthorizationNotification() &&
+            (! $action->isAuthorized())
+        ) {
             return null;
         }
 
@@ -426,10 +444,7 @@ trait InteractsWithActions
                 throw new ActionNotResolvableException("Action was not resolvable from methods [{$action['name']}Action] or [{$action['name']}]");
             }
 
-            $resolvedAction = Action::configureUsing(
-                Closure::fromCallable([$this, 'configureAction']),
-                fn () => $this->{$methodName}(),
-            );
+            $resolvedAction = $this->{$methodName}();
 
             if (! $resolvedAction instanceof Action) {
                 throw new ActionNotResolvableException('Actions must be an instance of ' . Action::class . ". The [{$methodName}] method on the Livewire component returned an instance of [" . get_class($resolvedAction) . '].');
@@ -571,8 +586,6 @@ trait InteractsWithActions
         return null;
     }
 
-    protected function configureAction(Action $action): void {}
-
     public function unmountAction(bool $canCancelParentActions = true): void
     {
         try {
@@ -641,5 +654,63 @@ trait InteractsWithActions
         );
 
         $this->getMountedAction()->mergeArguments($arguments);
+    }
+
+    public function getDefaultActionRecord(Action $action): ?Model
+    {
+        return null;
+    }
+
+    public function getDefaultActionRecordTitle(Action $action): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @return ?class-string<Model>
+     */
+    public function getDefaultActionModel(Action $action): ?string
+    {
+        return null;
+    }
+
+    public function getDefaultActionModelLabel(Action $action): ?string
+    {
+        return null;
+    }
+
+    public function getDefaultActionUrl(Action $action): ?string
+    {
+        return null;
+    }
+
+    public function getDefaultActionSuccessRedirectUrl(Action $action): ?string
+    {
+        return null;
+    }
+
+    public function getDefaultActionFailureRedirectUrl(Action $action): ?string
+    {
+        return null;
+    }
+
+    public function getDefaultActionRelationship(Action $action): ?Relation
+    {
+        return null;
+    }
+
+    public function getDefaultActionSchemaResolver(Action $action): ?Closure
+    {
+        return null;
+    }
+
+    public function getDefaultActionAuthorizationResponse(Action $action): ?Response
+    {
+        return null;
+    }
+
+    public function getDefaultActionIndividualRecordAuthorizationResponseResolver(Action $action): ?Closure
+    {
+        return null;
     }
 }

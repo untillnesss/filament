@@ -17,16 +17,26 @@ if (! function_exists('Filament\authorize')) {
      */
     function authorize(string $action, Model | string $model, bool $shouldCheckPolicyExistence = true): Response
     {
+        return get_authorization_response($action, $model, $shouldCheckPolicyExistence)->authorize();
+    }
+}
+
+if (! function_exists('Filament\get_authorization_response')) {
+    /**
+     * @param  Model|class-string<Model>  $model
+     */
+    function get_authorization_response(string $action, Model | string $model, bool $shouldCheckPolicyExistence = true): Response
+    {
         $user = Filament::auth()->user();
 
         if (! $shouldCheckPolicyExistence) {
-            return Gate::forUser($user)->authorize($action, $model);
+            return Gate::forUser($user)->inspect($action, $model);
         }
 
         $policy = Gate::getPolicyFor($model);
 
         if (filled($policy) && method_exists($policy, $action)) {
-            return Gate::forUser($user)->authorize($action, $model);
+            return Gate::forUser($user)->inspect($action, $model);
         }
 
         if (Filament::isAuthorizationStrict()) {
@@ -43,13 +53,13 @@ if (! function_exists('Filament\authorize')) {
         );
 
         if ($response === false) {
-            throw new AuthorizationException;
+            return Response::deny();
         }
 
         if (! $response instanceof Response) {
             return Response::allow();
         }
 
-        return $response->authorize();
+        return $response;
     }
 }

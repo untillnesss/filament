@@ -8,7 +8,6 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -63,8 +62,8 @@ class CreateAction extends Action
 
             $model = $this->getModel();
 
-            $record = $this->process(function (array $data, HasActions & HasSchemas $livewire, ?Table $table) use ($model): Model {
-                $relationship = $table?->getRelationship() ?? $this->getRelationship();
+            $record = $this->process(function (array $data, HasActions & HasSchemas $livewire) use ($model): Model {
+                $relationship = $this->getRelationship();
 
                 $pivotData = [];
 
@@ -179,6 +178,6 @@ class CreateAction extends Action
 
     public function getRelationship(): Relation | Builder | null
     {
-        return $this->evaluate($this->getRelationshipUsing);
+        return $this->evaluate($this->getRelationshipUsing) ?? $this->getTable()?->getRelationship() ?? $this->getHasActionsLivewire()?->getDefaultActionRelationship($this);
     }
 }

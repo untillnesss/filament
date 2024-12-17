@@ -356,8 +356,9 @@ abstract class Page extends BasePage
     public function getWidgetsSchemaComponents(array $widgets, array $data = []): array
     {
         return collect($widgets)
+            ->values()
             ->filter(fn (string | WidgetConfiguration $widget): bool => $this->normalizeWidgetClass($widget)::canView())
-            ->map(fn (string | WidgetConfiguration $widget, string | int $widgetKey): Livewire => Livewire::make(
+            ->map(fn (string | WidgetConfiguration $widget, int $widgetKey): Livewire => Livewire::make(
                 $widgetClass = $this->normalizeWidgetClass($widget),
                 [
                     ...$this->getWidgetData(),
