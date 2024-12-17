@@ -3,7 +3,6 @@
 namespace Filament\Tables;
 
 use Filament\Support\Assets\AlpineComponent;
-use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Tables\Testing\TestsActions;
 use Filament\Tables\Testing\TestsBulkActions;
@@ -38,7 +37,7 @@ class TablesServiceProvider extends PackageServiceProvider
             AlpineComponent::make('columns/select', __DIR__ . '/../dist/components/columns/select.js'),
             AlpineComponent::make('columns/text-input', __DIR__ . '/../dist/components/columns/text-input.js'),
             AlpineComponent::make('columns/toggle', __DIR__ . '/../dist/components/columns/toggle.js'),
-            Js::make('tables', __DIR__ . '/../dist/index.js'),
+            AlpineComponent::make('table', __DIR__ . '/../dist/components/table.js'),
         ], 'filament/tables');
 
         if ($this->app->runningInConsole()) {
