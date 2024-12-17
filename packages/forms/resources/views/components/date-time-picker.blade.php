@@ -196,7 +196,7 @@
                                 </template>
 
                                 <template
-                                    x-for="day in focusedDate.daysInMonth()"
+                                    x-for="day in daysInFocusedMonth"
                                     x-bind:key="day"
                                 >
                                     <div
