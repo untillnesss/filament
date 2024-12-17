@@ -8,16 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table): void {
+        Schema::create('department_ticket', function (Blueprint $table): void {
             $table->id();
-            $table->string('name');
+            $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('ticket_id');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('department_ticket');
     }
 };

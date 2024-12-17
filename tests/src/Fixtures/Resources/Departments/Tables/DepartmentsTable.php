@@ -3,11 +3,16 @@
 namespace Filament\Tests\Fixtures\Resources\Departments\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -17,7 +22,7 @@ class DepartmentsTable
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name'),
             ])
             ->filters([
                 TrashedFilter::make(),
@@ -25,6 +30,10 @@ class DepartmentsTable
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
+                DeleteAction::make(),
+                ForceDeleteAction::make(),
+                RestoreAction::make(),
+                ReplicateAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

@@ -9,6 +9,7 @@ use Filament\Tests\Fixtures\Models\Ticket;
 use Filament\Tests\Fixtures\Resources\Tickets\Pages\CreateTicket;
 use Filament\Tests\Fixtures\Resources\Tickets\Pages\EditTicket;
 use Filament\Tests\Fixtures\Resources\Tickets\Pages\ListTickets;
+use Filament\Tests\Fixtures\Resources\Tickets\Pages\ManageTicketDepartments;
 use Filament\Tests\Fixtures\Resources\Tickets\Pages\ViewTicket;
 use Filament\Tests\Fixtures\Resources\Tickets\Schemas\TicketForm;
 use Filament\Tests\Fixtures\Resources\Tickets\Schemas\TicketInfolist;
@@ -51,6 +52,7 @@ class TicketResource extends Resource
             'create' => CreateTicket::route('/create'),
             'view' => ViewTicket::route('/{record}'),
             'edit' => EditTicket::route('/{record}/edit'),
+            'departments' => ManageTicketDepartments::route('/{record}/departments'),
         ];
     }
 
