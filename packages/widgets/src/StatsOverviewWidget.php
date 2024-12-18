@@ -25,7 +25,7 @@ class StatsOverviewWidget extends Widget implements HasSchemas
     protected ?string $description = null;
 
     /**
-     * @var int | array<string, int | string | null> | null
+     * @var int | array<string, ?int> | null
      */
     protected int | array | null $columns = null;
 
@@ -48,7 +48,7 @@ class StatsOverviewWidget extends Widget implements HasSchemas
     }
 
     /**
-     * @return int | array<string, int | string | null> | null
+     * @return int | array<string, ?int> | null
      */
     protected function getColumns(): int | array | null
     {

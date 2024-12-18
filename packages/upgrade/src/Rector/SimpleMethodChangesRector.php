@@ -3,13 +3,16 @@
 namespace Filament\Upgrade\Rector;
 
 use Closure;
+use Filament\Pages\Dashboard;
 use Filament\Resources\Pages\CreateRecord;
 use PhpParser\Modifiers;
 use PhpParser\Node;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\UnionType;
 use Rector\Naming\VariableRenamer;
 use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -36,6 +39,12 @@ class SimpleMethodChangesRector extends AbstractRector
         return [
             [
                 'changes' => [
+                    'getFooterWidgetsColumns' => function (ClassMethod $node) {
+                        $node->returnType = new UnionType([new Identifier('int'), new Identifier('array')]);
+                    },
+                    'getHeaderWidgetsColumns' => function (ClassMethod $node) {
+                        $node->returnType = new UnionType([new Identifier('int'), new Identifier('array')]);
+                    },
                     'getSubNavigationPosition' => function (ClassMethod $node) {
                         $node->flags &= Modifiers::STATIC;
                     },
@@ -49,6 +58,17 @@ class SimpleMethodChangesRector extends AbstractRector
                 'changes' => [
                     'canCreateAnother' => function (ClassMethod $node) {
                         $node->flags &= ~Modifiers::STATIC;
+                    },
+                ],
+            ],
+            [
+                'class' => [
+                    Dashboard::class,
+                ],
+                'classIdentifier' => 'extends',
+                'changes' => [
+                    'getColumns' => function (ClassMethod $node) {
+                        $node->returnType = new UnionType([new Identifier('int'), new Identifier('array')]);
                     },
                 ],
             ],

@@ -15,17 +15,17 @@ class Grid extends Component implements CanEntangleWithSingularRelationships
     protected string $view = 'filament-schema::components.grid';
 
     /**
-     * @param  array<string, int | string | null> | int | string | null  $columns
+     * @param  array<string, ?int> | int | null  $columns
      */
-    final public function __construct(array | int | string | null $columns)
+    final public function __construct(array | int | null $columns)
     {
         $this->columns($columns);
     }
 
     /**
-     * @param  array<string, int | string | null> | int | string | null  $columns
+     * @param  array<string, ?int> | int | null  $columns
      */
-    public static function make(array | int | string | null $columns = 2): static
+    public static function make(array | int | null $columns = 2): static
     {
         $static = app(static::class, ['columns' => $columns]);
         $static->configure();

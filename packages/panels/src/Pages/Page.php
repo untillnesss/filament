@@ -234,9 +234,9 @@ abstract class Page extends BasePage
     }
 
     /**
-     * @return int | string | array<string, int | string | null>
+     * @return int | array<string, ?int>
      */
-    public function getHeaderWidgetsColumns(): int | string | array
+    public function getHeaderWidgetsColumns(): int | array
     {
         return 2;
     }
@@ -284,9 +284,9 @@ abstract class Page extends BasePage
     }
 
     /**
-     * @return int | string | array<string, int | string | null>
+     * @return int | array<string, ?int>
      */
-    public function getFooterWidgetsColumns(): int | string | array
+    public function getFooterWidgetsColumns(): int | array
     {
         return 2;
     }
