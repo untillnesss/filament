@@ -362,4 +362,10 @@ The European Portuguese translations have been moved from `pt_PT` to `pt`, which
 The Nepalese translations have been moved from `np` to `ne`, which appears to be the more commonly used language code for the language within the Laravel community.
 </Disclosure>
 
+<Disclosure>
+<span slot="summary">Norwegian translations</span>
+
+The Norwegian translations have been moved from `no` to `nb`, which appears to be the more commonly used language code for the language within the Laravel community.
+</Disclosure>
+
 </div>
