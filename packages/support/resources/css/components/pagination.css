@@ -2,6 +2,10 @@
     container-type: inline-size;
     @apply grid grid-cols-[1fr_auto_1fr] items-center gap-x-3;
 
+    &:empty {
+        @apply hidden;
+    }
+
     & .fi-pagination-previous-btn {
         @apply justify-self-start;
     }
@@ -83,7 +87,9 @@
 
         @container (min-width: 28rem) {
             & .fi-pagination-records-per-page-select {
-                @apply inline;
+                &:not(.fi-compact) {
+                    @apply inline;
+                }
 
                 &.fi-compact {
                     @apply hidden;
@@ -111,7 +117,9 @@
 
     @supports not (container-type: inline-size) {
         & .fi-pagination-records-per-page-select {
-            @apply sm:inline;
+            &:not(.fi-compact) {
+                @apply sm:inline;
+            }
 
             &.fi-compact {
                 @apply sm:hidden;
