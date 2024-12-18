@@ -18,6 +18,7 @@
     {{
         $attributes->class([
             'fi-pagination',
+            'fi-pagination-has-one-page' => ! $paginator->hasPages(),
             'fi-simple' => $isSimple,
         ])
     }}
