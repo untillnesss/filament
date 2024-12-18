@@ -43,9 +43,9 @@ class StatsOverviewWidget extends Widget implements HasSchemas
     }
 
     /**
-     * @return array<string, int | string | null> | int | string | null
+     * @return int | array<string, int | string | null> | null
      */
-    protected function getColumns(): array | int | string | null
+    protected function getColumns(): int | array | null
     {
         $count = count($this->getCachedStats());
 
