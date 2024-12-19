@@ -49,7 +49,7 @@ trait HasNavigation
             return;
         }
 
-        Filament::getCurrentPanelOrDefault()
+        Filament::getCurrentOrDefaultPanel()
             ->navigationItems(static::getNavigationItems());
     }
 

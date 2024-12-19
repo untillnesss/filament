@@ -216,7 +216,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
             return false;
         }
 
-        $panel = Filament::getCurrentPanelOrDefault();
+        $panel = Filament::getCurrentOrDefaultPanel();
 
         if (! $panel) {
             return false;

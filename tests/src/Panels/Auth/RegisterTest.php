@@ -36,7 +36,7 @@ it('can register', function () {
 
     $this->assertGuest();
 
-    Filament::getCurrentPanelOrDefault()->requiresEmailVerification(false);
+    Filament::getCurrentOrDefaultPanel()->requiresEmailVerification(false);
 
     $userToRegister = User::factory()->make();
 
@@ -67,7 +67,7 @@ it('can register and redirect user to their intended URL', function () {
 
     session()->put('url.intended', $intendedUrl = Str::random());
 
-    Filament::getCurrentPanelOrDefault()->requiresEmailVerification(false);
+    Filament::getCurrentOrDefaultPanel()->requiresEmailVerification(false);
 
     $userToRegister = User::factory()->make();
 

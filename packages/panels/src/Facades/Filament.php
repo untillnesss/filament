@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getCollapsedSidebarWidth()
  * @method static string getCurrentDomain(?string $testingDomain = null)
  * @method static Panel | null getCurrentPanel()
- * @method static Panel | null getCurrentPanelOrDefault()
+ * @method static Panel | null getCurrentOrDefaultPanel()
  * @method static string | Htmlable | null getDarkModeBrandLogo()
  * @method static string | null getDatabaseNotificationsPollingInterval()
  * @method static string getDefaultAvatarProvider()

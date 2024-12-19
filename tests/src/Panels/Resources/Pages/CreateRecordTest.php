@@ -175,12 +175,12 @@ it('can render page if the policy viewAny returns an allowed response', function
 });
 
 it('does not render page without a policy if authorization is strict', function () {
-    Filament::getCurrentPanelOrDefault()->strictAuthorization();
+    Filament::getCurrentOrDefaultPanel()->strictAuthorization();
 
     $this->get(TicketMessageResource::getUrl('create'))
         ->assertServerError();
 
-    Filament::getCurrentPanelOrDefault()->strictAuthorization(false);
+    Filament::getCurrentOrDefaultPanel()->strictAuthorization(false);
 });
 
 it('does not render page if the policy viewAny returns false', function () {

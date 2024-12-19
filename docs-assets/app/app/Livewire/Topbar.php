@@ -12,7 +12,7 @@ class Topbar extends Page
     public function mount()
     {
         filament()
-            ->getCurrentPanelOrDefault()
+            ->getCurrentOrDefaultPanel()
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Settings')

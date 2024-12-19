@@ -143,8 +143,8 @@ it('can generate a page class in a resource', function () {
     require_once app_path('Filament/Resources/UserResource/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/UserResource/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanelOrDefault())->resources = [
-        ...invade(Filament::getCurrentPanelOrDefault())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\UserResource',
     ];
 
@@ -175,8 +175,8 @@ it('can generate a page view in a resource', function () {
     require_once app_path('Filament/Resources/UserResource/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/UserResource/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanelOrDefault())->resources = [
-        ...invade(Filament::getCurrentPanelOrDefault())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\UserResource',
     ];
 
@@ -207,8 +207,8 @@ it('can generate a create page class in a resource', function () {
     require_once app_path('Filament/Resources/UserResource/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/UserResource/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanelOrDefault())->resources = [
-        ...invade(Filament::getCurrentPanelOrDefault())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\UserResource',
     ];
 
@@ -241,8 +241,8 @@ it('can generate an edit page class in a resource', function () {
     require_once app_path('Filament/Resources/UserResource/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/UserResource/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanelOrDefault())->resources = [
-        ...invade(Filament::getCurrentPanelOrDefault())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\UserResource',
     ];
 
@@ -275,8 +275,8 @@ it('can generate a view page class in a resource', function () {
     require_once app_path('Filament/Resources/UserResource/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/UserResource/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanelOrDefault())->resources = [
-        ...invade(Filament::getCurrentPanelOrDefault())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\UserResource',
     ];
 
@@ -325,8 +325,8 @@ $runGenerateManageRelatedRecordsPageCommand = function (TestCase $testCase): Pen
     require_once app_path('Filament/Resources/UserResource/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/UserResource/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanelOrDefault())->resources = [
-        ...invade(Filament::getCurrentPanelOrDefault())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\TeamResource',
         'App\\Filament\\Resources\\UserResource',
     ];

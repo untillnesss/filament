@@ -99,7 +99,7 @@ abstract class Page extends BasePage
             return;
         }
 
-        Filament::getCurrentPanelOrDefault()
+        Filament::getCurrentOrDefaultPanel()
             ->navigationItems(static::getNavigationItems());
     }
 
@@ -129,7 +129,7 @@ abstract class Page extends BasePage
 
     public static function getRouteName(?string $panel = null): string
     {
-        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentPanelOrDefault();
+        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentOrDefaultPanel();
 
         $routeName = 'pages.' . static::getRelativeRouteName();
         $routeName = static::prependClusterRouteBaseName($routeName);

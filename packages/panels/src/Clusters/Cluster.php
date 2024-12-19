@@ -113,7 +113,7 @@ class Cluster extends Page
 
     public static function getRouteName(?string $panel = null): string
     {
-        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentPanelOrDefault();
+        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentOrDefaultPanel();
 
         return $panel->generateRouteName(static::getRelativeRouteName());
     }
