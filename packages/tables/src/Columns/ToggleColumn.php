@@ -42,10 +42,10 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
 
         $attributes = (new ComponentAttributeBag)
             ->merge([
-                'ax-load' => FilamentView::hasSpaMode()
-                    ? 'visible || event (ax-modal-opened)'
+                'x-load' => FilamentView::hasSpaMode()
+                    ? 'visible || event (x-modal-opened)'
                     : true,
-                'ax-load-src' => FilamentAsset::getAlpineComponentSrc('columns/toggle', 'filament/tables'),
+                'x-load-src' => FilamentAsset::getAlpineComponentSrc('columns/toggle', 'filament/tables'),
                 'disabled' => $this->isDisabled(),
                 'x-data' => 'toggleTableColumn({
                     name: ' . Js::from($this->getName()) . ',
