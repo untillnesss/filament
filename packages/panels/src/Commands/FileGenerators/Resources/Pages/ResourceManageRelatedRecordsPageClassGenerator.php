@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Arr;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Method;
@@ -43,7 +44,6 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
         protected string $resourceFqn,
         protected string $relationship,
         protected ?string $relatedResourceFqn,
-        protected string $navigationLabel,
         protected bool $hasViewOperation,
         protected ?string $formSchemaFqn,
         protected ?string $infolistSchemaFqn,
@@ -109,7 +109,6 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
 
     protected function addMethodsToClass(ClassType $class): void
     {
-        $this->addGetNavigationLabelMethodToClass($class);
         $this->addFormMethodToClass($class);
         $this->addInfolistMethodToClass($class);
         $this->addTableMethodToClass($class);
@@ -152,19 +151,6 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
 
     protected function configureRelatedResourceProperty(Property $property): void {}
 
-    protected function addGetNavigationLabelMethodToClass(ClassType $class): void
-    {
-        $method = $class->addMethod('getNavigationLabel')
-            ->setProtected()
-            ->setStatic()
-            ->setReturnType('string')
-            ->setBody(new Literal('return ?;', [$this->getNavigationLabel()]));
-
-        $this->configureGetNavigationLabelMethod($method);
-    }
-
-    protected function configureGetNavigationLabelMethod(Method $method): void {}
-
     protected function addFormMethodToClass(ClassType $class): void
     {
         if ($this->hasRelatedResource()) {
@@ -177,7 +163,7 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
             ? <<<PHP
                 return {$this->simplifyFqn($formSchemaFqn)}::configure(\$schema);
                 PHP
-            : $this->generateFormMethodBody($this->getRelatedModelFqn());
+            : $this->generateFormMethodBody($this->getRelatedModelFqn(), exceptColumns: Arr::wrap($this->getForeignKeyColumnToNotGenerate()));
 
         $method = $class->addMethod('form')
             ->setPublic()
@@ -242,7 +228,7 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
             ? <<<PHP
                 return {$this->simplifyFqn($tableFqn)}::configure(\$table);
                 PHP
-            : $this->generateTableMethodBody($this->getRelatedModelFqn());
+            : $this->generateTableMethodBody($this->getRelatedModelFqn(), exceptColumns: Arr::wrap($this->getForeignKeyColumnToNotGenerate()));
 
         $method = $class->addMethod('table')
             ->setPublic()
@@ -281,6 +267,27 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
 
     protected function configureTableMethod(Method $method): void {}
 
+    public function getForeignKeyColumnToNotGenerate(): ?string
+    {
+        if (! class_exists($this->getResourceFqn())) {
+            return null;
+        }
+
+        $model = $this->getResourceFqn()::getModel();
+
+        if (! class_exists($model)) {
+            return null;
+        }
+
+        $relationship = app($model)->{$this->getRelationship()}();
+
+        if (! ($relationship instanceof HasMany)) {
+            return null;
+        }
+
+        return $relationship->getForeignKeyName();
+    }
+
     public function getFqn(): string
     {
         return $this->fqn;
@@ -310,11 +317,6 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
     public function hasRelatedResource(): bool
     {
         return filled($this->getRelatedResourceFqn());
-    }
-
-    public function getNavigationLabel(): string
-    {
-        return $this->navigationLabel;
     }
 
     public function hasViewOperation(): bool

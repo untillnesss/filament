@@ -360,4 +360,12 @@ trait InteractsWithRelationshipTable
     {
         return $this->getAuthorizationResponse($action, $record)->allowed();
     }
+
+    public static function getRelationshipTitle(): string
+    {
+        return (string) str(static::getRelationshipName())
+            ->kebab()
+            ->replace('-', ' ')
+            ->headline();
+    }
 }

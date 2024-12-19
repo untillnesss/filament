@@ -549,7 +549,7 @@ class MakePageCommand extends Command
                 if (
                     class_exists($resourceModelFqn) &&
                     method_exists($resourceModelFqn, $relationship) &&
-                    (($relationshipInstance = app($relatedModelFqn)->{$relationship}()) instanceof Relation)
+                    (($relationshipInstance = app($resourceModelFqn)->{$relationship}()) instanceof Relation)
                 ) {
                     return $relatedModelFqn = $relationshipInstance->getRelated()::class;
                 }
@@ -646,7 +646,6 @@ class MakePageCommand extends Command
             'resourceFqn' => $this->resourceFqn,
             'relationship' => $relationship,
             'relatedResourceFqn' => $relatedResourceFqn,
-            'navigationLabel' => Str::headline($relationship),
             'hasViewOperation' => $hasViewOperation,
             'formSchemaFqn' => $formSchemaFqn,
             'infolistSchemaFqn' => $infolistSchemaFqn,
