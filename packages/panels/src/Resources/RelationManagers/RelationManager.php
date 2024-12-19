@@ -184,10 +184,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return static::$title ?? (string) str(static::getRelationshipName())
-            ->kebab()
-            ->replace('-', ' ')
-            ->headline();
+        return static::$title ?? static::getRelationshipTitle();
     }
 
     /**

@@ -124,20 +124,20 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
 
     public function getBreadcrumb(): string
     {
-        return static::$breadcrumb ?? static::getTitle();
+        return static::$breadcrumb ?? static::getRelationshipTitle();
     }
 
-    public function getTitle(): string | Htmlable
+    public static function getNavigationLabel(): string
     {
-        if (filled(static::$title)) {
-            return static::$title;
+        if (filled(static::$navigationLabel)) {
+            return static::$navigationLabel;
         }
 
         if ($relatedResource = static::getRelatedResource()) {
             return $relatedResource::getTitleCasePluralModelLabel();
         }
 
-        return parent::getTitle();
+        return static::getRelationshipTitle();
     }
 
     /**
