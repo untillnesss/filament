@@ -4,7 +4,7 @@ namespace Filament\Tests\Database\Factories;
 
 use Filament\MultiFactorAuthentication\EmailCode\EmailCodeAuthentication;
 use Filament\MultiFactorAuthentication\GoogleTwoFactor\GoogleTwoFactorAuthentication;
-use Filament\Tests\Models\User;
+use Filament\Tests\Fixtures\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;

@@ -81,6 +81,8 @@ trait HasAuth
      */
     protected array $multiFactorAuthenticationProviders = [];
 
+    protected bool | Closure $isAuthorizationStrict = false;
+
     /**
      * @param  string | Closure | array<class-string, string> | null  $promptAction
      */
@@ -500,5 +502,17 @@ trait HasAuth
     public function getMultiFactorAuthenticationProviders(): array
     {
         return $this->multiFactorAuthenticationProviders;
+    }
+
+    public function strictAuthorization(bool | Closure $condition = true): static
+    {
+        $this->isAuthorizationStrict = $condition;
+
+        return $this;
+    }
+
+    public function isAuthorizationStrict(): bool
+    {
+        return (bool) $this->evaluate($this->isAuthorizationStrict);
     }
 }

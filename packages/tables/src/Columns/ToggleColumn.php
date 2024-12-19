@@ -8,6 +8,7 @@ use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
 use Filament\Tables\Columns\Contracts\Editable;
+use Filament\Tables\Table;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
@@ -60,6 +61,8 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
         $buttonAttributes = (new ComponentAttributeBag)
             ->merge([
                 'disabled' => $this->isDisabled(),
+                'wire:loading.attr' => 'disabled',
+                'wire:target' => implode(',', Table::LOADING_TARGETS),
                 'x-tooltip' => filled($tooltip = $this->getTooltip($state))
                     ? '{
                         content: ' . Js::from($tooltip) . ',
@@ -125,7 +128,7 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
                     <div aria-hidden="true">
                         <?= generate_icon_html(
                             $onIcon,
-                            attributes: (new ComponentattributeBag)->merge(['x-cloak' => true], escape: false),
+                            attributes: (new ComponentAttributeBag)->merge(['x-cloak' => true], escape: false),
                         )?->toHtml() ?>
                     </div>
                 </div>

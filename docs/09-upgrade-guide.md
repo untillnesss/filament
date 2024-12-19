@@ -11,6 +11,7 @@ import Disclosure from "@components/Disclosure.astro"
 ## New requirements
 
 - Tailwind CSS v4.0+, if you are currently using Tailwind CSS v3.0 with Filament. This does not apply if you are just using a Filament panel without a custom theme CSS file.
+- Filament no longer requires `doctrine/dbal`, but if your application still does, and you do not have it installed directly, you should add it to your `composer.json` file.
 
 ## Upgrading automatically
 
@@ -359,6 +360,12 @@ The European Portuguese translations have been moved from `pt_PT` to `pt`, which
 <span slot="summary">Nepalese translations</span>
 
 The Nepalese translations have been moved from `np` to `ne`, which appears to be the more commonly used language code for the language within the Laravel community.
+</Disclosure>
+
+<Disclosure>
+<span slot="summary">Norwegian translations</span>
+
+The Norwegian translations have been moved from `no` to `nb`, which appears to be the more commonly used language code for the language within the Laravel community.
 </Disclosure>
 
 </div>

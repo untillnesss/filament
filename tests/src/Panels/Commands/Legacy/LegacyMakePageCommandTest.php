@@ -314,7 +314,7 @@ $runGenerateManageRelatedRecordsPageCommand = function (TestCase $testCase): Pen
         ->expectsQuestion('Would you like to generate the form schema and table columns based on the attributes of the model?', false)
         ->expectsQuestion('Does the model use soft deletes?', false);
 
-    require_once __DIR__ . '/../../../Models/Team.php';
+    require_once __DIR__ . '/../../../Fixtures/Models/Team.php';
     require_once app_path('Filament/Resources/TeamResource.php');
     require_once app_path('Filament/Resources/TeamResource/Pages/ListTeams.php');
     require_once app_path('Filament/Resources/TeamResource/Pages/CreateTeam.php');
@@ -393,8 +393,8 @@ it('can generate a manage related records page class in a resource with a genera
         ->expectsQuestion($questions['relationship'], 'teams')
         ->expectsQuestion($questions['hasRelatedResource'], false)
         ->expectsQuestion($questions['isGenerated'], true)
-        ->expectsQuestion($questions['relatedModel'], 'Filament\\Tests\\Models\\Team')
-        ->expectsQuestion($questions['relatedModel'], 'Filament\\Tests\\Models\\Team')
+        ->expectsQuestion($questions['relatedModel'], 'Filament\\Tests\\Fixtures\\Models\\Team')
+        ->expectsQuestion($questions['relatedModel'], 'Filament\\Tests\\Fixtures\\Models\\Team')
         ->expectsQuestion($questions['hasViewOperation'], false)
         ->expectsQuestion($questions['titleAttribute'], 'name')
         ->expectsQuestion($questions['isSoftDeletable'], false)

@@ -3,8 +3,8 @@
 use Filament\Actions\AttachAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\Testing\Fixtures\TestAction;
-use Filament\Tests\Models\Post;
-use Filament\Tests\Tables\Fixtures\PostsTable;
+use Filament\Tests\Fixtures\Livewire\PostsTable;
+use Filament\Tests\Fixtures\Models\Post;
 use Filament\Tests\Tables\TestCase;
 use Illuminate\Support\Str;
 
@@ -93,7 +93,10 @@ it('can set default action data when mounted', function () {
         ->mountTableAction('data')
         ->assertTableActionDataSet([
             'foo' => 'bar',
-        ]);
+        ])
+        ->assertTableActionDataSet(function (array $data): bool {
+            return $data['foo'] === 'bar';
+        });
 });
 
 it('can call a nested action registered in the modal footer', function () {

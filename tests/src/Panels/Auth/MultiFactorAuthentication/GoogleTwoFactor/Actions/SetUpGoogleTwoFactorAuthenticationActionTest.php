@@ -3,7 +3,7 @@
 use Filament\Actions\Testing\Fixtures\TestAction;
 use Filament\Facades\Filament;
 use Filament\Pages\Auth\EditProfile;
-use Filament\Tests\Models\User;
+use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
@@ -60,7 +60,7 @@ it('can generate a secret and recovery codes when the action is mounted', functi
 });
 
 it('can save the secret and recovery codes to the user when the action is submitted', function () {
-    $googleTwoFactorAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -104,7 +104,7 @@ it('can save the secret and recovery codes to the user when the action is submit
 });
 
 it('will not set up authentication when an invalid code is used', function () {
-    $googleTwoFactorAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -177,7 +177,7 @@ test('codes are required', function () {
 });
 
 test('codes must be 6 digits', function () {
-    $googleTwoFactorAuthentication = Arr::first(filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 

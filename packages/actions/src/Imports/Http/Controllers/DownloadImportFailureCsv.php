@@ -11,8 +11,6 @@ use League\Csv\Writer;
 use SplTempFileObject;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-use function Filament\authorize;
-
 class DownloadImportFailureCsv
 {
     public function __invoke(Request $request, Import $import): StreamedResponse
@@ -23,14 +21,18 @@ class DownloadImportFailureCsv
                 : null,
         )->check(), 401);
 
-        if (filled(Gate::getPolicyFor($import::class))) {
-            authorize('view', $import);
+        $user = auth(
+            $request->hasValidSignature(absolute: false)
+                ? $request->query('authGuard')
+                : null,
+        )->user();
+
+        $importPolicy = Gate::getPolicyFor($import::class);
+
+        if (filled($importPolicy) && method_exists($importPolicy, 'view')) {
+            Gate::forUser($user)->authorize('view', $import);
         } else {
-            abort_unless($import->user()->is(auth(
-                $request->hasValidSignature(absolute: false)
-                    ? $request->query('authGuard')
-                    : null,
-            )->user()), 403);
+            abort_unless($import->user()->is($user), 403);
         }
 
         $csv = Writer::createFromFileObject(new SplTempFileObject);

@@ -29,8 +29,8 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
     use Concerns\CanBeCloned;
     use Concerns\CanGenerateUuids;
     use Concerns\CanLimitItemsLength;
-    use Concerns\HasContainerGridLayout;
     use Concerns\HasExtraItemActions;
+    use \Filament\Schemas\Components\Concerns\HasContainerGridLayout;
     use HasReorderAnimationDuration;
 
     protected string | Closure | null $addActionLabel = null;

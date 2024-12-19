@@ -1,8 +1,8 @@
 <?php
 
 use Filament\Schemas\Components\StateCasts\EnumStateCast;
-use Filament\Tests\Schemas\Components\StateCasts\Fixtures\IntegerBackedEnum;
-use Filament\Tests\Schemas\Components\StateCasts\Fixtures\StringBackedEnum;
+use Filament\Tests\Fixtures\Enums\IntegerBackedEnum;
+use Filament\Tests\Fixtures\Enums\StringBackedEnum;
 use Filament\Tests\TestCase;
 
 uses(TestCase::class);

@@ -69,7 +69,7 @@ class RuleBuilder extends Builder
                                 ])
                                 ->addAction(fn (Action $action) => $action
                                     ->label(__('filament-tables::filters/query-builder.actions.add_rule_group.label'))
-                                    ->icon('heroicon-s-plus'))
+                                    ->icon('heroicon-m-plus'))
                                 ->labelBetweenItems(__('filament-tables::filters/query-builder.item_separators.or'))
                                 ->collapsible()
                                 ->expandAllAction(fn (Action $action) => $action->hidden())
@@ -112,7 +112,7 @@ class RuleBuilder extends Builder
             })
             ->addAction(fn (Action $action) => $action
                 ->label(__('filament-tables::filters/query-builder.actions.add_rule.label'))
-                ->icon('heroicon-s-plus'))
+                ->icon('heroicon-m-plus'))
             ->addBetweenAction(fn (Action $action) => $action->hidden())
             ->label(__('filament-tables::filters/query-builder.form.rules.label'))
             ->hiddenLabel()

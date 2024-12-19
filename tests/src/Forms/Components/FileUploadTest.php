@@ -2,7 +2,7 @@
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Schema;
-use Filament\Tests\Forms\Fixtures\Livewire;
+use Filament\Tests\Fixtures\Livewire\Livewire;
 use Filament\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 use Livewire\Exceptions\RootTagMissingFromViewException;

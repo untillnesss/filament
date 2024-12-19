@@ -30,6 +30,7 @@ class ViewAction extends Action
 
         $this->color('gray');
 
+        $this->tableIcon(FilamentIcon::resolve('actions::view-action') ?? 'heroicon-m-eye');
         $this->groupedIcon(FilamentIcon::resolve('actions::view-action.grouped') ?? 'heroicon-m-eye');
 
         $this->disabledSchema();

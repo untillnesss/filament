@@ -2,8 +2,8 @@
 
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\Testing\Fixtures\TestAction;
-use Filament\Tests\Models\Post;
-use Filament\Tests\Tables\Fixtures\PostsTable;
+use Filament\Tests\Fixtures\Livewire\PostsTable;
+use Filament\Tests\Fixtures\Models\Post;
 use Filament\Tests\Tables\TestCase;
 use Illuminate\Support\Str;
 
@@ -89,7 +89,10 @@ it('can set default bulk action data when mounted', function () {
         ->mountTableBulkAction('data', records: $posts)
         ->assertTableBulkActionDataSet([
             'foo' => 'bar',
-        ]);
+        ])
+        ->assertTableBulkActionDataSet(function (array $data): bool {
+            return $data['foo'] === 'bar';
+        });
 });
 
 it('can call a bulk action with arguments', function () {

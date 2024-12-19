@@ -1,6 +1,7 @@
 ---
 title: Navigation
 ---
+import AutoScreenshot from "@components/AutoScreenshot.astro"
 
 ## Overview
 
@@ -461,6 +462,8 @@ public function panel(Panel $panel): Panel
         ]);
 }
 ```
+
+<AutoScreenshot name="panels/navigation/user-menu" alt="User menu with custom menu item" version="3.x" />
 
 ### Customizing the profile link
 

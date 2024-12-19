@@ -62,7 +62,7 @@ class TestsBulkActions
 
     public function assertTableBulkActionDataSet(): Closure
     {
-        return function (array $data): static {
+        return function (array | Closure $data): static {
             $this->assertActionDataSet($data);
 
             return $this;

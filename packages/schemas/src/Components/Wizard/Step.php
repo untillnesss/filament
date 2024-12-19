@@ -41,7 +41,7 @@ class Step extends Component implements CanConcealComponents
     {
         parent::setUp();
 
-        $this->key(fn (Step $component): string => Str::slug($component->getLabel()));
+        $this->key(fn (Step $component): string => Str::slug(Str::transliterate($component->getLabel(), strict: true)));
     }
 
     public function afterValidation(?Closure $callback): static

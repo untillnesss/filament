@@ -21,6 +21,15 @@ it('can register navigation items from resources and pages', function () {
                     fn ($item) => $item
                         ->getLabel()->toBe('Actions'),
                     fn ($item) => $item
+                        ->getLabel()->toBe('Departments')
+                        ->getIcon()->toBe('heroicon-o-rectangle-stack'),
+                    fn ($item) => $item
+                        ->getLabel()->toBe('Tickets')
+                        ->getIcon()->toBe('heroicon-o-rectangle-stack'),
+                    fn ($item) => $item
+                        ->getLabel()->toBe('Ticket Messages')
+                        ->getIcon()->toBe('heroicon-o-rectangle-stack'),
+                    fn ($item) => $item
                         ->getLabel()->toBe('Users')
                         ->getIcon()->toBe('heroicon-o-user'),
                     fn ($item) => $item
