@@ -36,7 +36,7 @@ class CreateAction extends Action
 
         $this->label(fn (): string => __('filament-actions::create.single.label', ['label' => $this->getModelLabel()]));
 
-        $this->modalHeading(fn (): string => __('filament-actions::create.single.modal.heading', ['label' => $this->getModelLabel()]));
+        $this->modalHeading(fn (): string => __('filament-actions::create.single.modal.heading', ['label' => $this->getTitleCaseModelLabel()]));
 
         $this->modalSubmitActionLabel(__('filament-actions::create.single.modal.actions.create.label'));
 

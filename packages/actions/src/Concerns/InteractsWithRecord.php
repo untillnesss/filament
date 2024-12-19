@@ -265,7 +265,24 @@ trait InteractsWithRecord
             return $this instanceof Action ? $this->getHasActionsLivewire()?->getDefaultActionModelLabel($this) : null;
         }
 
+        $defaultModel = $this->getHasActionsLivewire()?->getDefaultActionModel($this);
+
+        if (($this instanceof Action) && ($model === $defaultModel)) {
+            return $this->getHasActionsLivewire()?->getDefaultActionModelLabel($this);
+        }
+
         return get_model_label($model);
+    }
+
+    public function getTitleCaseModelLabel(): ?string
+    {
+        $modelLabel = $this->getModelLabel();
+
+        if (blank($modelLabel)) {
+            return null;
+        }
+
+        return Str::ucwords($modelLabel);
     }
 
     public function getCustomModelLabel(): ?string
@@ -298,6 +315,17 @@ trait InteractsWithRecord
         }
 
         return $singularLabel;
+    }
+
+    public function getTitleCasePluralModelLabel(): ?string
+    {
+        $pluralModelLabel = $this->getPluralModelLabel();
+
+        if (blank($pluralModelLabel)) {
+            return null;
+        }
+
+        return Str::ucwords($pluralModelLabel);
     }
 
     public function getCustomPluralModelLabel(): ?string
