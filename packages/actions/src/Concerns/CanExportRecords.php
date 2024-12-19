@@ -71,7 +71,7 @@ trait CanExportRecords
 
         $this->label(fn (ExportAction | ExportBulkAction $action): string => __('filament-actions::export.label', ['label' => $action->getPluralModelLabel()]));
 
-        $this->modalHeading(fn (ExportAction | ExportBulkAction $action): string => __('filament-actions::export.modal.heading', ['label' => $action->getPluralModelLabel()]));
+        $this->modalHeading(fn (ExportAction | ExportBulkAction $action): string => __('filament-actions::export.modal.heading', ['label' => $action->getTitleCasePluralModelLabel()]));
 
         $this->modalSubmitActionLabel(__('filament-actions::export.modal.actions.export.label'));
 

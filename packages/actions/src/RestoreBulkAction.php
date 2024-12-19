@@ -24,7 +24,7 @@ class RestoreBulkAction extends BulkAction
 
         $this->label(__('filament-actions::restore.multiple.label'));
 
-        $this->modalHeading(fn (): string => __('filament-actions::restore.multiple.modal.heading', ['label' => $this->getPluralModelLabel()]));
+        $this->modalHeading(fn (): string => __('filament-actions::restore.multiple.modal.heading', ['label' => $this->getTitleCasePluralModelLabel()]));
 
         $this->modalSubmitActionLabel(__('filament-actions::restore.multiple.modal.actions.restore.label'));
 
