@@ -125,7 +125,7 @@ class EditProfile extends Page
 
     public static function getRouteName(?string $panel = null): string
     {
-        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentPanel();
+        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentPanelOrDefault();
 
         return $panel->generateRouteName('auth.' . static::getRelativeRouteName());
     }

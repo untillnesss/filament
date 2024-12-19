@@ -45,8 +45,8 @@ beforeEach(function () {
     require_once app_path('Filament/Resources/UserResource/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/UserResource/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanel())->resources = [
-        ...invade(Filament::getCurrentPanel())->resources,
+    invade(Filament::getCurrentPanelOrDefault())->resources = [
+        ...invade(Filament::getCurrentPanelOrDefault())->resources,
         'App\\Filament\\Resources\\TeamResource',
         'App\\Filament\\Resources\\UserResource',
     ];

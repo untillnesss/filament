@@ -64,7 +64,7 @@ it('can register navigation items from resources and pages', function () {
 });
 
 it('can reorder navigation groups by registering them', function () {
-    Filament::getCurrentPanel()->navigationGroups([
+    Filament::getCurrentPanelOrDefault()->navigationGroups([
         NavigationGroup::make()->label('Shop'),
         NavigationGroup::make()->label('Blog'),
     ]);
@@ -84,7 +84,7 @@ it('can reorder navigation groups by registering them', function () {
 });
 
 it('can reorder navigation groups by registering them with different labels', function () {
-    Filament::getCurrentPanel()->navigationGroups([
+    Filament::getCurrentPanelOrDefault()->navigationGroups([
         'Shop' => NavigationGroup::make()->label('Store'),
         'Blog' => NavigationGroup::make()->label('Posts'),
     ]);
@@ -104,7 +104,7 @@ it('can reorder navigation groups by registering them with different labels', fu
 });
 
 it('can reorder navigation groups by registering their labels', function () {
-    Filament::getCurrentPanel()->navigationGroups([
+    Filament::getCurrentPanelOrDefault()->navigationGroups([
         'Shop',
         'Blog',
     ]);

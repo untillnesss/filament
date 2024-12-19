@@ -56,7 +56,7 @@ class FilamentManager
 
     public function auth(): Guard
     {
-        return $this->getCurrentPanel()->auth();
+        return $this->getCurrentPanelOrDefault()->auth();
     }
 
     public function bootCurrentPanel(): void
@@ -65,7 +65,7 @@ class FilamentManager
             return;
         }
 
-        $this->getCurrentPanel()->boot();
+        $this->getCurrentPanelOrDefault()->boot();
 
         $this->isCurrentPanelBooted = true;
     }
@@ -75,37 +75,45 @@ class FilamentManager
      */
     public function buildNavigation(): array
     {
-        return $this->getCurrentPanel()->buildNavigation();
+        return $this->getCurrentPanelOrDefault()->buildNavigation();
     }
 
     public function getAuthGuard(): string
     {
-        return $this->getCurrentPanel()->getAuthGuard();
+        return $this->getCurrentPanelOrDefault()->getAuthGuard();
     }
 
     public function getAuthPasswordBroker(): ?string
     {
-        return $this->getCurrentPanel()->getAuthPasswordBroker();
+        return $this->getCurrentPanelOrDefault()->getAuthPasswordBroker();
     }
 
     public function getBrandName(): string | Htmlable
     {
-        return $this->getCurrentPanel()->getBrandName();
+        return $this->getCurrentPanelOrDefault()->getBrandName();
     }
 
     public function getBrandLogo(): string | Htmlable | null
     {
-        return $this->getCurrentPanel()->getBrandLogo();
+        return $this->getCurrentPanelOrDefault()->getBrandLogo();
     }
 
     public function getBrandLogoHeight(): ?string
     {
-        return $this->getCurrentPanel()->getBrandLogoHeight();
+        return $this->getCurrentPanelOrDefault()->getBrandLogoHeight();
     }
 
     public function getCollapsedSidebarWidth(): string
     {
-        return $this->getCurrentPanel()->getCollapsedSidebarWidth();
+        return $this->getCurrentPanelOrDefault()->getCollapsedSidebarWidth();
+    }
+
+    /**
+     * @throws NoDefaultPanelSetException
+     */
+    public function getCurrentPanelOrDefault(): ?Panel
+    {
+        return $this->getCurrentPanel() ?? app(PanelRegistry::class)->getDefault();
     }
 
     public function getCurrentPanel(): ?Panel
@@ -115,17 +123,17 @@ class FilamentManager
 
     public function getDarkModeBrandLogo(): string | Htmlable | null
     {
-        return $this->getCurrentPanel()->getDarkModeBrandLogo();
+        return $this->getCurrentPanelOrDefault()->getDarkModeBrandLogo();
     }
 
     public function getDatabaseNotificationsPollingInterval(): ?string
     {
-        return $this->getCurrentPanel()->getDatabaseNotificationsPollingInterval();
+        return $this->getCurrentPanelOrDefault()->getDatabaseNotificationsPollingInterval();
     }
 
     public function getDefaultAvatarProvider(): string
     {
-        return $this->getCurrentPanel()->getDefaultAvatarProvider();
+        return $this->getCurrentPanelOrDefault()->getDefaultAvatarProvider();
     }
 
     /**
@@ -141,82 +149,82 @@ class FilamentManager
      */
     public function getEmailVerificationPromptUrl(array $parameters = []): ?string
     {
-        return $this->getCurrentPanel()->getEmailVerificationPromptUrl($parameters);
+        return $this->getCurrentPanelOrDefault()->getEmailVerificationPromptUrl($parameters);
     }
 
     public function getEmailVerifiedMiddleware(): string
     {
-        return $this->getCurrentPanel()->getEmailVerifiedMiddleware();
+        return $this->getCurrentPanelOrDefault()->getEmailVerifiedMiddleware();
     }
 
     public function getFavicon(): ?string
     {
-        return $this->getCurrentPanel()->getFavicon();
+        return $this->getCurrentPanelOrDefault()->getFavicon();
     }
 
     public function getFontFamily(): string
     {
-        return $this->getCurrentPanel()->getFontFamily();
+        return $this->getCurrentPanelOrDefault()->getFontFamily();
     }
 
     public function getMonoFontFamily(): string
     {
-        return $this->getCurrentPanel()->getMonoFontFamily();
+        return $this->getCurrentPanelOrDefault()->getMonoFontFamily();
     }
 
     public function getSerifFontFamily(): string
     {
-        return $this->getCurrentPanel()->getSerifFontFamily();
+        return $this->getCurrentPanelOrDefault()->getSerifFontFamily();
     }
 
     public function getFontHtml(): Htmlable
     {
-        return $this->getCurrentPanel()->getFontHtml();
+        return $this->getCurrentPanelOrDefault()->getFontHtml();
     }
 
     public function getMonoFontHtml(): Htmlable
     {
-        return $this->getCurrentPanel()->getMonoFontHtml();
+        return $this->getCurrentPanelOrDefault()->getMonoFontHtml();
     }
 
     public function getSerifFontHtml(): Htmlable
     {
-        return $this->getCurrentPanel()->getSerifFontHtml();
+        return $this->getCurrentPanelOrDefault()->getSerifFontHtml();
     }
 
     public function getFontProvider(): string
     {
-        return $this->getCurrentPanel()->getFontProvider();
+        return $this->getCurrentPanelOrDefault()->getFontProvider();
     }
 
     public function getMonoFontProvider(): string
     {
-        return $this->getCurrentPanel()->getMonoFontProvider();
+        return $this->getCurrentPanelOrDefault()->getMonoFontProvider();
     }
 
     public function getSerifFontProvider(): string
     {
-        return $this->getCurrentPanel()->getSerifFontProvider();
+        return $this->getCurrentPanelOrDefault()->getSerifFontProvider();
     }
 
     public function getFontUrl(): ?string
     {
-        return $this->getCurrentPanel()->getFontUrl();
+        return $this->getCurrentPanelOrDefault()->getFontUrl();
     }
 
     public function getMonoFontUrl(): ?string
     {
-        return $this->getCurrentPanel()->getMonoFontUrl();
+        return $this->getCurrentPanelOrDefault()->getMonoFontUrl();
     }
 
     public function getSerifFontUrl(): ?string
     {
-        return $this->getCurrentPanel()->getSerifFontUrl();
+        return $this->getCurrentPanelOrDefault()->getSerifFontUrl();
     }
 
     public function getGlobalSearchDebounce(): string
     {
-        return $this->getCurrentPanel()->getGlobalSearchDebounce();
+        return $this->getCurrentPanelOrDefault()->getGlobalSearchDebounce();
     }
 
     /**
@@ -224,32 +232,32 @@ class FilamentManager
      */
     public function getGlobalSearchKeyBindings(): array
     {
-        return $this->getCurrentPanel()->getGlobalSearchKeyBindings();
+        return $this->getCurrentPanelOrDefault()->getGlobalSearchKeyBindings();
     }
 
     public function getGlobalSearchFieldSuffix(): ?string
     {
-        return $this->getCurrentPanel()->getGlobalSearchFieldSuffix();
+        return $this->getCurrentPanelOrDefault()->getGlobalSearchFieldSuffix();
     }
 
     public function getGlobalSearchProvider(): ?GlobalSearchProvider
     {
-        return $this->getCurrentPanel()->getGlobalSearchProvider();
+        return $this->getCurrentPanelOrDefault()->getGlobalSearchProvider();
     }
 
     public function getHomeUrl(): ?string
     {
-        return $this->getCurrentPanel()->getHomeUrl() ?? $this->getCurrentPanel()->getUrl();
+        return $this->getCurrentPanelOrDefault()->getHomeUrl() ?? $this->getCurrentPanelOrDefault()->getUrl();
     }
 
     public function getId(): ?string
     {
-        return $this->getCurrentPanel()?->getId();
+        return $this->getCurrentPanelOrDefault()?->getId();
     }
 
     public function getSubNavigationPosition(): SubNavigationPosition
     {
-        return $this->getCurrentPanel()?->getSubNavigationPosition();
+        return $this->getCurrentPanelOrDefault()?->getSubNavigationPosition();
     }
 
     /**
@@ -257,7 +265,7 @@ class FilamentManager
      */
     public function getLoginUrl(array $parameters = []): ?string
     {
-        return $this->getCurrentPanel()->getLoginUrl($parameters);
+        return $this->getCurrentPanelOrDefault()->getLoginUrl($parameters);
     }
 
     /**
@@ -265,17 +273,17 @@ class FilamentManager
      */
     public function getLogoutUrl(array $parameters = []): string
     {
-        return $this->getCurrentPanel()->getLogoutUrl($parameters);
+        return $this->getCurrentPanelOrDefault()->getLogoutUrl($parameters);
     }
 
     public function getMaxContentWidth(): MaxWidth | string | null
     {
-        return $this->getCurrentPanel()->getMaxContentWidth();
+        return $this->getCurrentPanelOrDefault()->getMaxContentWidth();
     }
 
     public function getSimplePageMaxContentWidth(): MaxWidth | string | null
     {
-        return $this->getCurrentPanel()->getSimplePageMaxContentWidth();
+        return $this->getCurrentPanelOrDefault()->getSimplePageMaxContentWidth();
     }
 
     /**
@@ -283,7 +291,7 @@ class FilamentManager
      */
     public function getModelResource(string | Model $model): ?string
     {
-        return $this->getCurrentPanel()->getModelResource($model);
+        return $this->getCurrentPanelOrDefault()->getModelResource($model);
     }
 
     public function getNameForDefaultAvatar(Model | Authenticatable $record): string
@@ -300,7 +308,7 @@ class FilamentManager
      */
     public function getNavigation(): array
     {
-        return $this->getCurrentPanel()->getNavigation();
+        return $this->getCurrentPanelOrDefault()->getNavigation();
     }
 
     /**
@@ -308,7 +316,7 @@ class FilamentManager
      */
     public function getNavigationGroups(): array
     {
-        return $this->getCurrentPanel()->getNavigationGroups();
+        return $this->getCurrentPanelOrDefault()->getNavigationGroups();
     }
 
     /**
@@ -316,7 +324,7 @@ class FilamentManager
      */
     public function getNavigationItems(): array
     {
-        return $this->getCurrentPanel()->getNavigationItems();
+        return $this->getCurrentPanelOrDefault()->getNavigationItems();
     }
 
     /**
@@ -324,7 +332,7 @@ class FilamentManager
      */
     public function getClusteredComponents(?string $cluster): array
     {
-        return $this->getCurrentPanel()->getClusteredComponents($cluster);
+        return $this->getCurrentPanelOrDefault()->getClusteredComponents($cluster);
     }
 
     /**
@@ -332,10 +340,10 @@ class FilamentManager
      */
     public function getPages(): array
     {
-        return $this->getCurrentPanel()->getPages();
+        return $this->getCurrentPanelOrDefault()->getPages();
     }
 
-    public function getPanel(?string $id = null, bool $isStrict = true): Panel
+    public function getPanel(?string $id = null, bool $isStrict = true): ?Panel
     {
         return app(PanelRegistry::class)->get($id, $isStrict);
     }
@@ -350,7 +358,7 @@ class FilamentManager
 
     public function getPlugin(string $id): Plugin
     {
-        return $this->getCurrentPanel()->getPlugin($id);
+        return $this->getCurrentPanelOrDefault()->getPlugin($id);
     }
 
     /**
@@ -358,12 +366,12 @@ class FilamentManager
      */
     public function getProfileUrl(array $parameters = []): ?string
     {
-        return $this->getCurrentPanel()->getProfileUrl($parameters);
+        return $this->getCurrentPanelOrDefault()->getProfileUrl($parameters);
     }
 
     public function isProfilePageSimple(): bool
     {
-        return $this->getCurrentPanel()->isProfilePageSimple();
+        return $this->getCurrentPanelOrDefault()->isProfilePageSimple();
     }
 
     /**
@@ -371,7 +379,7 @@ class FilamentManager
      */
     public function getRegistrationUrl(array $parameters = []): ?string
     {
-        return $this->getCurrentPanel()->getRegistrationUrl($parameters);
+        return $this->getCurrentPanelOrDefault()->getRegistrationUrl($parameters);
     }
 
     /**
@@ -379,7 +387,7 @@ class FilamentManager
      */
     public function getRequestPasswordResetUrl(array $parameters = []): ?string
     {
-        return $this->getCurrentPanel()->getRequestPasswordResetUrl($parameters);
+        return $this->getCurrentPanelOrDefault()->getRequestPasswordResetUrl($parameters);
     }
 
     /**
@@ -387,7 +395,7 @@ class FilamentManager
      */
     public function getResetPasswordUrl(string $token, CanResetPassword | Model | Authenticatable $user, array $parameters = []): string
     {
-        return $this->getCurrentPanel()->getResetPasswordUrl($token, $user, $parameters);
+        return $this->getCurrentPanelOrDefault()->getResetPasswordUrl($token, $user, $parameters);
     }
 
     /**
@@ -395,7 +403,7 @@ class FilamentManager
      */
     public function getResources(): array
     {
-        return $this->getCurrentPanel()->getResources();
+        return $this->getCurrentPanelOrDefault()->getResources();
     }
 
     /**
@@ -403,12 +411,12 @@ class FilamentManager
      */
     public function getResourceUrl(string | Model $model, string $name = 'index', array $parameters = [], bool $isAbsolute = true, ?Model $tenant = null): string
     {
-        return $this->getCurrentPanel()->getResourceUrl($model, $name, $parameters, $isAbsolute, $tenant);
+        return $this->getCurrentPanelOrDefault()->getResourceUrl($model, $name, $parameters, $isAbsolute, $tenant);
     }
 
     public function getSidebarWidth(): string
     {
-        return $this->getCurrentPanel()->getSidebarWidth();
+        return $this->getCurrentPanelOrDefault()->getSidebarWidth();
     }
 
     public function getTenant(): ?Model
@@ -433,7 +441,7 @@ class FilamentManager
 
     public function getTenantBillingProvider(): ?Billing\Providers\Contracts\BillingProvider
     {
-        return $this->getCurrentPanel()->getTenantBillingProvider();
+        return $this->getCurrentPanelOrDefault()->getTenantBillingProvider();
     }
 
     /**
@@ -441,7 +449,7 @@ class FilamentManager
      */
     public function getTenantBillingUrl(array $parameters = [], ?Model $tenant = null): ?string
     {
-        return $this->getCurrentPanel()->getTenantBillingUrl($tenant ?? $this->getTenant(), $parameters);
+        return $this->getCurrentPanelOrDefault()->getTenantBillingUrl($tenant ?? $this->getTenant(), $parameters);
     }
 
     /**
@@ -449,7 +457,7 @@ class FilamentManager
      */
     public function getTenantMenuItems(): array
     {
-        return $this->getCurrentPanel()->getTenantMenuItems();
+        return $this->getCurrentPanelOrDefault()->getTenantMenuItems();
     }
 
     /**
@@ -457,7 +465,7 @@ class FilamentManager
      */
     public function getTenantModel(): ?string
     {
-        return $this->getCurrentPanel()->getTenantModel();
+        return $this->getCurrentPanelOrDefault()->getTenantModel();
     }
 
     public function getTenantName(Model $tenant): string
@@ -471,17 +479,17 @@ class FilamentManager
 
     public function getTenantOwnershipRelationshipName(): string
     {
-        return $this->getCurrentPanel()->getTenantOwnershipRelationshipName();
+        return $this->getCurrentPanelOrDefault()->getTenantOwnershipRelationshipName();
     }
 
     public function getProfilePage(): ?string
     {
-        return $this->getCurrentPanel()->getProfilePage();
+        return $this->getCurrentPanelOrDefault()->getProfilePage();
     }
 
     public function getTenantProfilePage(): ?string
     {
-        return $this->getCurrentPanel()->getTenantProfilePage();
+        return $this->getCurrentPanelOrDefault()->getTenantProfilePage();
     }
 
     /**
@@ -491,12 +499,12 @@ class FilamentManager
     {
         $parameters['tenant'] ??= $this->getTenant();
 
-        return $this->getCurrentPanel()->getTenantProfileUrl($parameters);
+        return $this->getCurrentPanelOrDefault()->getTenantProfileUrl($parameters);
     }
 
     public function getTenantRegistrationPage(): ?string
     {
-        return $this->getCurrentPanel()->getTenantRegistrationPage();
+        return $this->getCurrentPanelOrDefault()->getTenantRegistrationPage();
     }
 
     /**
@@ -504,12 +512,12 @@ class FilamentManager
      */
     public function getTenantRegistrationUrl(array $parameters = []): ?string
     {
-        return $this->getCurrentPanel()->getTenantRegistrationUrl($parameters);
+        return $this->getCurrentPanelOrDefault()->getTenantRegistrationUrl($parameters);
     }
 
     public function getTheme(): Theme
     {
-        return $this->getCurrentPanel()->getTheme();
+        return $this->getCurrentPanelOrDefault()->getTheme();
     }
 
     public function getUserAvatarUrl(Model | Authenticatable $user): string
@@ -530,7 +538,7 @@ class FilamentManager
     public function getUserDefaultTenant(HasTenants | Model | Authenticatable $user): ?Model
     {
         $tenant = null;
-        $panel = $this->getCurrentPanel();
+        $panel = $this->getCurrentPanelOrDefault();
 
         if ($user instanceof HasDefaultTenant) {
             $tenant = $user->getDefaultTenant($panel);
@@ -548,7 +556,7 @@ class FilamentManager
      */
     public function getUserMenuItems(): array
     {
-        return $this->getCurrentPanel()->getUserMenuItems();
+        return $this->getCurrentPanelOrDefault()->getUserMenuItems();
     }
 
     public function getUserName(Model | Authenticatable $user): string
@@ -565,7 +573,7 @@ class FilamentManager
      */
     public function getUserTenants(HasTenants | Model | Authenticatable $user): array
     {
-        $tenants = $user->getTenants($this->getCurrentPanel());
+        $tenants = $user->getTenants($this->getCurrentPanelOrDefault());
 
         if ($tenants instanceof Collection) {
             $tenants = $tenants->all();
@@ -576,7 +584,7 @@ class FilamentManager
 
     public function getUrl(?Model $tenant = null): ?string
     {
-        return $this->getCurrentPanel()->getUrl($tenant);
+        return $this->getCurrentPanelOrDefault()->getUrl($tenant);
     }
 
     /**
@@ -584,7 +592,7 @@ class FilamentManager
      */
     public function getVerifyEmailUrl(MustVerifyEmail | Model | Authenticatable $user, array $parameters = []): string
     {
-        return $this->getCurrentPanel()->getVerifyEmailUrl($user, $parameters);
+        return $this->getCurrentPanelOrDefault()->getVerifyEmailUrl($user, $parameters);
     }
 
     /**
@@ -592,117 +600,117 @@ class FilamentManager
      */
     public function getWidgets(): array
     {
-        return $this->getCurrentPanel()->getWidgets();
+        return $this->getCurrentPanelOrDefault()->getWidgets();
     }
 
     public function hasBreadcrumbs(): bool
     {
-        return $this->getCurrentPanel()->hasBreadcrumbs();
+        return $this->getCurrentPanelOrDefault()->hasBreadcrumbs();
     }
 
     public function hasBroadcasting(): bool
     {
-        return $this->getCurrentPanel()->hasBroadcasting();
+        return $this->getCurrentPanelOrDefault()->hasBroadcasting();
     }
 
     public function hasCollapsibleNavigationGroups(): bool
     {
-        return $this->getCurrentPanel()->hasCollapsibleNavigationGroups();
+        return $this->getCurrentPanelOrDefault()->hasCollapsibleNavigationGroups();
     }
 
     public function hasDarkMode(): bool
     {
-        return $this->getCurrentPanel()->hasDarkMode();
+        return $this->getCurrentPanelOrDefault()->hasDarkMode();
     }
 
     public function hasDarkModeForced(): bool
     {
-        return $this->getCurrentPanel()->hasDarkModeForced();
+        return $this->getCurrentPanelOrDefault()->hasDarkModeForced();
     }
 
     public function hasDatabaseNotifications(): bool
     {
-        return $this->getCurrentPanel()->hasDatabaseNotifications();
+        return $this->getCurrentPanelOrDefault()->hasDatabaseNotifications();
     }
 
     public function hasLazyLoadedDatabaseNotifications(): bool
     {
-        return $this->getCurrentPanel()->hasLazyLoadedDatabaseNotifications();
+        return $this->getCurrentPanelOrDefault()->hasLazyLoadedDatabaseNotifications();
     }
 
     public function hasEmailVerification(): bool
     {
-        return $this->getCurrentPanel()->hasEmailVerification();
+        return $this->getCurrentPanelOrDefault()->hasEmailVerification();
     }
 
     public function hasLogin(): bool
     {
-        return $this->getCurrentPanel()->hasLogin();
+        return $this->getCurrentPanelOrDefault()->hasLogin();
     }
 
     public function hasNavigation(): bool
     {
-        return $this->getCurrentPanel()->hasNavigation();
+        return $this->getCurrentPanelOrDefault()->hasNavigation();
     }
 
     public function hasPasswordReset(): bool
     {
-        return $this->getCurrentPanel()->hasPasswordReset();
+        return $this->getCurrentPanelOrDefault()->hasPasswordReset();
     }
 
     public function hasPlugin(string $id): bool
     {
-        return $this->getCurrentPanel()->hasPlugin($id);
+        return $this->getCurrentPanelOrDefault()->hasPlugin($id);
     }
 
     public function hasProfile(): bool
     {
-        return $this->getCurrentPanel()->hasProfile();
+        return $this->getCurrentPanelOrDefault()->hasProfile();
     }
 
     public function hasRegistration(): bool
     {
-        return $this->getCurrentPanel()->hasRegistration();
+        return $this->getCurrentPanelOrDefault()->hasRegistration();
     }
 
     public function hasTenantMenu(): bool
     {
-        return $this->getCurrentPanel()->hasTenantMenu();
+        return $this->getCurrentPanelOrDefault()->hasTenantMenu();
     }
 
     public function hasTenancy(): bool
     {
-        return $this->getCurrentPanel()->hasTenancy();
+        return $this->getCurrentPanelOrDefault()->hasTenancy();
     }
 
     public function hasTenantBilling(): bool
     {
-        return $this->getCurrentPanel()->hasTenantBilling();
+        return $this->getCurrentPanelOrDefault()->hasTenantBilling();
     }
 
     public function hasTenantProfile(): bool
     {
-        return $this->getCurrentPanel()->hasTenantProfile();
+        return $this->getCurrentPanelOrDefault()->hasTenantProfile();
     }
 
     public function hasTenantRegistration(): bool
     {
-        return $this->getCurrentPanel()->hasTenantRegistration();
+        return $this->getCurrentPanelOrDefault()->hasTenantRegistration();
     }
 
     public function hasTopbar(): bool
     {
-        return $this->getCurrentPanel()->hasTopbar();
+        return $this->getCurrentPanelOrDefault()->hasTopbar();
     }
 
     public function hasTopNavigation(): bool
     {
-        return $this->getCurrentPanel()->hasTopNavigation();
+        return $this->getCurrentPanelOrDefault()->hasTopNavigation();
     }
 
     public function hasUnsavedChangesAlerts(): bool
     {
-        return $this->getCurrentPanel()->hasUnsavedChangesAlerts();
+        return $this->getCurrentPanelOrDefault()->hasUnsavedChangesAlerts();
     }
 
     public function isGlobalSearchEnabled(): bool
@@ -727,12 +735,12 @@ class FilamentManager
 
     public function isSidebarCollapsibleOnDesktop(): bool
     {
-        return $this->getCurrentPanel()->isSidebarCollapsibleOnDesktop();
+        return $this->getCurrentPanelOrDefault()->isSidebarCollapsibleOnDesktop();
     }
 
     public function isSidebarFullyCollapsibleOnDesktop(): bool
     {
-        return $this->getCurrentPanel()->isSidebarFullyCollapsibleOnDesktop();
+        return $this->getCurrentPanelOrDefault()->isSidebarFullyCollapsibleOnDesktop();
     }
 
     public function registerPanel(Panel $panel): void
@@ -931,12 +939,12 @@ class FilamentManager
 
     public function getDefaultThemeMode(): ThemeMode
     {
-        return $this->getCurrentPanel()->getDefaultThemeMode();
+        return $this->getCurrentPanelOrDefault()->getDefaultThemeMode();
     }
 
     public function arePasswordsRevealable(): bool
     {
-        return $this->getCurrentPanel()->arePasswordsRevealable();
+        return $this->getCurrentPanelOrDefault()->arePasswordsRevealable();
     }
 
     public function getCurrentDomain(?string $testingDomain = null): string
@@ -958,7 +966,7 @@ class FilamentManager
 
     public function getTenancyScopeName(): string
     {
-        return $this->getCurrentPanel()->getTenancyScopeName();
+        return $this->getCurrentPanelOrDefault()->getTenancyScopeName();
     }
 
     /**
@@ -966,11 +974,11 @@ class FilamentManager
      */
     public function getMultiFactorAuthenticationProviders(): array
     {
-        return $this->getCurrentPanel()->getMultiFactorAuthenticationProviders();
+        return $this->getCurrentPanelOrDefault()->getMultiFactorAuthenticationProviders();
     }
 
     public function isAuthorizationStrict(): bool
     {
-        return $this->getCurrentPanel()->isAuthorizationStrict();
+        return $this->getCurrentPanelOrDefault()->isAuthorizationStrict();
     }
 }

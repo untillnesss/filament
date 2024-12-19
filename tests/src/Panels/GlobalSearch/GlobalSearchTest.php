@@ -51,7 +51,7 @@ it('can retrieve limited search results', function () {
 });
 
 it('can retrieve results via custom search provider', function () {
-    Filament::getCurrentPanel()->globalSearch(CustomSearchProvider::class);
+    Filament::getCurrentPanelOrDefault()->globalSearch(CustomSearchProvider::class);
 
     livewire(GlobalSearch::class)
         ->set('search', 'foo')
