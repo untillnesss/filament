@@ -47,13 +47,6 @@ class FilamentManager
 
     protected ?Model $tenant = null;
 
-    public function __construct()
-    {
-        // Resolve the panel registry to set the current panel
-        // as the default, which uses a `resolving()` callback.
-        app()->resolved(PanelRegistry::class) || app(PanelRegistry::class);
-    }
-
     public function auth(): Guard
     {
         return $this->getCurrentOrDefaultPanel()->auth();
@@ -113,7 +106,7 @@ class FilamentManager
      */
     public function getCurrentOrDefaultPanel(): ?Panel
     {
-        return $this->getCurrentPanel() ?? app(PanelRegistry::class)->getDefault();
+        return $this->getCurrentPanel() ?? $this->getDefaultPanel();
     }
 
     public function getCurrentPanel(): ?Panel
