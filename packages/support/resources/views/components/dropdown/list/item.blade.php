@@ -65,7 +65,7 @@
 @endif
 
 <{{ ($tag === 'form') ? 'button' : $tag }}
-    @if ($tag === 'a')
+    @if (($tag === 'a') && (! ($disabled && filled($tooltip))))
         {{ \Filament\Support\generate_href_html($href, $target === '_blank', $spaMode) }}
     @endif
     @if ($keyBindings)
@@ -85,7 +85,8 @@
                 fn (ComponentAttributeBag $attributes) => $attributes->except(['action', 'class', 'method', 'wire:submit']),
             )
             ->merge([
-                'disabled' => $disabled,
+                'aria-disabled' => $disabled ? 'true' : null,
+                'disabled' => $disabled && blank($tooltip),
                 'type' => match ($tag) {
                     'button' => 'button',
                     'form' => 'submit',
@@ -94,6 +95,12 @@
                 'wire:loading.attr' => $tag === 'button' ? 'disabled' : null,
                 'wire:target' => ($hasLoadingIndicator && $loadingIndicatorTarget) ? $loadingIndicatorTarget : null,
             ], escape: false)
+            ->when(
+                $disabled && filled($tooltip),
+                fn (ComponentAttributeBag $attributes) => $attributes->filter(
+                    fn (mixed $value, string $key): bool => ! str($key)->startsWith(['href', 'x-on:', 'wire:click']),
+                ),
+            )
             ->class([
                 'fi-dropdown-list-item',
                 'fi-disabled' => $disabled,
