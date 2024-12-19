@@ -181,7 +181,7 @@
         }
     }
 
-    & .fi-ta-pagination {
+    & .fi-pagination {
         @apply px-3 py-3 sm:px-6;
     }
 

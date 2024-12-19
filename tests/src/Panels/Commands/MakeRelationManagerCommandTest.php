@@ -14,7 +14,7 @@ beforeEach(function () {
 
     $this->artisan('make:filament-resource', [
         'model' => 'Team',
-        '--model-namespace' => 'Filament\\Tests\\Models',
+        '--model-namespace' => 'Filament\\Tests\\Fixtures\\Models',
         '--view' => true,
         '--panel' => 'admin',
         '--no-interaction' => true,
@@ -26,7 +26,7 @@ beforeEach(function () {
         '--no-interaction' => true,
     ]);
 
-    require_once __DIR__ . '/../../Models/Team.php';
+    require_once __DIR__ . '/../../Fixtures/Models/Team.php';
     require_once app_path('Filament/Resources/Teams/TeamResource.php');
     require_once app_path('Filament/Resources/Teams/Pages/ListTeams.php');
     require_once app_path('Filament/Resources/Teams/Pages/CreateTeam.php');
@@ -40,8 +40,8 @@ beforeEach(function () {
     require_once app_path('Filament/Resources/Users/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/Users/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanel())->resources = [
-        ...invade(Filament::getCurrentPanel())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\Teams\\TeamResource',
         'App\\Filament\\Resources\\Users\\UserResource',
     ];
@@ -102,7 +102,7 @@ it('can generate a relation manager with a generated form schema and table colum
         'recordTitleAttribute' => 'name',
         '--attach' => true,
         '--generate' => true,
-        '--related-model' => 'Filament\\Tests\\Models\\Team',
+        '--related-model' => 'Filament\\Tests\\Fixtures\\Models\\Team',
         '--panel' => 'admin',
         '--no-interaction' => true,
     ]);

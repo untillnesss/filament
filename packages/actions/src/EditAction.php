@@ -35,6 +35,7 @@ class EditAction extends Action
 
         $this->successNotificationTitle(__('filament-actions::edit.single.notifications.saved.title'));
 
+        $this->tableIcon(FilamentIcon::resolve('actions::edit-action') ?? 'heroicon-m-pencil-square');
         $this->groupedIcon(FilamentIcon::resolve('actions::edit-action.grouped') ?? 'heroicon-m-pencil-square');
 
         $this->fillForm(function (HasActions & HasSchemas $livewire, Model $record): array {

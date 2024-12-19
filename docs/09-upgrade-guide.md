@@ -11,6 +11,7 @@ import Disclosure from "@components/Disclosure.astro"
 ## New requirements
 
 - Tailwind CSS v4.0+, if you are currently using Tailwind CSS v3.0 with Filament. This does not apply if you are just using a Filament panel without a custom theme CSS file.
+- Filament no longer requires `doctrine/dbal`, but if your application still does, and you do not have it installed directly, you should add it to your `composer.json` file.
 
 ## Upgrading automatically
 
@@ -359,6 +360,34 @@ The European Portuguese translations have been moved from `pt_PT` to `pt`, which
 <span slot="summary">Nepalese translations</span>
 
 The Nepalese translations have been moved from `np` to `ne`, which appears to be the more commonly used language code for the language within the Laravel community.
+</Disclosure>
+
+<Disclosure>
+<span slot="summary">Norwegian translations</span>
+
+The Norwegian translations have been moved from `no` to `nb`, which appears to be the more commonly used language code for the language within the Laravel community.
+</Disclosure>
+
+<Disclosure x-show="packages.includes('panels')">
+<span slot="summary">`getCurrentPanel()` no longer returns the default panel as a fallback</span>
+
+In v4, the `getCurrentPanel()` method returned the default panel if no panel was set. While this was useful behaviour internally in Filament core, it was unexpected for developers. In v4, `getCurrentPanel()` will return `null` if no panel is set, and you should handle this case in your code.
+
+```php
+use Filament\Facades\Filament;
+
+Filament::getCurrentPanel();
+filament()->getCurrentPanel();
+```
+
+If you are a plugin author and would like to get the default panel if no panel is set, you can use the `getCurrentOrDefaultPanel()` method instead:
+
+```php
+use Filament\Facades\Filament;
+
+Filament::getCurrentOrDefaultPanel();
+filament()->getCurrentOrDefaultPanel();
+```
 </Disclosure>
 
 </div>

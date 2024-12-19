@@ -4,7 +4,7 @@ use Filament\Actions\Testing\Fixtures\TestAction;
 use Filament\Facades\Filament;
 use Filament\MultiFactorAuthentication\EmailCode\Notifications\VerifyEmailCodeAuthentication;
 use Filament\Pages\Auth\EditProfile;
-use Filament\Tests\Models\User;
+use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Notification;
@@ -26,7 +26,7 @@ beforeEach(function () {
 });
 
 it('can remove authentication when valid challenge code is used', function () {
-    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -76,7 +76,7 @@ it('can resend the code to the user', function () {
 });
 
 it('will not remove authentication when an invalid code is used', function () {
-    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -128,7 +128,7 @@ test('codes are required', function () {
 });
 
 test('codes must be 6 digits', function () {
-    $emailCodeAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $emailCodeAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 

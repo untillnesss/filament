@@ -115,7 +115,7 @@ trait BelongsToTenant
         }
 
         $model::addGlobalScope($panel->getTenancyScopeName(), function (Builder $query) use ($panel) {
-            if (Filament::getCurrentPanel() !== $panel) {
+            if (Filament::getCurrentOrDefaultPanel() !== $panel) {
                 return;
             }
 
@@ -142,7 +142,7 @@ trait BelongsToTenant
         }
 
         $model::creating(function (Model $record) use ($panel) {
-            if (Filament::getCurrentPanel() !== $panel) {
+            if (Filament::getCurrentOrDefaultPanel() !== $panel) {
                 return;
             }
 
@@ -160,7 +160,7 @@ trait BelongsToTenant
         });
 
         $model::created(function (Model $record) use ($panel) {
-            if (Filament::getCurrentPanel() !== $panel) {
+            if (Filament::getCurrentOrDefaultPanel() !== $panel) {
                 return;
             }
 

@@ -54,12 +54,12 @@ trait HasActions
             $action->table($this);
 
             if ($action instanceof ActionGroup) {
-                /** @var array<string, Action> $flatActions */
-                $flatActions = $action->getFlatActions();
-
                 if (! $action->getDropdownPlacement()) {
                     $action->dropdownPlacement('bottom-end');
                 }
+
+                /** @var array<string, Action> $flatActions */
+                $flatActions = $action->getFlatActions();
 
                 $this->mergeCachedFlatActions($flatActions);
             } elseif ($action instanceof Action) {

@@ -2,8 +2,8 @@
 
 use Filament\Actions\Testing\Fixtures\TestAction;
 use Filament\Notifications\Notification;
-use Filament\Tests\Actions\Fixtures\Pages\Actions;
 use Filament\Tests\Actions\TestCase;
+use Filament\Tests\Fixtures\Pages\Actions;
 use Illuminate\Support\Str;
 
 use function Filament\Tests\livewire;

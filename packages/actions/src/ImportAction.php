@@ -76,7 +76,7 @@ class ImportAction extends Action
 
         $this->label(fn (ImportAction $action): string => __('filament-actions::import.label', ['label' => $action->getPluralModelLabel()]));
 
-        $this->modalHeading(fn (ImportAction $action): string => __('filament-actions::import.modal.heading', ['label' => $action->getPluralModelLabel()]));
+        $this->modalHeading(fn (ImportAction $action): string => __('filament-actions::import.modal.heading', ['label' => $action->getTitleCasePluralModelLabel()]));
 
         $this->modalDescription(fn (ImportAction $action): Htmlable => $action->getModalAction('downloadExample'));
 

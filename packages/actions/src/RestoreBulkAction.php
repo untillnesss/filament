@@ -6,8 +6,8 @@ use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\TrashedFilter;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Number;
 
 class RestoreBulkAction extends BulkAction
 {
@@ -24,11 +24,35 @@ class RestoreBulkAction extends BulkAction
 
         $this->label(__('filament-actions::restore.multiple.label'));
 
-        $this->modalHeading(fn (): string => __('filament-actions::restore.multiple.modal.heading', ['label' => $this->getPluralModelLabel()]));
+        $this->modalHeading(fn (): string => __('filament-actions::restore.multiple.modal.heading', ['label' => $this->getTitleCasePluralModelLabel()]));
 
         $this->modalSubmitActionLabel(__('filament-actions::restore.multiple.modal.actions.restore.label'));
 
         $this->successNotificationTitle(__('filament-actions::restore.multiple.notifications.restored.title'));
+
+        $this->failureNotificationTitle(function (int $successCount, int $totalCount): string {
+            if ($successCount) {
+                return trans_choice('filament-actions::restore.multiple.notifications.restored_partial.title', $successCount, [
+                    'count' => Number::format($successCount),
+                    'total' => Number::format($totalCount),
+                ]);
+            }
+
+            return trans_choice('filament-actions::restore.multiple.notifications.restored_none.title', $totalCount, [
+                'count' => Number::format($totalCount),
+                'total' => Number::format($totalCount),
+            ]);
+        });
+
+        $this->failureNotificationMissingMessage(function (int $missingMessageCount, int $successCount): string {
+            return trans_choice(
+                $successCount
+                    ? 'filament-actions::restore.multiple.notifications.restored_partial.missing_message'
+                    : 'filament-actions::restore.multiple.notifications.restored_none.missing_message',
+                $missingMessageCount,
+                ['count' => Number::format($missingMessageCount)],
+            );
+        });
 
         $this->color('gray');
 
@@ -38,19 +62,15 @@ class RestoreBulkAction extends BulkAction
 
         $this->modalIcon(FilamentIcon::resolve('actions::restore-action.modal') ?? 'heroicon-o-arrow-uturn-left');
 
-        $this->action(function (): void {
-            $this->process(static function (Collection $records): void {
-                $records->each(function (Model $record): void {
-                    if (! method_exists($record, 'restore')) {
-                        return;
-                    }
+        $this->action(fn () => $this->processIndividualRecords(
+            static function (Model $record) {
+                if (! method_exists($record, 'restore')) {
+                    return;
+                }
 
-                    $record->restore();
-                });
-            });
-
-            $this->success();
-        });
+                $record->restore();
+            },
+        ));
 
         $this->deselectRecordsAfterCompletion();
 

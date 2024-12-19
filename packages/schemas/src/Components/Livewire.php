@@ -103,4 +103,9 @@ class Livewire extends Component
             ...$this->getData(),
         ];
     }
+
+    public function getId(): ?string
+    {
+        return $this->getCustomId();
+    }
 }

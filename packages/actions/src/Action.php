@@ -3,7 +3,7 @@
 namespace Filament\Actions;
 
 use Closure;
-use Filament\Notifications\Notification;
+use Filament\Actions\Concerns\HasTooltip;
 use Filament\Schemas\Components\Actions\ActionContainer;
 use Filament\Schemas\Components\Actions\ActionContainer as InfolistActionContainer;
 use Filament\Support\Components\ViewComponent;
@@ -11,7 +11,6 @@ use Filament\Support\Concerns\HasBadge;
 use Filament\Support\Concerns\HasColor;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Filament\Support\Concerns\HasIcon;
-use Filament\Support\Concerns\HasTooltip;
 use Filament\Support\Exceptions\Cancel;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Contracts\Support\Arrayable;
@@ -35,6 +34,7 @@ class Action extends ViewComponent implements Arrayable
     use Concerns\BelongsToSchemaComponent;
     use Concerns\BelongsToTable;
     use Concerns\CanAccessSelectedRecords;
+    use Concerns\CanBeAuthorized;
     use Concerns\CanBeDisabled;
     use Concerns\CanBeHidden;
     use Concerns\CanBeLabeledFrom;
@@ -67,6 +67,7 @@ class Action extends ViewComponent implements Arrayable
     use Concerns\HasParentActions;
     use Concerns\HasSchema;
     use Concerns\HasSize;
+    use Concerns\HasTableIcon;
     use Concerns\HasWizard;
     use Concerns\InteractsWithRecord;
     use HasBadge;
@@ -121,9 +122,6 @@ class Action extends ViewComponent implements Arrayable
         parent::setUp();
 
         $this->defaultView(static::BUTTON_VIEW);
-
-        $this->failureNotification(fn (Notification $notification): Notification => $notification);
-        $this->successNotification(fn (Notification $notification): Notification => $notification);
     }
 
     public function markAsRead(bool | Closure $condition = true): static
@@ -216,6 +214,18 @@ class Action extends ViewComponent implements Arrayable
     public function isBadge(): bool
     {
         return $this->getView() === static::BADGE_VIEW;
+    }
+
+    public function badge(string | int | float | Closure | null $badge = null): static
+    {
+        if (func_num_args() === 0) {
+            /** @phpstan-ignore-next-line */
+            return $this->view(static::BADGE_VIEW);
+        }
+
+        $this->badge = $badge;
+
+        return $this;
     }
 
     public function button(): static
@@ -540,9 +550,12 @@ class Action extends ViewComponent implements Arrayable
         $this->dispatchSuccessRedirect();
     }
 
-    public function failure(): void
+    /**
+     * @param  array<string>  $messages
+     */
+    public function failure(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): void
     {
-        $this->sendFailureNotification();
+        $this->sendFailureNotification($successCount, $totalCount, $missingMessageCount, $messages);
         $this->dispatchFailureRedirect();
     }
 
@@ -627,7 +640,7 @@ class Action extends ViewComponent implements Arrayable
                 'form' => $this->getFormToSubmit(),
                 'formId' => $this->getFormId(),
                 'href' => ($isDisabled || $shouldPostToUrl) ? null : $url,
-                'icon' => $props['icon'] ?? $this->getIcon(),
+                'icon' => $props['icon'] ?? $this->getIcon(default: $this->getTable() ? $this->getTableIcon() : null),
                 'iconSize' => $this->getIconSize(),
                 'keyBindings' => $this->getKeyBindings(),
                 'labelSrOnly' => $this->isLabelHidden(),
@@ -671,7 +684,7 @@ class Action extends ViewComponent implements Arrayable
             'badge' => $this->getBadge(),
             'badgeColor' => $this->getBadgeColor(),
             'class' => 'fi-ac-grouped-action',
-            'icon' => $this->getGroupedIcon(),
+            'icon' => $this->getIcon(default: $this->getGroupedIcon()),
             'slot' => new ComponentSlot(e($this->getLabel())),
         ]);
     }

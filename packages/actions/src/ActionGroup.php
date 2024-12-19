@@ -141,6 +141,18 @@ class ActionGroup extends ViewComponent implements Arrayable, HasEmbeddedView
         return $this->getTriggerView() === static::BADGE_VIEW;
     }
 
+    public function badge(string | int | float | Closure | null $badge = null): static
+    {
+        if (func_num_args() === 0) {
+            /** @phpstan-ignore-next-line */
+            return $this->triggerView(static::BADGE_VIEW);
+        }
+
+        $this->badge = $badge;
+
+        return $this;
+    }
+
     public function button(): static
     {
         return $this->triggerView(static::BUTTON_VIEW);
@@ -459,7 +471,7 @@ class ActionGroup extends ViewComponent implements Arrayable, HasEmbeddedView
             'badge' => $this->getBadge(),
             'badgeColor' => $this->getBadgeColor(),
             'class' => 'fi-ac-grouped-group',
-            'icon' => $this->getGroupedIcon(),
+            'icon' => $this->getIcon(),
             'slot' => new ComponentSlot(e($this->getLabel())),
         ];
     }

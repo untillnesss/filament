@@ -127,7 +127,7 @@
 
                                     <x-slot
                                         name="deleteButton"
-                                        x-on:click="deleteTag(tag)"
+                                        x-on:click.stop="deleteTag(tag)"
                                     ></x-slot>
                                 </x-filament::badge>
                             </template>

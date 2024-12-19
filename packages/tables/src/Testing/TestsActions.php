@@ -50,7 +50,7 @@ class TestsActions
 
     public function assertTableActionDataSet(): Closure
     {
-        return function (array $data): static {
+        return function (array | Closure $data): static {
             $this->assertActionDataSet($data);
 
             return $this;

@@ -2,7 +2,7 @@
 
 use Filament\Facades\Filament;
 use Filament\Pages\Auth\PasswordReset\ResetPassword;
-use Filament\Tests\Models\User;
+use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Event;

@@ -1,9 +1,17 @@
 .fi-link {
-    @apply relative inline-flex items-center justify-center gap-1.5 text-gray-700 outline-none hover:underline focus-visible:underline dark:text-gray-200;
+    @apply relative inline-flex items-center justify-center gap-1.5 text-gray-700 outline-none dark:text-gray-200;
+
+    &:not(.fi-disabled):not([disabled]) {
+        @apply hover:underline focus-visible:underline;
+    }
 
     &.fi-disabled,
     &[disabled] {
-        @apply pointer-events-none opacity-70;
+        @apply cursor-default opacity-70;
+
+        &:not([x-tooltip]) {
+            @apply pointer-events-none;
+        }
     }
 
     & > .fi-icon {

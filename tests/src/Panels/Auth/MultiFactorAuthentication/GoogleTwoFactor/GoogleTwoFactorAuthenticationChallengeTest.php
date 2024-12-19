@@ -4,7 +4,7 @@ use Filament\Actions\Testing\Fixtures\TestAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Auth\Login;
-use Filament\Tests\Models\User;
+use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -39,7 +39,7 @@ it('can render the challenge form after valid login credentials are successfully
 });
 
 it('will authenticate the user after a valid challenge code is used', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasGoogleTwoFactorAuthentication()
@@ -66,7 +66,7 @@ it('will authenticate the user after a valid challenge code is used', function (
 });
 
 it('will make the recovery code field visible when the user requests it', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasGoogleTwoFactorAuthentication()
@@ -95,7 +95,7 @@ it('will make the recovery code field visible when the user requests it', functi
 });
 
 it('will authenticate the user after a valid recovery code is used', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasGoogleTwoFactorAuthentication($recoveryCodes = $googleTwoFactorAuthentication->generateRecoveryCodes())
@@ -158,7 +158,7 @@ it('will not render the challenge form if a user does not have multi-factor auth
 });
 
 it('will not authenticate the user when an invalid challenge code is used', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasGoogleTwoFactorAuthentication()
@@ -189,7 +189,7 @@ it('will not authenticate the user when an invalid challenge code is used', func
 });
 
 test('challenge codes are required', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasGoogleTwoFactorAuthentication()
@@ -218,7 +218,7 @@ test('challenge codes are required', function () {
 });
 
 test('challenge codes must be numeric', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasGoogleTwoFactorAuthentication()
@@ -247,7 +247,7 @@ test('challenge codes must be numeric', function () {
 });
 
 test('challenge codes must be 6 digits', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasGoogleTwoFactorAuthentication()
@@ -276,7 +276,7 @@ test('challenge codes must be 6 digits', function () {
 });
 
 it('will not authenticate the user when an invalid recovery code is used', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $userToAuthenticate = User::factory()
         ->hasGoogleTwoFactorAuthentication()
@@ -317,7 +317,7 @@ it('will not authenticate the user when an invalid recovery code is used', funct
 });
 
 it('will not authenticate the user with a valid recovery code if recovery is disabled', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders())
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders())
         ->recoverable(false);
 
     $userToAuthenticate = User::factory()

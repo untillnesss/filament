@@ -99,7 +99,7 @@ abstract class Page extends BasePage
             return;
         }
 
-        Filament::getCurrentPanel()
+        Filament::getCurrentOrDefaultPanel()
             ->navigationItems(static::getNavigationItems());
     }
 
@@ -129,7 +129,7 @@ abstract class Page extends BasePage
 
     public static function getRouteName(?string $panel = null): string
     {
-        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentPanel();
+        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentOrDefaultPanel();
 
         $routeName = 'pages.' . static::getRelativeRouteName();
         $routeName = static::prependClusterRouteBaseName($routeName);
@@ -234,9 +234,9 @@ abstract class Page extends BasePage
     }
 
     /**
-     * @return int | string | array<string, int | string | null>
+     * @return int | array<string, ?int>
      */
-    public function getHeaderWidgetsColumns(): int | string | array
+    public function getHeaderWidgetsColumns(): int | array
     {
         return 2;
     }
@@ -284,9 +284,9 @@ abstract class Page extends BasePage
     }
 
     /**
-     * @return int | string | array<string, int | string | null>
+     * @return int | array<string, ?int>
      */
-    public function getFooterWidgetsColumns(): int | string | array
+    public function getFooterWidgetsColumns(): int | array
     {
         return 2;
     }
@@ -356,8 +356,9 @@ abstract class Page extends BasePage
     public function getWidgetsSchemaComponents(array $widgets, array $data = []): array
     {
         return collect($widgets)
+            ->values()
             ->filter(fn (string | WidgetConfiguration $widget): bool => $this->normalizeWidgetClass($widget)::canView())
-            ->map(fn (string | WidgetConfiguration $widget, string | int $widgetKey): Livewire => Livewire::make(
+            ->map(fn (string | WidgetConfiguration $widget, int $widgetKey): Livewire => Livewire::make(
                 $widgetClass = $this->normalizeWidgetClass($widget),
                 [
                     ...$this->getWidgetData(),
