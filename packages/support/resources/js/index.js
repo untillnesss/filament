@@ -1,11 +1,11 @@
 import AlpineFloatingUI from '@awcodes/alpine-floating-ui'
 import AlpineLazyLoadAssets from 'alpine-lazy-load-assets'
+import AsyncAlpine from 'async-alpine'
 import { md5 } from 'js-md5'
 import Sortable from './sortable'
 import Tooltip from '@ryangjchandler/alpine-tooltip'
 import dropdown from './components/dropdown.js'
 import modal from './components/modal.js'
-import AsyncAlpine from 'async-alpine'
 
 import '../css/components/actions.css'
 import '../css/components/avatar.css'
@@ -68,9 +68,9 @@ import '../css/sortable.css'
 document.addEventListener('alpine:init', () => {
     window.Alpine.plugin(AlpineFloatingUI)
     window.Alpine.plugin(AlpineLazyLoadAssets)
+    window.Alpine.plugin(AsyncAlpine)
     window.Alpine.plugin(Sortable)
     window.Alpine.plugin(Tooltip)
-    window.Alpine.plugin(AsyncAlpine)
     window.Alpine.data('filamentDropdown', dropdown)
     window.Alpine.data('filamentModal', modal)
 })
