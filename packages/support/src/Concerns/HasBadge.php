@@ -20,13 +20,8 @@ trait HasBadge
 
     protected IconPosition | string | Closure | null $badgeIconPosition = null;
 
-    public function badge(string | int | float | Closure | null $badge = null): static
+    public function badge(string | int | float | Closure | null $badge): static
     {
-        if (func_num_args() === 0) {
-            /** @phpstan-ignore-next-line */
-            return $this->triggerView(static::BADGE_VIEW);
-        }
-
         $this->badge = $badge;
 
         return $this;

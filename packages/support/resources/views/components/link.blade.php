@@ -3,6 +3,7 @@
     use Filament\Support\Enums\FontWeight;
     use Filament\Support\Enums\IconPosition;
     use Filament\Support\Enums\IconSize;
+    use Illuminate\View\ComponentAttributeBag;
 @endphp
 
 @props([
@@ -74,7 +75,7 @@
 @endphp
 
 <{{ $tag }}
-    @if ($tag === 'a')
+    @if (($tag === 'a') && (! ($disabled && filled($tooltip))))
         {{ \Filament\Support\generate_href_html($href, $target === '_blank', $spaMode) }}
     @endif
     @if ($keyBindings || $hasTooltip)
@@ -93,12 +94,19 @@
     {{
         $attributes
             ->merge([
-                'disabled' => $disabled,
+                'aria-disabled' => $disabled ? 'true' : null,
+                'disabled' => $disabled && blank($tooltip),
                 'form' => $formId,
                 'type' => $tag === 'button' ? $type : null,
                 'wire:loading.attr' => $tag === 'button' ? 'disabled' : null,
                 'wire:target' => ($hasLoadingIndicator && $loadingIndicatorTarget) ? $loadingIndicatorTarget : null,
             ], escape: false)
+            ->when(
+                $disabled && filled($tooltip),
+                fn (ComponentAttributeBag $attributes) => $attributes->filter(
+                    fn (mixed $value, string $key): bool => ! str($key)->startsWith(['href', 'x-on:', 'wire:click']),
+                ),
+            )
             ->class([
                 'fi-link',
                 'fi-disabled' => $disabled,

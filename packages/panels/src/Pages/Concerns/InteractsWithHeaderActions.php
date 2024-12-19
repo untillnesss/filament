@@ -21,6 +21,10 @@ trait InteractsWithHeaderActions
             if ($action instanceof ActionGroup) {
                 $action->livewire($this);
 
+                if (! $action->getDropdownPlacement()) {
+                    $action->dropdownPlacement('bottom-end');
+                }
+
                 /** @var array<string, Action> $flatActions */
                 $flatActions = $action->getFlatActions();
 
