@@ -368,4 +368,26 @@ The Nepalese translations have been moved from `np` to `ne`, which appears to be
 The Norwegian translations have been moved from `no` to `nb`, which appears to be the more commonly used language code for the language within the Laravel community.
 </Disclosure>
 
+<Disclosure x-show="packages.includes('panels')">
+<span slot="summary">`getCurrentPanel()` no longer returns the default panel as a fallback</span>
+
+In v4, the `getCurrentPanel()` method returned the default panel if no panel was set. While this was useful behaviour internally in Filament core, it was unexpected for developers. In v4, `getCurrentPanel()` will return `null` if no panel is set, and you should handle this case in your code.
+
+```php
+use Filament\Facades\Filament;
+
+Filament::getCurrentPanel();
+filament()->getCurrentPanel();
+```
+
+If you are a plugin author and would like to get the default panel if no panel is set, you can use the `getCurrentOrDefaultPanel()` method instead:
+
+```php
+use Filament\Facades\Filament;
+
+Filament::getCurrentOrDefaultPanel();
+filament()->getCurrentOrDefaultPanel();
+```
+</Disclosure>
+
 </div>

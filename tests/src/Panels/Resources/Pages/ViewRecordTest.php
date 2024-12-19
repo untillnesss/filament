@@ -104,7 +104,7 @@ it('can render tickets page if the policy viewAny returns an allowed response', 
 });
 
 it('does not render ticket messages page without a policy if authorization is strict', function () {
-    Filament::getCurrentPanel()->strictAuthorization();
+    Filament::getCurrentOrDefaultPanel()->strictAuthorization();
 
     $message = TicketMessage::factory()
         ->create();
@@ -112,7 +112,7 @@ it('does not render ticket messages page without a policy if authorization is st
     $this->get(TicketMessageResource::getUrl('view', ['record' => $message]))
         ->assertServerError();
 
-    Filament::getCurrentPanel()->strictAuthorization(false);
+    Filament::getCurrentOrDefaultPanel()->strictAuthorization(false);
 });
 
 it('does not render tickets page if the policy viewAny returns false', function () {

@@ -16,7 +16,7 @@ uses(TestCase::class);
 beforeEach(function () {
     Filament::setCurrentPanel('google-two-factor-authentication');
 
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $this->recoveryCodes = $googleTwoFactorAuthentication->generateRecoveryCodes();
 
@@ -26,7 +26,7 @@ beforeEach(function () {
 });
 
 it('can remove authentication when valid challenge code is used', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -95,7 +95,7 @@ it('can remove authentication when a valid recovery code is used', function () {
 });
 
 it('will not remove authentication when an invalid code is used', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -163,7 +163,7 @@ test('codes are required without a recovery code', function () {
 });
 
 test('codes must be 6 digits', function () {
-    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders());
+    $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
 
@@ -234,7 +234,7 @@ it('will not remove authentication when an invalid recovery code is used', funct
 });
 
 it('will not remove authentication with a recovery code if recovery is disabled', function () {
-    Arr::first(Filament::getCurrentPanel()->getMultiFactorAuthenticationProviders())
+    Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders())
         ->recoverable(false);
 
     $user = auth()->user();
