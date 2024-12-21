@@ -452,7 +452,7 @@ class ImageColumn extends Column implements HasEmbeddedView
                                     theme: $store.theme,
                                 }'
                                 : null,
-                        ])
+                        ], escape: false)
                         ->style([
                             "height: {$height}" => $height,
                             "width: {$width}" => $width,

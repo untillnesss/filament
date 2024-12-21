@@ -13,7 +13,7 @@
         (new \Illuminate\View\ComponentAttributeBag)
             ->merge([
                 'wire:poll.' . $pollingInterval => $pollingInterval ? true : null,
-            ])
+            ], escape: false)
             ->class([
                 'fi-wi-stats-overview',
             ])
