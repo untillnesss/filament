@@ -707,7 +707,7 @@ trait CanBeValidated
         $rules = [
             $this->getRequiredValidationRule(),
             ...($this instanceof CanBeLengthConstrained ? $this->getLengthValidationRules() : []),
-            ...(($inRule = $this->getInValidationRule()) ? [$inRule] : []),
+            ...(((! $this->hasInValidationOnMultipleValues()) && ($inRule = $this->getInValidationRule())) ? [$inRule] : []),
         ];
 
         if (filled($regexPattern = $this->getRegexPattern())) {
@@ -769,9 +769,9 @@ trait CanBeValidated
 
         if (
             $this->hasInValidationOnMultipleValues() &&
-            filled($inValidationRuleValues = $this->getInValidationRuleValues())
+            ($inRule = $this->getInValidationRule())
         ) {
-            $rules["{$statePath}.*"] = [Rule::in($inValidationRuleValues)];
+            $rules["{$statePath}.*"] = [$inRule];
         }
 
         if (! $this instanceof HasNestedRecursiveValidationRules) {
