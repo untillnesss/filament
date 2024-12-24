@@ -392,7 +392,7 @@ class TextColumn extends Column implements HasEmbeddedView
             ob_start(); ?>
 
             <div <?= $attributes
-                ->merge($stateItemAttributes->getAttributes())
+                ->merge($stateItemAttributes->getAttributes(), escape: false)
                 ->toHtml() ?>>
                 <?php if ($isBadge) { ?>
                     <span <?= $stateItemBadgeAttributes->toHtml() ?>>
@@ -422,7 +422,7 @@ class TextColumn extends Column implements HasEmbeddedView
                     'x-data' => ($stateOverListLimitCount && $isLimitedListExpandable)
                         ? '{ isLimited: true }'
                         : null,
-                ])
+                ], escape: false)
                 ->class([
                     'fi-ta-text-has-descriptions' => $hasDescriptions,
                     'fi-ta-text-list-limited' => $stateOverListLimitCount,

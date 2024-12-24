@@ -268,7 +268,7 @@ class ImageColumn extends Column implements HasEmbeddedView
         $temporaryAttributeBag = new ComponentAttributeBag;
 
         foreach ($this->extraImgAttributes as $extraImgAttributes) {
-            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraImgAttributes));
+            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraImgAttributes), escape: false);
         }
 
         return $temporaryAttributeBag->getAttributes();
@@ -452,7 +452,7 @@ class ImageColumn extends Column implements HasEmbeddedView
                                     theme: $store.theme,
                                 }'
                                 : null,
-                        ])
+                        ], escape: false)
                         ->style([
                             "height: {$height}" => $height,
                             "width: {$width}" => $width,
