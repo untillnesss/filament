@@ -106,7 +106,11 @@ it('can call an action and halt', function () {
 it('can hide an action', function () {
     livewire(Actions::class)
         ->assertActionHidden(TestAction::make('hidden')->schemaComponent('form.textInput'))
-        ->assertActionVisible(TestAction::make('visible')->schemaComponent('form.textInput'));
+        ->assertActionVisible(TestAction::make('visible')->schemaComponent('form.textInput'))
+        ->assertActionExists(TestAction::make('visible')->schemaComponent('form.textInput'), fn (Action $action): bool => $action->isVisible())
+        ->assertActionExists(TestAction::make('hidden')->schemaComponent('form.textInput'), fn (Action $action): bool => $action->isHidden())
+        ->assertActionDoesNotExist(TestAction::make('visible')->schemaComponent('form.textInput'), fn (Action $action): bool => $action->isHidden())
+        ->assertActionDoesNotExist(TestAction::make('hidden')->schemaComponent('form.textInput'), fn (Action $action): bool => $action->isVisible());
 
     livewire(Actions::class)
         ->assertFormComponentActionVisible('textInput', 'visible')

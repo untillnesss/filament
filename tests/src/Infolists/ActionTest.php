@@ -1,5 +1,6 @@
 <?php
 
+use Filament\Actions\Action;
 use Filament\Actions\Testing\Fixtures\TestAction;
 use Filament\Tests\Fixtures\Livewire\InfolistActions;
 use Filament\Tests\TestCase;
@@ -80,7 +81,11 @@ it('can call an action and halt', function () {
 it('can hide an action', function () {
     livewire(InfolistActions::class)
         ->assertActionVisible(TestAction::make('visible')->schemaComponent('infolist.textEntry'))
-        ->assertActionHidden(TestAction::make('hidden')->schemaComponent('infolist.textEntry'));
+        ->assertActionHidden(TestAction::make('hidden')->schemaComponent('infolist.textEntry'))
+        ->assertActionExists(TestAction::make('visible')->schemaComponent('infolist.textEntry'), fn (Action $action): bool => $action->isVisible())
+        ->assertActionExists(TestAction::make('hidden')->schemaComponent('infolist.textEntry'), fn (Action $action): bool => $action->isHidden())
+        ->assertActionDoesNotExist(TestAction::make('visible')->schemaComponent('infolist.textEntry'), fn (Action $action): bool => $action->isHidden())
+        ->assertActionDoesNotExist(TestAction::make('hidden')->schemaComponent('infolist.textEntry'), fn (Action $action): bool => $action->isVisible());
 
     livewire(InfolistActions::class)
         ->assertInfolistActionVisible('textEntry', 'visible')

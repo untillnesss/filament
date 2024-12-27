@@ -1,5 +1,6 @@
 <?php
 
+use Filament\Actions\Action;
 use Filament\Actions\Testing\Fixtures\TestAction;
 use Filament\Notifications\Notification;
 use Filament\Tests\Actions\TestCase;
@@ -220,7 +221,11 @@ it('can call an action and halt', function () {
 it('can hide an action', function () {
     livewire(Actions::class)
         ->assertActionVisible('visible')
-        ->assertActionHidden('hidden');
+        ->assertActionHidden('hidden')
+        ->assertActionExists('visible', fn (Action $action): bool => $action->isVisible())
+        ->assertActionExists('hidden', fn (Action $action): bool => $action->isHidden())
+        ->assertActionDoesNotExist('visible', fn (Action $action): bool => $action->isHidden())
+        ->assertActionDoesNotExist('hidden', fn (Action $action): bool => $action->isVisible());
 });
 
 it('can disable an action', function () {
