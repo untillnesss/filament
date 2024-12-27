@@ -88,6 +88,7 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
                         ->color('danger'))
                     ->modalCancelAction(false)
                     ->cancelParentActions(),
-            ]);
+            ])
+            ->rateLimit(5);
     }
 }

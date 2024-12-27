@@ -3,6 +3,8 @@
 namespace Filament\Actions\Concerns;
 
 use Closure;
+use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
+use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Filament\Actions\Action;
 use Filament\Actions\Exceptions\ActionNotResolvableException;
 use Filament\Schemas\Components\Contracts\ExposesStateToActionData;
@@ -24,6 +26,8 @@ use function Livewire\store;
 
 trait InteractsWithActions
 {
+    use WithRateLimiting;
+
     /**
      * @var array<array<string, mixed>> | null
      */
@@ -161,6 +165,8 @@ trait InteractsWithActions
             return null;
         }
 
+        $action->mergeArguments($arguments);
+
         if ($action->isDisabled()) {
             return null;
         }
@@ -172,7 +178,15 @@ trait InteractsWithActions
             return null;
         }
 
-        $action->mergeArguments($arguments);
+        if ($rateLimit = $action->getRateLimit()) {
+            try {
+                $this->rateLimit($rateLimit, method: json_encode(array_map(fn (array $action): array => Arr::except($action, ['data']), $this->mountedActions)));
+            } catch (TooManyRequestsException $exception) {
+                $action->sendRateLimitedNotification($exception);
+
+                return null;
+            }
+        }
 
         $schema = $this->getMountedActionSchema(mountedAction: $action);
 

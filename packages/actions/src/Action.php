@@ -40,6 +40,7 @@ class Action extends ViewComponent implements Arrayable
     use Concerns\CanBeLabeledFrom;
     use Concerns\CanBeMounted;
     use Concerns\CanBeOutlined;
+    use Concerns\CanBeRateLimited;
     use Concerns\CanBeSorted;
     use Concerns\CanCallParentAction;
     use Concerns\CanClose;

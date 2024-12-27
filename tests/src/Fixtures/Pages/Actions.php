@@ -96,7 +96,7 @@ class Actions extends Page
                                     baz: $mountedActions[2]->getRawFormData()['baz'],
                                 )),
                             Action::make('testArguments')
-                                ->action(function (array $mountedActions, Action $action) {
+                                ->action(function (array $mountedActions) {
                                     $this->dispatch(
                                         'arguments-test-called',
                                         foo: $mountedActions[0]->getArguments()['foo'],
@@ -159,6 +159,11 @@ class Actions extends Page
                         ->success()
                         ->send();
                 }),
+            Action::make('rate-limited')
+                ->rateLimit(5)
+                ->action(fn () => $this->dispatch(
+                    'rate-limited-called',
+                )),
         ];
     }
 }
