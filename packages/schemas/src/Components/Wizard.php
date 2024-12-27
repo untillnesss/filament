@@ -177,7 +177,7 @@ class Wizard extends Component
      */
     public function steps(array | Closure $steps): static
     {
-        $this->childComponents($steps);
+        $this->components($steps);
 
         return $this;
     }

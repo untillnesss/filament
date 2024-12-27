@@ -16,7 +16,7 @@ trait HasChildComponents
     /**
      * @param  array<Component> | Closure  $components
      */
-    public function childComponents(array | Closure $components): static
+    public function components(array | Closure $components): static
     {
         $this->childComponents = $components;
 
@@ -26,9 +26,19 @@ trait HasChildComponents
     /**
      * @param  array<Component> | Closure  $components
      */
+    public function childComponents(array | Closure $components): static
+    {
+        $this->components($components);
+
+        return $this;
+    }
+
+    /**
+     * @param  array<Component> | Closure  $components
+     */
     public function schema(array | Closure $components): static
     {
-        $this->childComponents($components);
+        $this->components($components);
 
         return $this;
     }

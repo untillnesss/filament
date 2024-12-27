@@ -69,7 +69,7 @@ class Tabs extends Component
      */
     public function tabs(array | Closure $tabs): static
     {
-        $this->childComponents($tabs);
+        $this->components($tabs);
 
         return $this;
     }

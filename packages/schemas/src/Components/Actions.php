@@ -42,7 +42,7 @@ class Actions extends Component
      */
     public function actions(array $actions): static
     {
-        $this->childComponents(array_map(
+        $this->components(array_map(
             fn (Action $action): Component => $action->toFormComponent(),
             $actions,
         ));

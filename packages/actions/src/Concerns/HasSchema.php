@@ -19,9 +19,19 @@ trait HasSchema
     /**
      * @param  array<Component> | Closure | null  $schema
      */
-    public function schema(array | Closure | null $schema): static
+    public function components(array | Closure | null $schema): static
     {
         $this->schema = $schema;
+
+        return $this;
+    }
+
+    /**
+     * @param  array<Component> | Closure | null  $schema
+     */
+    public function schema(array | Closure | null $schema): static
+    {
+        $this->components($schema);
 
         return $this;
     }

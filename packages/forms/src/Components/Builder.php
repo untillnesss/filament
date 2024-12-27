@@ -140,7 +140,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
      */
     public function blocks(array | Closure $blocks): static
     {
-        $this->childComponents($blocks);
+        $this->components($blocks);
 
         return $this;
     }

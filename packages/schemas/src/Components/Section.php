@@ -55,7 +55,7 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     final public function __construct(string | array | Htmlable | Closure | null $heading = null)
     {
         is_array($heading)
-            ? $this->childComponents($heading)
+            ? $this->components($heading)
             : $this->heading($heading);
     }
 
