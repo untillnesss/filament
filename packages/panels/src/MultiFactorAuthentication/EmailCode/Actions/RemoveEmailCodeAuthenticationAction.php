@@ -75,6 +75,7 @@ class RemoveEmailCodeAuthenticationAction
                     ->success()
                     ->icon('heroicon-o-lock-open')
                     ->send();
-            });
+            })
+            ->rateLimit(5);
     }
 }

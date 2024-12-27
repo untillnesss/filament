@@ -94,6 +94,7 @@ class SetUpEmailCodeAuthenticationAction
                     ->success()
                     ->icon('heroicon-o-lock-closed')
                     ->send();
-            });
+            })
+            ->rateLimit(5);
     }
 }
