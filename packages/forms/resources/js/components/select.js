@@ -97,21 +97,23 @@ export default function selectFormComponent({
 
             if (hasDynamicSearchResults) {
                 this.$refs.input.addEventListener('search', (event) => {
-                    if (! this.select._isSearching) {
+                    if (!this.select._isSearching) {
                         return
                     }
 
                     let search = event.detail.value?.trim()
 
-                    this.select._displayNotice([null, undefined, ''].includes(search)
-                        ? loadingMessage
-                        : searchingMessage)
+                    this.select._displayNotice(
+                        [null, undefined, ''].includes(search)
+                            ? loadingMessage
+                            : searchingMessage,
+                    )
                 })
 
                 this.$refs.input.addEventListener(
                     'search',
                     Alpine.debounce(async (event) => {
-                        if (! this.select._isSearching) {
+                        if (!this.select._isSearching) {
                             return
                         }
 
@@ -170,7 +172,7 @@ export default function selectFormComponent({
                 return
             }
 
-            if (! this.isEmpty) {
+            if (!this.isEmpty) {
                 this.select._clearNotice()
             }
 
@@ -184,7 +186,10 @@ export default function selectFormComponent({
                 this.select.setChoiceByValue(this.formatState(this.state))
             }
 
-            if (this.isEmpty && (! [null, undefined, ''].includes(config.search))) {
+            if (
+                this.isEmpty &&
+                ![null, undefined, ''].includes(config.search)
+            ) {
                 this.select._displayNotice(noSearchResultsMessage)
             }
         },
@@ -210,7 +215,7 @@ export default function selectFormComponent({
 
             let results = []
 
-            if (! [null, undefined, ''].includes(search)) {
+            if (![null, undefined, ''].includes(search)) {
                 results = await getSearchResultsUsing(search)
             } else {
                 results = await getOptionsUsing()

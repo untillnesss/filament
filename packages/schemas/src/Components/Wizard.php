@@ -4,8 +4,8 @@ namespace Filament\Schemas\Components;
 
 use Closure;
 use Filament\Actions\Action;
-use Filament\Schemas\Components\Attributes\Exposed;
 use Filament\Schemas\Components\Wizard\Step;
+use Filament\Support\Components\Attributes\ExposedLivewireMethod;
 use Filament\Support\Concerns;
 use Filament\Support\Enums\IconPosition;
 use Filament\Support\Exceptions\Halt;
@@ -71,7 +71,7 @@ class Wizard extends Component
         ]);
     }
 
-    #[Exposed]
+    #[ExposedLivewireMethod]
     public function nextStep(int $currentStepIndex): void
     {
         if (! $this->isSkippable()) {
@@ -103,7 +103,7 @@ class Wizard extends Component
         $livewire->dispatch('next-wizard-step', key: $this->getKey());
     }
 
-    #[Exposed]
+    #[ExposedLivewireMethod]
     public function previousStep(int $currentStepIndex): void
     {
         if ($currentStepIndex < 1) {

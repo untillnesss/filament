@@ -3,8 +3,8 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use Filament\Schemas\Components\Attributes\Exposed;
 use Filament\Schemas\Components\StateCasts\FileUploadStateCast;
+use Filament\Support\Components\Attributes\ExposedLivewireMethod;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -568,7 +568,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return $rules;
     }
 
-    #[Exposed]
+    #[ExposedLivewireMethod]
     #[Renderless]
     public function deleteUploadedFile(string $fileKey): static
     {
@@ -591,7 +591,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return $this;
     }
 
-    #[Exposed]
+    #[ExposedLivewireMethod]
     #[Renderless]
     public function removeUploadedFile(string $fileKey): string | TemporaryUploadedFile | null
     {
@@ -645,7 +645,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
     /**
      * @param  array<array-key>  $fileKeys
      */
-    #[Exposed]
+    #[ExposedLivewireMethod]
     #[Renderless]
     public function reorderUploadedFiles(array $fileKeys): void
     {
@@ -665,7 +665,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
     /**
      * @return array<array{name: string, size: int, type: string, url: string} | null> | null
      */
-    #[Exposed]
+    #[ExposedLivewireMethod]
     #[Renderless]
     public function getUploadedFiles(): ?array
     {
