@@ -20,11 +20,6 @@ class ManageUserTeams extends ManageRelatedRecords
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static function getNavigationLabel(): string
-    {
-        return 'Teams';
-    }
-
     public function form(Schema $schema): Schema
     {
         return $schema
