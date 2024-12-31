@@ -42,7 +42,7 @@ ${p.outerHTML}${w}
 
 filepond/dist/filepond.esm.js:
   (*!
-   * FilePond 4.32.5
+   * FilePond 4.32.6
    * Licensed under MIT, https://opensource.org/licenses/MIT/
    * Please visit https://pqina.nl/filepond/ for details.
    *)
