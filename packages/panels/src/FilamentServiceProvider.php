@@ -2,11 +2,15 @@
 
 namespace Filament;
 
+use Filament\Auth\Http\Responses\BlockEmailChangeVerificationResponse;
+use Filament\Auth\Http\Responses\Contracts\BlockEmailChangeVerificationResponse as BlockEmailChangeVerificationResponseContract;
+use Filament\Auth\Http\Responses\Contracts\EmailChangeVerificationResponse as EmailChangeVerificationResponseContract;
 use Filament\Auth\Http\Responses\Contracts\EmailVerificationResponse as EmailVerificationResponseContract;
 use Filament\Auth\Http\Responses\Contracts\LoginResponse as LoginResponseContract;
 use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
 use Filament\Auth\Http\Responses\Contracts\PasswordResetResponse as PasswordResetResponseContract;
 use Filament\Auth\Http\Responses\Contracts\RegistrationResponse as RegistrationResponseContract;
+use Filament\Auth\Http\Responses\EmailChangeVerificationResponse;
 use Filament\Auth\Http\Responses\EmailVerificationResponse;
 use Filament\Auth\Http\Responses\LoginResponse;
 use Filament\Auth\Http\Responses\LogoutResponse;
@@ -67,6 +71,8 @@ class FilamentServiceProvider extends PackageServiceProvider
             return new NavigationManager;
         });
 
+        $this->app->bind(BlockEmailChangeVerificationResponseContract::class, BlockEmailChangeVerificationResponse::class);
+        $this->app->bind(EmailChangeVerificationResponseContract::class, EmailChangeVerificationResponse::class);
         $this->app->bind(EmailVerificationResponseContract::class, EmailVerificationResponse::class);
         $this->app->bind(LoginResponseContract::class, LoginResponse::class);
         $this->app->bind(LogoutResponseContract::class, LogoutResponse::class);

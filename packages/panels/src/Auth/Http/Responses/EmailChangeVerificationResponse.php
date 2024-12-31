@@ -2,7 +2,7 @@
 
 namespace Filament\Auth\Http\Responses;
 
-use Filament\Auth\Http\Responses\Contracts\EmailVerificationResponse as Responsable;
+use Filament\Auth\Http\Responses\Contracts\EmailChangeVerificationResponse as Responsable;
 use Filament\Facades\Filament;
 use Illuminate\Http\RedirectResponse;
 use Livewire\Features\SupportRedirects\Redirector;

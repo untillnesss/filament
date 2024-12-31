@@ -3,7 +3,7 @@
 namespace Filament\Auth\Http\Controllers;
 
 use Filament\Auth\Http\Requests\BlockEmailChangeVerificationRequest;
-use Filament\Auth\Http\Responses\BlockEmailChangeVerificationResponse;
+use Filament\Auth\Http\Responses\Contracts\BlockEmailChangeVerificationResponse;
 use Filament\Notifications\Notification;
 
 class BlockEmailChangeVerificationController
