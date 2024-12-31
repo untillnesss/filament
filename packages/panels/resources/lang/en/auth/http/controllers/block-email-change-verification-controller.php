@@ -11,7 +11,7 @@ return [
 
         'failed' => [
             'title' => 'Failed to block email address change',
-            'body' => 'YUnfortunately, you were unable to prevent the email address from being changed to :email, since it was already verified before you blocked it. If you did not make the original request, please contact us immediately.',
+            'body' => 'Unfortunately, you were unable to prevent the email address from being changed to :email, since it was already verified before you blocked it. If you did not make the original request, please contact us immediately.',
         ],
 
     ],
