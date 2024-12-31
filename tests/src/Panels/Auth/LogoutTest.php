@@ -1,7 +1,7 @@
 <?php
 
+use Filament\Auth\Http\Responses\Contracts\LogoutResponse;
 use Filament\Facades\Filament;
-use Filament\Http\Responses\Auth\Contracts\LogoutResponse;
 use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
