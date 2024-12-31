@@ -49,9 +49,7 @@ return [
     'notifications' => [
 
         'regenerated' => [
-
             'title' => 'New two-factor app authentication recovery codes have been generated',
-
         ],
 
     ],

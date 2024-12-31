@@ -36,7 +36,7 @@ class VerifyEmailCodeAuthentication extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->subject(__('filament-panels::auth/multi-factor/email-code/notifications/verify-email-code-authentication.subject'))
-            ->line(__('filament-panels::auth/multi-factor/email-code/notifications/verify-email-code-authentication.lines.0', ['code' => $this->code]))
-            ->line(trans_choice('filament-panels::auth/multi-factor/email-code/notifications/verify-email-code-authentication.lines.1', $expiryMinutes, ['minutes' => $expiryMinutes]));
+            ->line(trans_choice('filament-panels::auth/multi-factor/email-code/notifications/verify-email-code-authentication.lines.0', $expiryMinutes, ['code' => $this->code, 'minutes' => $expiryMinutes]))
+            ->line(trans_choice('filament-panels::auth/multi-factor/email-code/notifications/verify-email-code-authentication.lines.1', $expiryMinutes, ['code' => $this->code, 'minutes' => $expiryMinutes]));
     }
 }

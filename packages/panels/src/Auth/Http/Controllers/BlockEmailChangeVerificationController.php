@@ -14,15 +14,19 @@ class BlockEmailChangeVerificationController
 
         if ($isSuccessful) {
             Notification::make()
-                ->title('Email address change blocked')
-                ->body('You have successfully blocked an email address change attempt to ' . decrypt($request->route('email')) . '. If you did not make the original request, please contact us immediately.')
+                ->title(__('filament-panels::auth/http/controllers/block-email-change-verification-controller.notifications.blocked.title'))
+                ->body(__('filament-panels::auth/http/controllers/block-email-change-verification-controller.notifications.blocked.body', [
+                    'email' => decrypt($request->route('email')),
+                ]))
                 ->success()
                 ->persistent()
                 ->send();
         } else {
             Notification::make()
-                ->title('Failed to block email address change')
-                ->body('Unfortunately, you were unable to prevent the email address from being changed to ' . decrypt($request->route('email')) . ', since it was already verified before you blocked it. If you did not make the original request, please contact us immediately to regain access to your account.')
+                ->title(__('filament-panels::auth/http/controllers/block-email-change-verification-controller.notifications.failed.title'))
+                ->body(__('filament-panels::auth/http/controllers/block-email-change-verification-controller.notifications.failed.body', [
+                    'email' => decrypt($request->route('email')),
+                ]))
                 ->danger()
                 ->persistent()
                 ->send();

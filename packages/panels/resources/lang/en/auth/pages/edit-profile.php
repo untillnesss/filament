@@ -42,6 +42,11 @@ return [
 
     'notifications' => [
 
+        'email_change_verification_sent' => [
+            'title' => 'Email address change request sent',
+            'body' => 'A request to change your email address has been sent to :email. Please check your email to verify the change.',
+        ],
+
         'saved' => [
             'title' => 'Saved',
         ],

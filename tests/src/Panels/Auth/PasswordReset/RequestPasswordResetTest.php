@@ -6,6 +6,7 @@ use Filament\Facades\Filament;
 use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Facades\Notification;
+
 use function Filament\Tests\livewire;
 
 uses(TestCase::class);

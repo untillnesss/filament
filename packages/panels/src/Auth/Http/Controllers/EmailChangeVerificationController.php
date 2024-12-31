@@ -13,8 +13,10 @@ class EmailChangeVerificationController
         $request->fulfill();
 
         Notification::make()
-            ->title('Email address changed')
-            ->body('Your email address has been successfully changed to ' . decrypt($request->route('email')) . '.')
+            ->title(__('filament-panels::auth/http/controllers/email-change-verification-controller.notifications.verified.title'))
+            ->body(__('filament-panels::auth/http/controllers/email-change-verification-controller.notifications.verified.body', [
+                'email' => decrypt($request->route('email')),
+            ]))
             ->success()
             ->send();
 

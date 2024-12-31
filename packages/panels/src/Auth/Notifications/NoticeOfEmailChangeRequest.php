@@ -27,9 +27,11 @@ class NoticeOfEmailChangeRequest extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Notice of Email Change Request')
-            ->line('We received a request to change the email address associated with your account. Your password was used to confirm this change.')
-            ->line('Once verified, the new email address on your account will be: ' . $this->newEmail)
-            ->line('If you did not make this request, please contact us immediately.');
+            ->subject(__('filament-panels::auth/notifications/notice-of-email-change-request.subject'))
+            ->line(__('filament-panels::auth/notifications/notice-of-email-change-request.lines.0', ['email' => $this->newEmail]))
+            ->line(__('filament-panels::auth/notifications/notice-of-email-change-request.lines.1', ['email' => $this->newEmail]))
+            ->line(__('filament-panels::auth/notifications/notice-of-email-change-request.lines.2', ['email' => $this->newEmail]))
+            ->line(__('filament-panels::auth/notifications/notice-of-email-change-request.lines.3', ['email' => $this->newEmail]))
+            ->action(__('filament-panels::auth/notifications/notice-of-email-change-request.action'), $this->blockVerificationUrl);
     }
 }

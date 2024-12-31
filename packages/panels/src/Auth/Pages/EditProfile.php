@@ -34,6 +34,7 @@ use Illuminate\Support\Js;
 use Illuminate\Validation\Rules\Password;
 use League\Uri\Components\Query;
 use Throwable;
+
 use function Filament\Support\is_app_url;
 
 /**
@@ -228,7 +229,7 @@ class EditProfile extends Page
 
         cache()->put($verificationSignature, true, ttl: now()->addHour());
 
-        $record->notify(app(NoticeOfEmailChangeRequest::class, [
+        $record->notify(app(NoticeOfEmailChangeRequest::class, [/** @phpstan-ignore-line */
             'blockVerificationUrl' => Filament::getBlockEmailChangeVerificationUrl($record, $newEmail, $verificationSignature),
             'newEmail' => $newEmail,
         ]));
@@ -236,9 +237,9 @@ class EditProfile extends Page
         Notification::route('mail', $newEmail)
             ->notify($notification);
 
-        $this->getEmailChangeRequestSentNotification($newEmail)?->send();
+        $this->getEmailChangeVerificationSentNotification($newEmail)?->send();
 
-        $this->data['email'] = $record->email;
+        $this->data['email'] = $record->getAttributeValue('email');
     }
 
     protected function getSavedNotification(): ?FilamentNotification
@@ -254,12 +255,12 @@ class EditProfile extends Page
             ->title($this->getSavedNotificationTitle());
     }
 
-    protected function getEmailChangeRequestSentNotification(string $newEmail): ?FilamentNotification
+    protected function getEmailChangeVerificationSentNotification(string $newEmail): ?FilamentNotification
     {
         return FilamentNotification::make()
             ->success()
-            ->title('Email address change request')
-            ->body('A request to change your email address has been sent to ' . $newEmail . '. Please check your email to confirm the change.');
+            ->title(__('filament-panels::auth/pages/edit-profile.notifications.email_change_verification_sent.title', ['email' => $newEmail]))
+            ->body(__('filament-panels::auth/pages/edit-profile.notifications.email_change_verification_sent.body', ['email' => $newEmail]));
     }
 
     protected function getSavedNotificationTitle(): ?string
@@ -329,7 +330,7 @@ class EditProfile extends Page
             ->currentPassword(guard: Filament::getAuthGuard())
             ->revealable(filament()->arePasswordsRevealable())
             ->required()
-            ->visible(fn (Get $get): bool => filled($get('password')) || ($get('email') !== $this->getUser()->email))
+            ->visible(fn (Get $get): bool => filled($get('password')) || ($get('email') !== $this->getUser()->getAttributeValue('email')))
             ->dehydrated(false);
     }
 
