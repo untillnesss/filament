@@ -1,11 +1,10 @@
 <?php
 
+use Filament\Auth\Pages\Login;
 use Filament\Facades\Filament;
-use Filament\Pages\Auth\Login;
 use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Str;
-
 use function Filament\Tests\livewire;
 
 uses(TestCase::class);

@@ -15,6 +15,7 @@
         "illuminate/support": "^10.45|^11.0",
         "illuminate/view": "^10.45|^11.0",
         "kirschbaum-development/eloquent-power-joins": "^3.0|^4.0",
+        "league/uri-components": "^7.0",
         "livewire/livewire": "^3.5",
         "nette/php-generator": "^4.0",
         "ryangjchandler/blade-capture-directive": "^0.2|^0.3|^1.0",

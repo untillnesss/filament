@@ -2,11 +2,11 @@
 
 namespace Filament\Tests\Fixtures\Models;
 
+use Filament\Auth\MultiFactor\EmailCode\Contracts\HasEmailCodeAuthentication;
+use Filament\Auth\MultiFactor\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
+use Filament\Auth\MultiFactor\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthenticationRecovery;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
-use Filament\MultiFactorAuthentication\EmailCode\Contracts\HasEmailCodeAuthentication;
-use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
-use Filament\MultiFactorAuthentication\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthenticationRecovery;
 use Filament\Panel;
 use Filament\Tests\Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;

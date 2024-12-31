@@ -1,8 +1,10 @@
 <?php
 
+use Filament\Auth\Http\Controllers\BlockEmailChangeVerificationController;
+use Filament\Auth\Http\Controllers\EmailChangeVerificationController;
+use Filament\Auth\Http\Controllers\EmailVerificationController;
+use Filament\Auth\Http\Controllers\LogoutController;
 use Filament\Facades\Filament;
-use Filament\Http\Controllers\Auth\EmailVerificationController;
-use Filament\Http\Controllers\Auth\LogoutController;
 use Filament\Http\Controllers\RedirectToHomeController;
 use Filament\Http\Controllers\RedirectToTenantController;
 use Filament\Panel;
@@ -77,6 +79,20 @@ Route::name('filament.')
                                             Route::get($panel->getEmailVerificationRouteSlug('/{id}/{hash}'), EmailVerificationController::class)
                                                 ->middleware(['signed', 'throttle:6,1'])
                                                 ->name('verify');
+                                        });
+                                }
+
+                                if ($panel->hasEmailChangeVerification()) {
+                                    Route::name('auth.email-change-verification.')
+                                        ->prefix($panel->getEmailChangeVerificationRoutePrefix())
+                                        ->group(function () use ($panel) {
+                                            Route::get($panel->getEmailChangeVerificationRouteSlug('/{id}/{email}'), EmailChangeVerificationController::class)
+                                                ->middleware(['signed', 'throttle:6,1'])
+                                                ->name('verify');
+
+                                            Route::get($panel->getEmailChangeVerificationRouteSlug('/{id}/{email}/block'), BlockEmailChangeVerificationController::class)
+                                                ->middleware(['signed', 'throttle:6,1'])
+                                                ->name('block-verification');
                                         });
                                 }
 

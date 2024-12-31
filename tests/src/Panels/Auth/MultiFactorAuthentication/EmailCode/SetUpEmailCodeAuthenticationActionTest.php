@@ -1,15 +1,14 @@
 <?php
 
 use Filament\Actions\Testing\Fixtures\TestAction;
+use Filament\Auth\MultiFactor\EmailCode\Notifications\VerifyEmailCodeAuthentication;
+use Filament\Auth\Pages\EditProfile;
 use Filament\Facades\Filament;
-use Filament\MultiFactorAuthentication\EmailCode\Notifications\VerifyEmailCodeAuthentication;
-use Filament\Pages\Auth\EditProfile;
 use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
-
 use function Filament\Tests\livewire;
 use function Pest\Laravel\actingAs;
 
@@ -28,9 +27,9 @@ it('can generate a secret when the action is mounted', function () {
 
     $livewire = livewire(EditProfile::class)
         ->mountAction(TestAction::make('setUpEmailCodeAuthentication')
-            ->schemaComponent('form.email_code.setUpEmailCodeAuthenticationAction'))
+            ->schemaComponent('content.email_code.setUpEmailCodeAuthenticationAction'))
         ->assertActionMounted(TestAction::make('setUpEmailCodeAuthentication')
-            ->schemaComponent('form.email_code.setUpEmailCodeAuthenticationAction')
+            ->schemaComponent('content.email_code.setUpEmailCodeAuthenticationAction')
             ->arguments(function (array $actualArguments): bool {
                 $encrypted = decrypt($actualArguments['encrypted']);
 
@@ -70,7 +69,7 @@ it('can save the secret to the user when the action is submitted', function () {
 
     $livewire = livewire(EditProfile::class)
         ->mountAction(TestAction::make('setUpEmailCodeAuthentication')
-            ->schemaComponent('form.email_code.setUpEmailCodeAuthenticationAction'));
+            ->schemaComponent('content.email_code.setUpEmailCodeAuthenticationAction'));
 
     $encryptedActionArguments = decrypt($livewire->instance()->mountedActions[0]['arguments']['encrypted']);
     $secret = $encryptedActionArguments['secret'];
@@ -90,7 +89,7 @@ it('can save the secret to the user when the action is submitted', function () {
 it('can resend the code to the user', function () {
     $livewire = livewire(EditProfile::class)
         ->mountAction(TestAction::make('setUpEmailCodeAuthentication')
-            ->schemaComponent('form.email_code.setUpEmailCodeAuthenticationAction'));
+            ->schemaComponent('content.email_code.setUpEmailCodeAuthenticationAction'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
 
@@ -114,7 +113,7 @@ it('will not set up authentication when an invalid code is used', function () {
 
     $livewire = livewire(EditProfile::class)
         ->mountAction(TestAction::make('setUpEmailCodeAuthentication')
-            ->schemaComponent('form.email_code.setUpEmailCodeAuthenticationAction'));
+            ->schemaComponent('content.email_code.setUpEmailCodeAuthenticationAction'));
 
     $encryptedActionArguments = decrypt($livewire->instance()->mountedActions[0]['arguments']['encrypted']);
     $secret = $encryptedActionArguments['secret'];
@@ -144,7 +143,7 @@ test('codes are required', function () {
 
     livewire(EditProfile::class)
         ->mountAction(TestAction::make('setUpEmailCodeAuthentication')
-            ->schemaComponent('form.email_code.setUpEmailCodeAuthenticationAction'))
+            ->schemaComponent('content.email_code.setUpEmailCodeAuthenticationAction'))
         ->setActionData(['code' => ''])
         ->callMountedAction()
         ->assertHasActionErrors([
@@ -171,7 +170,7 @@ test('codes must be 6 digits', function () {
 
     $livewire = livewire(EditProfile::class)
         ->mountAction(TestAction::make('setUpEmailCodeAuthentication')
-            ->schemaComponent('form.email_code.setUpEmailCodeAuthenticationAction'));
+            ->schemaComponent('content.email_code.setUpEmailCodeAuthenticationAction'));
 
     $encryptedActionArguments = decrypt($livewire->instance()->mountedActions[0]['arguments']['encrypted']);
     $secret = $encryptedActionArguments['secret'];

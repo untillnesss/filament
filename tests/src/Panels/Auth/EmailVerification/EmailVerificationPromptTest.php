@@ -1,12 +1,11 @@
 <?php
 
+use Filament\Auth\Notifications\VerifyEmail;
+use Filament\Auth\Pages\EmailVerification\EmailVerificationPrompt;
 use Filament\Facades\Filament;
-use Filament\Notifications\Auth\VerifyEmail;
-use Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
 use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Facades\Notification;
-
 use function Filament\Tests\livewire;
 
 uses(TestCase::class);

@@ -1,14 +1,13 @@
 <?php
 
 use Filament\Actions\Testing\Fixtures\TestAction;
+use Filament\Auth\Pages\Login;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
-use Filament\Pages\Auth\Login;
 use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-
 use function Filament\Tests\livewire;
 
 uses(TestCase::class);

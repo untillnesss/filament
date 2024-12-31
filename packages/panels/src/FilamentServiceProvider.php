@@ -2,22 +2,22 @@
 
 namespace Filament;
 
+use Filament\Auth\Http\Responses\Contracts\EmailVerificationResponse as EmailVerificationResponseContract;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse as LoginResponseContract;
+use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
+use Filament\Auth\Http\Responses\Contracts\PasswordResetResponse as PasswordResetResponseContract;
+use Filament\Auth\Http\Responses\Contracts\RegistrationResponse as RegistrationResponseContract;
+use Filament\Auth\Http\Responses\EmailVerificationResponse;
+use Filament\Auth\Http\Responses\LoginResponse;
+use Filament\Auth\Http\Responses\LogoutResponse;
+use Filament\Auth\Http\Responses\PasswordResetResponse;
+use Filament\Auth\Http\Responses\RegistrationResponse;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Http\Middleware\IdentifyTenant;
 use Filament\Http\Middleware\SetUpPanel;
-use Filament\Http\Responses\Auth\Contracts\EmailVerificationResponse as EmailVerificationResponseContract;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse as LoginResponseContract;
-use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContract;
-use Filament\Http\Responses\Auth\Contracts\PasswordResetResponse as PasswordResetResponseContract;
-use Filament\Http\Responses\Auth\Contracts\RegistrationResponse as RegistrationResponseContract;
-use Filament\Http\Responses\Auth\EmailVerificationResponse;
-use Filament\Http\Responses\Auth\LoginResponse;
-use Filament\Http\Responses\Auth\LogoutResponse;
-use Filament\Http\Responses\Auth\PasswordResetResponse;
-use Filament\Http\Responses\Auth\RegistrationResponse;
 use Filament\Navigation\NavigationManager;
 use Filament\Support\Assets\Font;
 use Filament\Support\Assets\Js;

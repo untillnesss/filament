@@ -1,13 +1,12 @@
 <?php
 
 use Filament\Actions\Testing\Fixtures\TestAction;
+use Filament\Auth\Pages\EditProfile;
 use Filament\Facades\Filament;
-use Filament\Pages\Auth\EditProfile;
 use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-
 use function Filament\Tests\livewire;
 use function Pest\Laravel\actingAs;
 
@@ -43,7 +42,7 @@ it('can remove authentication when valid challenge code is used', function () {
     livewire(EditProfile::class)
         ->callAction(
             TestAction::make('removeGoogleTwoFactorAuthentication')
-                ->schemaComponent('form.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
+                ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
             ['code' => $googleTwoFactorAuthentication->getCurrentCode($user)],
         )
         ->assertHasNoActionErrors();
@@ -74,7 +73,7 @@ it('can remove authentication when a valid recovery code is used', function () {
 
     livewire(EditProfile::class)
         ->mountAction(TestAction::make('removeGoogleTwoFactorAuthentication')
-            ->schemaComponent('form.google_two_factor.removeGoogleTwoFactorAuthenticationAction'))
+            ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'))
         ->callAction(TestAction::make('useRecoveryCode')
             ->schemaComponent('mountedActionSchema0.code'))
         ->setActionData([
@@ -112,7 +111,7 @@ it('will not remove authentication when an invalid code is used', function () {
     livewire(EditProfile::class)
         ->callAction(
             TestAction::make('removeGoogleTwoFactorAuthentication')
-                ->schemaComponent('form.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
+                ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
             ['code' => ($googleTwoFactorAuthentication->getCurrentCode($user) === '000000') ? '111111' : '000000'],
         )
         ->assertHasActionErrors();
@@ -144,7 +143,7 @@ test('codes are required without a recovery code', function () {
     livewire(EditProfile::class)
         ->callAction(
             TestAction::make('removeGoogleTwoFactorAuthentication')
-                ->schemaComponent('form.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
+                ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
             ['code' => ''],
         )
         ->assertHasActionErrors([
@@ -180,7 +179,7 @@ test('codes must be 6 digits', function () {
     livewire(EditProfile::class)
         ->callAction(
             TestAction::make('removeGoogleTwoFactorAuthentication')
-                ->schemaComponent('form.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
+                ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
             ['code' => Str::limit($googleTwoFactorAuthentication->getCurrentCode($user), limit: 5, end: '')],
         )
         ->assertHasActionErrors([
@@ -213,7 +212,7 @@ it('will not remove authentication when an invalid recovery code is used', funct
 
     livewire(EditProfile::class)
         ->mountAction(TestAction::make('removeGoogleTwoFactorAuthentication')
-            ->schemaComponent('form.google_two_factor.removeGoogleTwoFactorAuthenticationAction'))
+            ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'))
         ->callAction(TestAction::make('useRecoveryCode')
             ->schemaComponent('mountedActionSchema0.code'))
         ->setActionData([
@@ -252,7 +251,7 @@ it('will not remove authentication with a recovery code if recovery is disabled'
     livewire(EditProfile::class)
         ->callAction(
             TestAction::make('removeGoogleTwoFactorAuthentication')
-                ->schemaComponent('form.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
+                ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
             ['recoveryCode' => Arr::first($this->recoveryCodes)],
         )
         ->assertHasActionErrors();

@@ -3,13 +3,13 @@
 namespace Filament\Panel\Concerns;
 
 use Closure;
-use Filament\MultiFactorAuthentication\Contracts\MultiFactorAuthenticationProvider;
-use Filament\Pages\Auth\EditProfile;
-use Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
-use Filament\Pages\Auth\Login;
-use Filament\Pages\Auth\PasswordReset\RequestPasswordReset;
-use Filament\Pages\Auth\PasswordReset\ResetPassword;
-use Filament\Pages\Auth\Register;
+use Filament\Auth\MultiFactor\Contracts\MultiFactorAuthenticationProvider;
+use Filament\Auth\Pages\EditProfile;
+use Filament\Auth\Pages\EmailVerification\EmailVerificationPrompt;
+use Filament\Auth\Pages\Login;
+use Filament\Auth\Pages\PasswordReset\RequestPasswordReset;
+use Filament\Auth\Pages\PasswordReset\ResetPassword;
+use Filament\Auth\Pages\Register;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\Guard;
@@ -28,11 +28,17 @@ trait HasAuth
      */
     protected string | Closure | array | null $emailVerificationRouteAction = null;
 
+    protected bool | Closure $hasEmailChangeVerification = false;
+
     protected string $emailVerificationPromptRouteSlug = 'prompt';
 
     protected string $emailVerificationRouteSlug = 'verify';
 
+    protected string $emailChangeVerificationRouteSlug = 'verify';
+
     protected string $emailVerificationRoutePrefix = 'email-verification';
+
+    protected string $emailChangeVerificationRoutePrefix = 'email-change-verification';
 
     protected bool $isEmailVerificationRequired = false;
 
@@ -94,6 +100,13 @@ trait HasAuth
         return $this;
     }
 
+    public function emailChangeVerification(bool | Closure $condition = true): static
+    {
+        $this->hasEmailChangeVerification = $condition;
+
+        return $this;
+    }
+
     public function emailVerificationPromptRouteSlug(string $slug): static
     {
         $this->emailVerificationPromptRouteSlug = $slug;
@@ -108,9 +121,23 @@ trait HasAuth
         return $this;
     }
 
+    public function emailChangeVerificationRouteSlug(string $slug): static
+    {
+        $this->emailChangeVerificationRouteSlug = $slug;
+
+        return $this;
+    }
+
     public function emailVerificationRoutePrefix(string $prefix): static
     {
         $this->emailVerificationRoutePrefix = $prefix;
+
+        return $this;
+    }
+
+    public function emailChangeVerificationRoutePrefix(string $prefix): static
+    {
+        $this->emailChangeVerificationRoutePrefix = $prefix;
 
         return $this;
     }
@@ -327,6 +354,39 @@ trait HasAuth
     /**
      * @param  array<mixed>  $parameters
      */
+    public function getVerifyEmailChangeUrl(MustVerifyEmail | Model | Authenticatable $user, string $newEmail, array $parameters = []): string
+    {
+        return URL::temporarySignedRoute(
+            $this->generateRouteName('auth.email-change-verification.verify'),
+            now()->addMinutes(config('auth.verification.expire', 60)),
+            [
+                'id' => $user->getKey(),
+                'email' => encrypt($newEmail),
+                ...$parameters,
+            ],
+        );
+    }
+
+    /**
+     * @param  array<mixed>  $parameters
+     */
+    public function getBlockEmailChangeVerificationUrl(MustVerifyEmail | Model | Authenticatable $user, string $newEmail, string $verificationSignature, array $parameters = []): string
+    {
+        return URL::temporarySignedRoute(
+            $this->generateRouteName('auth.email-change-verification.block-verification'),
+            now()->addMinutes(config('auth.verification.expire', 60)),
+            [
+                'id' => $user->getKey(),
+                'email' => encrypt($newEmail),
+                'verificationSignature' => $verificationSignature,
+                ...$parameters,
+            ],
+        );
+    }
+
+    /**
+     * @param  array<mixed>  $parameters
+     */
     public function getResetPasswordUrl(string $token, CanResetPassword | Model | Authenticatable $user, array $parameters = []): string
     {
         return URL::signedRoute(
@@ -382,9 +442,19 @@ trait HasAuth
         return Str::start($this->emailVerificationRouteSlug, '/') . $suffix;
     }
 
+    public function getEmailChangeVerificationRouteSlug(string $suffix): string
+    {
+        return Str::start($this->emailChangeVerificationRouteSlug, '/') . $suffix;
+    }
+
     public function getEmailVerificationRoutePrefix(): string
     {
         return Str::start($this->emailVerificationRoutePrefix, '/');
+    }
+
+    public function getEmailChangeVerificationRoutePrefix(): string
+    {
+        return Str::start($this->emailChangeVerificationRoutePrefix, '/');
     }
 
     /**
@@ -442,6 +512,11 @@ trait HasAuth
     public function getResetPasswordRoutePrefix(): string
     {
         return Str::start($this->resetPasswordRoutePrefix, '/');
+    }
+
+    public function hasEmailChangeVerification(): bool
+    {
+        return (bool) $this->evaluate($this->hasEmailChangeVerification);
     }
 
     public function hasEmailVerification(): bool

@@ -28,7 +28,7 @@ return static function (RectorConfig $rectorConfig): void {
             'Filament\\Forms\\Components\\Concerns\\HasExtraAlpineAttributes' => 'Filament\\Support\\Concerns\\HasExtraAlpineAttributes',
             'Filament\\Forms\\Components\\Concerns\\HasExtraAttributes' => 'Filament\\Support\\Concerns\\HasExtraAttributes',
             'Filament\\Infolists\\Components\\Card' => 'Filament\\Schemas\\Components\\Section',
-            'Filament\\Http\\Livewire\\Auth\\Login' => 'Filament\\Pages\\Auth\\Login',
+            'Filament\\Http\\Livewire\\Auth\\Login' => 'Filament\\Auth\\Pages\\Login',
             'Filament\\Navigation\\UserMenuItem' => 'Filament\\Navigation\\MenuItem',
             'Filament\\Pages\\Actions\\Modal\\Actions\\Action' => 'Filament\\Actions\\Action',
             'Filament\\Pages\\Actions\\Modal\\Actions\\ButtonAction' => 'Filament\\Actions\\Action',
