@@ -64,7 +64,7 @@ class EmailVerificationPrompt extends SimplePage
     {
         return Action::make('resendNotification')
             ->link()
-            ->label(__('filament-panels::pages/auth/email-verification/email-verification-prompt.actions.resend_notification.label') . '.')
+            ->label(__('filament-panels::auth/pages/email-verification/email-verification-prompt.actions.resend_notification.label') . '.')
             ->action(function (): void {
                 try {
                     $this->rateLimit(2);
@@ -77,7 +77,7 @@ class EmailVerificationPrompt extends SimplePage
                 $this->sendEmailVerificationNotification($this->getVerifiable());
 
                 Notification::make()
-                    ->title(__('filament-panels::pages/auth/email-verification/email-verification-prompt.notifications.notification_resent.title'))
+                    ->title(__('filament-panels::auth/pages/email-verification/email-verification-prompt.notifications.notification_resent.title'))
                     ->success()
                     ->send();
             });
@@ -86,11 +86,11 @@ class EmailVerificationPrompt extends SimplePage
     protected function getRateLimitedNotification(TooManyRequestsException $exception): ?Notification
     {
         return Notification::make()
-            ->title(__('filament-panels::pages/auth/email-verification/email-verification-prompt.notifications.notification_resend_throttled.title', [
+            ->title(__('filament-panels::auth/pages/email-verification/email-verification-prompt.notifications.notification_resend_throttled.title', [
                 'seconds' => $exception->secondsUntilAvailable,
                 'minutes' => $exception->minutesUntilAvailable,
             ]))
-            ->body(array_key_exists('body', __('filament-panels::pages/auth/email-verification/email-verification-prompt.notifications.notification_resend_throttled') ?: []) ? __('filament-panels::pages/auth/email-verification/email-verification-prompt.notifications.notification_resend_throttled.body', [
+            ->body(array_key_exists('body', __('filament-panels::auth/pages/email-verification/email-verification-prompt.notifications.notification_resend_throttled') ?: []) ? __('filament-panels::auth/pages/email-verification/email-verification-prompt.notifications.notification_resend_throttled.body', [
                 'seconds' => $exception->secondsUntilAvailable,
                 'minutes' => $exception->minutesUntilAvailable,
             ]) : null)
@@ -99,11 +99,11 @@ class EmailVerificationPrompt extends SimplePage
 
     public function getTitle(): string | Htmlable
     {
-        return __('filament-panels::pages/auth/email-verification/email-verification-prompt.title');
+        return __('filament-panels::auth/pages/email-verification/email-verification-prompt.title');
     }
 
     public function getHeading(): string | Htmlable
     {
-        return __('filament-panels::pages/auth/email-verification/email-verification-prompt.heading');
+        return __('filament-panels::auth/pages/email-verification/email-verification-prompt.heading');
     }
 }

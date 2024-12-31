@@ -71,7 +71,7 @@ class EditProfile extends Page
 
     public static function getLabel(): string
     {
-        return __('filament-panels::pages/auth/edit-profile.label');
+        return __('filament-panels::auth/pages/edit-profile.label');
     }
 
     public static function getRelativeRouteName(): string
@@ -264,7 +264,7 @@ class EditProfile extends Page
 
     protected function getSavedNotificationTitle(): ?string
     {
-        return __('filament-panels::pages/auth/edit-profile.notifications.saved.title');
+        return __('filament-panels::auth/pages/edit-profile.notifications.saved.title');
     }
 
     protected function getRedirectUrl(): ?string
@@ -275,7 +275,7 @@ class EditProfile extends Page
     protected function getNameFormComponent(): Component
     {
         return TextInput::make('name')
-            ->label(__('filament-panels::pages/auth/edit-profile.form.name.label'))
+            ->label(__('filament-panels::auth/pages/edit-profile.form.name.label'))
             ->required()
             ->maxLength(255)
             ->autofocus();
@@ -284,7 +284,7 @@ class EditProfile extends Page
     protected function getEmailFormComponent(): Component
     {
         return TextInput::make('email')
-            ->label(__('filament-panels::pages/auth/edit-profile.form.email.label'))
+            ->label(__('filament-panels::auth/pages/edit-profile.form.email.label'))
             ->email()
             ->required()
             ->maxLength(255)
@@ -295,8 +295,8 @@ class EditProfile extends Page
     protected function getPasswordFormComponent(): Component
     {
         return TextInput::make('password')
-            ->label(__('filament-panels::pages/auth/edit-profile.form.password.label'))
-            ->validationAttribute(__('filament-panels::pages/auth/edit-profile.form.password.validation_attribute'))
+            ->label(__('filament-panels::auth/pages/edit-profile.form.password.label'))
+            ->validationAttribute(__('filament-panels::auth/pages/edit-profile.form.password.validation_attribute'))
             ->password()
             ->revealable(filament()->arePasswordsRevealable())
             ->rule(Password::default())
@@ -310,8 +310,8 @@ class EditProfile extends Page
     protected function getPasswordConfirmationFormComponent(): Component
     {
         return TextInput::make('passwordConfirmation')
-            ->label(__('filament-panels::pages/auth/edit-profile.form.password_confirmation.label'))
-            ->validationAttribute(__('filament-panels::pages/auth/edit-profile.form.password_confirmation.validation_attribute'))
+            ->label(__('filament-panels::auth/pages/edit-profile.form.password_confirmation.label'))
+            ->validationAttribute(__('filament-panels::auth/pages/edit-profile.form.password_confirmation.validation_attribute'))
             ->password()
             ->revealable(filament()->arePasswordsRevealable())
             ->required()
@@ -322,9 +322,9 @@ class EditProfile extends Page
     protected function getCurrentPasswordFormComponent(): Component
     {
         return TextInput::make('currentPassword')
-            ->label(__('filament-panels::pages/auth/edit-profile.form.current_password.label'))
-            ->validationAttribute(__('filament-panels::pages/auth/edit-profile.form.current_password.validation_attribute'))
-            ->belowContent(__('filament-panels::pages/auth/edit-profile.form.current_password.below_content'))
+            ->label(__('filament-panels::auth/pages/edit-profile.form.current_password.label'))
+            ->validationAttribute(__('filament-panels::auth/pages/edit-profile.form.current_password.validation_attribute'))
+            ->belowContent(__('filament-panels::auth/pages/edit-profile.form.current_password.below_content'))
             ->password()
             ->currentPassword(guard: Filament::getAuthGuard())
             ->revealable(filament()->arePasswordsRevealable())
@@ -380,7 +380,7 @@ class EditProfile extends Page
     protected function getSaveFormAction(): Action
     {
         return Action::make('save')
-            ->label(__('filament-panels::pages/auth/edit-profile.form.actions.save.label'))
+            ->label(__('filament-panels::auth/pages/edit-profile.form.actions.save.label'))
             ->submit('save')
             ->keyBindings(['mod+s']);
     }
@@ -418,7 +418,7 @@ class EditProfile extends Page
         $url = filament()->getUrl();
 
         return Action::make('back')
-            ->label(__('filament-panels::pages/auth/edit-profile.actions.cancel.label'))
+            ->label(__('filament-panels::auth/pages/edit-profile.actions.cancel.label'))
             ->alpineClickHandler(
                 FilamentView::hasSpaMode($url)
                     ? 'document.referrer ? window.history.back() : Livewire.navigate(' . Js::from($url) . ')'

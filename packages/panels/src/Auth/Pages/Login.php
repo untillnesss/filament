@@ -127,11 +127,11 @@ class Login extends SimplePage
     protected function getRateLimitedNotification(TooManyRequestsException $exception): ?Notification
     {
         return Notification::make()
-            ->title(__('filament-panels::pages/auth/login.notifications.throttled.title', [
+            ->title(__('filament-panels::auth/pages/login.notifications.throttled.title', [
                 'seconds' => $exception->secondsUntilAvailable,
                 'minutes' => $exception->minutesUntilAvailable,
             ]))
-            ->body(array_key_exists('body', __('filament-panels::pages/auth/login.notifications.throttled') ?: []) ? __('filament-panels::pages/auth/login.notifications.throttled.body', [
+            ->body(array_key_exists('body', __('filament-panels::auth/pages/login.notifications.throttled') ?: []) ? __('filament-panels::auth/pages/login.notifications.throttled.body', [
                 'seconds' => $exception->secondsUntilAvailable,
                 'minutes' => $exception->minutesUntilAvailable,
             ]) : null)
@@ -141,7 +141,7 @@ class Login extends SimplePage
     protected function throwFailureValidationException(): never
     {
         throw ValidationException::withMessages([
-            'data.email' => __('filament-panels::pages/auth/login.messages.failed'),
+            'data.email' => __('filament-panels::auth/pages/login.messages.failed'),
         ]);
     }
 
@@ -194,7 +194,7 @@ class Login extends SimplePage
     protected function getEmailFormComponent(): Component
     {
         return TextInput::make('email')
-            ->label(__('filament-panels::pages/auth/login.form.email.label'))
+            ->label(__('filament-panels::auth/pages/login.form.email.label'))
             ->email()
             ->required()
             ->autocomplete()
@@ -205,8 +205,8 @@ class Login extends SimplePage
     protected function getPasswordFormComponent(): Component
     {
         return TextInput::make('password')
-            ->label(__('filament-panels::pages/auth/login.form.password.label'))
-            ->hint(filament()->hasPasswordReset() ? new HtmlString(Blade::render('<x-filament::link :href="filament()->getRequestPasswordResetUrl()" tabindex="3"> {{ __(\'filament-panels::pages/auth/login.actions.request_password_reset.label\') }}</x-filament::link>')) : null)
+            ->label(__('filament-panels::auth/pages/login.form.password.label'))
+            ->hint(filament()->hasPasswordReset() ? new HtmlString(Blade::render('<x-filament::link :href="filament()->getRequestPasswordResetUrl()" tabindex="3"> {{ __(\'filament-panels::auth/pages/login.actions.request_password_reset.label\') }}</x-filament::link>')) : null)
             ->password()
             ->revealable(filament()->arePasswordsRevealable())
             ->autocomplete('current-password')
@@ -217,29 +217,29 @@ class Login extends SimplePage
     protected function getRememberFormComponent(): Component
     {
         return Checkbox::make('remember')
-            ->label(__('filament-panels::pages/auth/login.form.remember.label'));
+            ->label(__('filament-panels::auth/pages/login.form.remember.label'));
     }
 
     public function registerAction(): Action
     {
         return Action::make('register')
             ->link()
-            ->label(__('filament-panels::pages/auth/login.actions.register.label'))
+            ->label(__('filament-panels::auth/pages/login.actions.register.label'))
             ->url(filament()->getRegistrationUrl());
     }
 
     public function getTitle(): string | Htmlable
     {
-        return __('filament-panels::pages/auth/login.title');
+        return __('filament-panels::auth/pages/login.title');
     }
 
     public function getHeading(): string | Htmlable
     {
         if (filled($this->userUndertakingMultiFactorAuthentication)) {
-            return __('filament-panels::pages/auth/login.multi_factor_heading');
+            return __('filament-panels::auth/pages/login.multi_factor_heading');
         }
 
-        return __('filament-panels::pages/auth/login.heading');
+        return __('filament-panels::auth/pages/login.heading');
     }
 
     /**
@@ -255,7 +255,7 @@ class Login extends SimplePage
     protected function getAuthenticateFormAction(): Action
     {
         return Action::make('authenticate')
-            ->label(__('filament-panels::pages/auth/login.form.actions.authenticate.label'))
+            ->label(__('filament-panels::auth/pages/login.form.actions.authenticate.label'))
             ->submit('authenticate');
     }
 
@@ -272,7 +272,7 @@ class Login extends SimplePage
     protected function getMultiFactorAuthenticateFormAction(): Action
     {
         return Action::make('authenticate')
-            ->label(__('filament-panels::pages/auth/login.multi_factor_form.actions.authenticate.label'))
+            ->label(__('filament-panels::auth/pages/login.multi_factor_form.actions.authenticate.label'))
             ->submit('authenticate');
     }
 
@@ -308,7 +308,7 @@ class Login extends SimplePage
             return null;
         }
 
-        return new HtmlString(__('filament-panels::pages/auth/login.actions.register.before') . ' ' . $this->registerAction->toHtml());
+        return new HtmlString(__('filament-panels::auth/pages/login.actions.register.before') . ' ' . $this->registerAction->toHtml());
     }
 
     public function content(Schema $schema): Schema

@@ -94,11 +94,11 @@ class RequestPasswordReset extends SimplePage
     protected function getRateLimitedNotification(TooManyRequestsException $exception): ?Notification
     {
         return Notification::make()
-            ->title(__('filament-panels::pages/auth/password-reset/request-password-reset.notifications.throttled.title', [
+            ->title(__('filament-panels::auth/pages/password-reset/request-password-reset.notifications.throttled.title', [
                 'seconds' => $exception->secondsUntilAvailable,
                 'minutes' => $exception->minutesUntilAvailable,
             ]))
-            ->body(array_key_exists('body', __('filament-panels::pages/auth/password-reset/request-password-reset.notifications.throttled') ?: []) ? __('filament-panels::pages/auth/password-reset/request-password-reset.notifications.throttled.body', [
+            ->body(array_key_exists('body', __('filament-panels::auth/pages/password-reset/request-password-reset.notifications.throttled') ?: []) ? __('filament-panels::auth/pages/password-reset/request-password-reset.notifications.throttled.body', [
                 'seconds' => $exception->secondsUntilAvailable,
                 'minutes' => $exception->minutesUntilAvailable,
             ]) : null)
@@ -129,7 +129,7 @@ class RequestPasswordReset extends SimplePage
     protected function getEmailFormComponent(): Component
     {
         return TextInput::make('email')
-            ->label(__('filament-panels::pages/auth/password-reset/request-password-reset.form.email.label'))
+            ->label(__('filament-panels::auth/pages/password-reset/request-password-reset.form.email.label'))
             ->email()
             ->required()
             ->autocomplete()
@@ -140,7 +140,7 @@ class RequestPasswordReset extends SimplePage
     {
         return Action::make('login')
             ->link()
-            ->label(__('filament-panels::pages/auth/password-reset/request-password-reset.actions.login.label'))
+            ->label(__('filament-panels::auth/pages/password-reset/request-password-reset.actions.login.label'))
             ->icon(match (__('filament-panels::layout.direction')) {
                 'rtl' => FilamentIcon::resolve('panels::pages.password-reset.request-password-reset.actions.login.rtl') ?? 'heroicon-m-arrow-right',
                 default => FilamentIcon::resolve('panels::pages.password-reset.request-password-reset.actions.login') ?? 'heroicon-m-arrow-left',
@@ -150,12 +150,12 @@ class RequestPasswordReset extends SimplePage
 
     public function getTitle(): string | Htmlable
     {
-        return __('filament-panels::pages/auth/password-reset/request-password-reset.title');
+        return __('filament-panels::auth/pages/password-reset/request-password-reset.title');
     }
 
     public function getHeading(): string | Htmlable
     {
-        return __('filament-panels::pages/auth/password-reset/request-password-reset.heading');
+        return __('filament-panels::auth/pages/password-reset/request-password-reset.heading');
     }
 
     /**
@@ -171,7 +171,7 @@ class RequestPasswordReset extends SimplePage
     protected function getRequestFormAction(): Action
     {
         return Action::make('request')
-            ->label(__('filament-panels::pages/auth/password-reset/request-password-reset.form.actions.request.label'))
+            ->label(__('filament-panels::auth/pages/password-reset/request-password-reset.form.actions.request.label'))
             ->submit('request');
     }
 
