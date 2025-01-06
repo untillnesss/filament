@@ -4,7 +4,7 @@
 @endphp
 
 @if (filled($label = $getLabel()))
-    <div class="flex items-center gap-x-3 mb-2">
+    <div class="mb-2 flex items-center gap-x-3">
         {{ $getDecorations($schemaComponent::BEFORE_LABEL_DECORATIONS) }}
 
         <div

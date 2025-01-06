@@ -16,7 +16,6 @@ use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Decorations\FormActionsDecorations;
-use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\NestedSchema;
