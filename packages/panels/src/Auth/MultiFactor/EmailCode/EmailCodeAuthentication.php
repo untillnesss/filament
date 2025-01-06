@@ -7,7 +7,7 @@ use Exception;
 use Filament\Actions\Action;
 use Filament\Auth\MultiFactor\Contracts\HasBeforeChallengeHook;
 use Filament\Auth\MultiFactor\Contracts\MultiFactorAuthenticationProvider;
-use Filament\Auth\MultiFactor\EmailCode\Actions\RemoveEmailCodeAuthenticationAction;
+use Filament\Auth\MultiFactor\EmailCode\Actions\DisableEmailCodeAuthenticationAction;
 use Filament\Auth\MultiFactor\EmailCode\Actions\SetUpEmailCodeAuthenticationAction;
 use Filament\Auth\MultiFactor\EmailCode\Contracts\HasEmailCodeAuthentication;
 use Filament\Auth\MultiFactor\EmailCode\Notifications\VerifyEmailCodeAuthentication;
@@ -113,11 +113,12 @@ class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuth
         return [
             Actions::make($this->getActions())
                 ->label(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.label'))
+                ->belowContent(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.below_content'))
                 ->afterLabel(fn (): TextDecoration => $this->isEnabled($user)
-                    ? TextDecoration::make(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.messages.active'))
+                    ? TextDecoration::make(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.messages.enabled'))
                         ->badge()
                         ->color('success')
-                    : TextDecoration::make(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.messages.inactive'))
+                    : TextDecoration::make(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.messages.disabled'))
                         ->badge()),
         ];
     }
@@ -132,7 +133,7 @@ class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuth
         return [
             SetUpEmailCodeAuthenticationAction::make($this)
                 ->hidden(fn (): bool => $this->isEnabled($user)),
-            RemoveEmailCodeAuthenticationAction::make($this)
+            DisableEmailCodeAuthenticationAction::make($this)
                 ->visible(fn (): bool => $this->isEnabled($user)),
         ];
     }

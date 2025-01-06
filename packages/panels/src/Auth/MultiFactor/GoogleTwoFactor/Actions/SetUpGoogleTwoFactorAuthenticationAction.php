@@ -68,8 +68,7 @@ class SetUpGoogleTwoFactorAuthenticationAction
                     }),
             ])
             ->modalSubmitAction(fn (Action $action) => $action
-                ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.actions.submit.label'))
-                ->color('danger'))
+                ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.actions.submit.label')))
             ->action(function (array $arguments) use ($googleTwoFactorAuthentication) {
                 /** @var Authenticatable&HasGoogleTwoFactorAuthentication&HasGoogleTwoFactorAuthenticationRecovery $user */
                 $user = Filament::auth()->user();

@@ -57,6 +57,10 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
 
     const AFTER_LABEL_DECORATIONS = 'after_label';
 
+    const ABOVE_CONTENT_DECORATIONS = 'above_content';
+
+    const BELOW_CONTENT_DECORATIONS = 'below_content';
+
     /**
      * @param  string | array<Component> | Htmlable | Closure | null  $heading
      */
@@ -175,6 +179,26 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
             $decorations,
             makeDefaultLayoutUsing: fn (array $decorations): AlignDecorations => AlignDecorations::end($decorations),
         );
+
+        return $this;
+    }
+
+    /**
+     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     */
+    public function aboveContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    {
+        $this->decorations(static::ABOVE_CONTENT_DECORATIONS, $decorations);
+
+        return $this;
+    }
+
+    /**
+     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     */
+    public function belowContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    {
+        $this->decorations(static::BELOW_CONTENT_DECORATIONS, $decorations);
 
         return $this;
     }

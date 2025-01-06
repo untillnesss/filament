@@ -6,11 +6,13 @@ return [
 
         'actions' => [
 
-            'label' => 'Email code authentication',
+            'label' => 'Email verification codes',
+
+            'below_content' => 'Receive a temporary code at your email address to verify your identity during login.',
 
             'messages' => [
-                'active' => 'Active',
-                'inactive' => 'Inactive',
+                'enabled' => 'Enabled',
+                'disabled' => 'Disabled',
             ],
 
         ],
@@ -21,7 +23,7 @@ return [
 
         'code' => [
 
-            'label' => 'Enter the code we sent you by email',
+            'label' => 'Enter the 6-digit code we sent you by email',
 
             'validation_attribute' => 'code',
 

@@ -7,7 +7,7 @@ use Exception;
 use Filament\Actions\Action;
 use Filament\Auth\MultiFactor\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Auth\MultiFactor\GoogleTwoFactor\Actions\RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction;
-use Filament\Auth\MultiFactor\GoogleTwoFactor\Actions\RemoveGoogleTwoFactorAuthenticationAction;
+use Filament\Auth\MultiFactor\GoogleTwoFactor\Actions\DisableGoogleTwoFactorAuthenticationAction;
 use Filament\Auth\MultiFactor\GoogleTwoFactor\Actions\SetUpGoogleTwoFactorAuthenticationAction;
 use Filament\Auth\MultiFactor\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
 use Filament\Auth\MultiFactor\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthenticationRecovery;
@@ -164,11 +164,12 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
         return [
             Actions::make($this->getActions())
                 ->label(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.label'))
+                ->belowContent(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.below_content'))
                 ->afterLabel(fn (): TextDecoration => $this->isEnabled($user)
-                    ? TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.active'))
+                    ? TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.enabled'))
                         ->badge()
                         ->color('success')
-                    : TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.inactive'))
+                    : TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.disabled'))
                         ->badge()),
         ];
     }
@@ -185,7 +186,7 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
                 ->hidden(fn (): bool => $this->isEnabled($user)),
             RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction::make($this)
                 ->visible(fn (): bool => $this->isEnabled($user) && $this->isRecoverable() && $this->canRegenerateRecoveryCodes()),
-            RemoveGoogleTwoFactorAuthenticationAction::make($this)
+            DisableGoogleTwoFactorAuthenticationAction::make($this)
                 ->visible(fn (): bool => $this->isEnabled($user)),
         ];
     }

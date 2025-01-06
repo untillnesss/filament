@@ -71,8 +71,7 @@ class SetUpEmailCodeAuthenticationAction
                     }),
             ])
             ->modalSubmitAction(fn (Action $action) => $action
-                ->label(__('filament-panels::auth/multi-factor/email-code/actions/set-up.modal.actions.submit.label'))
-                ->color('danger'))
+                ->label(__('filament-panels::auth/multi-factor/email-code/actions/set-up.modal.actions.submit.label')))
             ->action(function (array $arguments) use ($emailCodeAuthentication) {
                 /** @var Authenticatable&HasEmailCodeAuthentication $user */
                 $user = Filament::auth()->user();

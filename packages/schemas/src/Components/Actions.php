@@ -24,6 +24,10 @@ class Actions extends Component
 
     const AFTER_LABEL_DECORATIONS = 'after_label';
 
+    const ABOVE_CONTENT_DECORATIONS = 'above_content';
+
+    const BELOW_CONTENT_DECORATIONS = 'below_content';
+
     /**
      * @param  array<Action>  $actions
      */
@@ -88,6 +92,26 @@ class Actions extends Component
             $decorations,
             makeDefaultLayoutUsing: fn (array $decorations): AlignDecorations => AlignDecorations::end($decorations),
         );
+
+        return $this;
+    }
+
+    /**
+     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     */
+    public function aboveContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    {
+        $this->decorations(static::ABOVE_CONTENT_DECORATIONS, $decorations);
+
+        return $this;
+    }
+
+    /**
+     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     */
+    public function belowContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    {
+        $this->decorations(static::BELOW_CONTENT_DECORATIONS, $decorations);
 
         return $this;
     }

@@ -17,6 +17,12 @@
     </div>
 @endif
 
+@if ($aboveContentDecorations = $getDecorations($schemaComponent::ABOVE_CONTENT_DECORATIONS))
+    <div class="mb-2">
+        {{ $aboveContentDecorations }}
+    </div>
+@endif
+
 <x-filament::section
     :after-header="$getDecorations($schemaComponent::AFTER_HEADER_DECORATIONS)"
     :aside="$isAside"
@@ -46,3 +52,9 @@
 >
     {{ $getChildComponentContainer()->gap(! $isDivided)->extraAttributes(['class' => 'fi-section-content']) }}
 </x-filament::section>
+
+@if ($belowContentDecorations = $getDecorations($schemaComponent::BELOW_CONTENT_DECORATIONS))
+    <div class="mt-2">
+        {{ $belowContentDecorations }}
+    </div>
+@endif

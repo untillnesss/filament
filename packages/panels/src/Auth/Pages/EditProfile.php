@@ -443,12 +443,7 @@ class EditProfile extends Page
         return $schema
             ->components([
                 $this->getFormContentComponent(),
-                Section::make()
-                    ->label('Multi-factor authentication')
-                    ->secondary()
-                    ->divided()
-                    ->compact()
-                    ->schema($this->getMultiFactorAuthenticationContentComponents()),
+                $this->getMultiFactorAuthenticationContentComponent(),
             ]);
     }
 
@@ -461,6 +456,16 @@ class EditProfile extends Page
                 ->alignment($this->getFormActionsAlignment())
                 ->fullWidth($this->hasFullWidthFormActions())
                 ->sticky((! static::isSimple()) && $this->areFormActionsSticky()));
+    }
+
+    public function getMultiFactorAuthenticationContentComponent(): Component
+    {
+        return Section::make()
+            ->label(__('filament-panels::auth/pages/edit-profile.multi_factor_authentication.label'))
+            ->compact()
+            ->divided()
+            ->secondary()
+            ->schema($this->getMultiFactorAuthenticationContentComponents());
     }
 
     /**

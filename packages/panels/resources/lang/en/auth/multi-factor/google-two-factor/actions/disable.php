@@ -2,19 +2,19 @@
 
 return [
 
-    'label' => 'Remove',
+    'label' => 'Turn off',
 
     'modal' => [
 
-        'heading' => 'Remove two-factor authentication app',
+        'heading' => 'Disable authenticator app',
 
-        'description' => 'Are you sure you want to remove two-factor authentication app?',
+        'description' => 'Are you sure you want to stop using the authenticator app? Disabling this will remove an extra layer of security from your account.',
 
         'form' => [
 
             'code' => [
 
-                'label' => 'Enter a code from the app',
+                'label' => 'Enter the 6-digit code from the authenticator app',
 
                 'validation_attribute' => 'code',
 
@@ -53,7 +53,7 @@ return [
         'actions' => [
 
             'submit' => [
-                'label' => 'Remove two-factor authentication',
+                'label' => 'Disable authenticator app',
             ],
 
         ],
@@ -62,8 +62,8 @@ return [
 
     'notifications' => [
 
-        'removed' => [
-            'title' => 'Two-factor app authentication has been removed',
+        'disabled' => [
+            'title' => 'Authenticator app has been disabled',
         ],
 
     ],
