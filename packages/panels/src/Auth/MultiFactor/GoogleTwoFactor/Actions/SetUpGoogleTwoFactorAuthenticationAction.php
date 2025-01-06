@@ -26,7 +26,7 @@ class SetUpGoogleTwoFactorAuthenticationAction
             ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.label'))
             ->color('primary')
             ->icon('heroicon-m-lock-closed')
-            ->outlined()
+            ->link()
             ->mountUsing(function (HasActions $livewire) use ($googleTwoFactorAuthentication) {
                 $livewire->mergeMountedActionArguments([
                     'encrypted' => encrypt([

@@ -16,6 +16,7 @@ use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Decorations\TextDecoration;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -158,9 +159,17 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
      */
     public function getManagementSchemaComponents(): array
     {
+        $user = Filament::auth()->user();
+
         return [
             Actions::make($this->getActions())
-                ->label(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.label')),
+                ->label(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.label'))
+                ->afterLabel(fn (): TextDecoration => $this->isEnabled($user)
+                    ? TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.active'))
+                        ->badge()
+                        ->color('success')
+                    : TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.inactive'))
+                        ->badge()),
         ];
     }
 

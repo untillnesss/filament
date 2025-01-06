@@ -27,10 +27,16 @@
     }}
 >
     @if (filled($label = $getLabel()))
-        <div
-            class="text-sm font-medium leading-6 text-gray-950 dark:text-white"
-        >
-            {{ $label }}
+        <div class="flex items-center gap-x-3">
+            {{ $getDecorations($schemaComponent::BEFORE_LABEL_DECORATIONS) }}
+
+            <div
+                class="text-sm font-medium leading-6 text-gray-950 dark:text-white"
+            >
+                {{ $label }}
+            </div>
+
+            {{ $getDecorations($schemaComponent::AFTER_LABEL_DECORATIONS) }}
         </div>
     @endif
 

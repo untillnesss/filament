@@ -5,7 +5,9 @@ namespace Filament\Schemas\Components;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
-use Filament\Schemas\Components\Concerns\CanBeCompacted;
+use Filament\Schemas\Components\Concerns\CanBeCompact;
+use Filament\Schemas\Components\Concerns\CanBeDivided;
+use Filament\Schemas\Components\Concerns\CanBeSecondary;
 use Filament\Schemas\Components\Concerns\EntanglesStateWithSingularRelationship;
 use Filament\Schemas\Components\Concerns\HasDescription;
 use Filament\Schemas\Components\Concerns\HasFooterActions;
@@ -25,8 +27,10 @@ use Illuminate\Support\Str;
 class Section extends Component implements CanConcealComponents, CanEntangleWithSingularRelationships, Contracts\HasFooterActions, Contracts\HasHeaderActions
 {
     use CanBeCollapsed;
-    use CanBeCompacted;
+    use CanBeCompact;
     use CanBeContained;
+    use CanBeDivided;
+    use CanBeSecondary;
     use EntanglesStateWithSingularRelationship;
     use HasDescription;
     use HasExtraAlpineAttributes;
@@ -48,6 +52,10 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     const AFTER_HEADER_DECORATIONS = 'after_header';
 
     const FOOTER_DECORATIONS = 'footer';
+
+    const BEFORE_LABEL_DECORATIONS = 'before_label';
+
+    const AFTER_LABEL_DECORATIONS = 'after_label';
 
     /**
      * @param  string | array<Component> | Htmlable | Closure | null  $heading
@@ -143,6 +151,30 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     public function footer(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
     {
         $this->decorations(static::FOOTER_DECORATIONS, $decorations);
+
+        return $this;
+    }
+
+    /**
+     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     */
+    public function beforeLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    {
+        $this->decorations(static::BEFORE_LABEL_DECORATIONS, $decorations);
+
+        return $this;
+    }
+
+    /**
+     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     */
+    public function afterLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    {
+        $this->decorations(
+            static::AFTER_LABEL_DECORATIONS,
+            $decorations,
+            makeDefaultLayoutUsing: fn (array $decorations): AlignDecorations => AlignDecorations::end($decorations),
+        );
 
         return $this;
     }

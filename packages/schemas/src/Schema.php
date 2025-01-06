@@ -21,6 +21,7 @@ class Schema extends ViewComponent
     use Concerns\HasComponents;
     use Concerns\HasEntryWrapper;
     use Concerns\HasFieldWrapper;
+    use Concerns\HasGap;
     use Concerns\HasInlineLabels;
     use Concerns\HasKey;
     use Concerns\HasOperation;

@@ -22,7 +22,7 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
             ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/regenerate-recovery-codes.label'))
             ->color('gray')
             ->icon('heroicon-m-arrow-path')
-            ->outlined()
+            ->link()
             ->modalWidth(MaxWidth::Large)
             ->modalIcon('heroicon-o-arrow-path')
             ->modalIconColor('primary')

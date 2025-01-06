@@ -1,7 +1,17 @@
 .fi-section {
     &:not(.fi-section-not-contained) {
-        & .fi-section-content {
-            @apply p-6;
+        &:not(.fi-divided) {
+            & .fi-section-content {
+                @apply p-6;
+            }
+        }
+
+        &.fi-divided {
+            & .fi-section-content {
+                & > * {
+                    @apply p-6;
+                }
+            }
         }
 
         & .fi-section-footer {
@@ -10,6 +20,14 @@
 
         &:not(.fi-aside) {
             @apply rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10;
+
+            &.fi-compact {
+                @apply rounded-lg;
+            }
+
+            &.fi-secondary {
+                @apply bg-gray-50 dark:bg-white/5;
+            }
 
             & .fi-section-header {
                 @apply px-6 py-4;
@@ -26,6 +44,18 @@
             & .fi-section-content-ctn {
                 @apply rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 md:col-span-2;
             }
+
+            &.fi-compact {
+                & .fi-section-content-ctn {
+                    @apply rounded-lg;
+                }
+            }
+
+            &.fi-secondary {
+                & .fi-section-content-ctn {
+                    @apply bg-gray-50 dark:bg-white/5;
+                }
+            }
         }
 
         &.fi-compact {
@@ -35,8 +65,18 @@
                 }
             }
 
-            & .fi-section-content {
-                @apply p-4;
+            &:not(.fi-divided) {
+                & .fi-section-content {
+                    @apply p-4;
+                }
+            }
+
+            &.fi-divided {
+                & .fi-section-content {
+                    & > * {
+                        @apply p-4;
+                    }
+                }
             }
 
             & .fi-section-footer {
@@ -52,12 +92,34 @@
             @apply grid gap-y-4;
         }
 
+        &.fi-divided {
+            & .fi-section-content {
+                & > * {
+                    @apply py-6;
+                }
+            }
+        }
+
         &.fi-compact {
             @apply gap-y-2.5;
 
             & .fi-section-content-ctn {
                 @apply gap-y-2.5;
             }
+
+            &.fi-divided {
+                & .fi-section-content {
+                    & > * {
+                        @apply py-4;
+                    }
+                }
+            }
+        }
+    }
+
+    &.fi-divided {
+        & .fi-section-content {
+            @apply divide-y divide-gray-200 dark:divide-white/10;
         }
     }
 

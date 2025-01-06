@@ -16,9 +16,11 @@ use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Decorations\FormActionsDecorations;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\NestedSchema;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Alignment;
@@ -441,7 +443,12 @@ class EditProfile extends Page
         return $schema
             ->components([
                 $this->getFormContentComponent(),
-                ...$this->getMultiFactorAuthenticationContentComponents(),
+                Section::make()
+                    ->label('Multi-factor authentication')
+                    ->secondary()
+                    ->divided()
+                    ->compact()
+                    ->schema($this->getMultiFactorAuthenticationContentComponents()),
             ]);
     }
 

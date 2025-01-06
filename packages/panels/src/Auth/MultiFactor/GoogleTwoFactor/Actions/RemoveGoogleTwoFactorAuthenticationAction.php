@@ -26,7 +26,7 @@ class RemoveGoogleTwoFactorAuthenticationAction
             ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.label'))
             ->color('danger')
             ->icon('heroicon-m-lock-open')
-            ->outlined()
+            ->link()
             ->modalWidth(MaxWidth::Medium)
             ->modalIcon('heroicon-o-lock-open')
             ->modalHeading(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.heading'))

@@ -22,7 +22,7 @@ class SetUpEmailCodeAuthenticationAction
             ->label(__('filament-panels::auth/multi-factor/email-code/actions/set-up.label'))
             ->color('primary')
             ->icon('heroicon-m-lock-closed')
-            ->outlined()
+            ->link()
             ->mountUsing(function (HasActions $livewire) use ($emailCodeAuthentication) {
                 $livewire->mergeMountedActionArguments([
                     'encrypted' => encrypt([

@@ -20,7 +20,7 @@ class RemoveEmailCodeAuthenticationAction
             ->label(__('filament-panels::auth/multi-factor/email-code/actions/remove.label'))
             ->color('danger')
             ->icon('heroicon-m-lock-open')
-            ->outlined()
+            ->link()
             ->mountUsing(function () use ($emailCodeAuthentication) {
                 /** @var HasEmailCodeAuthentication $user */
                 $user = Filament::auth()->user();

@@ -16,7 +16,9 @@ use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Decorations\TextDecoration;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\RateLimiter;
 use PragmaRX\Google2FAQRCode\Google2FA;
 
 class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuthenticationProvider
@@ -59,6 +61,14 @@ class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuth
             throw new Exception("Model [{$userClass}] does not have a [notify()] method.");
         }
 
+        $rateLimitingKey = 'filament_email_code_authentication.' . md5($secret ?? $this->getSecret($user));
+
+        if (RateLimiter::tooManyAttempts($rateLimitingKey, maxAttempts: 1)) {
+            return;
+        }
+
+        RateLimiter::hit($rateLimitingKey);
+
         $user->notify(app($this->getCodeNotification(), [
             'code' => $this->getCurrentCode($user, $secret),
             'codeWindow' => $this->getCodeWindow(),
@@ -98,9 +108,17 @@ class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuth
      */
     public function getManagementSchemaComponents(): array
     {
+        $user = Filament::auth()->user();
+
         return [
             Actions::make($this->getActions())
-                ->label(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.label')),
+                ->label(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.label'))
+                ->afterLabel(fn (): TextDecoration => $this->isEnabled($user)
+                    ? TextDecoration::make(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.messages.active'))
+                        ->badge()
+                        ->color('success')
+                    : TextDecoration::make(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.messages.inactive'))
+                        ->badge()),
         ];
     }
 

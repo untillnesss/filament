@@ -5,7 +5,14 @@ return [
     'management_schema' => [
 
         'actions' => [
+
             'label' => 'Email code authentication',
+
+            'messages' => [
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+            ],
+
         ],
 
     ],

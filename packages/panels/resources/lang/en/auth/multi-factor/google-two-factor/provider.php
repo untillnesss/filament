@@ -5,7 +5,14 @@ return [
     'management_schema' => [
 
         'actions' => [
-            'label' => 'Two factor authentication app',
+
+            'label' => 'Two-factor authentication app',
+
+            'messages' => [
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+            ],
+
         ],
 
     ],
