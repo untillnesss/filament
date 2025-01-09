@@ -5,6 +5,7 @@ namespace Filament\Schemas\Components\Decorations;
 use Closure;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\JsContent;
+use Filament\Support\Concerns\CanBeCopied;
 use Filament\Support\Concerns\HasColor;
 use Filament\Support\Concerns\HasFontFamily;
 use Filament\Support\Concerns\HasIcon;
@@ -14,6 +15,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class TextDecoration extends Component
 {
+    use CanBeCopied;
     use HasColor;
     use HasFontFamily;
     use HasIcon;
@@ -23,6 +25,8 @@ class TextDecoration extends Component
     protected string | Htmlable | Closure $content;
 
     protected bool | Closure $isBadge = false;
+
+    protected string | Closure | null $size = null;
 
     protected string $view = 'filament-schema::components.decorations.text-decoration';
 
@@ -75,5 +79,17 @@ class TextDecoration extends Component
     public function getContent(): string | Htmlable
     {
         return $this->evaluate($this->content);
+    }
+
+    public function size(string | Closure | null $size): static
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public function getSize(): ?string
+    {
+        return $this->evaluate($this->size);
     }
 }

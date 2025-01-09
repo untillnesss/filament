@@ -26,8 +26,6 @@ return [
 
                 'instruction' => 'Or enter this code manually:',
 
-                'copy_hint' => '(click to copy)',
-
                 'messages' => [
                     'copied' => 'Copied',
                 ],

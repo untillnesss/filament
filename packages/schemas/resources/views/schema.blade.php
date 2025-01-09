@@ -18,7 +18,7 @@
                 ], escape: false)
                 ->class([
                     'fi-sc',
-                    'gap-6' => $hasGap(),
+                    ($isDense() ? 'gap-3' : 'gap-6') => $hasGap(),
                 ])
         }}
     >

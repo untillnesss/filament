@@ -96,3 +96,12 @@
         @apply absolute start-full top-0 z-[1] w-max -translate-x-1/4 -translate-y-3/4 rounded-md bg-white font-normal hover:no-underline focus-visible:no-underline dark:bg-gray-900 rtl:translate-x-1/4;
     }
 }
+
+/**
+ * Align links embedded within text.
+ */
+p > .fi-link,
+span > .fi-link {
+    @apply pb-[2px] align-middle;
+    text-align: inherit;
+}

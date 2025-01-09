@@ -11,8 +11,15 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Decorations\ListDecoration;
+use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Schemas\Components\Group;
+use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\MaxWidth;
-use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Js;
 
 class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
 {
@@ -75,10 +82,46 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
                 Action::make('showNewRecoveryCodes')
                     ->modalHeading(__('filament-panels::auth/multi-factor/google-two-factor/actions/regenerate-recovery-codes.show_new_recovery_codes.modal.heading'))
                     ->modalDescription(__('filament-panels::auth/multi-factor/google-two-factor/actions/regenerate-recovery-codes.show_new_recovery_codes.modal.description'))
-                    ->modalContent(fn (array $arguments): View => view(
-                        'filament-panels::auth.multi-factor.recovery-codes-modal-content',
-                        $arguments,
-                    ))
+                    ->schema(fn (array $arguments) => [
+                        Group::make([
+                            ListDecoration::make(fn (): array => array_map(
+                                fn (string $recoveryCode): Component => TextDecoration::make($recoveryCode)
+                                    ->copyable()
+                                    ->copyMessage(__('filament-panels::auth/multi-factor/recovery-codes-modal-content.messages.copied'))
+                                    ->fontFamily(FontFamily::Mono)
+                                    ->size('xs')
+                                    ->color('neutral'),
+                                $arguments['recoveryCodes'],
+                            ))
+                                ->size('xs'),
+                            TextDecoration::make(fn (): Htmlable => new HtmlString(
+                                __('filament-panels::auth/multi-factor/recovery-codes-modal-content.actions.0') .
+                                ' ' .
+                                Action::make('copy')
+                                    ->label(__('filament-panels::auth/multi-factor/recovery-codes-modal-content.actions.copy.label'))
+                                    ->link()
+                                    ->alpineClickHandler('
+                                        window.navigator.clipboard.writeText(' . Js::from(implode(PHP_EOL, $arguments['recoveryCodes'])) . ')
+                                        $tooltip(' . Js::from(__('filament-panels::auth/multi-factor/recovery-codes-modal-content.messages.copied')) . ', {
+                                            theme: $store.theme,
+                                        })
+                                    ')
+                                    ->toHtml() .
+                                ' ' .
+                                __('filament-panels::auth/multi-factor/recovery-codes-modal-content.actions.1') .
+                                ' ' .
+                                Action::make('download')
+                                    ->label(__('filament-panels::auth/multi-factor/recovery-codes-modal-content.actions.download.label'))
+                                    ->link()
+                                    ->url('data:application/octet-stream,' . urlencode(implode(PHP_EOL, $arguments['recoveryCodes'])))
+                                    ->extraAttributes(['download' => true])
+                                    ->toHtml() .
+                                ' ' .
+                                __('filament-panels::auth/multi-factor/recovery-codes-modal-content.actions.2')
+                            )),
+                        ])
+                            ->dense(),
+                    ])
                     ->modalWidth(MaxWidth::Large)
                     ->closeModalByClickingAway(false)
                     ->closeModalByEscaping(false)
