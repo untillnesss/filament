@@ -278,7 +278,7 @@ class TestsForms
         };
     }
 
-    public function assertFormFieldIsDisabled(): Closure
+    public function assertFormFieldDisabled(): Closure
     {
         return function (string $fieldName, string $formName = 'form'): static {
             /** @phpstan-ignore-next-line  */
@@ -306,7 +306,15 @@ class TestsForms
         };
     }
 
-    public function assertFormFieldIsEnabled(): Closure
+    /**
+     * @deprecated Use `assertFormFieldDisabled()` instead.
+     */
+    public function assertFormFieldIsDisabled(): Closure
+    {
+        return $this->assertFormFieldDisabled();
+    }
+
+    public function assertFormFieldEnabled(): Closure
     {
         return function (string $fieldName, string $formName = 'form'): static {
             /** @phpstan-ignore-next-line  */
@@ -334,7 +342,15 @@ class TestsForms
         };
     }
 
-    public function assertFormFieldIsReadOnly(): Closure
+    /**
+     * @deprecated Use `assertFormFieldEnabled()` instead.
+     */
+    public function assertFormFieldIsEnabled(): Closure
+    {
+        return $this->assertFormFieldEnabled();
+    }
+
+    public function assertFormFieldReadOnly(): Closure
     {
         return function (string $fieldName, string $formName = 'form'): static {
             /** @phpstan-ignore-next-line  */
@@ -357,7 +373,15 @@ class TestsForms
         };
     }
 
-    public function assertFormFieldIsHidden(): Closure
+    /**
+     * @deprecated Use `assertFormFieldReadOnly()` instead.
+     */
+    public function assertFormFieldIsReadOnly(): Closure
+    {
+        return $this->assertFormFieldReadOnly();
+    }
+
+    public function assertFormFieldHidden(): Closure
     {
         return function (string $fieldName, string $formName = 'form'): static {
             /** @phpstan-ignore-next-line  */
@@ -380,7 +404,15 @@ class TestsForms
         };
     }
 
-    public function assertFormFieldIsVisible(): Closure
+    /**
+     * @deprecated Use `assertFormFieldHidden()` instead.
+     */
+    public function assertFormFieldIsHidden(): Closure
+    {
+        return $this->assertFormFieldHidden();
+    }
+
+    public function assertFormFieldVisible(): Closure
     {
         return function (string $fieldName, string $formName = 'form'): static {
             /** @phpstan-ignore-next-line  */
@@ -401,6 +433,14 @@ class TestsForms
 
             return $this;
         };
+    }
+
+    /**
+     * @deprecated Use `assertFormFieldVisible()` instead.
+     */
+    public function assertFormFieldIsVisible(): Closure
+    {
+        return $this->assertFormFieldVisible();
     }
 
     public function assertWizardStepExists(): Closure
