@@ -3,6 +3,8 @@
 namespace App\Livewire\Forms;
 
 use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
@@ -29,8 +31,9 @@ use Filament\Schemas\Schema;
 use Illuminate\Support\HtmlString;
 use Livewire\Component;
 
-class FieldsDemo extends Component implements HasForms
+class FieldsDemo extends Component implements HasActions, HasForms
 {
+    use InteractsWithActions;
     use InteractsWithForms;
 
     public $data = [];

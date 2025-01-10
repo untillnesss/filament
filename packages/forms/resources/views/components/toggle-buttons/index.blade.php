@@ -1,5 +1,6 @@
 @php
     use Filament\Support\Enums\GridDirection;
+    use Illuminate\View\ComponentAttributeBag;
 
     $gridDirection = $getGridDirection() ?? GridDirection::Column;
     $hasInlineLabel = $hasInlineLabel();

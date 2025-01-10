@@ -1319,11 +1319,12 @@
                                     @foreach ($columns as $column)
                                         <td
                                             @class([
-                                                'fi-ta-cell fi-ta-individual-search-cell',
-                                                'fi-ta-individual-search-cell-' . str($column->getName())->camel()->kebab(),
+                                                'fi-ta-cell',
+                                                'fi-ta-individual-search-cell' => $isIndividuallySearchable = $column->isIndividuallySearchable(),
+                                                'fi-ta-individual-search-cell-' . str($column->getName())->camel()->kebab() => $isIndividuallySearchable,
                                             ])
                                         >
-                                            @if ($column->isIndividuallySearchable())
+                                            @if ($isIndividuallySearchable)
                                                 <x-filament-tables::search-field
                                                     :debounce="$searchDebounce"
                                                     :on-blur="$isSearchOnBlur"

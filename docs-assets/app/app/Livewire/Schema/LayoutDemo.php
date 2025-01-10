@@ -3,6 +3,8 @@
 namespace App\Livewire\Schema;
 
 use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -26,8 +28,9 @@ use Filament\Support\Enums\IconPosition;
 use Filament\Support\Enums\VerticalAlignment;
 use Livewire\Component;
 
-class LayoutDemo extends Component implements HasForms
+class LayoutDemo extends Component implements HasActions, HasForms
 {
+    use InteractsWithActions;
     use InteractsWithForms;
 
     public $data = [];
