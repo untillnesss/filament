@@ -106,4 +106,46 @@ class TestsFilters
             return $this;
         };
     }
+
+    public function assertTableFilterVisible(): Closure
+    {
+        return function (string $name): static {
+            $name = $this->instance()->parseTableFilterName($name);
+
+            $filter = $this->instance()->getTable()->getFilter(
+                name: $name,
+                withHidden: true,
+            );
+
+            $livewireClass = $this->instance()::class;
+
+            Assert::assertTrue(
+                $filter->isVisible(),
+                message: "Failed asserting that a table filter with name [{$name}] is visible on the [{$livewireClass}] component."
+            );
+
+            return $this;
+        };
+    }
+
+    public function assertTableFilterHidden(): Closure
+    {
+        return function (string $name): static {
+            $name = $this->instance()->parseTableFilterName($name);
+
+            $filter = $this->instance()->getTable()->getFilter(
+                name: $name,
+                withHidden: true,
+            );
+
+            $livewireClass = $this->instance()::class;
+
+            Assert::assertTrue(
+                $filter->isHidden(),
+                message: "Failed asserting that a table filter with name [{$name}] is hidden on the [{$livewireClass}] component."
+            );
+
+            return $this;
+        };
+    }
 }

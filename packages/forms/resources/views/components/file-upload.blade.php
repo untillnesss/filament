@@ -79,6 +79,7 @@
                     maxFiles: @js($getMaxFiles()),
                     maxSize: @js(($size = $getMaxSize()) ? "{$size}KB" : null),
                     minSize: @js(($size = $getMinSize()) ? "{$size}KB" : null),
+                    maxParallelUploads: @js($getMaxParallelUploads()),
                     removeUploadedFileUsing: async (fileKey) => {
                         return await $wire.callSchemaComponentMethod(
                             @js($key),

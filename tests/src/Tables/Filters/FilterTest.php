@@ -109,3 +109,13 @@ it('can assert a filter exists with a given configuration', function () {
             return $filter->getLabel() === 'Is published';
         });
 });
+
+it('can check if a filter is visible', function (): void {
+    livewire(PostsTable::class)
+        ->assertTableFilterVisible('is_published');
+});
+
+it('can check if a filter is hidden', function (): void {
+    livewire(PostsTable::class)
+        ->assertTableFilterHidden('hidden_filter');
+});

@@ -349,7 +349,20 @@ it('can remove all table filters', function () {
 });
 ```
 
-### Existence
+### Hidden filters
+
+To ensure that a particular user cannot see a filter, you can use the `assertTableFilterVisible()` and `assertTableFilterHidden()` methods:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('shows the correct filters', function () {
+    livewire(PostsTable::class)
+        ->assertTableFilterVisible('created_at')
+        ->assertTableFilterHidden('author');
+```
+
+### Filter existence
 
 To ensure that a filter exists, you can use the `assertTableFilterExists()` method:
 
