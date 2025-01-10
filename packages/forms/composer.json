@@ -11,6 +11,7 @@
         "php": "^8.2",
         "danharrin/date-format-converter": "^0.3",
         "filament/actions": "self.version",
+        "filament/schemas": "self.version",
         "filament/support": "self.version",
         "illuminate/console": "^11.15",
         "illuminate/contracts": "^11.15",
