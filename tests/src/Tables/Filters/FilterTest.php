@@ -2,6 +2,7 @@
 
 use Filament\Tests\Fixtures\Livewire\PostsTable;
 use Filament\Tests\Fixtures\Models\Post;
+use Filament\Tables\Filters\Filter;
 use Filament\Tests\Tables\TestCase;
 
 use function Filament\Tests\livewire;
@@ -100,4 +101,11 @@ it('can use a custom attribute for the `SelectFilter`', function () {
         ->assertCanSeeTableRecords($unpublishedPosts)
         ->filterTable('select_filter_attribute', true)
         ->assertCanNotSeeTableRecords($unpublishedPosts);
+});
+
+it('can assert a filter exists with a given configuration', function () {
+    livewire(PostsTable::class)
+        ->assertTableFilterExists('is_published', function (Filter $filter): bool {
+            return $filter->getLabel() === 'Is published';
+        });
 });
