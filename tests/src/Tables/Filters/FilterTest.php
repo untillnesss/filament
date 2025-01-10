@@ -1,8 +1,8 @@
 <?php
 
+use Filament\Tables\Filters\Filter;
 use Filament\Tests\Fixtures\Livewire\PostsTable;
 use Filament\Tests\Fixtures\Models\Post;
-use Filament\Tables\Filters\Filter;
 use Filament\Tests\Tables\TestCase;
 
 use function Filament\Tests\livewire;
@@ -117,5 +117,5 @@ it('can check if a filter is visible', function (): void {
 
 it('can check if a filter is hidden', function (): void {
     livewire(PostsTable::class)
-        ->assertTableFilterHidden('hidden_filter');
+        ->assertTableFilterHidden('hidden');
 });
