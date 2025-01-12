@@ -28,7 +28,7 @@ trait HasGap
             return $this->getParentComponent()?->hasGap() ?? true;
         }
 
-        return $this->getContainer()?->hasGap() ?? true;
+        return $this->getContainer()->hasGap();
     }
 
     public function dense(bool | Closure | null $condition = true): static
@@ -48,6 +48,6 @@ trait HasGap
             return $this->getParentComponent()?->isDense() ?? false;
         }
 
-        return $this->getContainer()?->isDense() ?? false;
+        return $this->getContainer()->isDense();
     }
 }

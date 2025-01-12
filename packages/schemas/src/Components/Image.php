@@ -1,18 +1,17 @@
 <?php
 
-namespace Filament\Schemas\Components\Decorations;
+namespace Filament\Schemas\Components;
 
 use Closure;
-use Filament\Schemas\Components\Component;
 use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Concerns\HasTooltip;
 
-class ImageDecoration extends Component
+class Image extends Component
 {
     use HasAlignment;
     use HasTooltip;
 
-    protected string $view = 'filament-schema::components.decorations.image-decoration';
+    protected string $view = 'filament-schema::components.image';
 
     protected string | Closure $url;
 

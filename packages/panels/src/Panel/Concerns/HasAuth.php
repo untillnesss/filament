@@ -15,7 +15,7 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -566,13 +566,15 @@ trait HasAuth
      */
     public function multiFactorAuthentication(array | MultiFactorAuthenticationProvider $providers): static
     {
-        $this->multiFactorAuthenticationProviders = Arr::wrap($providers);
+        $this->multiFactorAuthenticationProviders = Collection::wrap($providers)
+            ->mapWithKeys(fn (MultiFactorAuthenticationProvider $provider): array => [$provider->getId() => $provider])
+            ->all();
 
         return $this;
     }
 
     /**
-     * @return array<MultiFactorAuthenticationProvider>
+     * @return array<string, MultiFactorAuthenticationProvider>
      */
     public function getMultiFactorAuthenticationProviders(): array
     {

@@ -21,6 +21,8 @@ return [
 
     'login_form' => [
 
+        'label' => 'Use a code from your authenticator app',
+
         'code' => [
 
             'label' => 'Enter the 6-digit code from the authenticator app',

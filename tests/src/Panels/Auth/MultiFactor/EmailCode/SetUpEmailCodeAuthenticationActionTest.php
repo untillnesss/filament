@@ -88,11 +88,39 @@ it('can save the secret to the user when the action is submitted', function () {
 });
 
 it('can resend the code to the user', function () {
+    $this->travelTo(now()->subMinute());
+
     $livewire = livewire(EditProfile::class)
         ->mountAction(TestAction::make('setUpEmailCodeAuthentication')
             ->schemaComponent('content.email_code.setUpEmailCodeAuthenticationAction'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
+
+    $this->travelBack();
+
+    $livewire
+        ->callAction(TestAction::make('resend')
+            ->schemaComponent('mountedActionSchema0.code'));
+
+    Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 2);
+});
+
+it('can resend the code to the user more than once per minute', function () {
+    $this->travelTo(now()->subMinute());
+
+    $livewire = livewire(EditProfile::class)
+        ->mountAction(TestAction::make('setUpEmailCodeAuthentication')
+            ->schemaComponent('content.email_code.setUpEmailCodeAuthenticationAction'));
+
+    Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
+
+    $livewire
+        ->callAction(TestAction::make('resend')
+            ->schemaComponent('mountedActionSchema0.code'));
+
+    Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
+
+    $this->travelBack();
 
     $livewire
         ->callAction(TestAction::make('resend')

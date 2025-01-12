@@ -47,7 +47,7 @@
             "
         @endif
         @class([
-            'fi-sc-text-decoration break-words',
+            'fi-sc-text break-words',
             'cursor-pointer' => $isCopyable,
             match ($color) {
                 'gray' => 'text-gray-600 dark:text-gray-400',

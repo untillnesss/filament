@@ -25,7 +25,7 @@ beforeEach(function () {
     Notification::fake();
 });
 
-it('can remove authentication when valid challenge code is used', function () {
+it('can disable authentication when valid challenge code is used', function () {
     $emailCodeAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
@@ -40,8 +40,8 @@ it('can remove authentication when valid challenge code is used', function () {
 
     livewire(EditProfile::class)
         ->callAction(
-            TestAction::make('removeEmailCodeAuthentication')
-                ->schemaComponent('content.email_code.removeEmailCodeAuthenticationAction'),
+            TestAction::make('disableEmailCodeAuthentication')
+                ->schemaComponent('content.email_code.disableEmailCodeAuthenticationAction'),
             ['code' => $emailCodeAuthentication->getCurrentCode($user)],
         )
         ->assertHasNoActionErrors();
@@ -62,11 +62,15 @@ it('can remove authentication when valid challenge code is used', function () {
 });
 
 it('can resend the code to the user', function () {
+    $this->travelTo(now()->subMinute());
+
     $livewire = livewire(EditProfile::class)
-        ->mountAction(TestAction::make('removeEmailCodeAuthentication')
-            ->schemaComponent('content.email_code.removeEmailCodeAuthenticationAction'));
+        ->mountAction(TestAction::make('disableEmailCodeAuthentication')
+            ->schemaComponent('content.email_code.disableEmailCodeAuthenticationAction'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
+
+    $this->travelBack();
 
     $livewire
         ->callAction(TestAction::make('resend')
@@ -75,7 +79,31 @@ it('can resend the code to the user', function () {
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 2);
 });
 
-it('will not remove authentication when an invalid code is used', function () {
+it('can resend the code to the user more than once per minute', function () {
+    $this->travelTo(now()->subMinute());
+
+    $livewire = livewire(EditProfile::class)
+        ->mountAction(TestAction::make('disableEmailCodeAuthentication')
+            ->schemaComponent('content.email_code.disableEmailCodeAuthenticationAction'));
+
+    Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
+
+    $livewire
+        ->callAction(TestAction::make('resend')
+            ->schemaComponent('mountedActionSchema0.code'));
+
+    Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
+
+    $this->travelBack();
+
+    $livewire
+        ->callAction(TestAction::make('resend')
+            ->schemaComponent('mountedActionSchema0.code'));
+
+    Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 2);
+});
+
+it('will not disable authentication when an invalid code is used', function () {
     $emailCodeAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
@@ -88,8 +116,8 @@ it('will not remove authentication when an invalid code is used', function () {
 
     livewire(EditProfile::class)
         ->callAction(
-            TestAction::make('removeEmailCodeAuthentication')
-                ->schemaComponent('content.email_code.removeEmailCodeAuthenticationAction'),
+            TestAction::make('disableEmailCodeAuthentication')
+                ->schemaComponent('content.email_code.disableEmailCodeAuthenticationAction'),
             ['code' => ($emailCodeAuthentication->getCurrentCode($user) === '000000') ? '111111' : '000000'],
         )
         ->assertHasActionErrors();
@@ -112,8 +140,8 @@ test('codes are required', function () {
 
     livewire(EditProfile::class)
         ->callAction(
-            TestAction::make('removeEmailCodeAuthentication')
-                ->schemaComponent('content.email_code.removeEmailCodeAuthenticationAction'),
+            TestAction::make('disableEmailCodeAuthentication')
+                ->schemaComponent('content.email_code.disableEmailCodeAuthenticationAction'),
             ['code' => ''],
         )
         ->assertHasActionErrors([
@@ -140,8 +168,8 @@ test('codes must be 6 digits', function () {
 
     livewire(EditProfile::class)
         ->callAction(
-            TestAction::make('removeEmailCodeAuthentication')
-                ->schemaComponent('content.email_code.removeEmailCodeAuthenticationAction'),
+            TestAction::make('disableEmailCodeAuthentication')
+                ->schemaComponent('content.email_code.disableEmailCodeAuthenticationAction'),
             ['code' => Str::limit($emailCodeAuthentication->getCurrentCode($user), limit: 5, end: '')],
         )
         ->assertHasActionErrors([

@@ -10,7 +10,7 @@ use Filament\Auth\Notifications\VerifyEmail;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Pages\SimplePage;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Schemas\Components\Text;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Support\Htmlable;
@@ -18,6 +18,7 @@ use Illuminate\Support\HtmlString;
 
 /**
  * @property-read Schema $form
+ * @property-read Action $resendNotificationAction
  */
 class EmailVerificationPrompt extends SimplePage
 {
@@ -108,10 +109,10 @@ class EmailVerificationPrompt extends SimplePage
     {
         return $schema
             ->components([
-                TextDecoration::make(__('filament-panels::auth/pages/email-verification/email-verification-prompt.messages.notification_sent', [
+                Text::make(__('filament-panels::auth/pages/email-verification/email-verification-prompt.messages.notification_sent', [
                     'email' => filament()->auth()->user()->getEmailForVerification(),
                 ])),
-                TextDecoration::make(new HtmlString(
+                Text::make(new HtmlString(
                     __('filament-panels::auth/pages/email-verification/email-verification-prompt.messages.notification_not_received') .
                     ' ' .
                     $this->resendNotificationAction->toHtml(),

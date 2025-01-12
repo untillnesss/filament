@@ -16,7 +16,7 @@ use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Schemas\Components\Text;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\RateLimiter;
 use PragmaRX\Google2FAQRCode\Google2FA;
@@ -42,6 +42,11 @@ class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuth
     public function getId(): string
     {
         return 'email_code';
+    }
+
+    public function getLoginFormLabel(): string
+    {
+        return __('filament-panels::auth/multi-factor/email-code/provider.login_form.label');
     }
 
     public function isEnabled(Authenticatable $user): bool
@@ -114,11 +119,11 @@ class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuth
             Actions::make($this->getActions())
                 ->label(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.label'))
                 ->belowContent(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.below_content'))
-                ->afterLabel(fn (): TextDecoration => $this->isEnabled($user)
-                    ? TextDecoration::make(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.messages.enabled'))
+                ->afterLabel(fn (): Text => $this->isEnabled($user)
+                    ? Text::make(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.messages.enabled'))
                         ->badge()
                         ->color('success')
-                    : TextDecoration::make(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.messages.disabled'))
+                    : Text::make(__('filament-panels::auth/multi-factor/email-code/provider.management_schema.actions.messages.disabled'))
                         ->badge()),
         ];
     }

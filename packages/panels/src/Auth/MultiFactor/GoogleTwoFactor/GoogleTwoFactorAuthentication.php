@@ -16,7 +16,7 @@ use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Schemas\Components\Text;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -52,6 +52,11 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
     public function getId(): string
     {
         return 'google_two_factor';
+    }
+
+    public function getLoginFormLabel(): string
+    {
+        return __('filament-panels::auth/multi-factor/google-two-factor/provider.login_form.label');
     }
 
     public function isEnabled(Authenticatable $user): bool
@@ -165,11 +170,11 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
             Actions::make($this->getActions())
                 ->label(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.label'))
                 ->belowContent(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.below_content'))
-                ->afterLabel(fn (): TextDecoration => $this->isEnabled($user)
-                    ? TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.enabled'))
+                ->afterLabel(fn (): Text => $this->isEnabled($user)
+                    ? Text::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.enabled'))
                         ->badge()
                         ->color('success')
-                    : TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.disabled'))
+                    : Text::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.disabled'))
                         ->badge()),
         ];
     }

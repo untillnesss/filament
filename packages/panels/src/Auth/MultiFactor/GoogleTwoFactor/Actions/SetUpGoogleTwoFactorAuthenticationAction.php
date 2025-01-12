@@ -12,12 +12,12 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Decorations\ImageDecoration;
-use Filament\Schemas\Components\Decorations\ListDecoration;
-use Filament\Schemas\Components\Decorations\TextDecoration;
 use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Image;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Split;
+use Filament\Schemas\Components\Text;
+use Filament\Schemas\Components\UnorderedList;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\MaxWidth;
@@ -56,19 +56,19 @@ class SetUpGoogleTwoFactorAuthenticationAction
             ->schema(function (Action $action) use ($googleTwoFactorAuthentication): array {
                 return [
                     Group::make([
-                        TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.content.qr_code.instruction'))
+                        Text::make(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.content.qr_code.instruction'))
                             ->color('neutral'),
-                        ImageDecoration::make(
+                        Image::make(
                             url: fn (): string => $googleTwoFactorAuthentication->generateQRCodeDataUri(decrypt($action->getArguments()['encrypted'])['secret']),
                             alt: __('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.content.qr_code.alt'),
                         )
                             ->imageHeight('12rem')
                             ->alignCenter(),
                         Split::make([
-                            TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.content.text_code.instruction'))
+                            Text::make(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.content.text_code.instruction'))
                                 ->color('neutral')
                                 ->grow(false),
-                            TextDecoration::make(fn (): string => decrypt($action->getArguments()['encrypted'])['secret'])
+                            Text::make(fn (): string => decrypt($action->getArguments()['encrypted'])['secret'])
                                 ->fontFamily(FontFamily::Mono)
                                 ->color('neutral')
                                 ->copyable()
@@ -77,11 +77,11 @@ class SetUpGoogleTwoFactorAuthenticationAction
                         ])->from('sm'),
                         Section::make()
                             ->schema([
-                                TextDecoration::make(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.content.recovery_codes.instruction'))
+                                Text::make(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.content.recovery_codes.instruction'))
                                     ->weight(FontWeight::Bold)
                                     ->color('neutral'),
-                                ListDecoration::make(fn (): array => array_map(
-                                    fn (string $recoveryCode): Component => TextDecoration::make($recoveryCode)
+                                UnorderedList::make(fn (): array => array_map(
+                                    fn (string $recoveryCode): Component => Text::make($recoveryCode)
                                         ->copyable()
                                         ->copyMessage(__('filament-panels::auth/multi-factor/recovery-codes-modal-content.messages.copied'))
                                         ->fontFamily(FontFamily::Mono)
@@ -90,7 +90,7 @@ class SetUpGoogleTwoFactorAuthenticationAction
                                     decrypt($action->getArguments()['encrypted'] ?? encrypt([]))['recoveryCodes'] ?? [],
                                 ))
                                     ->size('xs'),
-                                TextDecoration::make(function () use ($action): Htmlable {
+                                Text::make(function () use ($action): Htmlable {
                                     $recoveryCodes = decrypt($action->getArguments()['encrypted'])['recoveryCodes'];
 
                                     return new HtmlString(

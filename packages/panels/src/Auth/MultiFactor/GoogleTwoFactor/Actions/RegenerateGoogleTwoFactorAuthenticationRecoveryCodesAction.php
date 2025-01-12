@@ -12,9 +12,9 @@ use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Decorations\ListDecoration;
-use Filament\Schemas\Components\Decorations\TextDecoration;
 use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Text;
+use Filament\Schemas\Components\UnorderedList;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\MaxWidth;
 use Illuminate\Contracts\Support\Htmlable;
@@ -84,8 +84,8 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
                     ->modalDescription(__('filament-panels::auth/multi-factor/google-two-factor/actions/regenerate-recovery-codes.show_new_recovery_codes.modal.description'))
                     ->schema(fn (array $arguments) => [
                         Group::make([
-                            ListDecoration::make(fn (): array => array_map(
-                                fn (string $recoveryCode): Component => TextDecoration::make($recoveryCode)
+                            UnorderedList::make(fn (): array => array_map(
+                                fn (string $recoveryCode): Component => Text::make($recoveryCode)
                                     ->copyable()
                                     ->copyMessage(__('filament-panels::auth/multi-factor/recovery-codes-modal-content.messages.copied'))
                                     ->fontFamily(FontFamily::Mono)
@@ -94,7 +94,7 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
                                 $arguments['recoveryCodes'],
                             ))
                                 ->size('xs'),
-                            TextDecoration::make(fn (): Htmlable => new HtmlString(
+                            Text::make(fn (): Htmlable => new HtmlString(
                                 __('filament-panels::auth/multi-factor/recovery-codes-modal-content.actions.0') .
                                 ' ' .
                                 Action::make('copy')

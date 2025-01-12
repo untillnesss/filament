@@ -1,18 +1,17 @@
 <?php
 
-namespace Filament\Schemas\Components\Decorations;
+namespace Filament\Schemas\Components;
 
 use Closure;
-use Filament\Schemas\Components\Component;
 use Filament\Support\Concerns\HasColor;
 use Filament\Support\Concerns\HasTooltip;
 
-class IconDecoration extends Component
+class Icon extends Component
 {
     use HasColor;
     use HasTooltip;
 
-    protected string $view = 'filament-schema::components.decorations.icon-decoration';
+    protected string $view = 'filament-schema::components.icon';
 
     protected string | Closure $icon;
 

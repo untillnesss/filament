@@ -1,9 +1,8 @@
 <?php
 
-namespace Filament\Schemas\Components\Decorations;
+namespace Filament\Schemas\Components;
 
 use Closure;
-use Filament\Schemas\Components\Component;
 use Filament\Schemas\JsContent;
 use Filament\Support\Concerns\CanBeCopied;
 use Filament\Support\Concerns\HasColor;
@@ -13,7 +12,7 @@ use Filament\Support\Concerns\HasTooltip;
 use Filament\Support\Concerns\HasWeight;
 use Illuminate\Contracts\Support\Htmlable;
 
-class TextDecoration extends Component
+class Text extends Component
 {
     use CanBeCopied;
     use HasColor;
@@ -28,7 +27,7 @@ class TextDecoration extends Component
 
     protected string | Closure | null $size = null;
 
-    protected string $view = 'filament-schema::components.decorations.text-decoration';
+    protected string $view = 'filament-schema::components.text';
 
     final public function __construct(string | Htmlable | Closure $content)
     {

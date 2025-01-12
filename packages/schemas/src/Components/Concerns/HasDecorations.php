@@ -7,7 +7,7 @@ use Filament\Actions\Action;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
 use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Schemas\Components\Text;
 use Filament\Support\Enums\ActionSize;
 use Illuminate\Support\Arr;
 
@@ -70,7 +70,7 @@ trait HasDecorations
             }
 
             if (is_string($decorations)) {
-                $decorations = [TextDecoration::make($decorations)];
+                $decorations = [Text::make($decorations)];
             }
 
             $decorations = Arr::wrap($decorations);

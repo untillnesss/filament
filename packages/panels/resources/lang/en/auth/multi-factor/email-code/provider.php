@@ -21,6 +21,8 @@ return [
 
     'login_form' => [
 
+        'label' => 'Send a code to your email',
+
         'code' => [
 
             'label' => 'Enter the 6-digit code we sent you by email',

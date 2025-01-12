@@ -18,7 +18,7 @@
         x-tooltip="{ content: @js($tooltip), theme: $store.theme }"
     @endif
     @class([
-        'fi-sc-icon-decoration rounded-lg border border-gray-300 dark:border-transparent',
+        'fi-sc-icon rounded-lg border border-gray-300 dark:border-transparent',
         match ($alignment) {
             Alignment::Center => 'mx-auto',
             Alignment::End, Alignment::Right => 'ms-auto',

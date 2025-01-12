@@ -69,7 +69,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getLogoutUrl(array $parameters = [])
  * @method static MaxWidth | string | null getMaxContentWidth()
  * @method static string | null getModelResource(string | Model $model)
- * @method static array<MultiFactorAuthenticationProvider> getMultiFactorAuthenticationProviders()
+ * @method static array<string, MultiFactorAuthenticationProvider> getMultiFactorAuthenticationProviders()
  * @method static string getNameForDefaultAvatar(Model | Authenticatable $user)
  * @method static array<NavigationGroup> getNavigation()
  * @method static array<string | int, NavigationGroup | string> getNavigationGroups()

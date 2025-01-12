@@ -1,13 +1,12 @@
 <?php
 
-namespace Filament\Schemas\Components\Decorations;
+namespace Filament\Schemas\Components;
 
 use Closure;
-use Filament\Schemas\Components\Component;
 
-class ListDecoration extends Component
+class UnorderedList extends Component
 {
-    protected string $view = 'filament-schema::components.decorations.list-decoration';
+    protected string $view = 'filament-schema::components.unordered-list';
 
     protected string | Closure | null $size = null;
 
