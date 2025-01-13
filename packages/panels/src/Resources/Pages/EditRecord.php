@@ -387,7 +387,7 @@ class EditRecord extends Page
                 Actions::make($this->getFormActions())
                     ->alignment($this->getFormActionsAlignment())
                     ->fullWidth($this->hasFullWidthFormActions())
-                    ->sticky(),
+                    ->sticky($this->areFormActionsSticky()),
             ]);
     }
 
