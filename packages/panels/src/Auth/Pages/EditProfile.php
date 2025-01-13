@@ -28,6 +28,7 @@ use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
@@ -442,7 +443,7 @@ class EditProfile extends Page
         return $schema
             ->components([
                 $this->getFormContentComponent(),
-                $this->getMultiFactorAuthenticationContentComponent(),
+                ...Arr::wrap($this->getMultiFactorAuthenticationContentComponent()),
             ]);
     }
 
@@ -457,33 +458,23 @@ class EditProfile extends Page
                 ->sticky((! static::isSimple()) && $this->areFormActionsSticky()));
     }
 
-    public function getMultiFactorAuthenticationContentComponent(): Component
+    public function getMultiFactorAuthenticationContentComponent(): ?Component
     {
+        if (! Filament::hasMultiFactorAuthentication()) {
+            return null;
+        }
+
+        $user = Filament::auth()->user();
+
         return Section::make()
             ->label(__('filament-panels::auth/pages/edit-profile.multi_factor_authentication.label'))
             ->compact()
             ->divided()
             ->secondary()
-            ->schema($this->getMultiFactorAuthenticationContentComponents());
-    }
-
-    /**
-     * @return array<Component>
-     */
-    public function getMultiFactorAuthenticationContentComponents(): array
-    {
-        $providers = Filament::getMultiFactorAuthenticationProviders();
-
-        if (empty($providers)) {
-            return [];
-        }
-
-        $user = Filament::auth()->user();
-
-        return collect($providers)
-            ->sort(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): int => $multiFactorAuthenticationProvider->isEnabled($user) ? 0 : 1)
-            ->map(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): Component => Group::make($multiFactorAuthenticationProvider->getManagementSchemaComponents())
-                ->statePath($multiFactorAuthenticationProvider->getId()))
-            ->all();
+            ->schema(collect(Filament::getMultiFactorAuthenticationProviders())
+                ->sort(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): int => $multiFactorAuthenticationProvider->isEnabled($user) ? 0 : 1)
+                ->map(fn (MultiFactorAuthenticationProvider $multiFactorAuthenticationProvider): Component => Group::make($multiFactorAuthenticationProvider->getManagementSchemaComponents())
+                    ->statePath($multiFactorAuthenticationProvider->getId()))
+                ->all());
     }
 }

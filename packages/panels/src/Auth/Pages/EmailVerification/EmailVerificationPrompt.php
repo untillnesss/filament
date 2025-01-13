@@ -17,7 +17,6 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 
 /**
- * @property-read Schema $form
  * @property-read Action $resendNotificationAction
  */
 class EmailVerificationPrompt extends SimplePage

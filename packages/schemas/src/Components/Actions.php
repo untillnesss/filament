@@ -60,6 +60,21 @@ class Actions extends Component
         return $this;
     }
 
+    public function isHidden(): bool
+    {
+        if (parent::isHidden()) {
+            return true;
+        }
+
+        foreach ($this->getChildComponentContainer()->getComponents() as $component) {
+            if ($component->isVisible()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function fullWidth(bool | Closure $isFullWidth = true): static
     {
         $this->isFullWidth = $isFullWidth;

@@ -27,6 +27,8 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Alignment;
 use Filament\View\PanelsRenderHook;
+use Illuminate\Auth\SessionGuard;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
@@ -110,18 +112,16 @@ class Login extends SimplePage
             }
         }
 
-        if (! Filament::auth()->attempt($credentials, $data['remember'] ?? false)) {
-            $this->throwFailureValidationException();
-        }
+        /** @var SessionGuard $authGuard */
+        $authGuard = Filament::auth();
 
-        $user = Filament::auth()->user();
+        if (! $authGuard->attemptWhen($credentials, function (Authenticatable $user): bool {
+            if (! ($user instanceof FilamentUser)) {
+                return true;
+            }
 
-        if (
-            ($user instanceof FilamentUser) &&
-            (! $user->canAccessPanel(Filament::getCurrentOrDefaultPanel()))
-        ) {
-            Filament::auth()->logout();
-
+            return $user->canAccessPanel(Filament::getCurrentOrDefaultPanel());
+        }, $data['remember'] ?? false)) {
             $this->throwFailureValidationException();
         }
 

@@ -96,6 +96,17 @@ Route::name('filament.')
                                         });
                                 }
 
+                                if ($panel->hasMultiFactorAuthentication()) {
+                                    Route::name('auth.multi-factor-authentication.')
+                                        ->prefix($panel->getMultiFactorAuthenticationRoutePrefix())
+                                        ->group(function () use ($panel) {
+                                            if ($panel->isMultiFactorAuthenticationRequired()) {
+                                                Route::get($panel->getSetUpRequiredMultiFactorAuthenticationRouteSlug(), $panel->getSetUpRequiredMultiFactorAuthenticationRouteAction())
+                                                    ->name('set-up-required');
+                                            }
+                                        });
+                                }
+
                                 Route::name('tenant.')
                                     ->group(function () use ($panel): void {
                                         if ($panel->hasTenantRegistration()) {

@@ -61,7 +61,9 @@
         style="height: 0"
     >
         @foreach ($this->getMountedActions() as $action)
-            {{ $action->toModalHtmlable() }}
+            @if ((! $loop->last) || $this->mountedActionShouldOpenModal())
+                {{ $action->toModalHtmlable() }}
+            @endif
         @endforeach
     </div>
 
