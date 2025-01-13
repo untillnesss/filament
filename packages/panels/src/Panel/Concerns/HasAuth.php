@@ -352,7 +352,7 @@ trait HasAuth
      */
     public function getSetUpRequiredMultiFactorAuthenticationUrl(array $parameters = []): ?string
     {
-        if (! $this->hasEmailVerification()) {
+        if (! $this->hasMultiFactorAuthentication()) {
             return null;
         }
 

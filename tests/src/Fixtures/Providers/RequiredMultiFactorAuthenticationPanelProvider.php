@@ -8,6 +8,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -17,37 +18,23 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class SlugsPanelProvider extends PanelProvider
+class RequiredMultiFactorAuthenticationPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('slugs')
-            ->path('slugs')
+            ->id('required-multi-factor-authentication')
+            ->path('required-multi-factor-authentication')
             ->login()
-            ->loginRouteSlug('login-test')
-            ->passwordReset()
-            ->passwordResetRequestRouteSlug('request-test')
-            ->passwordResetRouteSlug('reset-test')
-            ->passwordResetRoutePrefix('password-reset-test')
-            ->registration()
-            ->registrationRouteSlug('register-test')
-            ->emailChangeVerification()
-            ->emailChangeVerificationRouteSlug('verify-change-test')
-            ->emailChangeVerificationRoutePrefix('email-change-verification-test')
-            ->emailVerification()
-            ->emailVerificationPromptRouteSlug('prompt-test')
-            ->emailVerificationRouteSlug('verify-test')
-            ->emailVerificationRoutePrefix('email-verification-test')
             ->multiFactorAuthentication([
                 EmailCodeAuthentication::make(),
                 GoogleTwoFactorAuthentication::make(),
             ], isRequired: true)
-            ->setUpRequiredMultiFactorAuthenticationRouteSlug('set-up-test')
-            ->multiFactorAuthenticationRoutePrefix('multi-factor-authentication-test')
             ->profile()
             ->resources([])
-            ->pages([])
+            ->pages([
+                Dashboard::class,
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

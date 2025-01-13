@@ -44,7 +44,7 @@ class User extends Authenticatable implements FilamentUser, HasEmailCodeAuthenti
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return in_array($panel->getId(), ['admin', 'slugs', 'google-two-factor-authentication', 'email-code-authentication']);
+        return in_array($panel->getId(), ['admin', 'slugs', 'google-two-factor-authentication', 'email-code-authentication', 'required-multi-factor-authentication']);
     }
 
     public function posts(): HasMany
