@@ -11,8 +11,8 @@ use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\CanUseDatabaseTransactions;
 use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Decorations\Layouts\FormActionsDecorations;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\NestedSchema;
 use Filament\Schemas\Schema;
@@ -383,10 +383,12 @@ class EditRecord extends Page
         return Form::make([NestedSchema::make('form')])
             ->id('form')
             ->livewireSubmitHandler('save')
-            ->footer(FormActionsDecorations::make($this->getFormActions())
-                ->alignment($this->getFormActionsAlignment())
-                ->fullWidth($this->hasFullWidthFormActions())
-                ->sticky($this->areFormActionsSticky()));
+            ->footer([
+                Actions::make($this->getFormActions())
+                    ->alignment($this->getFormActionsAlignment())
+                    ->fullWidth($this->hasFullWidthFormActions())
+                    ->sticky(),
+            ]);
     }
 
     /**

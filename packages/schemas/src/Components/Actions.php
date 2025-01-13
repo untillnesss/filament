@@ -18,6 +18,8 @@ class Actions extends Component
 
     protected string $view = 'filament-schema::components.actions';
 
+    protected bool | Closure $isSticky = false;
+
     protected bool | Closure $isFullWidth = false;
 
     const BEFORE_LABEL_DECORATIONS = 'before_label';
@@ -129,5 +131,17 @@ class Actions extends Component
         $this->decorations(static::BELOW_CONTENT_DECORATIONS, $decorations);
 
         return $this;
+    }
+
+    public function sticky(bool | Closure $condition = true): static
+    {
+        $this->isSticky = $condition;
+
+        return $this;
+    }
+
+    public function isSticky(): bool
+    {
+        return (bool) $this->evaluate($this->isSticky);
     }
 }

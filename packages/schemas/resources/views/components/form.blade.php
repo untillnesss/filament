@@ -13,5 +13,5 @@
 
     {{ $getChildComponentContainer() }}
 
-    {{ $getDecorations($schemaComponent::FOOTER_DECORATIONS) }}
+    {{ $getFooterChildComponentContainer() }}
 </form>

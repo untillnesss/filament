@@ -16,8 +16,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Notifications\Notification;
 use Filament\Pages\SimplePage;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Decorations\Layouts\FormActionsDecorations;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\NestedSchema;
@@ -394,9 +394,11 @@ class Login extends SimplePage
         return Form::make([NestedSchema::make('form')])
             ->id('form')
             ->livewireSubmitHandler('authenticate')
-            ->footer(FormActionsDecorations::make($this->getFormActions())
-                ->alignment($this->getFormActionsAlignment())
-                ->fullWidth($this->hasFullWidthFormActions()))
+            ->footer([
+                Actions::make($this->getFormActions())
+                    ->alignment($this->getFormActionsAlignment())
+                    ->fullWidth($this->hasFullWidthFormActions()),
+            ])
             ->visible(fn (): bool => blank($this->userUndertakingMultiFactorAuthentication));
     }
 
@@ -405,9 +407,11 @@ class Login extends SimplePage
         return Form::make([NestedSchema::make('multiFactorChallengeForm')])
             ->id('multiFactorChallengeForm')
             ->livewireSubmitHandler('authenticate')
-            ->footer(FormActionsDecorations::make($this->getMultiFactorChallengeFormActions())
-                ->alignment($this->getMultiFactorChallengeFormActionsAlignment())
-                ->fullWidth($this->hasFullWidthMultiFactorChallengeFormActions()))
+            ->footer([
+                Actions::make($this->getMultiFactorChallengeFormActions())
+                    ->alignment($this->getMultiFactorChallengeFormActionsAlignment())
+                    ->fullWidth($this->hasFullWidthMultiFactorChallengeFormActions()),
+            ])
             ->visible(fn (): bool => filled($this->userUndertakingMultiFactorAuthentication));
     }
 

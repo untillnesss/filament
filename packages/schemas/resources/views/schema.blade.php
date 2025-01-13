@@ -69,19 +69,7 @@
                 >
                     @if (! $isHidden)
                         <div
-                            x-data="{
-                                $statePath:
-                                    {{ $jsStatePath = Js::from($schemaComponent->getStatePath()) }},
-                                get $get() {
-                                    return makeGetUtility(@js($schemaComponent->getContainer()->getStatePath()))
-                                },
-                                get $set() {
-                                    return makeSetUtility(@js($schemaComponent->getContainer()->getStatePath()), @js($schemaComponent->isLive()))
-                                },
-                                get $state() {
-                                    return $wire.$get({{ $jsStatePath }})
-                                },
-                            }"
+                            x-data="filamentSchemaComponent({ path: @js($schemaComponent->getStatePath()), containerPath: @js($schemaComponent->getContainer()->getStatePath()), isLive: @js($schemaComponent->isLive()) })"
                             @if ($afterStateUpdatedJs = $schemaComponent->getAfterStateUpdatedJs())
                                 {{-- format-ignore-start --}}x-init="@foreach ($afterStateUpdatedJs as $js) $wire.$watch({{ $jsStatePath }}, ($state, $old) => eval(@js($js))); @endforeach"{{-- format-ignore-end --}}
                             @endif

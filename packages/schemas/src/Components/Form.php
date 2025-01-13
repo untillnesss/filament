@@ -5,17 +5,16 @@ namespace Filament\Schemas\Components;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Schemas\Components\Concerns\EntanglesStateWithSingularRelationship;
-use Filament\Schemas\Components\Concerns\HasFooterActions;
 use Filament\Schemas\Components\Concerns\HasHeaderActions;
 use Filament\Schemas\Components\Contracts\CanEntangleWithSingularRelationships;
 use Filament\Schemas\Components\Contracts\ExposesStateToActionData;
 use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
 use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
+use Filament\Schemas\Schema;
 
-class Form extends Component implements CanEntangleWithSingularRelationships, Contracts\HasFooterActions, Contracts\HasHeaderActions, ExposesStateToActionData
+class Form extends Component implements CanEntangleWithSingularRelationships, Contracts\HasHeaderActions, ExposesStateToActionData
 {
     use EntanglesStateWithSingularRelationship;
-    use HasFooterActions;
     use HasHeaderActions;
 
     /**
@@ -27,7 +26,10 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Co
 
     const HEADER_DECORATIONS = 'header';
 
-    const FOOTER_DECORATIONS = 'footer';
+    /**
+     * @var array<Component> | Closure
+     */
+    protected array | Closure $footerChildComponents = [];
 
     /**
      * @param  array<Component> | Closure  $schema
@@ -53,7 +55,6 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Co
         parent::setUp();
 
         $this->header(fn (Form $component): array => $component->getHeaderActions());
-        $this->setUpFooterActions();
     }
 
     public function action(Action | Closure | null $action): static
@@ -94,13 +95,52 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Co
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component> | Closure  $components
      */
-    public function footer(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function footer(array | Closure $components): static
     {
-        $this->decorations(static::FOOTER_DECORATIONS, $decorations);
+        $this->footerChildComponents = $components;
 
         return $this;
+    }
+
+    /**
+     * @return array<Component>
+     */
+    public function getFooterChildComponents(): array
+    {
+        return $this->evaluate($this->footerChildComponents);
+    }
+
+    public function getFooterChildComponentContainer(): Schema
+    {
+        return Schema::make($this->getLivewire())
+            ->parentComponent($this)
+            ->components($this->getFooterChildComponents());
+    }
+
+    /**
+     * @return array<Schema>
+     */
+    public function getChildComponentContainers(bool $withHidden = false): array
+    {
+        return [
+            ...$this->hasChildComponentContainer($withHidden) ? [$this->getChildComponentContainer()] : [],
+            ...$this->hasFooterChildComponentContainer($withHidden) ? [$this->getFooterChildComponentContainer()] : [],
+        ];
+    }
+
+    public function hasFooterChildComponentContainer(bool $withHidden = false): bool
+    {
+        if ((! $withHidden) && $this->isHidden()) {
+            return false;
+        }
+
+        if ($this->getFooterChildComponents() === []) {
+            return false;
+        }
+
+        return true;
     }
 
     public function prepareDecorationAction(Action $action): Action

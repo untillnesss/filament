@@ -1,63 +1,63 @@
+const resolveRelativeStatePath = function (containerPath, path, isAbsolute) {
+    let containerPathCopy = containerPath
+
+    if (path.startsWith('/')) {
+        isAbsolute = true
+        path = path.slice(1)
+    }
+
+    if (isAbsolute) {
+        return path
+    }
+
+    while (path.startsWith('../')) {
+        containerPathCopy = containerPathCopy.includes('.')
+            ? containerPathCopy.slice(
+                0,
+                containerPathCopy.lastIndexOf('.'),
+            )
+            : null
+
+        path = path.slice(3)
+    }
+
+    if (['', null, undefined].includes(containerPathCopy)) {
+        return path
+    }
+
+    return `${containerPathCopy}.${path}`
+}
+
+const makeGetUtility = function (containerPath) {
+    return (path, isAbsolute) => {
+        return this.$wire.$get(
+            resolveRelativeStatePath(
+                containerPath,
+                path,
+                isAbsolute,
+            ),
+        )
+    }
+}
+
+const makeSetUtility = function (containerPath, isComponentLive) {
+    return (path, state, isAbsolute, isLive = null) => {
+        isLive ??= isComponentLive
+
+        return this.$wire.$set(
+            resolveRelativeStatePath(
+                containerPath,
+                path,
+                isAbsolute,
+            ),
+            state,
+            isLive,
+        )
+    }
+}
+
 document.addEventListener('alpine:init', () => {
     window.Alpine.data('filamentSchema', ({ livewireId }) => ({
-        makeGetUtility: function (containerPath) {
-            return (path, isAbsolute) => {
-                return this.$wire.$get(
-                    this.resolveRelativeStatePath(
-                        containerPath,
-                        path,
-                        isAbsolute,
-                    ),
-                )
-            }
-        },
-
-        makeSetUtility: function (containerPath, isComponentLive) {
-            return (path, state, isAbsolute, isLive = null) => {
-                isLive ??= isComponentLive
-
-                return this.$wire.$set(
-                    this.resolveRelativeStatePath(
-                        containerPath,
-                        path,
-                        isAbsolute,
-                    ),
-                    state,
-                    isLive,
-                )
-            }
-        },
-
-        resolveRelativeStatePath: function (containerPath, path, isAbsolute) {
-            let containerPathCopy = containerPath
-
-            if (path.startsWith('/')) {
-                isAbsolute = true
-                path = path.slice(1)
-            }
-
-            if (isAbsolute) {
-                return path
-            }
-
-            while (path.startsWith('../')) {
-                containerPathCopy = containerPathCopy.includes('.')
-                    ? containerPathCopy.slice(
-                          0,
-                          containerPathCopy.lastIndexOf('.'),
-                      )
-                    : null
-
-                path = path.slice(3)
-            }
-
-            if (['', null, undefined].includes(containerPathCopy)) {
-                return path
-            }
-
-            return `${containerPathCopy}.${path}`
-        },
-
         handleFormValidationError: function (event) {
             if (event.detail.livewireId !== livewireId) {
                 return
@@ -88,6 +88,19 @@ document.addEventListener('alpine:init', () => {
                     200,
                 )
             })
+        },
+    }))
+
+    window.Alpine.data('filamentSchemaComponent', ({ path, containerPath, isLive }) => ({
+        $statePath: path,
+        get $get() {
+            return makeGetUtility(containerPath)
+        },
+        get $set() {
+            return makeSetUtility(containerPath, isLive)
+        },
+        get $state() {
+            return this.$wire.$get(path)
         },
     }))
 })

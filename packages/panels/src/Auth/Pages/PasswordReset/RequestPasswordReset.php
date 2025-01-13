@@ -12,8 +12,8 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\SimplePage;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Decorations\Layouts\FormActionsDecorations;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\NestedSchema;
 use Filament\Schemas\Components\RenderHook;
@@ -204,8 +204,10 @@ class RequestPasswordReset extends SimplePage
         return Form::make([NestedSchema::make('form')])
             ->id('form')
             ->livewireSubmitHandler('request')
-            ->footer(FormActionsDecorations::make($this->getFormActions())
-                ->alignment($this->getFormActionsAlignment())
-                ->fullWidth($this->hasFullWidthFormActions()));
+            ->footer([
+                Actions::make($this->getFormActions())
+                    ->alignment($this->getFormActionsAlignment())
+                    ->fullWidth($this->hasFullWidthFormActions()),
+            ]);
     }
 }

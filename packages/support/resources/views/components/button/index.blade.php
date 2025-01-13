@@ -99,23 +99,7 @@
         }"
     @endif
     @if ($hasFormProcessingLoadingIndicator)
-        x-data="{
-            form: null,
-            isProcessing: false,
-            processingMessage: null,
-        }"
-        x-init="
-            formElement = $el.closest('form')
-
-            formElement?.addEventListener('form-processing-started', (event) => {
-                isProcessing = true
-                processingMessage = event.detail.message
-            })
-
-            formElement?.addEventListener('form-processing-finished', () => {
-                isProcessing = false
-            })
-        "
+        x-data="filamentFormButton"
         x-bind:class="{ 'fi-processing': isProcessing }"
     @endif
     {{
