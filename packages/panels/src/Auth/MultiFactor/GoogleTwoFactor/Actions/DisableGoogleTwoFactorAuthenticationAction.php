@@ -16,30 +16,30 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\MaxWidth;
 use Illuminate\Support\Facades\DB;
 
-class RemoveGoogleTwoFactorAuthenticationAction
+class DisableGoogleTwoFactorAuthenticationAction
 {
     public static function make(GoogleTwoFactorAuthentication $googleTwoFactorAuthentication): Action
     {
         $isRecoverable = $googleTwoFactorAuthentication->isRecoverable();
 
-        return Action::make('removeGoogleTwoFactorAuthentication')
-            ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.label'))
+        return Action::make('disableGoogleTwoFactorAuthentication')
+            ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.label'))
             ->color('danger')
             ->icon('heroicon-m-lock-open')
-            ->outlined()
+            ->link()
             ->modalWidth(MaxWidth::Medium)
             ->modalIcon('heroicon-o-lock-open')
-            ->modalHeading(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.heading'))
-            ->modalDescription(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.description'))
+            ->modalHeading(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.heading'))
+            ->modalDescription(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.description'))
             ->form([
                 OneTimeCodeInput::make('code')
-                    ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.form.code.label'))
+                    ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.form.code.label'))
                     ->belowContent(fn (Get $get): Action => Action::make('useRecoveryCode')
-                        ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.form.code.actions.use_recovery_code.label'))
+                        ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.form.code.actions.use_recovery_code.label'))
                         ->link()
                         ->action(fn (Set $set) => $set('useRecoveryCode', true))
                         ->visible(fn (): bool => $isRecoverable && (! $get('useRecoveryCode'))))
-                    ->validationAttribute(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.form.code.validation_attribute'))
+                    ->validationAttribute(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.form.code.validation_attribute'))
                     ->required(fn (Get $get): bool => (! $isRecoverable) || blank($get('recoveryCode')))
                     ->rule(function () use ($googleTwoFactorAuthentication): Closure {
                         return function (string $attribute, mixed $value, Closure $fail) use ($googleTwoFactorAuthentication): void {
@@ -47,12 +47,12 @@ class RemoveGoogleTwoFactorAuthenticationAction
                                 return;
                             }
 
-                            $fail(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.form.code.messages.invalid'));
+                            $fail(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.form.code.messages.invalid'));
                         };
                     }),
                 TextInput::make('recoveryCode')
-                    ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.form.recovery_code.label'))
-                    ->validationAttribute(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.form.recovery_code.validation_attribute'))
+                    ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.form.recovery_code.label'))
+                    ->validationAttribute(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.form.recovery_code.validation_attribute'))
                     ->password()
                     ->revealable(Filament::arePasswordsRevealable())
                     ->rule(function () use ($googleTwoFactorAuthentication): Closure {
@@ -65,14 +65,14 @@ class RemoveGoogleTwoFactorAuthenticationAction
                                 return;
                             }
 
-                            $fail(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.form.recovery_code.messages.invalid'));
+                            $fail(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.form.recovery_code.messages.invalid'));
                         };
                     })
                     ->visible(fn (Get $get): bool => $isRecoverable && $get('useRecoveryCode'))
                     ->live(onBlur: true),
             ])
             ->modalSubmitAction(fn (Action $action) => $action
-                ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.modal.actions.submit.label')))
+                ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.actions.submit.label')))
             ->action(function () use ($googleTwoFactorAuthentication, $isRecoverable) {
                 /** @var HasGoogleTwoFactorAuthentication&HasGoogleTwoFactorAuthenticationRecovery $user */
                 $user = Filament::auth()->user();
@@ -86,7 +86,7 @@ class RemoveGoogleTwoFactorAuthenticationAction
                 });
 
                 Notification::make()
-                    ->title(__('filament-panels::auth/multi-factor/google-two-factor/actions/remove.notifications.removed.title'))
+                    ->title(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.notifications.disabled.title'))
                     ->success()
                     ->icon('heroicon-o-lock-open')
                     ->send();

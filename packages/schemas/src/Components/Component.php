@@ -25,6 +25,7 @@ use Filament\Schemas\Components\Concerns\HasMaxWidth;
 use Filament\Schemas\Components\Concerns\HasMeta;
 use Filament\Schemas\Components\Concerns\HasState;
 use Filament\Schemas\Concerns\HasColumns;
+use Filament\Schemas\Concerns\HasGap;
 use Filament\Schemas\Concerns\HasStateBindingModifiers;
 use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\CanGrow;
@@ -55,6 +56,7 @@ class Component extends ViewComponent
     use HasEntryWrapper;
     use HasExtraAttributes;
     use HasFieldWrapper;
+    use HasGap;
     use HasId;
     use HasInlineLabel;
     use HasKey;

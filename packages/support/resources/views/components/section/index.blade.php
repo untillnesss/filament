@@ -14,12 +14,15 @@
     'contained' => true,
     'contentBefore' => false,
     'description' => null,
+    'divided' => false,
     'footer' => null,
+    'hasContentEl' => true,
     'heading' => null,
     'icon' => null,
     'iconColor' => 'gray',
     'iconSize' => IconSize::Large,
     'persistCollapsed' => false,
+    'secondary' => false,
 ])
 
 @php
@@ -50,6 +53,8 @@
             'fi-aside' => $aside,
             'fi-compact' => $compact,
             'fi-collapsible' => $collapsible,
+            'fi-divided' => $divided,
+            'fi-secondary' => $secondary,
         ])
     }}
 >
@@ -119,9 +124,13 @@
         @endif
         class="fi-section-content-ctn"
     >
-        <div class="fi-section-content">
+        @if ($hasContentEl)
+            <div class="fi-section-content">
+                {{ $slot }}
+            </div>
+        @else
             {{ $slot }}
-        </div>
+        @endif
 
         @if (! is_slot_empty($footer))
             <footer class="fi-section-footer">

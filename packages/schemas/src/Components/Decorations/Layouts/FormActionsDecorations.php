@@ -1,11 +1,10 @@
 <?php
 
-namespace Filament\Schemas\Components\Decorations;
+namespace Filament\Schemas\Components\Decorations\Layouts;
 
 use Closure;
 use Filament\Actions\Action;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
 use Filament\Support\Concerns\HasAlignment;
 
 class FormActionsDecorations extends DecorationsLayout

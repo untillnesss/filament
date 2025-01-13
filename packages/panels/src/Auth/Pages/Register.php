@@ -16,7 +16,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\CanUseDatabaseTransactions;
 use Filament\Pages\SimplePage;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Decorations\FormActionsDecorations;
+use Filament\Schemas\Components\Decorations\Layouts\FormActionsDecorations;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\NestedSchema;
 use Filament\Schemas\Components\RenderHook;

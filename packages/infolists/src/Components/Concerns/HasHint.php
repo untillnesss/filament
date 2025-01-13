@@ -5,8 +5,8 @@ namespace Filament\Infolists\Components\Concerns;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\Entry;
-use Filament\Schemas\Components\Decorations\IconDecoration;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Schemas\Components\Icon;
+use Filament\Schemas\Components\Text;
 use Illuminate\Contracts\Support\Htmlable;
 
 trait HasHint
@@ -35,14 +35,14 @@ trait HasHint
             $hint = $component->getHint();
 
             if (filled($hint)) {
-                $decorations[] = TextDecoration::make($hint)
+                $decorations[] = Text::make($hint)
                     ->color($component->getHintColor());
             }
 
             $hintIcon = $component->getHintIcon();
 
             if (filled($hintIcon)) {
-                $decorations[] = IconDecoration::make($hintIcon)
+                $decorations[] = Icon::make($hintIcon)
                     ->tooltip($component->getHintIconTooltip());
             }
 

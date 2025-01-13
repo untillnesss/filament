@@ -16,7 +16,10 @@
                     'x-data' => $isRoot ? 'filamentSchema({ livewireId: ' . Js::from($this->getId()) . ' })' : null,
                     'x-on:form-validation-error.window' => $isRoot ? 'handleFormValidationError' : null,
                 ], escape: false)
-                ->class(['fi-sc gap-6'])
+                ->class([
+                    'fi-sc',
+                    ($isDense() ? 'gap-3' : 'gap-6') => $hasGap(),
+                ])
         }}
     >
         @foreach ($getComponents(withHidden: true) as $schemaComponent)

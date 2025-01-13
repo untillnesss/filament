@@ -26,6 +26,7 @@ use Filament\Tests\Fixtures\Providers\EmailCodeAuthenticationPanelProvider;
 use Filament\Tests\Fixtures\Providers\Fixtures\Providers\SingleDomainPanel;
 use Filament\Tests\Fixtures\Providers\GoogleTwoFactorAuthenticationPanelProvider;
 use Filament\Tests\Fixtures\Providers\MultiDomainPanel;
+use Filament\Tests\Fixtures\Providers\RequiredMultiFactorAuthenticationPanelProvider;
 use Filament\Tests\Fixtures\Providers\SlugsPanelProvider;
 use Filament\Tests\Fixtures\Providers\TenancyPanelProvider;
 use Filament\Widgets\WidgetsServiceProvider;
@@ -63,6 +64,7 @@ abstract class TestCase extends BaseTestCase
             CustomPanelProvider::class,
             EmailCodeAuthenticationPanelProvider::class,
             GoogleTwoFactorAuthenticationPanelProvider::class,
+            RequiredMultiFactorAuthenticationPanelProvider::class,
             DomainTenancyPanelProvider::class,
             MultiDomainPanel::class,
             SingleDomainPanel::class,

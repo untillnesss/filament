@@ -145,6 +145,14 @@ class FilamentManager
         return $this->getCurrentOrDefaultPanel()->getEmailVerificationPromptUrl($parameters);
     }
 
+    /**
+     * @param  array<mixed>  $parameters
+     */
+    public function getSetUpRequiredMultiFactorAuthenticationUrl(array $parameters = []): ?string
+    {
+        return $this->getCurrentOrDefaultPanel()->getSetUpRequiredMultiFactorAuthenticationUrl($parameters);
+    }
+
     public function getEmailVerifiedMiddleware(): string
     {
         return $this->getCurrentOrDefaultPanel()->getEmailVerifiedMiddleware();
@@ -647,6 +655,11 @@ class FilamentManager
         return $this->getCurrentOrDefaultPanel()->hasLazyLoadedDatabaseNotifications();
     }
 
+    public function hasMultiFactorAuthentication(): bool
+    {
+        return $this->getCurrentOrDefaultPanel()->hasMultiFactorAuthentication();
+    }
+
     public function hasEmailVerification(): bool
     {
         return $this->getCurrentOrDefaultPanel()->hasEmailVerification();
@@ -984,7 +997,7 @@ class FilamentManager
     }
 
     /**
-     * @return array<MultiFactorAuthenticationProvider>
+     * @return array<string, MultiFactorAuthenticationProvider>
      */
     public function getMultiFactorAuthenticationProviders(): array
     {

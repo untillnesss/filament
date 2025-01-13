@@ -500,6 +500,10 @@ trait HasComponents
                 $this->queueLivewireComponentForRegistration($loginRouteAction);
             }
 
+            if ($this->isMultiFactorAuthenticationRequired() && is_subclass_of($setUpRequiredMultiFactorAuthenticationRouteAction = $this->getSetUpRequiredMultiFactorAuthenticationRouteAction(), Component::class)) {
+                $this->queueLivewireComponentForRegistration($setUpRequiredMultiFactorAuthenticationRouteAction);
+            }
+
             if ($this->hasPasswordReset()) {
                 if (is_subclass_of($requestPasswordResetRouteAction = $this->getRequestPasswordResetRouteAction(), Component::class)) {
                     $this->queueLivewireComponentForRegistration($requestPasswordResetRouteAction);

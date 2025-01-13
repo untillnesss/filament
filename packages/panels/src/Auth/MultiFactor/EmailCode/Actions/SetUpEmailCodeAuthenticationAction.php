@@ -22,7 +22,7 @@ class SetUpEmailCodeAuthenticationAction
             ->label(__('filament-panels::auth/multi-factor/email-code/actions/set-up.label'))
             ->color('primary')
             ->icon('heroicon-m-lock-closed')
-            ->outlined()
+            ->link()
             ->mountUsing(function (HasActions $livewire) use ($emailCodeAuthentication) {
                 $livewire->mergeMountedActionArguments([
                     'encrypted' => encrypt([
@@ -71,8 +71,7 @@ class SetUpEmailCodeAuthenticationAction
                     }),
             ])
             ->modalSubmitAction(fn (Action $action) => $action
-                ->label(__('filament-panels::auth/multi-factor/email-code/actions/set-up.modal.actions.submit.label'))
-                ->color('danger'))
+                ->label(__('filament-panels::auth/multi-factor/email-code/actions/set-up.modal.actions.submit.label')))
             ->action(function (array $arguments) use ($emailCodeAuthentication) {
                 /** @var Authenticatable&HasEmailCodeAuthentication $user */
                 $user = Filament::auth()->user();

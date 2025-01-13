@@ -2,19 +2,19 @@
 
 return [
 
-    'label' => 'Remove',
+    'label' => 'Turn off',
 
     'modal' => [
 
-        'heading' => 'Remove email code authentication',
+        'heading' => 'Disable email verification codes',
 
-        'description' => 'Are you sure you want to disable email code authentication?',
+        'description' => 'Are you sure you want to stop receiving email verification codes? Disabling this will remove an extra layer of security from your account.',
 
         'form' => [
 
             'code' => [
 
-                'label' => 'Enter the code we sent you by email',
+                'label' => 'Enter the 6-digit code we sent you by email',
 
                 'validation_attribute' => 'code',
 
@@ -49,7 +49,7 @@ return [
         'actions' => [
 
             'submit' => [
-                'label' => 'Remove email code authentication',
+                'label' => 'Disable email verification codes',
             ],
 
         ],
@@ -58,8 +58,8 @@ return [
 
     'notifications' => [
 
-        'removed' => [
-            'title' => 'Email code authentication has been removed',
+        'disabled' => [
+            'title' => 'Email verification codes have been disabled',
         ],
 
     ],

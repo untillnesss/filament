@@ -17,12 +17,11 @@ TextInput::make('url')
 You can also render more complex decorations, like icons, by using a decoration component to configure it:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\IconDecoration;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Icon;
 
 TextInput::make('url')
     ->afterLabel(
-        IconDecoration::make('heroicon-m-information-circle')
+        Icon::make('heroicon-m-information-circle')
             ->tooltip('Example: John Doe'),
     )
 ```
@@ -30,14 +29,12 @@ TextInput::make('url')
 You can render multiple decorations in one slot, using an array of decoration components:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\IconDecoration;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Icon;use Filament\Schemas\Components\Text;
 
 TextInput::make('name')
     ->belowContent([
-        TextDecoration::make('Your full name here, including any middle names.'),
-        IconDecoration::make('heroicon-m-information-circle')
+        Text::make('Your full name here, including any middle names.'),
+        Icon::make('heroicon-m-information-circle')
             ->tooltip('Example: John Doe'),
     ])
 ```
@@ -45,15 +42,12 @@ TextInput::make('name')
 You can also align decorations using an `AlignDecorations` component, for example, to make the text occupy the left and the icon the far right:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\IconDecoration;
-use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;use Filament\Schemas\Components\Icon;use Filament\Schemas\Components\Text;
 
 TextInput::make('name')
     ->belowContent(AlignDecorations::between([
-        TextDecoration::make('Your full name here, including any middle names.'),
-        IconDecoration::make('heroicon-m-information-circle')
+        Text::make('Your full name here, including any middle names.'),
+        Icon::make('heroicon-m-information-circle')
             ->tooltip('Example: John Doe'),
     ]))
 ```
@@ -141,12 +135,11 @@ TextInput::make('url')
 Text decorations displayed as a badge may also have an [icon](../styling/icons):
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Text;
 
 TextInput::make('url')
     ->belowContent(
-        TextDecoration::make('Public')
+        Text::make('Public')
             ->badge()
             ->icon('heroicon-m-globe-alt'),
     )
@@ -155,12 +148,11 @@ TextInput::make('url')
 You may set the position of an icon using `iconPosition()`:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Text;
 
 TextInput::make('url')
     ->belowContent(
-        TextDecoration::make('Public')
+        Text::make('Public')
             ->badge()
             ->icon('heroicon-m-globe-alt')
             ->iconPosition(IconPosition::After) // `IconPosition::Before` or `IconPosition::After`,
@@ -174,14 +166,12 @@ You can change the text font family to any of the following options: `FontFamily
 For instance, you may make the font monospaced using `fontFamily(FontFamily::Mono)`:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\TextDecoration;
-use Filament\Support\Enums\FontFamily;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Text;use Filament\Support\Enums\FontFamily;
 
 TextInput::make('apiKey')
     ->belowContent([
-        TextDecoration::make('Example'),
-        TextDecoration::make('v1Fm7gyWGh5n9GPE')
+        Text::make('Example'),
+        Text::make('v1Fm7gyWGh5n9GPE')
             ->fontFamily(FontFamily::Mono),
     ])
 ```
@@ -191,12 +181,11 @@ TextInput::make('apiKey')
 You may specify a tooltip to display when you hover over a text decoration:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Text;
 
 TextInput::make('url')
     ->belowContent(
-        TextDecoration::make('Public')
+        Text::make('Public')
             ->badge()
             ->tooltip('Users will be able to see this on your profile.'),
     )
@@ -209,13 +198,11 @@ Text decoration have regular font weight by default, but you may change this to 
 For instance, you may make the font bold using `weight(FontWeight::Bold)`:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\TextDecoration;
-use Filament\Support\Enums\FontWeight;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Text;use Filament\Support\Enums\FontWeight;
 
 TextInput::make('url')
     ->belowContent(
-        TextDecoration::make('Public')
+        Text::make('Public')
             ->weight(FontWeight::Bold),
     )
 ```
@@ -225,12 +212,11 @@ TextInput::make('url')
 Icon decorations can be defined by using an `IconDecoration` component:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\IconDecoration;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Icon;
 
 TextInput::make('url')
     ->afterLabel(
-        IconDecoration::make('heroicon-m-information-circle'),
+        Icon::make('heroicon-m-information-circle'),
     )
 ```
 
@@ -239,12 +225,11 @@ TextInput::make('url')
 You may set a [color](../styling/colors) for an icon decoration using the `color()` method:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\IconDecoration;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Icon;
 
 TextInput::make('url')
     ->afterLabel(
-        IconDecoration::make('heroicon-m-information-circle')
+        Icon::make('heroicon-m-information-circle')
             ->color('info'),
     )
 ```
@@ -254,12 +239,11 @@ TextInput::make('url')
 You may specify a tooltip to display when you hover over an icon decoration:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\IconDecoration;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Icon;
 
 TextInput::make('url')
     ->afterLabel(
-        IconDecoration::make('heroicon-m-information-circle')
+        Icon::make('heroicon-m-information-circle')
             ->tooltip('Example: John Doe'),
     )
 ```
@@ -294,27 +278,24 @@ TextInput::make('password')
 You may align decorations within their slot. Each slot has a default alignment depending on where it is, but you may override this by wrapping your decorations in an `AlignDecorations` component. The available alignment options are `AlignDecorations::start()`, `AlignDecorations::end()`, and `AlignDecorations::between()`:
 
 ```php
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\IconDecoration;
-use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;use Filament\Schemas\Components\Icon;use Filament\Schemas\Components\Text;
 
 TextInput::make('name')
     ->afterLabel(AlignDecorations::start([
-        IconDecoration::make('heroicon-m-information-circle')
+        Icon::make('heroicon-m-information-circle')
             ->tooltip('Example: John Doe'),
     ]))
 
 TextInput::make('name')
     ->belowContent(AlignDecorations::between([
-        TextDecoration::make('Your full name here, including any middle names.'),
-        IconDecoration::make('heroicon-m-information-circle')
+        Text::make('Your full name here, including any middle names.'),
+        Icon::make('heroicon-m-information-circle')
             ->tooltip('Example: John Doe'),
     ]))
 
 TextInput::make('name')
     ->belowContent(AlignDecorations::end([
-        IconDecoration::make('heroicon-m-information-circle')
+        Icon::make('heroicon-m-information-circle')
             ->tooltip('Example: John Doe'),
     ]))
 ```
@@ -322,17 +303,13 @@ TextInput::make('name')
 When using `AlignDecorations::between()`, you may group decorations together at the start or end of the slot using a nested array:
 
 ```php
-use Filament\Actions\Action;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Decorations\IconDecoration;
-use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
-use Filament\Schemas\Components\Decorations\TextDecoration;
+use Filament\Actions\Action;use Filament\Forms\Components\TextInput;use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;use Filament\Schemas\Components\Icon;use Filament\Schemas\Components\Text;
 
 TextInput::make('name')
     ->belowContent(AlignDecorations::between([
         [
-            TextDecoration::make('Your full name here, including any middle names.'),
-            IconDecoration::make('heroicon-m-information-circle')
+            Text::make('Your full name here, including any middle names.'),
+            Icon::make('heroicon-m-information-circle')
                 ->tooltip('Example: John Doe'),
         ],
         Action::make('switchToCompanyAccount')

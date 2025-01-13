@@ -25,7 +25,7 @@ beforeEach(function () {
         ->create());
 });
 
-it('can remove authentication when valid challenge code is used', function () {
+it('can disable authentication when valid challenge code is used', function () {
     $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
@@ -42,8 +42,8 @@ it('can remove authentication when valid challenge code is used', function () {
 
     livewire(EditProfile::class)
         ->callAction(
-            TestAction::make('removeGoogleTwoFactorAuthentication')
-                ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
+            TestAction::make('disableGoogleTwoFactorAuthentication')
+                ->schemaComponent('content.google_two_factor.disableGoogleTwoFactorAuthenticationAction'),
             ['code' => $googleTwoFactorAuthentication->getCurrentCode($user)],
         )
         ->assertHasNoActionErrors();
@@ -59,7 +59,7 @@ it('can remove authentication when valid challenge code is used', function () {
         ->toBeEmpty();
 });
 
-it('can remove authentication when a valid recovery code is used', function () {
+it('can disable authentication when a valid recovery code is used', function () {
     $user = auth()->user();
 
     expect($user->hasGoogleTwoFactorAuthentication())
@@ -73,8 +73,8 @@ it('can remove authentication when a valid recovery code is used', function () {
         ->toHaveCount(8);
 
     livewire(EditProfile::class)
-        ->mountAction(TestAction::make('removeGoogleTwoFactorAuthentication')
-            ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'))
+        ->mountAction(TestAction::make('disableGoogleTwoFactorAuthentication')
+            ->schemaComponent('content.google_two_factor.disableGoogleTwoFactorAuthenticationAction'))
         ->callAction(TestAction::make('useRecoveryCode')
             ->schemaComponent('mountedActionSchema0.code'))
         ->setActionData([
@@ -94,7 +94,7 @@ it('can remove authentication when a valid recovery code is used', function () {
         ->toBeEmpty();
 });
 
-it('will not remove authentication when an invalid code is used', function () {
+it('will not disable authentication when an invalid code is used', function () {
     $googleTwoFactorAuthentication = Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders());
 
     $user = auth()->user();
@@ -111,8 +111,8 @@ it('will not remove authentication when an invalid code is used', function () {
 
     livewire(EditProfile::class)
         ->callAction(
-            TestAction::make('removeGoogleTwoFactorAuthentication')
-                ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
+            TestAction::make('disableGoogleTwoFactorAuthentication')
+                ->schemaComponent('content.google_two_factor.disableGoogleTwoFactorAuthenticationAction'),
             ['code' => ($googleTwoFactorAuthentication->getCurrentCode($user) === '000000') ? '111111' : '000000'],
         )
         ->assertHasActionErrors();
@@ -143,8 +143,8 @@ test('codes are required without a recovery code', function () {
 
     livewire(EditProfile::class)
         ->callAction(
-            TestAction::make('removeGoogleTwoFactorAuthentication')
-                ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
+            TestAction::make('disableGoogleTwoFactorAuthentication')
+                ->schemaComponent('content.google_two_factor.disableGoogleTwoFactorAuthenticationAction'),
             ['code' => ''],
         )
         ->assertHasActionErrors([
@@ -179,8 +179,8 @@ test('codes must be 6 digits', function () {
 
     livewire(EditProfile::class)
         ->callAction(
-            TestAction::make('removeGoogleTwoFactorAuthentication')
-                ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
+            TestAction::make('disableGoogleTwoFactorAuthentication')
+                ->schemaComponent('content.google_two_factor.disableGoogleTwoFactorAuthenticationAction'),
             ['code' => Str::limit($googleTwoFactorAuthentication->getCurrentCode($user), limit: 5, end: '')],
         )
         ->assertHasActionErrors([
@@ -198,7 +198,7 @@ test('codes must be 6 digits', function () {
         ->toHaveCount(8);
 });
 
-it('will not remove authentication when an invalid recovery code is used', function () {
+it('will not disable authentication when an invalid recovery code is used', function () {
     $user = auth()->user();
 
     expect($user->hasGoogleTwoFactorAuthentication())
@@ -212,8 +212,8 @@ it('will not remove authentication when an invalid recovery code is used', funct
         ->toHaveCount(8);
 
     livewire(EditProfile::class)
-        ->mountAction(TestAction::make('removeGoogleTwoFactorAuthentication')
-            ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'))
+        ->mountAction(TestAction::make('disableGoogleTwoFactorAuthentication')
+            ->schemaComponent('content.google_two_factor.disableGoogleTwoFactorAuthenticationAction'))
         ->callAction(TestAction::make('useRecoveryCode')
             ->schemaComponent('mountedActionSchema0.code'))
         ->setActionData([
@@ -233,7 +233,7 @@ it('will not remove authentication when an invalid recovery code is used', funct
         ->toHaveCount(8);
 });
 
-it('will not remove authentication with a recovery code if recovery is disabled', function () {
+it('will not disable authentication with a recovery code if recovery is disabled', function () {
     Arr::first(Filament::getCurrentOrDefaultPanel()->getMultiFactorAuthenticationProviders())
         ->recoverable(false);
 
@@ -251,8 +251,8 @@ it('will not remove authentication with a recovery code if recovery is disabled'
 
     livewire(EditProfile::class)
         ->callAction(
-            TestAction::make('removeGoogleTwoFactorAuthentication')
-                ->schemaComponent('content.google_two_factor.removeGoogleTwoFactorAuthenticationAction'),
+            TestAction::make('disableGoogleTwoFactorAuthentication')
+                ->schemaComponent('content.google_two_factor.disableGoogleTwoFactorAuthenticationAction'),
             ['recoveryCode' => Arr::first($this->recoveryCodes)],
         )
         ->assertHasActionErrors();

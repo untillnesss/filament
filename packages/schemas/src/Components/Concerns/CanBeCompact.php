@@ -4,7 +4,7 @@ namespace Filament\Schemas\Components\Concerns;
 
 use Closure;
 
-trait CanBeCompacted
+trait CanBeCompact
 {
     protected bool | Closure $isCompact = false;
 

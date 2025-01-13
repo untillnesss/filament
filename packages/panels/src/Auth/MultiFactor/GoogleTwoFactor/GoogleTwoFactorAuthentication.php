@@ -6,8 +6,8 @@ use Closure;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Auth\MultiFactor\Contracts\MultiFactorAuthenticationProvider;
+use Filament\Auth\MultiFactor\GoogleTwoFactor\Actions\DisableGoogleTwoFactorAuthenticationAction;
 use Filament\Auth\MultiFactor\GoogleTwoFactor\Actions\RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction;
-use Filament\Auth\MultiFactor\GoogleTwoFactor\Actions\RemoveGoogleTwoFactorAuthenticationAction;
 use Filament\Auth\MultiFactor\GoogleTwoFactor\Actions\SetUpGoogleTwoFactorAuthenticationAction;
 use Filament\Auth\MultiFactor\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthentication;
 use Filament\Auth\MultiFactor\GoogleTwoFactor\Contracts\HasGoogleTwoFactorAuthenticationRecovery;
@@ -16,6 +16,7 @@ use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Text;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -51,6 +52,11 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
     public function getId(): string
     {
         return 'google_two_factor';
+    }
+
+    public function getLoginFormLabel(): string
+    {
+        return __('filament-panels::auth/multi-factor/google-two-factor/provider.login_form.label');
     }
 
     public function isEnabled(Authenticatable $user): bool
@@ -158,9 +164,18 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
      */
     public function getManagementSchemaComponents(): array
     {
+        $user = Filament::auth()->user();
+
         return [
             Actions::make($this->getActions())
-                ->label(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.label')),
+                ->label(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.label'))
+                ->belowContent(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.below_content'))
+                ->afterLabel(fn (): Text => $this->isEnabled($user)
+                    ? Text::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.enabled'))
+                        ->badge()
+                        ->color('success')
+                    : Text::make(__('filament-panels::auth/multi-factor/google-two-factor/provider.management_schema.actions.messages.disabled'))
+                        ->badge()),
         ];
     }
 
@@ -176,7 +191,7 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
                 ->hidden(fn (): bool => $this->isEnabled($user)),
             RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction::make($this)
                 ->visible(fn (): bool => $this->isEnabled($user) && $this->isRecoverable() && $this->canRegenerateRecoveryCodes()),
-            RemoveGoogleTwoFactorAuthenticationAction::make($this)
+            DisableGoogleTwoFactorAuthenticationAction::make($this)
                 ->visible(fn (): bool => $this->isEnabled($user)),
         ];
     }
