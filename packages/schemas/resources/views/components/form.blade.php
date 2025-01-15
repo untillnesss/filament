@@ -13,5 +13,5 @@
 
     {{ $getChildComponentContainer() }}
 
-    {{ $getFooterChildComponentContainer() }}
+    {{ $getChildComponentContainer($schemaComponent::FOOTER_SLOT) }}
 </form>

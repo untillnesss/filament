@@ -45,12 +45,12 @@ class Schema extends ViewComponent
 
     public static string $defaultTimeDisplayFormat = 'H:i:s';
 
-    final public function __construct(Component & HasSchemas $livewire)
+    final public function __construct((Component & HasSchemas) | null $livewire = null)
     {
         $this->livewire($livewire);
     }
 
-    public static function make(Component & HasSchemas $livewire): static
+    public static function make((Component & HasSchemas) | null $livewire = null): static
     {
         $static = app(static::class, ['livewire' => $livewire]);
         $static->configure();

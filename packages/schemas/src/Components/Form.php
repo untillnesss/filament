@@ -26,10 +26,7 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Co
 
     const HEADER_DECORATIONS = 'header';
 
-    /**
-     * @var array<Component> | Closure
-     */
-    protected array | Closure $footerChildComponents = [];
+    const FOOTER_SLOT = 'footer';
 
     /**
      * @param  array<Component> | Closure  $schema
@@ -95,52 +92,13 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Co
     }
 
     /**
-     * @param  array<Component> | Closure  $components
+     * @param  array<Component | Action> | Schema | Component | Action | string | Closure | null $components
      */
-    public function footer(array | Closure $components): static
+    public function footer(array | Schema | Component | Action | string | Closure | null $components): static
     {
-        $this->footerChildComponents = $components;
+        $this->childComponents($components, static::FOOTER_SLOT);
 
         return $this;
-    }
-
-    /**
-     * @return array<Component>
-     */
-    public function getFooterChildComponents(): array
-    {
-        return $this->evaluate($this->footerChildComponents);
-    }
-
-    public function getFooterChildComponentContainer(): Schema
-    {
-        return Schema::make($this->getLivewire())
-            ->parentComponent($this)
-            ->components($this->getFooterChildComponents());
-    }
-
-    /**
-     * @return array<Schema>
-     */
-    public function getChildComponentContainers(bool $withHidden = false): array
-    {
-        return [
-            ...$this->hasChildComponentContainer($withHidden) ? [$this->getChildComponentContainer()] : [],
-            ...$this->hasFooterChildComponentContainer($withHidden) ? [$this->getFooterChildComponentContainer()] : [],
-        ];
-    }
-
-    public function hasFooterChildComponentContainer(bool $withHidden = false): bool
-    {
-        if ((! $withHidden) && $this->isHidden()) {
-            return false;
-        }
-
-        if ($this->getFooterChildComponents() === []) {
-            return false;
-        }
-
-        return true;
     }
 
     public function prepareDecorationAction(Action $action): Action

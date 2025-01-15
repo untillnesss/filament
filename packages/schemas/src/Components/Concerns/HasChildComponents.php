@@ -3,18 +3,19 @@
 namespace Filament\Schemas\Components\Concerns;
 
 use Closure;
+use Filament\Actions\Action;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
 
 trait HasChildComponents
 {
     /**
-     * @var array<string, array<Component> | Closure>
+     * @var array<string, array<Component | Action> | Schema | Component | Action | string | Closure | null>
      */
-    protected array | Closure $childComponents = [];
+    protected array $childComponents = [];
 
     /**
-     * @param  array<Component> | Closure  $components
+     * @param  array<Component | Action> | Closure  $components
      */
     public function components(array | Closure $components): static
     {
@@ -24,9 +25,9 @@ trait HasChildComponents
     }
 
     /**
-     * @param  array<Component> | Closure  $components
+     * @param  array<Component | Action> | Schema | Component | Action | string | Closure | null  $components
      */
-    public function childComponents(array | Closure $components, string $slot = 'default'): static
+    public function childComponents(array | Schema | Component | Action | string | Closure | null $components, string $slot = 'default'): static
     {
         $this->childComponents[$slot] = $components;
 
@@ -34,7 +35,7 @@ trait HasChildComponents
     }
 
     /**
-     * @param  array<Component> | Closure  $components
+     * @param  array<Component | Action> | Closure  $components
      */
     public function schema(array | Closure $components): static
     {
@@ -44,23 +45,23 @@ trait HasChildComponents
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action>
      */
-    public function getChildComponents(string $slot = 'default'): array
+    public function getChildComponents(?string $slot = null): array
     {
-        if ($slot === 'default') {
+        if (blank($slot)) {
             return $this->getDefaultChildComponents();
         }
 
-        return $this->evaluate($this->childComponents[$slot] ?? []);
+        return $this->getChildComponentContainer($slot)->getComponents();
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     public function getDefaultChildComponents(): array
     {
-        return $this->evaluate($this->childComponents['default'] ?? []);
+        return $this->getChildComponents(slot: 'default');
     }
 
     /**
@@ -68,13 +69,31 @@ trait HasChildComponents
      */
     public function getChildComponentContainer($key = null): Schema
     {
-        if (filled($key) && array_key_exists($key, $containers = $this->getChildComponentContainers())) {
+        if (filled($key) && array_key_exists($key, $containers = $this->getDefaultChildComponentContainers())) {
             return $containers[$key];
         }
 
+        $slot = $key ?? 'default';
+
+        if (blank($this->childComponents[$slot] ?? [])) {
+            return $this->makeSchemaForSlot($slot);
+        }
+
+        $components = $this->evaluate($this->childComponents[$slot]) ?? [];
+
+        if ($components instanceof Schema) {
+            return $components
+                ->livewire($this->getLivewire())
+                ->parentComponent($this);
+        }
+
+        return $this->makeSchemaForSlot($slot)->components($components);
+    }
+
+    protected function makeSchemaForSlot(string $slot): Schema
+    {
         return Schema::make($this->getLivewire())
-            ->parentComponent($this)
-            ->components($this->getChildComponents());
+            ->parentComponent($this);
     }
 
     /**
@@ -82,11 +101,26 @@ trait HasChildComponents
      */
     public function getChildComponentContainers(bool $withHidden = false): array
     {
-        if (! $this->hasChildComponentContainer($withHidden)) {
+        if ((! $withHidden) && $this->isHidden()) {
             return [];
         }
 
-        return $this->getDefaultChildComponentContainers();
+        return [
+            ...(array_key_exists('default', $this->childComponents) ? $this->getDefaultChildComponentContainers() : []),
+            ...array_reduce(
+                array_keys($this->childComponents),
+                function (array $carry, string $slot): array {
+                    if ($slot === 'default') {
+                        return $carry;
+                    }
+
+                    $carry[] = $this->getChildComponentContainer($slot);
+
+                    return $carry;
+                },
+                initial: [],
+            ),
+        ];
     }
 
     /**
@@ -97,16 +131,24 @@ trait HasChildComponents
         return [$this->getChildComponentContainer()];
     }
 
-    public function hasChildComponentContainer(bool $withHidden = false): bool
+    protected function cloneChildComponents(): static
     {
-        if ((! $withHidden) && $this->isHidden()) {
-            return false;
+        foreach ($this->childComponents as $slot => $childComponents) {
+            if (is_array($childComponents)) {
+                $this->childComponents[$slot] = array_map(
+                    fn (Component | Action $component): Component | Action => match (true) {
+                        $component instanceof Component => $component->getClone(),
+                        default => $component,
+                    },
+                    $childComponents,
+                );
+            }
+
+            if ($childComponents instanceof Schema) {
+                $this->childComponents[$slot] = $childComponents->getClone();
+            }
         }
 
-        if ($this->getChildComponents() === []) {
-            return false;
-        }
-
-        return true;
+        return $this;
     }
 }
