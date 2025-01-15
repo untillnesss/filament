@@ -2,7 +2,7 @@
     use Filament\Actions\Action;
     use Filament\Support\Enums\Alignment;
 
-    $containers = $getChildComponentContainers();
+    $items = $getItems();
     $blockPickerBlocks = $getBlockPickerBlocks();
     $blockPickerColumns = $getBlockPickerColumns();
     $blockPickerWidth = $getBlockPickerWidth();
@@ -47,7 +47,7 @@
             <div
                 @class([
                     'flex gap-x-3',
-                    'hidden' => count($containers) < 2,
+                    'hidden' => count($items) < 2,
                 ])
             >
                 @if ($collapseAllActionIsVisible)
@@ -68,7 +68,7 @@
             </div>
         @endif
 
-        @if (count($containers))
+        @if (count($items))
             <ul
                 x-sortable
                 data-sortable-animation-duration="{{ $getReorderAnimationDuration() }}"
@@ -81,7 +81,7 @@
                     $hasBlockNumbers = $hasBlockNumbers();
                 @endphp
 
-                @foreach ($containers as $uuid => $item)
+                @foreach ($items as $uuid => $item)
                     @php
                         $visibleExtraItemActions = array_filter(
                             $extraItemActions,

@@ -12,10 +12,7 @@ const resolveRelativeStatePath = function (containerPath, path, isAbsolute) {
 
     while (path.startsWith('../')) {
         containerPathCopy = containerPathCopy.includes('.')
-            ? containerPathCopy.slice(
-                0,
-                containerPathCopy.lastIndexOf('.'),
-            )
+            ? containerPathCopy.slice(0, containerPathCopy.lastIndexOf('.'))
             : null
 
         path = path.slice(3)
@@ -31,11 +28,7 @@ const resolveRelativeStatePath = function (containerPath, path, isAbsolute) {
 const makeGetUtility = function (containerPath) {
     return (path, isAbsolute) => {
         return this.$wire.$get(
-            resolveRelativeStatePath(
-                containerPath,
-                path,
-                isAbsolute,
-            ),
+            resolveRelativeStatePath(containerPath, path, isAbsolute),
         )
     }
 }
@@ -45,11 +38,7 @@ const makeSetUtility = function (containerPath, isComponentLive) {
         isLive ??= isComponentLive
 
         return this.$wire.$set(
-            resolveRelativeStatePath(
-                containerPath,
-                path,
-                isAbsolute,
-            ),
+            resolveRelativeStatePath(containerPath, path, isAbsolute),
             state,
             isLive,
         )
@@ -91,16 +80,19 @@ document.addEventListener('alpine:init', () => {
         },
     }))
 
-    window.Alpine.data('filamentSchemaComponent', ({ path, containerPath, isLive }) => ({
-        $statePath: path,
-        get $get() {
-            return makeGetUtility(containerPath)
-        },
-        get $set() {
-            return makeSetUtility(containerPath, isLive)
-        },
-        get $state() {
-            return this.$wire.$get(path)
-        },
-    }))
+    window.Alpine.data(
+        'filamentSchemaComponent',
+        ({ path, containerPath, isLive }) => ({
+            $statePath: path,
+            get $get() {
+                return makeGetUtility(containerPath)
+            },
+            get $set() {
+                return makeSetUtility(containerPath, isLive)
+            },
+            get $state() {
+                return this.$wire.$get(path)
+            },
+        }),
+    )
 })

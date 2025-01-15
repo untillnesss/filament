@@ -8,11 +8,13 @@ trait Cloneable
 {
     protected function cloneChildComponents(): static
     {
-        if (is_array($this->childComponents)) {
-            $this->childComponents = array_map(
-                fn (Component $component): Component => $component->getClone(),
-                $this->childComponents,
-            );
+        foreach ($this->childComponents as $slot => $childComponents) {
+            if (is_array($childComponents)) {
+                $this->childComponents[$slot] = array_map(
+                    fn (Component $component): Component => $component->getClone(),
+                    $childComponents,
+                );
+            }
         }
 
         return $this;

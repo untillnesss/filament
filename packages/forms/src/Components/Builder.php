@@ -898,12 +898,11 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
         return $blocks;
     }
 
-    public function getChildComponentContainers(bool $withHidden = false): array
+    /**
+     * @return array<Schema>
+     */
+    public function getItems(): array
     {
-        if ((! $withHidden) && $this->isHidden()) {
-            return [];
-        }
-
         return collect($this->getState())
             ->filter(fn (array $itemData): bool => filled($itemData['type'] ?? null) && $this->hasBlock($itemData['type']))
             ->map(
@@ -915,6 +914,14 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
                     ->getClone(),
             )
             ->all();
+    }
+
+    /**
+     * @return array<Schema>
+     */
+    public function getDefaultChildComponentContainers(): array
+    {
+        return $this->getItems();
     }
 
     public function getAddBetweenActionLabel(): string

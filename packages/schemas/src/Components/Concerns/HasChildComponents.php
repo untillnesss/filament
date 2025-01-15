@@ -9,16 +9,16 @@ use Filament\Schemas\Schema;
 trait HasChildComponents
 {
     /**
-     * @var array<Component> | Closure
+     * @var array<string, array<Component> | Closure>
      */
     protected array | Closure $childComponents = [];
 
     /**
      * @param  array<Component> | Closure  $components
      */
-    public function components(array | Closure $components): static
+    public function components(array | Closure $components, string $slot = 'default'): static
     {
-        $this->childComponents = $components;
+        $this->childComponents($components, $slot);
 
         return $this;
     }
@@ -26,9 +26,9 @@ trait HasChildComponents
     /**
      * @param  array<Component> | Closure  $components
      */
-    public function childComponents(array | Closure $components): static
+    public function childComponents(array | Closure $components, string $slot = 'default'): static
     {
-        $this->components($components);
+        $this->childComponents[$slot] = $components;
 
         return $this;
     }
@@ -36,9 +36,9 @@ trait HasChildComponents
     /**
      * @param  array<Component> | Closure  $components
      */
-    public function schema(array | Closure $components): static
+    public function schema(array | Closure $components, string $slot = 'default'): static
     {
-        $this->components($components);
+        $this->childComponents($components, $slot);
 
         return $this;
     }
@@ -46,9 +46,21 @@ trait HasChildComponents
     /**
      * @return array<Component>
      */
-    public function getChildComponents(): array
+    public function getChildComponents(string $slot = 'default'): array
     {
-        return $this->evaluate($this->childComponents);
+        if ($slot === 'default') {
+            return $this->getDefaultChildComponents();
+        }
+
+        return $this->evaluate($this->childComponents[$slot] ?? []);
+    }
+
+    /**
+     * @return array<Component>
+     */
+    public function getDefaultChildComponents(): array
+    {
+        return $this->evaluate($this->childComponents['default'] ?? []);
     }
 
     /**
@@ -74,6 +86,14 @@ trait HasChildComponents
             return [];
         }
 
+        return $this->getDefaultChildComponentContainers();
+    }
+
+    /**
+     * @return array<Schema>
+     */
+    public function getDefaultChildComponentContainers(): array
+    {
         return [$this->getChildComponentContainer()];
     }
 

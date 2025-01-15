@@ -61,7 +61,7 @@ class MorphToSelect extends Component
     /**
      * @return array<Component>
      */
-    public function getChildComponents(): array
+    public function getDefaultChildComponents(): array
     {
         $relationship = $this->getRelationship();
         $typeColumn = $relationship->getMorphType();
