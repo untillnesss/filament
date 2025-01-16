@@ -3,6 +3,7 @@
 namespace Filament\Schemas\Components;
 
 use Closure;
+use Filament\Actions\Action;
 use Filament\Schemas\Components\Concerns\EntanglesStateWithSingularRelationship;
 use Filament\Schemas\Components\Contracts\CanEntangleWithSingularRelationships;
 
@@ -16,7 +17,7 @@ class Group extends Component implements CanEntangleWithSingularRelationships
     protected string $view = 'filament-schema::components.grid';
 
     /**
-     * @param  array<Component> | Closure  $schema
+     * @param  array<Component | Action> | Closure  $schema
      */
     final public function __construct(array | Closure $schema = [])
     {
@@ -24,7 +25,7 @@ class Group extends Component implements CanEntangleWithSingularRelationships
     }
 
     /**
-     * @param  array<Component> | Closure  $schema
+     * @param  array<Component | Action> | Closure  $schema
      */
     public static function make(array | Closure $schema = []): static
     {

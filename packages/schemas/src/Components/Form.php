@@ -5,17 +5,13 @@ namespace Filament\Schemas\Components;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Schemas\Components\Concerns\EntanglesStateWithSingularRelationship;
-use Filament\Schemas\Components\Concerns\HasHeaderActions;
 use Filament\Schemas\Components\Contracts\CanEntangleWithSingularRelationships;
 use Filament\Schemas\Components\Contracts\ExposesStateToActionData;
-use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
-use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
 use Filament\Schemas\Schema;
 
-class Form extends Component implements CanEntangleWithSingularRelationships, Contracts\HasHeaderActions, ExposesStateToActionData
+class Form extends Component implements CanEntangleWithSingularRelationships, ExposesStateToActionData
 {
     use EntanglesStateWithSingularRelationship;
-    use HasHeaderActions;
 
     /**
      * @var view-string
@@ -24,12 +20,12 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Co
 
     protected string | Closure | null $livewireSubmitHandler = null;
 
-    const HEADER_DECORATIONS = 'header';
+    const HEADER_SLOT = 'header';
 
     const FOOTER_SLOT = 'footer';
 
     /**
-     * @param  array<Component> | Closure  $schema
+     * @param  array<Component | Action> | Closure  $schema
      */
     final public function __construct(array | Closure $schema = [])
     {
@@ -37,7 +33,7 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Co
     }
 
     /**
-     * @param  array<Component> | Closure  $schema
+     * @param  array<Component | Action> | Closure  $schema
      */
     public static function make(array | Closure $schema = []): static
     {
@@ -45,13 +41,6 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Co
         $static->configure();
 
         return $static;
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->header(fn (Form $component): array => $component->getHeaderActions());
     }
 
     public function action(Action | Closure | null $action): static
@@ -78,21 +67,17 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Co
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action> | Schema | Component | Action | string | Closure | null  $components
      */
-    public function header(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function header(array | Schema | Component | Action | string | Closure | null $components): static
     {
-        $this->decorations(
-            static::HEADER_DECORATIONS,
-            $decorations,
-            makeDefaultLayoutUsing: fn (array $decorations): AlignDecorations => AlignDecorations::end($decorations),
-        );
+        $this->childComponents($components, static::HEADER_SLOT);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action> | Schema | Component | Action | string | Closure | null $components
+     * @param  array<Component | Action> | Schema | Component | Action | string | Closure | null  $components
      */
     public function footer(array | Schema | Component | Action | string | Closure | null $components): static
     {

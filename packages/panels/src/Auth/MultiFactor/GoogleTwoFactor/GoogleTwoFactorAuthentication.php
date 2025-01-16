@@ -160,7 +160,7 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     public function getManagementSchemaComponents(): array
     {

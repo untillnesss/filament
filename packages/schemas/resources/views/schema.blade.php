@@ -1,4 +1,5 @@
 @php
+    use Filament\Actions\Action;
     use Filament\Support\Enums\MaxWidth;
     use Illuminate\Support\Js;
     use Illuminate\View\ComponentAttributeBag;
@@ -23,7 +24,17 @@
         }}
     >
         @foreach ($getComponents(withHidden: true) as $schemaComponent)
-            @if (! $schemaComponent->isLiberatedFromContainerGrid())
+            @if ($schemaComponent instanceof Action)
+                <div
+                    @class([
+                        'hidden' => ($schemaComponentIsHidden = $schemaComponent->isHidden()),
+                    ])
+                >
+                    @if (! $schemaComponentIsHidden)
+                        {{ $schemaComponent }}
+                    @endif
+                </div>
+            @elseif (! $schemaComponent->isLiberatedFromContainerGrid())
                 @php
                     /**
                      * Instead of only rendering the hidden components, we should
@@ -70,12 +81,12 @@
                     @if (! $isHidden)
                         <div
                             x-data="filamentSchemaComponent({
-                                        path: @js($schemaComponent->getStatePath()),
+                                        path: @js($schemaComponentStatePath = $schemaComponent->getStatePath()),
                                         containerPath: @js($schemaComponent->getContainer()->getStatePath()),
                                         isLive: @js($schemaComponent->isLive()),
                                     })"
                             @if ($afterStateUpdatedJs = $schemaComponent->getAfterStateUpdatedJs())
-                                {{-- format-ignore-start --}}x-init="@foreach ($afterStateUpdatedJs as $js) $wire.$watch({{ $jsStatePath }}, ($state, $old) => eval(@js($js))); @endforeach"{{-- format-ignore-end --}}
+                                {{-- format-ignore-start --}}x-init="@foreach ($afterStateUpdatedJs as $js) $wire.$watch(@js($schemaComponentStatePath), ($state, $old) => eval(@js($js))); @endforeach"{{-- format-ignore-end --}}
                             @endif
                             @if (filled($xShow = match ([filled($hiddenJs), filled($visibleJs)]) {
                                      [true, true] => "(! {$hiddenJs}) && ({$visibleJs})",

@@ -3,6 +3,7 @@
 namespace Filament\Schemas\Concerns;
 
 use Closure;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Field;
 use Filament\Schemas\Components\Component;
 use Illuminate\Support\Collection;
@@ -10,22 +11,17 @@ use Illuminate\Support\Collection;
 trait HasComponents
 {
     /**
-     * @var array<Component> | Closure
+     * @var array<Component | Action> | Closure
      */
     protected array | Closure $components = [];
 
     /**
-     * @var array<string, Component>
-     */
-    protected array $cachedVisibleComponents;
-
-    /**
-     * @var array<array<array<array<string, Component>>>>
+     * @var array<array<array<array<array<string, Component>>>>>
      */
     protected array $cachedFlatComponents = [];
 
     /**
-     * @param  array<Component> | Closure  $components
+     * @param  array<Component | Action> | Closure  $components
      */
     public function components(array | Closure $components): static
     {
@@ -35,7 +31,7 @@ trait HasComponents
     }
 
     /**
-     * @param  array<Component> | Closure  $components
+     * @param  array<Component | Action> | Closure  $components
      */
     public function schema(array | Closure $components): static
     {
@@ -44,64 +40,45 @@ trait HasComponents
         return $this;
     }
 
-    public function getComponent(string | Closure $findComponentUsing, bool $withHidden = false, bool $isAbsoluteKey = false): ?Component
+    public function getComponent(string | Closure $findComponentUsing, bool $withActions = true, bool $withHidden = false, bool $isAbsoluteKey = false): Component | Action | null
     {
         if (! is_string($findComponentUsing)) {
-            return collect($this->getFlatComponents($withHidden))->first($findComponentUsing);
-        }
-
-        if ($withHidden) {
-            return $this->getFlatComponents($withHidden)[$findComponentUsing] ?? null;
+            return collect($this->getFlatComponents($withActions, $withHidden))->first($findComponentUsing);
         }
 
         if ((! $isAbsoluteKey) && filled($key = $this->getKey())) {
-            $findComponentUsing = "{$key}.{$findComponentUsing}";
+            $findComponentUsing = "{$key}.$findComponentUsing";
         }
 
-        return $this->getCachedVisibleComponents()[$findComponentUsing] ?? null;
+        return $this->getFlatComponents($withActions, $withHidden, withAbsoluteKeys: true)[$findComponentUsing] ?? null;
     }
 
     /**
-     * @return array<string, Component>
+     * @return array<Field>
      */
-    public function cacheVisibleComponents(): array
+    public function getFlatFields(bool $withHidden = false, bool $withAbsoluteKeys = false): array
     {
-        $this->cachedVisibleComponents = [];
-
-        foreach ($this->getComponents() as $component) {
-            if (filled($componentKey = $component->getKey())) {
-                $this->cachedVisibleComponents[$componentKey] = $component;
-            }
-
-            foreach ($component->getChildComponentContainers() as $childComponentContainer) {
-                $this->cachedVisibleComponents = [
-                    ...$this->cachedVisibleComponents,
-                    ...$childComponentContainer->getCachedVisibleComponents(),
-                ];
-            }
-        }
-
-        return $this->cachedVisibleComponents;
+        return collect($this->getFlatComponents(withActions: false, withHidden: $withHidden, withAbsoluteKeys: $withAbsoluteKeys))
+            ->whereInstanceOf(Field::class)
+            ->all();
     }
 
     /**
-     * @return array<string, Component>
+     * @return array<Component | Action>
      */
-    public function getCachedVisibleComponents(): array
-    {
-        return $this->cachedVisibleComponents ??= $this->cacheVisibleComponents();
-    }
-
-    /**
-     * @return array<Component>
-     */
-    public function getFlatComponents(bool $withHidden = false, bool $withAbsoluteKeys = false, ?string $containerKey = null): array
+    public function getFlatComponents(bool $withActions = true, bool $withHidden = false, bool $withAbsoluteKeys = false, ?string $containerKey = null): array
     {
         $containerKey ??= $this->getKey();
 
-        return $this->cachedFlatComponents[$withHidden][$withAbsoluteKeys][$containerKey] ??= array_reduce(
-            $this->getComponents($withHidden),
-            function (array $carry, Component $component) use ($containerKey, $withHidden, $withAbsoluteKeys): array {
+        return $this->cachedFlatComponents[$withActions][$withHidden][$withAbsoluteKeys][$containerKey] ??= array_reduce(
+            $this->getComponents($withActions, $withHidden),
+            function (array $carry, Component | Action $component) use ($containerKey, $withActions, $withHidden, $withAbsoluteKeys): array {
+                if ($component instanceof Action) {
+                    $carry[] = $component;
+
+                    return $carry;
+                }
+
                 $componentKey = $component->getKey();
 
                 if (blank($componentKey)) {
@@ -115,7 +92,7 @@ trait HasComponents
                 foreach ($component->getChildComponentContainers($withHidden) as $childComponentContainer) {
                     $carry = [
                         ...$carry,
-                        ...$childComponentContainer->getFlatComponents($withHidden, $withAbsoluteKeys, $containerKey),
+                        ...$childComponentContainer->getFlatComponents($withActions, $withHidden, $withAbsoluteKeys, $containerKey),
                     ];
                 }
 
@@ -126,36 +103,55 @@ trait HasComponents
     }
 
     /**
-     * @return array<Field>
+     * @return array<Component | Action>
      */
-    public function getFlatFields(bool $withHidden = false, bool $withAbsoluteKeys = false): array
+    public function getComponents(bool $withActions = true, bool $withHidden = false, bool $withOriginalKeys = false): array
     {
-        return collect($this->getFlatComponents($withHidden, $withAbsoluteKeys))
-            ->whereInstanceOf(Field::class)
-            ->all();
-    }
-
-    /**
-     * @return array<Component>
-     */
-    public function getComponents(bool $withHidden = false, bool $withOriginalKeys = false): array
-    {
-        $components = array_map(function (Component $component): Component {
-            $component->container($this);
+        $components = array_map(function (Component | Action $component): Component | Action {
+            if ($component instanceof Component) {
+                $component->container($this);
+            }
 
             return $component;
         }, $this->evaluate($this->components));
 
-        if ($withHidden) {
+        if ($withActions && $withHidden) {
             return $components;
         }
 
         return collect($components)
-            ->filter(fn (Component $component) => $component->isVisible())
+            ->filter(function (Component | Action $component) use ($withActions, $withHidden) {
+                if ((! $withActions) && ($component instanceof Action)) {
+                    return false;
+                }
+
+                if ((! $withHidden) && $component->isHidden()) {
+                    return false;
+                }
+
+                return true;
+            })
             ->when(
                 ! $withOriginalKeys,
                 fn (Collection $collection): Collection => $collection->values(),
             )
             ->all();
+    }
+
+    protected function cloneComponents(): static
+    {
+        if (is_array($this->components)) {
+            $this->components = array_map(
+                fn (Component | Action $component): Component | Action => match (true) {
+                    $component instanceof Component => $component
+                        ->container($this)
+                        ->getClone(),
+                    $component instanceof Action => clone $component,
+                },
+                $this->components,
+            );
+        }
+
+        return $this;
     }
 }

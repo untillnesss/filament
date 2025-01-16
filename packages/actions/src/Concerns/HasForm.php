@@ -3,6 +3,7 @@
 namespace Filament\Actions\Concerns;
 
 use Closure;
+use Filament\Actions\Action;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
 
@@ -36,7 +37,7 @@ trait HasForm
     }
 
     /**
-     * @param  array<Component> | Closure | null  $form
+     * @param  array<Component| Action> | Closure | null  $form
      */
     public function form(array | Closure | null $form): static
     {

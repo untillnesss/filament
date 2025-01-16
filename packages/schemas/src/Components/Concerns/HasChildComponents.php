@@ -5,7 +5,9 @@ namespace Filament\Schemas\Components\Concerns;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Text;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Arr;
 
 trait HasChildComponents
 {
@@ -49,10 +51,6 @@ trait HasChildComponents
      */
     public function getChildComponents(?string $slot = null): array
     {
-        if (blank($slot)) {
-            return $this->getDefaultChildComponents();
-        }
-
         return $this->getChildComponentContainer($slot)->getComponents();
     }
 
@@ -61,13 +59,13 @@ trait HasChildComponents
      */
     public function getDefaultChildComponents(): array
     {
-        return $this->getChildComponents(slot: 'default');
+        return $this->evaluate($this->childComponents['default'] ?? []) ?? [];
     }
 
     /**
      * @param  array-key  $key
      */
-    public function getChildComponentContainer($key = null): Schema
+    public function getChildComponentContainer($key = null): ?Schema
     {
         if (filled($key) && array_key_exists($key, $containers = $this->getDefaultChildComponentContainers())) {
             return $containers[$key];
@@ -75,24 +73,44 @@ trait HasChildComponents
 
         $slot = $key ?? 'default';
 
-        if (blank($this->childComponents[$slot] ?? [])) {
-            return $this->makeSchemaForSlot($slot);
-        }
+        $components = ($slot === 'default')
+            ? $this->getDefaultChildComponents()
+            : $this->evaluate($this->childComponents[$slot] ?? []) ?? [];
 
-        $components = $this->evaluate($this->childComponents[$slot]) ?? [];
+        if (blank($components)) {
+            return ($slot === 'default')
+                ? $this->makeSchemaForSlot($slot)
+                : null;
+        }
 
         if ($components instanceof Schema) {
             return $components
+                ->key(($slot === 'default' ? null : $slot))
                 ->livewire($this->getLivewire())
                 ->parentComponent($this);
         }
 
-        return $this->makeSchemaForSlot($slot)->components($components);
+        return $this->makeSchemaForSlot($slot)
+            ->components($this->normalizeChildComponents($components));
+    }
+
+    /**
+     * @param  array<Component | Action> | Component | Action | string  $components
+     * @return array<Component | Action>
+     */
+    protected function normalizeChildComponents(array | Component | Action | string $components): array
+    {
+        if (is_string($components)) {
+            return [Text::make($components)];
+        }
+
+        return Arr::wrap($components);
     }
 
     protected function makeSchemaForSlot(string $slot): Schema
     {
         return Schema::make($this->getLivewire())
+            ->key(($slot === 'default' ? null : $slot))
             ->parentComponent($this);
     }
 
@@ -114,7 +132,9 @@ trait HasChildComponents
                         return $carry;
                     }
 
-                    $carry[] = $this->getChildComponentContainer($slot);
+                    if ($container = $this->getChildComponentContainer($slot)) {
+                        $carry[$slot] = $container;
+                    }
 
                     return $carry;
                 },
@@ -128,7 +148,7 @@ trait HasChildComponents
      */
     public function getDefaultChildComponentContainers(): array
     {
-        return [$this->getChildComponentContainer()];
+        return ['default' => $this->getChildComponentContainer()];
     }
 
     protected function cloneChildComponents(): static
@@ -138,7 +158,7 @@ trait HasChildComponents
                 $this->childComponents[$slot] = array_map(
                     fn (Component | Action $component): Component | Action => match (true) {
                         $component instanceof Component => $component->getClone(),
-                        default => $component,
+                        default => clone $component,
                     },
                     $childComponents,
                 );
@@ -146,6 +166,14 @@ trait HasChildComponents
 
             if ($childComponents instanceof Schema) {
                 $this->childComponents[$slot] = $childComponents->getClone();
+            }
+
+            if ($childComponents instanceof Component) {
+                $this->childComponents[$slot] = $childComponents->getClone();
+            }
+
+            if ($childComponents instanceof Action) {
+                $this->childComponents[$slot] = clone $childComponents;
             }
         }
 

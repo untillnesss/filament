@@ -3,6 +3,7 @@
 namespace Filament\Tables\Filters\QueryBuilder\Constraints\SelectConstraint\Operators;
 
 use Exception;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Component;
 use Filament\Tables\Filters\QueryBuilder\Constraints\Operators\Operator;
@@ -61,7 +62,7 @@ class IsOperator extends Operator
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     public function getFormSchema(): array
     {

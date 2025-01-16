@@ -16,6 +16,7 @@ class Get
 
         $component = $livewire->getSchemaComponent(
             $this->component->resolveRelativeKey($key, $isAbsolute),
+            withHidden: true,
         );
 
         if (! $component) {

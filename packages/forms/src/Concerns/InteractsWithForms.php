@@ -161,7 +161,7 @@ trait InteractsWithForms
     /**
      * @deprecated Override the `form()` method to configure the default form.
      *
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     protected function getFormSchema(): array
     {

@@ -35,6 +35,10 @@ trait HasKey
             return $this->cachedAbsoluteKey;
         }
 
+        if (blank($key)) {
+            return $this->cacheAbsoluteKey(null);
+        }
+
         $keyComponents = [];
 
         if (filled($parentComponentInheritanceKey = $this->getParentComponent()?->getInheritanceKey())) {

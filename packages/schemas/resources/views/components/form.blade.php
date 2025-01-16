@@ -9,7 +9,7 @@
             ->class(['fi-fo-form flex flex-col', $isDense() ? 'gap-3' : 'gap-6'])
     }}
 >
-    {{ $getDecorations($schemaComponent::HEADER_DECORATIONS) }}
+    {{ $getChildComponentContainer($schemaComponent::HEADER_SLOT) }}
 
     {{ $getChildComponentContainer() }}
 

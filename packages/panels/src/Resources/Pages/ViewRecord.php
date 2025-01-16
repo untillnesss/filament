@@ -202,7 +202,7 @@ class ViewRecord extends Page
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     public function getContentComponents(): array
     {

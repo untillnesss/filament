@@ -63,7 +63,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
     protected string $view = 'filament-forms::components.select';
 
     /**
-     * @var array<Component> | Closure | null
+     * @var array<Component | Action> | Closure | null
      */
     protected array | Closure | null $createOptionActionForm = null;
 
@@ -78,7 +78,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
     protected ?Closure $modifyManageOptionActionsUsing = null;
 
     /**
-     * @var array<Component> | Closure | null
+     * @var array<Component | Action> | Closure | null
      */
     protected array | Closure | null $editOptionActionForm = null;
 
@@ -231,7 +231,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
     }
 
     /**
-     * @param  array<Component> | Closure | null  $schema
+     * @param  array<Component | Action> | Closure | null  $schema
      */
     public function manageOptionForm(array | Closure | null $schema): static
     {
@@ -242,7 +242,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
     }
 
     /**
-     * @param  array<Component> | Closure | null  $schema
+     * @param  array<Component | Action> | Closure | null  $schema
      */
     public function createOptionForm(array | Closure | null $schema): static
     {
@@ -362,7 +362,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
     }
 
     /**
-     * @return array<Component> | Schema | null
+     * @return array<Component | Action> | Schema | null
      */
     public function getCreateOptionActionForm(Schema $form): array | Schema | null
     {
@@ -375,7 +375,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
     }
 
     /**
-     * @return array<Component> | Schema | null
+     * @return array<Component | Action> | Schema | null
      */
     public function getEditOptionActionForm(Schema $form): array | Schema | null
     {
@@ -388,7 +388,7 @@ class Select extends Field implements Contracts\CanDisableOptions, Contracts\Has
     }
 
     /**
-     * @param  array<Component> | Closure | null  $schema
+     * @param  array<Component | Action> | Closure | null  $schema
      */
     public function editOptionForm(array | Closure | null $schema): static
     {

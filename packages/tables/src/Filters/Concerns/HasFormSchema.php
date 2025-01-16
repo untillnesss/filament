@@ -3,6 +3,7 @@
 namespace Filament\Tables\Filters\Concerns;
 
 use Closure;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Field;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
@@ -10,14 +11,14 @@ use Filament\Schemas\Schema;
 trait HasFormSchema
 {
     /**
-     * @var array<Component> | Closure | null
+     * @var array<Component | Action> | Closure | null
      */
     protected array | Closure | null $formSchema = null;
 
     protected ?Closure $modifyFormFieldUsing = null;
 
     /**
-     * @param  array<Component> | Closure | null  $schema
+     * @param  array<Component | Action> | Closure | null  $schema
      */
     public function form(array | Closure | null $schema): static
     {
@@ -34,7 +35,7 @@ trait HasFormSchema
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     public function getFormSchema(): array
     {

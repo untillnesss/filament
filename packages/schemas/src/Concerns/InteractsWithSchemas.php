@@ -3,6 +3,7 @@
 namespace Filament\Schemas\Concerns;
 
 use Closure;
+use Filament\Actions\Action;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
 use Filament\Support\Components\Attributes\ExposedLivewireMethod;
@@ -130,7 +131,7 @@ trait InteractsWithSchemas
         }
     }
 
-    public function getSchemaComponent(string $key): ?Component
+    public function getSchemaComponent(string $key, bool $withHidden = false): Component | Action | null
     {
         if (! str($key)->contains('.')) {
             return null;
@@ -140,7 +141,7 @@ trait InteractsWithSchemas
 
         $schema = $this->getSchema($schemaName);
 
-        return $schema?->getComponent($key, isAbsoluteKey: true);
+        return $schema?->getComponent($key, withHidden: $withHidden, isAbsoluteKey: true);
     }
 
     protected function cacheSchema(string $name, Schema | Closure | null $schema = null): ?Schema

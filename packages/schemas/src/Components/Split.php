@@ -3,6 +3,7 @@
 namespace Filament\Schemas\Components;
 
 use Closure;
+use Filament\Actions\Action;
 use Filament\Schemas\Components\Concerns\EntanglesStateWithSingularRelationship;
 use Filament\Support\Concerns\HasFromBreakpoint;
 use Filament\Support\Concerns\HasVerticalAlignment;
@@ -19,7 +20,7 @@ class Split extends Component
     protected string $view = 'filament-schema::components.split';
 
     /**
-     * @param  array<Component> | Closure  $schema
+     * @param  array<Component | Action> | Closure  $schema
      */
     final public function __construct(array | Closure $schema)
     {
@@ -27,7 +28,7 @@ class Split extends Component
     }
 
     /**
-     * @param  array<Component> | Closure  $schema
+     * @param  array<Component | Action> | Closure  $schema
      */
     public static function make(array | Closure $schema): static
     {

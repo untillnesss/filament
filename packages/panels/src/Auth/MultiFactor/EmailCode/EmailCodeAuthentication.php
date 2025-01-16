@@ -109,7 +109,7 @@ class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuth
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     public function getManagementSchemaComponents(): array
     {

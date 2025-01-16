@@ -2,6 +2,7 @@
 
 namespace Filament\Tables\Filters\QueryBuilder\Constraints\DateConstraint\Operators;
 
+use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Schemas\Components\Component;
 use Filament\Tables\Filters\QueryBuilder\Constraints\Operators\Operator;
@@ -38,7 +39,7 @@ class IsBeforeOperator extends Operator
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     public function getFormSchema(): array
     {

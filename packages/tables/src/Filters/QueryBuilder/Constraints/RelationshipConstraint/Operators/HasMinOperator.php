@@ -2,6 +2,7 @@
 
 namespace Filament\Tables\Filters\QueryBuilder\Constraints\RelationshipConstraint\Operators;
 
+use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
 use Filament\Tables\Filters\QueryBuilder\Constraints\Operators\Operator;
@@ -37,7 +38,7 @@ class HasMinOperator extends Operator
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     public function getFormSchema(): array
     {

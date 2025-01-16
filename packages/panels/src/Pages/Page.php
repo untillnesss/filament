@@ -2,6 +2,7 @@
 
 namespace Filament\Pages;
 
+use Filament\Actions\Action;
 use Filament\Clusters\Cluster;
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationItem;
@@ -351,7 +352,7 @@ abstract class Page extends BasePage
     /**
      * @param  array<string | WidgetConfiguration>  $widgets
      * @param  array<string, mixed>  $data
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     public function getWidgetsSchemaComponents(array $widgets, array $data = []): array
     {

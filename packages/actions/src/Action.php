@@ -5,7 +5,6 @@ namespace Filament\Actions;
 use Closure;
 use Filament\Actions\Concerns\HasTooltip;
 use Filament\Schemas\Components\Actions\ActionContainer;
-use Filament\Schemas\Components\Actions\ActionContainer as InfolistActionContainer;
 use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\HasBadge;
 use Filament\Support\Concerns\HasColor;
@@ -495,18 +494,9 @@ class Action extends ViewComponent implements Arrayable
         $this->record(null);
     }
 
-    public function toFormComponent(): ActionContainer
+    public function toSchemaComponent(): ActionContainer
     {
         $component = ActionContainer::make($this);
-
-        $this->schemaComponent($component);
-
-        return $component;
-    }
-
-    public function toInfolistComponent(): InfolistActionContainer
-    {
-        $component = InfolistActionContainer::make($this);
 
         $this->schemaComponent($component);
 

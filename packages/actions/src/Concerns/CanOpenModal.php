@@ -407,17 +407,6 @@ trait CanOpenModal
         return $this->getModalActions()[$name] ?? null;
     }
 
-    public function getMountableModalAction(string $name): ?Action
-    {
-        $action = $this->getModalAction($name);
-
-        if (! $action instanceof Action) {
-            return null;
-        }
-
-        return $action;
-    }
-
     public function prepareModalAction(Action $action): Action
     {
         if (! $action instanceof Action) {

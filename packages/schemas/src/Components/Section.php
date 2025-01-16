@@ -62,7 +62,7 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     const BELOW_CONTENT_DECORATIONS = 'below_content';
 
     /**
-     * @param  string | array<Component> | Htmlable | Closure | null  $heading
+     * @param  string | array<Component | Action> | Htmlable | Closure | null  $heading
      */
     final public function __construct(string | array | Htmlable | Closure | null $heading = null)
     {
@@ -72,7 +72,7 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     }
 
     /**
-     * @param  string | array<Component> | Htmlable | Closure | null  $heading
+     * @param  string | array<Component | Action> | Htmlable | Closure | null  $heading
      */
     public static function make(string | array | Htmlable | Closure | null $heading = null): static
     {

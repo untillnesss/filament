@@ -4,6 +4,7 @@ namespace Filament\Tables\Filters\QueryBuilder\Constraints\RelationshipConstrain
 
 use Closure;
 use Exception;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Component;
 use Filament\Support\Services\RelationshipJoiner;
@@ -101,7 +102,7 @@ class IsRelatedToOperator extends Operator
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action>
      */
     public function getFormSchema(): array
     {
