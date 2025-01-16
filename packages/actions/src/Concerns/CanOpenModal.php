@@ -414,6 +414,7 @@ trait CanOpenModal
         }
 
         return $action
+            ->schemaComponentContainer($this->getSchemaComponentContainer())
             ->schemaComponent($this->getSchemaComponent())
             ->livewire($this->getLivewire())
             ->when(

@@ -108,11 +108,11 @@ trait HasComponents
     public function getComponents(bool $withActions = true, bool $withHidden = false, bool $withOriginalKeys = false): array
     {
         $components = array_map(function (Component | Action $component): Component | Action {
-            if ($component instanceof Component) {
-                $component->container($this);
+            if ($component instanceof Action) {
+                return $component->schemaComponentContainer($this);
             }
 
-            return $component;
+            return $component->container($this);
         }, $this->evaluate($this->components));
 
         if ($withActions && $withHidden) {
@@ -143,10 +143,11 @@ trait HasComponents
         if (is_array($this->components)) {
             $this->components = array_map(
                 fn (Component | Action $component): Component | Action => match (true) {
+                    $component instanceof Action => (clone $component)
+                        ->schemaComponentContainer($this),
                     $component instanceof Component => $component
                         ->container($this)
                         ->getClone(),
-                    $component instanceof Action => clone $component,
                 },
                 $this->components,
             );
