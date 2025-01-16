@@ -410,7 +410,9 @@ trait InteractsWithActions
                 throw new ActionNotResolvableException('An action tried to resolve without a name.');
             }
 
-            if (filled($action['context']['schemaComponent'] ?? null)) {
+            if (filled($action['context']['schemaComponentContainer'] ?? null)) {
+                $resolvedAction = $this->resolveSchemaComponentContainerAction($action, $resolvedActions);
+            } elseif (filled($action['context']['schemaComponent'] ?? null)) {
                 $resolvedAction = $this->resolveSchemaComponentAction($action, $resolvedActions);
             } elseif ($this instanceof HasTable && filled($action['context']['table'] ?? null)) {
                 $resolvedAction = $this->resolveTableAction($action, $resolvedActions);
@@ -477,7 +479,7 @@ trait InteractsWithActions
     protected function resolveTableAction(array $action, array $parentActions): Action
     {
         if (! ($this instanceof HasTable)) {
-            throw new ActionNotResolvableException('Failed to resolve table action for Livewire component without the ' . HasTable::class . ' trait.');
+            throw new ActionNotResolvableException('Failed to resolve table action for Livewire component without the [' . HasTable::class . '] trait.');
         }
 
         $resolvedAction = null;
@@ -502,10 +504,42 @@ trait InteractsWithActions
      * @param  array<string, mixed>  $action
      * @param  array<Action>  $parentActions
      */
+    protected function resolveSchemaComponentContainerAction(array $action, array $parentActions): Action
+    {
+        if (! $this instanceof HasSchemas) {
+            throw new ActionNotResolvableException('Failed to resolve action schema for Livewire component without the [' . InteractsWithSchemas::class . '] trait.');
+        }
+
+        $key = $action['context']['schemaComponentContainer'];
+
+        $schemaName = (string) str($key)->before('.');
+
+        $schema = $this->getSchema($schemaName);
+
+        if (! $schema) {
+            throw new ActionNotResolvableException("Schema [{$schemaName}] not found.");
+        }
+
+        $resolvedAction = $schema->getAction(
+            $action['name'],
+            str($key)->contains('.') ? (string) str($key)->after('.') : null,
+        );
+
+        if (! $resolvedAction) {
+            throw new ActionNotResolvableException("Action [{$action['name']}] not found on schema [{$action['context']['schemaComponentContainer']}].");
+        }
+
+        return $resolvedAction;
+    }
+
+    /**
+     * @param  array<string, mixed>  $action
+     * @param  array<Action>  $parentActions
+     */
     protected function resolveSchemaComponentAction(array $action, array $parentActions): Action
     {
         if (! $this instanceof HasSchemas) {
-            throw new ActionNotResolvableException('Failed to resolve action schema component for Livewire component without the ' . InteractsWithSchemas::class . ' trait.');
+            throw new ActionNotResolvableException('Failed to resolve action schema component for Livewire component without the [' . InteractsWithSchemas::class . '] trait.');
         }
 
         $component = $this->getSchemaComponent($action['context']['schemaComponent']);
@@ -514,13 +548,13 @@ trait InteractsWithActions
             throw new ActionNotResolvableException("Schema component [{$action['context']['schemaComponent']}] not found.");
         }
 
-        $componentAction = $component->getAction($action['name']);
+        $resolvedAction = $component->getAction($action['name']);
 
-        if (! $componentAction) {
+        if (! $resolvedAction) {
             throw new ActionNotResolvableException("Action [{$action['name']}] not found on schema component [{$action['context']['schemaComponent']}].");
         }
 
-        return $componentAction;
+        return $resolvedAction;
     }
 
     /**

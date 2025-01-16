@@ -58,7 +58,7 @@ trait HasHeaderActions
             } elseif ($action instanceof Action) {
                 $this->cacheAction($action);
             } else {
-                throw new InvalidArgumentException('Table header actions must be an instance of ' . Action::class . ', ' . BulkAction::class . ' or ' . ActionGroup::class . '.');
+                throw new InvalidArgumentException('Table header actions must be an instance of [' . Action::class . '], [' . BulkAction::class . '] or [' . ActionGroup::class . '].');
             }
 
             $this->headerActions[] = $action;

@@ -40,6 +40,69 @@ trait HasComponents
         return $this;
     }
 
+    public function getAction(string $actionName, ?string $nestedContainerKey = null): ?Action
+    {
+        foreach ($this->getComponents() as $component) {
+            if (
+                blank($nestedContainerKey) &&
+                ($component instanceof Action) &&
+                ($component->getName() === $actionName)
+            ) {
+                return $component;
+            }
+
+            if ($component instanceof Action) {
+                continue;
+            }
+
+            $componentKey = $component->getKey(isAbsolute: false);
+
+            if (filled($componentKey)) {
+                if (blank($nestedContainerKey)) {
+                    continue;
+                }
+
+                if (
+                    ($nestedContainerKey !== $componentKey) &&
+                    (! str($nestedContainerKey)->startsWith("{$componentKey}."))
+                ) {
+                    continue;
+                }
+            }
+
+            $componentNestedContainerKey = ($nestedContainerKey === $componentKey)
+                ? null
+                : (string) str($nestedContainerKey)->after("{$componentKey}.");
+
+            foreach ($component->getChildComponentContainers() as $childComponentContainer) {
+                $childComponentContainerKey = $childComponentContainer->getKey(isAbsolute: false);
+
+                if (filled($childComponentContainerKey)) {
+                    if (blank($componentNestedContainerKey)) {
+                        continue;
+                    }
+
+                    if (
+                        ($componentNestedContainerKey !== $childComponentContainerKey)
+                        && (! str($componentNestedContainerKey)->startsWith("{$childComponentContainerKey}."))
+                    ) {
+                        continue;
+                    }
+                }
+
+                $childComponentContainerNestedContainerKey = ($componentNestedContainerKey === $childComponentContainerKey)
+                    ? null
+                    : (string) str($componentNestedContainerKey)->after("{$childComponentContainerKey}.");
+
+                if ($action = $childComponentContainer->getAction($actionName, $childComponentContainerNestedContainerKey)) {
+                    return $action;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function getComponent(string | Closure $findComponentUsing, bool $withActions = true, bool $withHidden = false, bool $isAbsoluteKey = false): Component | Action | null
     {
         if (! is_string($findComponentUsing)) {

@@ -67,7 +67,7 @@ trait HasEmptyState
             } elseif ($action instanceof Action) {
                 $this->cacheAction($action, $shouldOverwriteExistingActions);
             } else {
-                throw new InvalidArgumentException('Table empty state actions must be an instance of ' . Action::class . ' or ' . ActionGroup::class . '.');
+                throw new InvalidArgumentException('Table empty state actions must be an instance of [' . Action::class . '] or [' . ActionGroup::class . '].');
             }
 
             $this->emptyStateActions[] = $action;

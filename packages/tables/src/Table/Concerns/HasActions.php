@@ -67,7 +67,7 @@ trait HasActions
 
                 $this->cacheAction($action);
             } else {
-                throw new InvalidArgumentException('Table actions must be an instance of ' . Action::class . ' or ' . ActionGroup::class . '.');
+                throw new InvalidArgumentException('Table actions must be an instance of [' . Action::class . '] or [' . ActionGroup::class . '].');
             }
 
             $this->actions[] = $action;

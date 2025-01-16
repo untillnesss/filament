@@ -31,7 +31,7 @@ trait InteractsWithFormActions
             }
 
             if (! $action instanceof Action) {
-                throw new InvalidArgumentException('Form actions must be an instance of ' . Action::class . ', or ' . ActionGroup::class . '.');
+                throw new InvalidArgumentException('Form actions must be an instance of [' . Action::class . '], or [' . ActionGroup::class . '].');
             }
 
             $this->cacheAction($action);
