@@ -4,7 +4,6 @@ namespace Filament\Actions;
 
 use Closure;
 use Filament\Actions\Concerns\HasTooltip;
-use Filament\Schemas\Components\Actions\ActionContainer;
 use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\HasBadge;
 use Filament\Support\Concerns\HasColor;
@@ -497,15 +496,6 @@ class Action extends ViewComponent implements Arrayable
         $this->record(null);
     }
 
-    public function toSchemaComponent(): ActionContainer
-    {
-        $component = ActionContainer::make($this);
-
-        $this->schemaComponent($component);
-
-        return $component;
-    }
-
     /**
      * @param  array<string, mixed>  $parameters
      */
@@ -716,5 +706,10 @@ class Action extends ViewComponent implements Arrayable
             static::LINK_VIEW => $this->renderLink(),
             default => parent::render(),
         };
+    }
+
+    public function getClone(): static
+    {
+        return clone $this;
     }
 }

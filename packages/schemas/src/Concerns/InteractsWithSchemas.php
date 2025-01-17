@@ -4,6 +4,7 @@ namespace Filament\Schemas\Concerns;
 
 use Closure;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
 use Filament\Support\Components\Attributes\ExposedLivewireMethod;
@@ -131,7 +132,7 @@ trait InteractsWithSchemas
         }
     }
 
-    public function getSchemaComponent(string $key, bool $withHidden = false): Component | Action | null
+    public function getSchemaComponent(string $key, bool $withHidden = false): Component | Action | ActionGroup | null
     {
         if (! str($key)->contains('.')) {
             return null;

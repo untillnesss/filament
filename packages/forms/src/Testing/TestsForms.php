@@ -4,6 +4,7 @@ namespace Filament\Forms\Testing;
 
 use Closure;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Contracts\HasForms;
@@ -454,7 +455,7 @@ class TestsForms
             $form = $this->instance()->{$formName};
 
             /** @var Wizard $wizard */
-            $wizard = $form->getComponent(fn (Component | Action $component): bool => $component instanceof Wizard);
+            $wizard = $form->getComponent(fn (Component | Action | ActionGroup $component): bool => $component instanceof Wizard);
             Assert::assertArrayHasKey(
                 $step - 1,
                 $wizard->getDefaultChildComponents(),
@@ -475,7 +476,7 @@ class TestsForms
             $form = $this->instance()->{$formName};
 
             /** @var Wizard $wizard */
-            $wizard = $form->getComponent(fn (Component | Action $component): bool => $component instanceof Wizard);
+            $wizard = $form->getComponent(fn (Component | Action | ActionGroup $component): bool => $component instanceof Wizard);
             Assert::assertEquals(
                 $step,
                 $current = $wizard->getCurrentStepIndex() + 1,
@@ -496,7 +497,7 @@ class TestsForms
             $form = $this->instance()->{$formName};
 
             /** @var Wizard $wizard */
-            $wizard = $form->getComponent(fn (Component | Action $component): bool => $component instanceof Wizard);
+            $wizard = $form->getComponent(fn (Component | Action | ActionGroup $component): bool => $component instanceof Wizard);
 
             $stepIndex = ($step <= 1) ? 0 : $step - 2;
 
@@ -516,7 +517,7 @@ class TestsForms
             $form = $this->instance()->{$formName};
 
             /** @var Wizard $wizard */
-            $wizard = $form->getComponent(fn (Component | Action $component): bool => $component instanceof Wizard);
+            $wizard = $form->getComponent(fn (Component | Action | ActionGroup $component): bool => $component instanceof Wizard);
 
             $this->call('callSchemaComponentMethod', $wizard->getKey(), 'nextStep', [$wizard->getCurrentStepIndex()]);
 
@@ -534,7 +535,7 @@ class TestsForms
             $form = $this->instance()->{$formName};
 
             /** @var Wizard $wizard */
-            $wizard = $form->getComponent(fn (Component | Action $component): bool => $component instanceof Wizard);
+            $wizard = $form->getComponent(fn (Component | Action | ActionGroup $component): bool => $component instanceof Wizard);
 
             $this->call('callSchemaComponentMethod', $wizard->getKey(), 'previousStep', [$wizard->getCurrentStepIndex()]);
 

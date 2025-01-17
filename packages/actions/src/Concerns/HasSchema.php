@@ -4,6 +4,7 @@ namespace Filament\Actions\Concerns;
 
 use Closure;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Schema;
@@ -11,14 +12,14 @@ use Filament\Schemas\Schema;
 trait HasSchema
 {
     /**
-     * @var array<Component | Action> | Closure | null
+     * @var array<Component | Action | ActionGroup> | Closure | null
      */
     protected array | Closure | null $schema = null;
 
     protected bool | Closure $isSchemaDisabled = false;
 
     /**
-     * @param  array<Component | Action> | Closure | null  $schema
+     * @param  array<Component | Action | ActionGroup> | Closure | null  $schema
      */
     public function components(array | Closure | null $schema): static
     {
@@ -28,7 +29,7 @@ trait HasSchema
     }
 
     /**
-     * @param  array<Component | Action> | Closure | null  $schema
+     * @param  array<Component | Action | ActionGroup> | Closure | null  $schema
      */
     public function schema(array | Closure | null $schema): static
     {

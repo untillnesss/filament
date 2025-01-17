@@ -20,11 +20,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\View\ComponentAttributeBag;
 use Illuminate\View\ComponentSlot;
-use Livewire\Component;
 
 class ActionGroup extends ViewComponent implements Arrayable, HasEmbeddedView
 {
     use Concerns\BelongsToGroup;
+    use Concerns\BelongsToLivewire;
+    use Concerns\BelongsToSchemaComponent;
     use Concerns\BelongsToTable;
     use Concerns\CanBeHidden {
         isHidden as baseIsHidden;
@@ -63,8 +64,6 @@ class ActionGroup extends ViewComponent implements Arrayable, HasEmbeddedView
      * @var array<string, Action>
      */
     protected array $flatActions;
-
-    protected Component $livewire;
 
     protected string $evaluationIdentifier = 'group';
 
@@ -186,22 +185,6 @@ class ActionGroup extends ViewComponent implements Arrayable, HasEmbeddedView
     public function isLink(): bool
     {
         return $this->getTriggerView() === static::LINK_VIEW;
-    }
-
-    public function livewire(Component $livewire): static
-    {
-        $this->livewire = $livewire;
-
-        return $this;
-    }
-
-    public function getLivewire(): object
-    {
-        if (isset($this->livewire)) {
-            return $this->livewire;
-        }
-
-        return $this->getGroup()?->getLivewire();
     }
 
     public function getLabel(): string
@@ -582,6 +565,27 @@ class ActionGroup extends ViewComponent implements Arrayable, HasEmbeddedView
         return $this->triggerViewInstance ??= view(
             $this->getTriggerView(),
             $this->getTriggerViewData(),
+        );
+    }
+
+    public function getClone(): static
+    {
+        $clone = clone $this;
+        $clone->cloneActions();
+
+        return $clone;
+    }
+
+    protected function cloneActions(): void
+    {
+        $this->actions = array_map(
+            fn (Action | ActionGroup $action): Action | ActionGroup => $action->getClone()->group($this),
+            $this->actions,
+        );
+
+        $this->flatActions = array_map(
+            fn (Action $action): Action => $action->getClone()->group($this),
+            $this->flatActions,
         );
     }
 }

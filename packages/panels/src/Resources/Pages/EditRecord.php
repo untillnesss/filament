@@ -369,7 +369,7 @@ class EditRecord extends Page
     }
 
     /**
-     * @return array<Component | Action>
+     * @return array<Component | Action | ActionGroup>
      */
     public function getContentComponents(): array
     {

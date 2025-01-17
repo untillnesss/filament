@@ -5,6 +5,7 @@ namespace Filament\Forms\Components;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
 use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
@@ -109,9 +110,9 @@ class Field extends Component implements Contracts\HasValidationRules
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function aboveLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function aboveLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::ABOVE_LABEL_DECORATIONS, $decorations);
 
@@ -119,9 +120,9 @@ class Field extends Component implements Contracts\HasValidationRules
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function belowLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function belowLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::BELOW_LABEL_DECORATIONS, $decorations);
 
@@ -129,9 +130,9 @@ class Field extends Component implements Contracts\HasValidationRules
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function beforeLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function beforeLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::BEFORE_LABEL_DECORATIONS, $decorations);
 
@@ -139,9 +140,9 @@ class Field extends Component implements Contracts\HasValidationRules
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function afterLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function afterLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(
             static::AFTER_LABEL_DECORATIONS,
@@ -153,9 +154,9 @@ class Field extends Component implements Contracts\HasValidationRules
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function aboveContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function aboveContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::ABOVE_CONTENT_DECORATIONS, $decorations);
 
@@ -163,19 +164,19 @@ class Field extends Component implements Contracts\HasValidationRules
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function belowContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function belowContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
-        $this->decorations(static::BELOW_CONTENT_DECORATIONS, $decorations);
+        $this->childComponents($decorations, static::BELOW_CONTENT_DECORATIONS);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function beforeContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function beforeContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::BEFORE_CONTENT_DECORATIONS, $decorations);
 
@@ -183,9 +184,9 @@ class Field extends Component implements Contracts\HasValidationRules
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function afterContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function afterContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(
             static::AFTER_CONTENT_DECORATIONS,
@@ -197,9 +198,9 @@ class Field extends Component implements Contracts\HasValidationRules
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function aboveErrorMessage(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function aboveErrorMessage(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::ABOVE_ERROR_MESSAGE_DECORATIONS, $decorations);
 
@@ -207,9 +208,9 @@ class Field extends Component implements Contracts\HasValidationRules
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function belowErrorMessage(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function belowErrorMessage(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::BELOW_ERROR_MESSAGE_DECORATIONS, $decorations);
 

@@ -4,6 +4,7 @@ namespace Filament\Forms\Components;
 
 use Closure;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
@@ -797,7 +798,7 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
     }
 
     /**
-     * @return array<Component | Action>
+     * @return array<Component | Action | ActionGroup>
      */
     public function getDefaultChildComponents(): array
     {

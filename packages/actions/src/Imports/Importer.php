@@ -4,6 +4,7 @@ namespace Filament\Actions\Imports;
 
 use Carbon\CarbonInterface;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\Imports\Models\Import;
 use Filament\Schemas\Components\Component;
 use Illuminate\Database\Eloquent\Model;
@@ -281,7 +282,7 @@ abstract class Importer
     abstract public static function getColumns(): array;
 
     /**
-     * @return array<Component | Action>
+     * @return array<Component | Action | ActionGroup>
      */
     public static function getOptionsFormComponents(): array
     {

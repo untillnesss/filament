@@ -45,9 +45,7 @@ trait HasKey
             $keyComponents[] = $containerInheritanceKey;
         }
 
-        if (filled($key)) {
-            $keyComponents[] = $key;
-        }
+        $keyComponents[] = $key;
 
         return $this->cacheAbsoluteKey(implode('.', $keyComponents));
     }

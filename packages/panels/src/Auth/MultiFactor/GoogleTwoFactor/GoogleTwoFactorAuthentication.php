@@ -5,6 +5,7 @@ namespace Filament\Auth\MultiFactor\GoogleTwoFactor;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Auth\MultiFactor\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Auth\MultiFactor\GoogleTwoFactor\Actions\DisableGoogleTwoFactorAuthenticationAction;
 use Filament\Auth\MultiFactor\GoogleTwoFactor\Actions\RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction;
@@ -160,7 +161,7 @@ class GoogleTwoFactorAuthentication implements MultiFactorAuthenticationProvider
     }
 
     /**
-     * @return array<Component | Action>
+     * @return array<Component | Action | ActionGroup>
      */
     public function getManagementSchemaComponents(): array
     {

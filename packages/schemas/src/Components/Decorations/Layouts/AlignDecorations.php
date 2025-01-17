@@ -3,6 +3,7 @@
 namespace Filament\Schemas\Components\Decorations\Layouts;
 
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Component;
 use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Enums\Alignment;
@@ -14,7 +15,7 @@ class AlignDecorations extends DecorationsLayout
     protected string $view = 'filament-schema::components.decorations.layouts.align-decorations';
 
     /**
-     * @param  array<Component | Action | array<Component | Action>>  $decorations
+     * @param  array<Component | Action | array<Component | Action | ActionGroup>>  $decorations
      */
     public function __construct(
         protected array $decorations,
@@ -24,7 +25,7 @@ class AlignDecorations extends DecorationsLayout
     }
 
     /**
-     * @param  array<Component | Action | array<Component | Action>>  $decorations
+     * @param  array<Component | Action | array<Component | Action | ActionGroup>>  $decorations
      */
     public static function make(
         Alignment $alignment,
@@ -40,7 +41,7 @@ class AlignDecorations extends DecorationsLayout
     }
 
     /**
-     * @param  array<Component | Action | array<Component | Action>>  $decorations
+     * @param  array<Component | Action | array<Component | Action | ActionGroup>>  $decorations
      */
     public static function start(array $decorations): static
     {
@@ -48,7 +49,7 @@ class AlignDecorations extends DecorationsLayout
     }
 
     /**
-     * @param  array<Component | Action | array<Component | Action>>  $decorations
+     * @param  array<Component | Action | array<Component | Action | ActionGroup>>  $decorations
      */
     public static function end(array $decorations): static
     {
@@ -56,7 +57,7 @@ class AlignDecorations extends DecorationsLayout
     }
 
     /**
-     * @param  array<Component | Action | array<Component | Action>>  $decorations
+     * @param  array<Component | Action | array<Component | Action | ActionGroup>>  $decorations
      */
     public static function between(array $decorations): static
     {
@@ -69,7 +70,7 @@ class AlignDecorations extends DecorationsLayout
     }
 
     /**
-     * @return array<Component | Action | array<Component | Action>>
+     * @return array<Component | Action | array<Component | Action | ActionGroup>>
      */
     public function getDecorations(): array
     {

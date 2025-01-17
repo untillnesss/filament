@@ -1,5 +1,6 @@
 @php
     use Filament\Actions\Action;
+    use Filament\Actions\ActionGroup;
     use Filament\Support\Enums\MaxWidth;
     use Illuminate\Support\Js;
     use Illuminate\View\ComponentAttributeBag;
@@ -24,7 +25,7 @@
         }}
     >
         @foreach ($getComponents(withHidden: true) as $schemaComponent)
-            @if ($schemaComponent instanceof Action)
+            @if (($schemaComponent instanceof Action) || ($schemaComponent instanceof ActionGroup))
                 <div
                     @class([
                         'hidden' => ($schemaComponentIsHidden = $schemaComponent->isHidden()),
@@ -86,7 +87,8 @@
                                         isLive: @js($schemaComponent->isLive()),
                                     })"
                             @if ($afterStateUpdatedJs = $schemaComponent->getAfterStateUpdatedJs())
-                                {{-- format-ignore-start --}}x-init="@foreach ($afterStateUpdatedJs as $js) $wire.$watch(@js($schemaComponentStatePath), ($state, $old) => eval(@js($js))); @endforeach"{{-- format-ignore-end --}}
+                                {{-- format-ignore-start --}}x-init="@foreach ($afterStateUpdatedJs as $js) $wire.$watch(@js($schemaComponentStatePath), ($state, $old) => eval(@js($js))); @endforeach"
+                                                                                    {{-- format-ignore-end --}}
                             @endif
                             @if (filled($xShow = match ([filled($hiddenJs), filled($visibleJs)]) {
                                      [true, true] => "(! {$hiddenJs}) && ({$visibleJs})",

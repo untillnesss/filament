@@ -5,6 +5,7 @@ namespace Filament\Forms\Components;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\MorphToSelect\Type;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Set;
@@ -60,7 +61,7 @@ class MorphToSelect extends Component
     }
 
     /**
-     * @return array<Component | Action>
+     * @return array<Component | Action | ActionGroup>
      */
     public function getDefaultChildComponents(): array
     {

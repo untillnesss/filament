@@ -4,6 +4,7 @@ namespace Filament\Schemas\Components;
 
 use Closure;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Concerns\CanBeCollapsed;
 use Filament\Schemas\Components\Concerns\CanBeCompact;
 use Filament\Schemas\Components\Concerns\CanBeDivided;
@@ -62,7 +63,7 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     const BELOW_CONTENT_DECORATIONS = 'below_content';
 
     /**
-     * @param  string | array<Component | Action> | Htmlable | Closure | null  $heading
+     * @param  string | array<Component | Action | ActionGroup> | Htmlable | Closure | null  $heading
      */
     final public function __construct(string | array | Htmlable | Closure | null $heading = null)
     {
@@ -72,7 +73,7 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     }
 
     /**
-     * @param  string | array<Component | Action> | Htmlable | Closure | null  $heading
+     * @param  string | array<Component | Action | ActionGroup> | Htmlable | Closure | null  $heading
      */
     public static function make(string | array | Htmlable | Closure | null $heading = null): static
     {
@@ -136,9 +137,9 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function afterHeader(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function afterHeader(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(
             static::AFTER_HEADER_DECORATIONS,
@@ -150,9 +151,9 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function footer(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function footer(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::FOOTER_DECORATIONS, $decorations);
 
@@ -160,9 +161,9 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function beforeLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function beforeLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::BEFORE_LABEL_DECORATIONS, $decorations);
 
@@ -170,9 +171,9 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function afterLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function afterLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(
             static::AFTER_LABEL_DECORATIONS,
@@ -184,9 +185,9 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function aboveContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function aboveContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::ABOVE_CONTENT_DECORATIONS, $decorations);
 
@@ -194,9 +195,9 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function belowContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function belowContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::BELOW_CONTENT_DECORATIONS, $decorations);
 

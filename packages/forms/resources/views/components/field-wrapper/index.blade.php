@@ -32,7 +32,7 @@
     $beforeLabelDecorations = $field?->getDecorations($field::BEFORE_LABEL_DECORATIONS);
     $afterLabelDecorations = $field?->getDecorations($field::AFTER_LABEL_DECORATIONS);
     $aboveContentDecorations = $field?->getDecorations($field::ABOVE_CONTENT_DECORATIONS);
-    $belowContentDecorations = $field?->getDecorations($field::BELOW_CONTENT_DECORATIONS);
+    $belowContentDecorations = $field?->getChildComponentContainer($field::BELOW_CONTENT_DECORATIONS);
     $beforeContentDecorations = $field?->getDecorations($field::BEFORE_CONTENT_DECORATIONS);
     $afterContentDecorations = $field?->getDecorations($field::AFTER_CONTENT_DECORATIONS);
     $aboveErrorMessageDecorations = $field?->getDecorations($field::ABOVE_ERROR_MESSAGE_DECORATIONS);

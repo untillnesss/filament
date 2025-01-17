@@ -3,6 +3,7 @@
 namespace Filament\Tables\Filters\QueryBuilder\Constraints\TextConstraint\Operators;
 
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
 use Filament\Tables\Filters\QueryBuilder\Constraints\Operators\Operator;
@@ -41,7 +42,7 @@ class EqualsOperator extends Operator
     }
 
     /**
-     * @return array<Component | Action>
+     * @return array<Component | Action | ActionGroup>
      */
     public function getFormSchema(): array
     {

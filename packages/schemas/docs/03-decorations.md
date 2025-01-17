@@ -335,9 +335,9 @@ Now, you need a method that consumers of the component can use to add decoration
 
 ```php
 /**
- * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+ * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
  */
-public function footer(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+public function footer(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
 {
     $this->decorations(static::FOOTER_DECORATIONS, $decorations);
 

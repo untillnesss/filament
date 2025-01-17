@@ -5,6 +5,7 @@ namespace Filament\Infolists\Components;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Concerns\CanOpenUrl;
 use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
@@ -102,9 +103,9 @@ class Entry extends Component
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function aboveLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function aboveLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::ABOVE_LABEL_DECORATIONS, $decorations);
 
@@ -112,9 +113,9 @@ class Entry extends Component
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function belowLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function belowLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::BELOW_LABEL_DECORATIONS, $decorations);
 
@@ -122,9 +123,9 @@ class Entry extends Component
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function beforeLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function beforeLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::BEFORE_LABEL_DECORATIONS, $decorations);
 
@@ -132,9 +133,9 @@ class Entry extends Component
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function afterLabel(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function afterLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::AFTER_LABEL_DECORATIONS, $decorations);
 
@@ -142,9 +143,9 @@ class Entry extends Component
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function aboveContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function aboveContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::ABOVE_CONTENT_DECORATIONS, $decorations);
 
@@ -152,9 +153,9 @@ class Entry extends Component
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function belowContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function belowContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::BELOW_CONTENT_DECORATIONS, $decorations);
 
@@ -162,9 +163,9 @@ class Entry extends Component
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function beforeContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function beforeContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::BEFORE_CONTENT_DECORATIONS, $decorations);
 
@@ -172,9 +173,9 @@ class Entry extends Component
     }
 
     /**
-     * @param  array<Component | Action> | DecorationsLayout | Component | Action | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
      */
-    public function afterContent(array | DecorationsLayout | Component | Action | string | Closure | null $decorations): static
+    public function afterContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
     {
         $this->decorations(static::AFTER_CONTENT_DECORATIONS, $decorations);
 

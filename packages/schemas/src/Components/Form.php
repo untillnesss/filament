@@ -4,6 +4,7 @@ namespace Filament\Schemas\Components;
 
 use Closure;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Concerns\EntanglesStateWithSingularRelationship;
 use Filament\Schemas\Components\Contracts\CanEntangleWithSingularRelationships;
 use Filament\Schemas\Components\Contracts\ExposesStateToActionData;
@@ -25,7 +26,7 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Ex
     const FOOTER_SLOT = 'footer';
 
     /**
-     * @param  array<Component | Action> | Closure  $schema
+     * @param  array<Component | Action | ActionGroup> | Closure  $schema
      */
     final public function __construct(array | Closure $schema = [])
     {
@@ -33,7 +34,7 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Ex
     }
 
     /**
-     * @param  array<Component | Action> | Closure  $schema
+     * @param  array<Component | Action | ActionGroup> | Closure  $schema
      */
     public static function make(array | Closure $schema = []): static
     {
@@ -67,9 +68,9 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Ex
     }
 
     /**
-     * @param  array<Component | Action> | Schema | Component | Action | string | Closure | null  $components
+     * @param  array<Component | Action | ActionGroup> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function header(array | Schema | Component | Action | string | Closure | null $components): static
+    public function header(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
         $this->childComponents($components, static::HEADER_SLOT);
 
@@ -77,9 +78,9 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Ex
     }
 
     /**
-     * @param  array<Component | Action> | Schema | Component | Action | string | Closure | null  $components
+     * @param  array<Component | Action | ActionGroup> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function footer(array | Schema | Component | Action | string | Closure | null $components): static
+    public function footer(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
         $this->childComponents($components, static::FOOTER_SLOT);
 

@@ -27,11 +27,11 @@ trait BelongsToSchemaComponent
 
     public function getSchemaComponent(): ?Component
     {
-        return $this->schemaComponent ?? $this->getSchemaComponentContainer()?->getParentComponent();
+        return $this->schemaComponent ?? $this->getSchemaComponentContainer()?->getParentComponent() ?? $this->getGroup()?->getSchemaComponent();
     }
 
     public function getSchemaComponentContainer(): ?Schema
     {
-        return $this->schemaComponentContainer;
+        return $this->schemaComponentContainer ?? $this->getGroup()?->getSchemaComponentContainer();
     }
 }
