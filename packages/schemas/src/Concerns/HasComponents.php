@@ -190,6 +190,10 @@ trait HasComponents
                 $this->configureAction($component);
             }
 
+            if ($component instanceof ActionGroup) {
+                $this->configureActionGroup($component);
+            }
+
             if (($component instanceof Action) || ($component instanceof ActionGroup)) {
                 return $component->schemaComponentContainer($this);
             }

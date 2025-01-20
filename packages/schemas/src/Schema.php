@@ -107,8 +107,7 @@ class Schema extends ViewComponent
     {
         return static::make()
             ->components($components)
-            ->alignStart()
-            ->inline();
+            ->alignStart();
     }
 
     /**
@@ -118,8 +117,7 @@ class Schema extends ViewComponent
     {
         return static::make()
             ->components($components)
-            ->alignEnd()
-            ->inline();
+            ->alignEnd();
     }
 
     /**
@@ -129,7 +127,6 @@ class Schema extends ViewComponent
     {
         return static::make()
             ->components($components)
-            ->alignBetween()
-            ->inline();
+            ->alignBetween();
     }
 }

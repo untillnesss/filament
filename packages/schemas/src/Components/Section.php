@@ -210,6 +210,13 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
             $schema->alignEnd();
         }
 
+        return $schema;
+    }
+
+    protected function configureSchemaForSlot(Schema $schema, string $slot): Schema
+    {
+        $schema = parent::configureSchemaForSlot($schema, $slot);
+
         if (in_array($slot, [
             static::AFTER_HEADER_CONTAINER,
             static::FOOTER_CONTAINER,
@@ -227,9 +234,11 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
             static::ABOVE_CONTENT_CONTAINER,
             static::BELOW_CONTENT_CONTAINER,
         ])) {
-            $schema->configureActionsUsing(fn (Action $action) => $action
-                ->defaultSize(ActionSize::Small)
-                ->defaultView(Action::LINK_VIEW));
+            $schema
+                ->configureActionsUsing(fn (Action $action) => $action
+                    ->defaultSize(ActionSize::Small)
+                    ->defaultView(Action::LINK_VIEW))
+                ->configureActionGroupsUsing(fn (ActionGroup $actionGroup) => $actionGroup->defaultSize(ActionSize::Small));
         }
 
         return $schema;

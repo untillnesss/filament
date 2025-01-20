@@ -78,19 +78,28 @@ trait HasChildComponents
 
         if (blank($components)) {
             return ($slot === 'default')
-                ? $this->makeSchemaForSlot($slot)
+                ? $this->configureSchemaForSlot(
+                    $this->makeSchemaForSlot($slot),
+                    $slot,
+                )
                 : null;
         }
 
         if ($components instanceof Schema) {
-            return $components
-                ->key(($slot === 'default') ? null : $slot)
-                ->livewire($this->getLivewire())
-                ->parentComponent($this);
+            return $this->configureSchemaForSlot(
+                $components
+                    ->key(($slot === 'default') ? null : $slot)
+                    ->livewire($this->getLivewire())
+                    ->parentComponent($this),
+                $slot,
+            );
         }
 
-        return $this->makeSchemaForSlot($slot)
-            ->components($components);
+        return $this->configureSchemaForSlot(
+            $this->makeSchemaForSlot($slot)
+                ->components($components),
+            $slot,
+        );
     }
 
     protected function makeSchemaForSlot(string $slot): Schema
@@ -98,6 +107,11 @@ trait HasChildComponents
         return Schema::make($this->getLivewire())
             ->key(($slot === 'default') ? null : $slot)
             ->parentComponent($this);
+    }
+
+    protected function configureSchemaForSlot(Schema $schema, string $slot): Schema
+    {
+        return $schema;
     }
 
     /**

@@ -191,6 +191,13 @@ class Entry extends Component
             $schema->alignEnd();
         }
 
+        return $schema;
+    }
+
+    protected function configureSchemaForSlot(Schema $schema, string $slot): Schema
+    {
+        $schema = parent::configureSchemaForSlot($schema, $slot);
+
         if (in_array($slot, [
             static::ABOVE_LABEL_CONTAINER,
             static::BELOW_LABEL_CONTAINER,
@@ -205,7 +212,8 @@ class Entry extends Component
                 ->inline()
                 ->configureActionsUsing(fn (Action $action) => $action
                     ->defaultSize(ActionSize::Small)
-                    ->defaultView(Action::LINK_VIEW));
+                    ->defaultView(Action::LINK_VIEW))
+                ->configureActionGroupsUsing(fn (ActionGroup $actionGroup) => $actionGroup->defaultSize(ActionSize::Small));
         }
 
         return $schema;

@@ -32,7 +32,7 @@ class Actions extends Component
     const BELOW_CONTENT_CONTAINER = 'below_content';
 
     /**
-     * @param  array<Action>  $actions
+     * @param  array<Action | ActionGroup>  $actions
      */
     final public function __construct(array $actions)
     {
@@ -40,7 +40,7 @@ class Actions extends Component
     }
 
     /**
-     * @param  array<Action>  $actions
+     * @param  array<Action | ActionGroup>  $actions
      */
     public static function make(array $actions): static
     {
@@ -51,7 +51,7 @@ class Actions extends Component
     }
 
     /**
-     * @param  array<Action>  $actions
+     * @param  array<Action | ActionGroup>  $actions
      */
     public function actions(array $actions): static
     {
@@ -135,6 +135,13 @@ class Actions extends Component
             $schema->alignEnd();
         }
 
+        return $schema;
+    }
+
+    protected function configureSchemaForSlot(Schema $schema, string $slot): Schema
+    {
+        $schema = parent::configureSchemaForSlot($schema, $slot);
+
         if (in_array($slot, [
             static::BEFORE_LABEL_CONTAINER,
             static::AFTER_LABEL_CONTAINER,
@@ -145,7 +152,8 @@ class Actions extends Component
                 ->inline()
                 ->configureActionsUsing(fn (Action $action) => $action
                     ->defaultSize(ActionSize::Small)
-                    ->defaultView(Action::LINK_VIEW));
+                    ->defaultView(Action::LINK_VIEW))
+                ->configureActionGroupsUsing(fn (ActionGroup $actionGroup) => $actionGroup->defaultSize(ActionSize::Small));
         }
 
         return $schema;
