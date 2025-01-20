@@ -186,6 +186,10 @@ trait HasComponents
     public function getComponents(bool $withActions = true, bool $withHidden = false, bool $withOriginalKeys = false): array
     {
         $components = array_map(function (Component | Action | ActionGroup | string $component): Component | Action | ActionGroup {
+            if ($component instanceof Action) {
+                $this->configureAction($component);
+            }
+
             if (($component instanceof Action) || ($component instanceof ActionGroup)) {
                 return $component->schemaComponentContainer($this);
             }

@@ -21,6 +21,7 @@ class Schema extends ViewComponent
     use Concerns\CanBeHidden;
     use Concerns\CanBeInline;
     use Concerns\CanBeValidated;
+    use Concerns\CanConfigureActions;
     use Concerns\Cloneable;
     use Concerns\HasColumns;
     use Concerns\HasComponents;

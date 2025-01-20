@@ -6,6 +6,7 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Facades\FilamentIcon;
 use Filament\Support\View\Components\Modal;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
@@ -381,7 +382,15 @@ trait CanOpenModal
 
     public function getModalFooterActionsAlignment(): string | Alignment | null
     {
-        return $this->evaluate($this->modalFooterActionsAlignment);
+        if ($alignment = $this->evaluate($this->modalFooterActionsAlignment)) {
+            return $alignment;
+        }
+
+        if ($this->isConfirmationRequired()) {
+            return Alignment::Center;
+        }
+
+        return null;
     }
 
     /**
@@ -494,12 +503,28 @@ trait CanOpenModal
 
     public function getModalAlignment(): Alignment | string
     {
-        return $this->evaluate($this->modalAlignment) ?? (in_array($this->getModalWidth(), [MaxWidth::ExtraSmall, MaxWidth::Small, 'xs', 'sm']) ? Alignment::Center : Alignment::Start);
+        if ($alignment = $this->evaluate($this->modalAlignment)) {
+            return $alignment;
+        }
+
+        if ($this->isConfirmationRequired() || in_array($this->getModalWidth(), [MaxWidth::ExtraSmall, MaxWidth::Small, 'xs', 'sm'])) {
+            return Alignment::Center;
+        }
+
+        return Alignment::Start;
     }
 
     public function getModalSubmitActionLabel(): string
     {
-        return $this->evaluate($this->modalSubmitActionLabel) ?? __('filament-actions::modal.actions.submit.label');
+        if (filled($label = $this->evaluate($this->modalSubmitActionLabel))) {
+            return $label;
+        }
+
+        if ($this->isConfirmationRequired()) {
+            return __('filament-actions::modal.actions.confirm.label');
+        }
+
+        return __('filament-actions::modal.actions.submit.label');
     }
 
     public function getModalCancelActionLabel(): string
@@ -544,7 +569,15 @@ trait CanOpenModal
 
     public function getModalDescription(): string | Htmlable | null
     {
-        return $this->evaluate($this->modalDescription);
+        if (filled($description = $this->evaluate($this->modalDescription))) {
+            return $description;
+        }
+
+        if ($this->isConfirmationRequired()) {
+            return __('filament-actions::modal.confirmation');
+        }
+
+        return null;
     }
 
     public function hasModalDescription(): bool
@@ -554,7 +587,15 @@ trait CanOpenModal
 
     public function getModalWidth(): MaxWidth | string
     {
-        return $this->evaluate($this->modalWidth) ?? MaxWidth::FourExtraLarge;
+        if ($width = $this->evaluate($this->modalWidth)) {
+            return $width;
+        }
+
+        if ($this->isConfirmationRequired()) {
+            return MaxWidth::Medium;
+        }
+
+        return MaxWidth::FourExtraLarge;
     }
 
     public function isModalFooterSticky(): bool
@@ -638,7 +679,15 @@ trait CanOpenModal
 
     public function getModalIcon(): ?string
     {
-        return $this->evaluate($this->modalIcon);
+        if ($icon = $this->evaluate($this->modalIcon)) {
+            return $icon;
+        }
+
+        if ($this->isConfirmationRequired()) {
+            return FilamentIcon::resolve('actions::modal.confirmation') ?? 'heroicon-o-exclamation-triangle';
+        }
+
+        return null;
     }
 
     /**

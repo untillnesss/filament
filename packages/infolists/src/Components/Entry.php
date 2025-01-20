@@ -12,6 +12,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Concerns\HasPlaceholder;
 use Filament\Support\Concerns\HasTooltip;
+use Filament\Support\Enums\ActionSize;
 use Illuminate\Contracts\Support\Htmlable;
 
 class Entry extends Component
@@ -200,7 +201,11 @@ class Entry extends Component
             static::BEFORE_CONTENT_CONTAINER,
             static::AFTER_CONTENT_CONTAINER,
         ])) {
-            $schema->inline();
+            $schema
+                ->inline()
+                ->configureActionsUsing(fn (Action $action) => $action
+                    ->defaultSize(ActionSize::Small)
+                    ->defaultView(Action::LINK_VIEW));
         }
 
         return $schema;
