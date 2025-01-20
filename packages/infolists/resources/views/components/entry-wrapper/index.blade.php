@@ -59,7 +59,7 @@
             'sm:grid-cols-3 sm:items-start sm:gap-x-4' => $hasInlineLabel,
         ])
     >
-        {{ $entry?->getContainer($entry::ABOVE_LABEL_CONTAINER) }}
+        {{ $entry?->getChildComponentContainer($entry::ABOVE_LABEL_CONTAINER) }}
 
         @if (($label && (! $labelSrOnly)) || $labelPrefix || $labelSuffix || $beforeLabelContainer || $afterLabelContainer)
             <div
@@ -87,7 +87,7 @@
             </div>
         @endif
 
-        {{ $entry?->getContainer($entry::BELOW_LABEL_CONTAINER) }}
+        {{ $entry?->getChildComponentContainer($entry::BELOW_LABEL_CONTAINER) }}
 
         <div
             @class([
@@ -95,7 +95,7 @@
                 'sm:col-span-2' => $hasInlineLabel,
             ])
         >
-            {{ $entry?->getContainer($entry::ABOVE_CONTENT_CONTAINER) }}
+            {{ $entry?->getChildComponentContainer($entry::ABOVE_CONTENT_CONTAINER) }}
 
             @capture($content)
                 <dd
@@ -158,7 +158,7 @@
                 {{ $content() }}
             @endif
 
-            {{ $entry?->getContainer($entry::BELOW_CONTENT_CONTAINER) }}
+            {{ $entry?->getChildComponentContainer($entry::BELOW_CONTENT_CONTAINER) }}
         </div>
     </div>
 </div>

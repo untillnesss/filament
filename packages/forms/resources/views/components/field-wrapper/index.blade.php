@@ -66,7 +66,7 @@
             } => $hasInlineLabel,
         ])
     >
-        {{ $field?->getContainer($field::ABOVE_LABEL_CONTAINER) }}
+        {{ $field?->getChildComponentContainer($field::ABOVE_LABEL_CONTAINER) }}
 
         @if (($label && (! $labelSrOnly)) || $labelPrefix || $labelSuffix || $beforeLabelContainer || $afterLabelContainer)
             <div
@@ -97,7 +97,7 @@
             </div>
         @endif
 
-        {{ $field?->getContainer($field::BELOW_LABEL_CONTAINER) }}
+        {{ $field?->getChildComponentContainer($field::BELOW_LABEL_CONTAINER) }}
 
         @if ((! \Filament\Support\is_slot_empty($slot)) || $hasError || $aboveContentContainer || $belowContentContainer || $beforeContentContainer || $afterContentContainer || $aboveErrorMessageContainer || $belowErrorMessageContainer)
             <div
