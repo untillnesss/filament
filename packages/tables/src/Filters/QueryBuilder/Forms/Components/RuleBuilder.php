@@ -48,8 +48,8 @@ class RuleBuilder extends Builder
                                 throw new Exception('No repeater component found.');
                             }
 
-                            $itemLabels = collect($repeater->getChildComponentContainers())
-                                ->map(fn (Schema $blockContainer, string $blockContainerUuid): string => $repeater->getItemLabel($blockContainerUuid));
+                            $itemLabels = collect($repeater->getItems())
+                                ->map(fn (Schema $item, string $itemUuid): string => $repeater->getItemLabel($itemUuid));
 
                             if ($itemLabels->count() === 1) {
                                 return $itemLabels->first();
@@ -74,22 +74,22 @@ class RuleBuilder extends Builder
                                 ->collapsible()
                                 ->expandAllAction(fn (Action $action) => $action->hidden())
                                 ->collapseAllAction(fn (Action $action) => $action->hidden())
-                                ->itemLabel(function (Schema $container, array $state): string {
-                                    $builder = $container->getComponent(fn (Component $component): bool => $component instanceof RuleBuilder);
+                                ->itemLabel(function (Schema $item): string {
+                                    $builder = $item->getComponent(fn (Component $component): bool => $component instanceof RuleBuilder);
 
                                     if (! ($builder instanceof RuleBuilder)) {
                                         throw new Exception('No rule builder component found.');
                                     }
 
-                                    $blockLabels = collect($builder->getChildComponentContainers())
-                                        ->map(function (Schema $blockContainer, string $blockUuid): string {
-                                            $block = $blockContainer->getParentComponent();
+                                    $blockLabels = collect($builder->getItems())
+                                        ->map(function (Schema $item, string $blockUuid): string {
+                                            $block = $item->getParentComponent();
 
                                             if (! ($block instanceof Builder\Block)) {
                                                 throw new Exception('No block component found.');
                                             }
 
-                                            return $block->getLabel($blockContainer->getRawState(), $blockUuid);
+                                            return $block->getLabel($item->getRawState(), $blockUuid);
                                         });
 
                                     if ($blockLabels->isEmpty()) {

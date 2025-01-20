@@ -5,6 +5,7 @@ namespace Filament\Auth\MultiFactor\EmailCode;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Auth\MultiFactor\Contracts\HasBeforeChallengeHook;
 use Filament\Auth\MultiFactor\Contracts\MultiFactorAuthenticationProvider;
 use Filament\Auth\MultiFactor\EmailCode\Actions\DisableEmailCodeAuthenticationAction;
@@ -109,7 +110,7 @@ class EmailCodeAuthentication implements HasBeforeChallengeHook, MultiFactorAuth
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action | ActionGroup>
      */
     public function getManagementSchemaComponents(): array
     {

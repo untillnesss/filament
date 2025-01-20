@@ -30,24 +30,24 @@ trait HasHint
     protected function setUpHint(): void
     {
         $this->afterLabel(function (Entry $component): array {
-            $decorations = [];
+            $components = [];
 
             $hint = $component->getHint();
 
             if (filled($hint)) {
-                $decorations[] = Text::make($hint)
+                $components[] = Text::make($hint)
                     ->color($component->getHintColor());
             }
 
             $hintIcon = $component->getHintIcon();
 
             if (filled($hintIcon)) {
-                $decorations[] = Icon::make($hintIcon)
+                $components[] = Icon::make($hintIcon)
                     ->tooltip($component->getHintIconTooltip());
             }
 
             return [
-                ...$decorations,
+                ...$components,
                 ...$component->getHintActions(),
             ];
         });

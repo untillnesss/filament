@@ -2,6 +2,8 @@
 
 namespace Filament\Resources\Pages\Concerns;
 
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\Enums\ContentTabPosition;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -93,7 +95,7 @@ trait HasRelationManagers
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action | ActionGroup>
      */
     public function getContentComponents(): array
     {

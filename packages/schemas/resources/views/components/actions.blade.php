@@ -10,7 +10,7 @@
 
 @if (filled($label = $getLabel()))
     <div class="mb-2 flex items-center gap-x-3">
-        {{ $getDecorations($schemaComponent::BEFORE_LABEL_DECORATIONS) }}
+        {{ $getChildComponentContainer($schemaComponent::BEFORE_LABEL_CONTAINER) }}
 
         <div
             class="text-sm font-medium leading-6 text-gray-950 dark:text-white"
@@ -18,13 +18,13 @@
             {{ $label }}
         </div>
 
-        {{ $getDecorations($schemaComponent::AFTER_LABEL_DECORATIONS) }}
+        {{ $getChildComponentContainer($schemaComponent::AFTER_LABEL_CONTAINER) }}
     </div>
 @endif
 
-@if ($aboveContentDecorations = $getDecorations($schemaComponent::ABOVE_CONTENT_DECORATIONS))
+@if ($aboveContentContainer = $getChildComponentContainer($schemaComponent::ABOVE_CONTENT_CONTAINER)?->toHtmlString())
     <div class="mb-2">
-        {{ $aboveContentDecorations }}
+        {{ $aboveContentContainer }}
     </div>
 @endif
 
@@ -42,7 +42,8 @@
         x-init="evaluatePageScrollPosition"
         x-on:scroll.window="evaluatePageScrollPosition"
         x-bind:class="{
-            'fi-sticky sticky bottom-0 -mx-4 transform bg-white p-4 shadow-lg ring-1 ring-gray-950/5 transition dark:bg-gray-900 dark:ring-white/10 md:bottom-4 md:rounded-xl': isSticky,
+            'fi-sticky sticky bottom-0 -mx-4 transform bg-white p-4 shadow-lg ring-1 ring-gray-950/5 transition dark:bg-gray-900 dark:ring-white/10 md:bottom-4 md:rounded-xl':
+                isSticky,
         }"
     @endif
     {{
@@ -69,8 +70,8 @@
     />
 </div>
 
-@if ($belowContentDecorations = $getDecorations($schemaComponent::BELOW_CONTENT_DECORATIONS))
+@if ($belowContentContainer = $getChildComponentContainer($schemaComponent::BELOW_CONTENT_CONTAINER)?->toHtmlString())
     <div class="mt-2">
-        {{ $belowContentDecorations }}
+        {{ $belowContentContainer }}
     </div>
 @endif

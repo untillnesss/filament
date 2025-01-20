@@ -3,7 +3,7 @@
     use Filament\Support\Enums\Alignment;
     use Illuminate\View\ComponentAttributeBag;
 
-    $containers = $getChildComponentContainers();
+    $items = $getItems();
 
     $addAction = $getAction($getAddActionName());
     $addBetweenAction = $getAction($getAddBetweenActionName());
@@ -42,7 +42,7 @@
             <div
                 @class([
                     'flex gap-x-3',
-                    'hidden' => count($containers) < 2,
+                    'hidden' => count($items) < 2,
                 ])
             >
                 @if ($collapseAllActionIsVisible)
@@ -63,7 +63,7 @@
             </div>
         @endif
 
-        @if (count($containers))
+        @if (count($items))
             <ul>
                 <div
                     x-sortable
@@ -77,7 +77,7 @@
                             ->class(['items-start gap-4'])
                     }}
                 >
-                    @foreach ($containers as $uuid => $item)
+                    @foreach ($items as $uuid => $item)
                         @php
                             $itemLabel = $getItemLabel($uuid);
                             $visibleExtraItemActions = array_filter(

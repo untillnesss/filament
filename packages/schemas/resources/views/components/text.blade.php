@@ -82,7 +82,7 @@
             \Filament\Support\get_color_css_variables(
                 $color,
                 shades: [400, 600],
-                alias: 'schema::components.decorations.text-decoration',
+                alias: 'schema::components.text',
             ),
         ])
     >

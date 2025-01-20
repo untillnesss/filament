@@ -15,6 +15,8 @@ class TestAction implements Arrayable
 
     protected ?string $schemaComponent = null;
 
+    protected ?string $schemaComponentContainer = null;
+
     protected mixed $table = null;
 
     protected bool $isBulk = false;
@@ -41,6 +43,13 @@ class TestAction implements Arrayable
     public function schemaComponent(?string $key): static
     {
         $this->schemaComponent = $key;
+
+        return $this;
+    }
+
+    public function schemaComponentContainer(?string $key): static
+    {
+        $this->schemaComponentContainer = $key;
 
         return $this;
     }
@@ -82,6 +91,7 @@ class TestAction implements Arrayable
             'context' => [
                 ...($this->isBulk ? ['bulk' => true] : []),
                 ...($this->schemaComponent ? ['schemaComponent' => $this->schemaComponent] : []),
+                ...($this->schemaComponentContainer ? ['schemaComponentContainer' => $this->schemaComponentContainer] : []),
                 ...$this->context,
             ],
         ];

@@ -4,6 +4,7 @@ namespace Filament\Resources\Pages;
 
 use Closure;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -202,7 +203,7 @@ class ViewRecord extends Page
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action | ActionGroup>
      */
     public function getContentComponents(): array
     {

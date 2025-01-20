@@ -92,7 +92,7 @@ trait HasColumns
             }
 
             if (! $action instanceof Action) {
-                throw new InvalidArgumentException('Table column actions must be an instance of ' . Action::class . '.');
+                throw new InvalidArgumentException('Table column actions must be an instance of [' . Action::class . '].');
             }
 
             $this->cacheAction($action->table($this));

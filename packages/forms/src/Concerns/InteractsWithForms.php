@@ -5,6 +5,7 @@ namespace Filament\Forms\Concerns;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Schema;
@@ -161,7 +162,7 @@ trait InteractsWithForms
     /**
      * @deprecated Override the `form()` method to configure the default form.
      *
-     * @return array<Component>
+     * @return array<Component | Action | ActionGroup>
      */
     protected function getFormSchema(): array
     {

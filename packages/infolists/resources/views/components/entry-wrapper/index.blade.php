@@ -34,10 +34,10 @@
         $alignment = filled($alignment) ? (Alignment::tryFrom($alignment) ?? $alignment) : null;
     }
 
-    $beforeLabelDecorations = $entry?->getDecorations($entry::BEFORE_LABEL_DECORATIONS);
-    $afterLabelDecorations = $entry?->getDecorations($entry::AFTER_LABEL_DECORATIONS);
-    $beforeContentDecorations = $entry?->getDecorations($entry::BEFORE_CONTENT_DECORATIONS);
-    $afterContentDecorations = $entry?->getDecorations($entry::AFTER_CONTENT_DECORATIONS);
+    $beforeLabelContainer = $entry?->getChildComponentContainer($entry::BEFORE_LABEL_CONTAINER)?->toHtmlString();
+    $afterLabelContainer = $entry?->getChildComponentContainer($entry::AFTER_LABEL_CONTAINER)?->toHtmlString();
+    $beforeContentContainer = $entry?->getChildComponentContainer($entry::BEFORE_CONTENT_CONTAINER)?->toHtmlString();
+    $afterContentContainer = $entry?->getChildComponentContainer($entry::AFTER_CONTENT_CONTAINER)?->toHtmlString();
 @endphp
 
 <div
@@ -59,16 +59,16 @@
             'sm:grid-cols-3 sm:items-start sm:gap-x-4' => $hasInlineLabel,
         ])
     >
-        {{ $entry?->getDecorations($entry::ABOVE_LABEL_DECORATIONS) }}
+        {{ $entry?->getChildComponentContainer($entry::ABOVE_LABEL_CONTAINER) }}
 
-        @if (($label && (! $labelSrOnly)) || $labelPrefix || $labelSuffix || $beforeLabelDecorations || $afterLabelDecorations)
+        @if (($label && (! $labelSrOnly)) || $labelPrefix || $labelSuffix || $beforeLabelContainer || $afterLabelContainer)
             <div
                 @class([
                     'flex items-center gap-x-3',
                     ($label instanceof \Illuminate\View\ComponentSlot) ? $label->attributes->get('class') : null,
                 ])
             >
-                {{ $beforeLabelDecorations }}
+                {{ $beforeLabelContainer }}
 
                 @if ($label && (! $labelSrOnly))
                     <x-filament-infolists::entry-wrapper.label
@@ -83,11 +83,11 @@
                     {{ $labelSuffix }}
                 @endif
 
-                {{ $afterLabelDecorations }}
+                {{ $afterLabelContainer }}
             </div>
         @endif
 
-        {{ $entry?->getDecorations($entry::BELOW_LABEL_DECORATIONS) }}
+        {{ $entry?->getChildComponentContainer($entry::BELOW_LABEL_CONTAINER) }}
 
         <div
             @class([
@@ -95,7 +95,7 @@
                 'sm:col-span-2' => $hasInlineLabel,
             ])
         >
-            {{ $entry?->getDecorations($entry::ABOVE_CONTENT_DECORATIONS) }}
+            {{ $entry?->getChildComponentContainer($entry::ABOVE_CONTENT_CONTAINER) }}
 
             @capture($content)
                 <dd
@@ -144,21 +144,21 @@
                 </dd>
             @endcapture
 
-            @if ($beforeContentDecorations || $afterContentDecorations)
+            @if ($beforeContentContainer || $afterContentContainer)
                 <div class="flex w-full items-center gap-x-3">
-                    {{ $beforeContentDecorations }}
+                    {{ $beforeContentContainer }}
 
                     <div class="w-full">
                         {{ $content() }}
                     </div>
 
-                    {{ $afterContentDecorations }}
+                    {{ $afterContentContainer }}
                 </div>
             @else
                 {{ $content() }}
             @endif
 
-            {{ $entry?->getDecorations($entry::BELOW_CONTENT_DECORATIONS) }}
+            {{ $entry?->getChildComponentContainer($entry::BELOW_CONTENT_CONTAINER) }}
         </div>
     </div>
 </div>

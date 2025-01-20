@@ -50,15 +50,13 @@
             ])
     }}
 >
-    @foreach ($getChildComponentContainers() as $container)
-        @foreach ($container->getComponents() as $component)
-            <div
-                @class([
-                    'w-full flex-1' => $component->canGrow(),
-                ])
-            >
-                {{ $component }}
-            </div>
-        @endforeach
+    @foreach ($getChildComponentContainer()->getComponents() as $component)
+        <div
+            @class([
+                'w-full flex-1' => $component->canGrow(),
+            ])
+        >
+            {{ $component }}
+        </div>
     @endforeach
 </div>
