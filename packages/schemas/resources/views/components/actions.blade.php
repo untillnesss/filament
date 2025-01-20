@@ -22,7 +22,7 @@
     </div>
 @endif
 
-@if ($aboveContentContainer = $getChildComponentContainer($schemaComponent::ABOVE_CONTENT_CONTAINER))
+@if ($aboveContentContainer = $getChildComponentContainer($schemaComponent::ABOVE_CONTENT_CONTAINER)?->toHtmlString())
     <div class="mb-2">
         {{ $aboveContentContainer }}
     </div>
@@ -70,7 +70,7 @@
     />
 </div>
 
-@if ($belowContentContainer = $getChildComponentContainer($schemaComponent::BELOW_CONTENT_CONTAINER))
+@if ($belowContentContainer = $getChildComponentContainer($schemaComponent::BELOW_CONTENT_CONTAINER)?->toHtmlString())
     <div class="mt-2">
         {{ $belowContentContainer }}
     </div>

@@ -104,9 +104,11 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
         });
 
         $this->afterHeader(fn (Section $component): array => $component->getHeaderActions());
-        $this->footer(fn (Section $component): Schema => match ($component->getFooterActionsAlignment()) {
-            Alignment::End, Alignment::Right => Schema::end($component->getFooterActions()),
-            default => Schema::start($component->getFooterActions()),
+        $this->footer(function (Section $component): Schema {
+            return match ($component->getFooterActionsAlignment()) {
+                Alignment::End, Alignment::Right => Schema::end($component->getFooterActions()),
+                default => Schema::start($component->getFooterActions()),
+            };
         });
     }
 
@@ -205,6 +207,17 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
 
         if (in_array($slot, [static::AFTER_HEADER_CONTAINER, static::AFTER_LABEL_CONTAINER])) {
             $schema->alignEnd();
+        }
+
+        if (in_array($slot, [
+            static::AFTER_HEADER_CONTAINER,
+            static::FOOTER_CONTAINER,
+            static::BEFORE_LABEL_CONTAINER,
+            static::AFTER_LABEL_CONTAINER,
+            static::ABOVE_CONTENT_CONTAINER,
+            static::BELOW_CONTENT_CONTAINER,
+        ])) {
+            $schema->inline();
         }
 
         return $schema;

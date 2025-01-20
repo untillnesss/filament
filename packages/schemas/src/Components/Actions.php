@@ -134,6 +134,15 @@ class Actions extends Component
             $schema->alignEnd();
         }
 
+        if (in_array($slot, [
+            static::BEFORE_LABEL_CONTAINER,
+            static::AFTER_LABEL_CONTAINER,
+            static::ABOVE_CONTENT_CONTAINER,
+            static::BELOW_CONTENT_CONTAINER,
+        ])) {
+            $schema->inline();
+        }
+
         return $schema;
     }
 

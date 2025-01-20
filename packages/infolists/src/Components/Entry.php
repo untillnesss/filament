@@ -181,4 +181,28 @@ class Entry extends Component
 
         return $this;
     }
+
+    protected function makeSchemaForSlot(string $slot): Schema
+    {
+        $schema = parent::makeSchemaForSlot($slot);
+
+        if (in_array($slot, [static::AFTER_LABEL_CONTAINER, static::AFTER_CONTENT_CONTAINER])) {
+            $schema->alignEnd();
+        }
+
+        if (in_array($slot, [
+            static::ABOVE_LABEL_CONTAINER,
+            static::BELOW_LABEL_CONTAINER,
+            static::BEFORE_LABEL_CONTAINER,
+            static::AFTER_LABEL_CONTAINER,
+            static::ABOVE_CONTENT_CONTAINER,
+            static::BELOW_CONTENT_CONTAINER,
+            static::BEFORE_CONTENT_CONTAINER,
+            static::AFTER_CONTENT_CONTAINER,
+        ])) {
+            $schema->inline();
+        }
+
+        return $schema;
+    }
 }

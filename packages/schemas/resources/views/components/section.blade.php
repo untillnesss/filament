@@ -17,14 +17,14 @@
     </div>
 @endif
 
-@if ($aboveContentContainer = $getChildComponentContainer($schemaComponent::ABOVE_CONTENT_CONTAINER))
+@if ($aboveContentContainer = $getChildComponentContainer($schemaComponent::ABOVE_CONTENT_CONTAINER)?->toHtmlString())
     <div class="mb-2">
         {{ $aboveContentContainer }}
     </div>
 @endif
 
 <x-filament::section
-    :after-header="$getChildComponentContainer($schemaComponent::AFTER_HEADER_CONTAINER)"
+    :after-header="$getChildComponentContainer($schemaComponent::AFTER_HEADER_CONTAINER)?->toHtmlString()"
     :aside="$isAside"
     :collapsed="$isCollapsed()"
     :collapsible="$isCollapsible() && (! $isAside)"
@@ -33,7 +33,7 @@
     :content-before="$isFormBefore()"
     :description="$getDescription()"
     :divided="$isDivided"
-    :footer="$getChildComponentContainer($schemaComponent::FOOTER_CONTAINER)"
+    :footer="$getChildComponentContainer($schemaComponent::FOOTER_CONTAINER)?->toHtmlString()"
     :has-content-el="false"
     :heading="$getHeading()"
     :icon="$getIcon()"
@@ -53,7 +53,7 @@
     {{ $getChildComponentContainer()->gap(! $isDivided)->extraAttributes(['class' => 'fi-section-content']) }}
 </x-filament::section>
 
-@if ($belowContentContainer = $getChildComponentContainer($schemaComponent::BELOW_CONTENT_CONTAINER))
+@if ($belowContentContainer = $getChildComponentContainer($schemaComponent::BELOW_CONTENT_CONTAINER)?->toHtmlString())
     <div class="mt-2">
         {{ $belowContentContainer }}
     </div>

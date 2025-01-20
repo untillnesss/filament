@@ -19,6 +19,7 @@ class Schema extends ViewComponent
     use Concerns\BelongsToParentComponent;
     use Concerns\CanBeDisabled;
     use Concerns\CanBeHidden;
+    use Concerns\CanBeInline;
     use Concerns\CanBeValidated;
     use Concerns\Cloneable;
     use Concerns\HasColumns;
@@ -105,7 +106,8 @@ class Schema extends ViewComponent
     {
         return static::make()
             ->components($components)
-            ->alignStart();
+            ->alignStart()
+            ->inline();
     }
 
     /**
@@ -115,7 +117,8 @@ class Schema extends ViewComponent
     {
         return static::make()
             ->components($components)
-            ->alignEnd();
+            ->alignEnd()
+            ->inline();
     }
 
     /**
@@ -125,6 +128,7 @@ class Schema extends ViewComponent
     {
         return static::make()
             ->components($components)
-            ->alignBetween();
+            ->alignBetween()
+            ->inline();
     }
 }

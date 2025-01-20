@@ -45,7 +45,7 @@ trait HasGap
         }
 
         if ($this instanceof Schema) {
-            return $this->getParentComponent()?->isDense() ?? false;
+            return $this->isInline() || $this->getParentComponent()?->isDense();
         }
 
         return $this->getContainer()->isDense();

@@ -34,10 +34,10 @@
         $alignment = filled($alignment) ? (Alignment::tryFrom($alignment) ?? $alignment) : null;
     }
 
-    $beforeLabelContainer = $entry?->getChildComponentContainer($entry::BEFORE_LABEL_CONTAINER);
-    $afterLabelContainer = $entry?->getChildComponentContainer($entry::AFTER_LABEL_CONTAINER);
-    $beforeContentContainer = $entry?->getChildComponentContainer($entry::BEFORE_CONTENT_CONTAINER);
-    $afterContentContainer = $entry?->getChildComponentContainer($entry::AFTER_CONTENT_CONTAINER);
+    $beforeLabelContainer = $entry?->getChildComponentContainer($entry::BEFORE_LABEL_CONTAINER)?->toHtmlString();
+    $afterLabelContainer = $entry?->getChildComponentContainer($entry::AFTER_LABEL_CONTAINER)?->toHtmlString();
+    $beforeContentContainer = $entry?->getChildComponentContainer($entry::BEFORE_CONTENT_CONTAINER)?->toHtmlString();
+    $afterContentContainer = $entry?->getChildComponentContainer($entry::AFTER_CONTENT_CONTAINER)?->toHtmlString();
 @endphp
 
 <div

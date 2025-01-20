@@ -29,14 +29,14 @@
         $statePath ??= $field->getStatePath();
     }
 
-    $beforeLabelContainer = $field?->getChildComponentContainer($field::BEFORE_LABEL_CONTAINER);
-    $afterLabelContainer = $field?->getChildComponentContainer($field::AFTER_LABEL_CONTAINER);
-    $aboveContentContainer = $field?->getChildComponentContainer($field::ABOVE_CONTENT_CONTAINER);
-    $belowContentContainer = $field?->getChildComponentContainer($field::BELOW_CONTENT_CONTAINER);
-    $beforeContentContainer = $field?->getChildComponentContainer($field::BEFORE_CONTENT_CONTAINER);
-    $afterContentContainer = $field?->getChildComponentContainer($field::AFTER_CONTENT_CONTAINER);
-    $aboveErrorMessageContainer = $field?->getChildComponentContainer($field::ABOVE_ERROR_MESSAGE_CONTAINER);
-    $belowErrorMessageContainer = $field?->getChildComponentContainer($field::BELOW_ERROR_MESSAGE_CONTAINER);
+    $beforeLabelContainer = $field?->getChildComponentContainer($field::BEFORE_LABEL_CONTAINER)?->toHtmlString();
+    $afterLabelContainer = $field?->getChildComponentContainer($field::AFTER_LABEL_CONTAINER)?->toHtmlString();
+    $aboveContentContainer = $field?->getChildComponentContainer($field::ABOVE_CONTENT_CONTAINER)?->toHtmlString();
+    $belowContentContainer = $field?->getChildComponentContainer($field::BELOW_CONTENT_CONTAINER)?->toHtmlString();
+    $beforeContentContainer = $field?->getChildComponentContainer($field::BEFORE_CONTENT_CONTAINER)?->toHtmlString();
+    $afterContentContainer = $field?->getChildComponentContainer($field::AFTER_CONTENT_CONTAINER)?->toHtmlString();
+    $aboveErrorMessageContainer = $field?->getChildComponentContainer($field::ABOVE_ERROR_MESSAGE_CONTAINER)?->toHtmlString();
+    $belowErrorMessageContainer = $field?->getChildComponentContainer($field::BELOW_ERROR_MESSAGE_CONTAINER)?->toHtmlString();
 
     $hasError = filled($statePath) && ($errors->has($statePath) || ($hasNestedRecursiveValidationRules && $errors->has("{$statePath}.*")));
 @endphp

@@ -216,6 +216,21 @@ class Field extends Component implements Contracts\HasValidationRules
             $schema->alignEnd();
         }
 
+        if (in_array($slot, [
+            static::ABOVE_LABEL_CONTAINER,
+            static::BELOW_LABEL_CONTAINER,
+            static::BEFORE_LABEL_CONTAINER,
+            static::AFTER_LABEL_CONTAINER,
+            static::ABOVE_CONTENT_CONTAINER,
+            static::BELOW_CONTENT_CONTAINER,
+            static::BEFORE_CONTENT_CONTAINER,
+            static::AFTER_CONTENT_CONTAINER,
+            static::ABOVE_ERROR_MESSAGE_CONTAINER,
+            static::BELOW_ERROR_MESSAGE_CONTAINER,
+        ])) {
+            $schema->inline();
+        }
+
         return $schema;
     }
 }
