@@ -76,7 +76,7 @@ it('can disable authentication when a valid recovery code is used', function () 
         ->mountAction(TestAction::make('disableGoogleTwoFactorAuthentication')
             ->schemaComponentContainer('content.google_two_factor'))
         ->callAction(TestAction::make('useRecoveryCode')
-            ->schemaComponentContainer('mountedActionSchema0.code.below_content'))
+            ->schemaComponentContainer('mountedActionSchema0.code'))
         ->setActionData([
             'recoveryCode' => Arr::first($this->recoveryCodes),
         ])
@@ -215,7 +215,7 @@ it('will not disable authentication when an invalid recovery code is used', func
         ->mountAction(TestAction::make('disableGoogleTwoFactorAuthentication')
             ->schemaComponentContainer('content.google_two_factor'))
         ->callAction(TestAction::make('useRecoveryCode')
-            ->schemaComponentContainer('mountedActionSchema0.code.below_content'))
+            ->schemaComponentContainer('mountedActionSchema0.code'))
         ->setActionData([
             'recoveryCode' => 'invalid-recovery-code',
         ])

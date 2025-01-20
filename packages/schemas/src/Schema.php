@@ -18,6 +18,7 @@ class Schema extends ViewComponent
     use Concerns\BelongsToModel;
     use Concerns\BelongsToParentComponent;
     use Concerns\CanBeDisabled;
+    use Concerns\CanBeEmbeddedInParentComponent;
     use Concerns\CanBeHidden;
     use Concerns\CanBeInline;
     use Concerns\CanBeValidated;

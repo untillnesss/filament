@@ -100,7 +100,7 @@ it('can resend the code to the user', function () {
 
     $livewire
         ->callAction(TestAction::make('resend')
-            ->schemaComponentContainer("multiFactorChallengeForm.{$emailCodeAuthentication->getId()}.code.below_content"));
+            ->schemaComponentContainer("multiFactorChallengeForm.{$emailCodeAuthentication->getId()}.code"));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 2);
 });
@@ -125,7 +125,7 @@ it('can not resend the code to the user more than once per minute', function () 
 
     $livewire
         ->callAction(TestAction::make('resend')
-            ->schemaComponentContainer("multiFactorChallengeForm.{$emailCodeAuthentication->getId()}.code.below_content"));
+            ->schemaComponentContainer("multiFactorChallengeForm.{$emailCodeAuthentication->getId()}.code"));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
 
@@ -133,7 +133,7 @@ it('can not resend the code to the user more than once per minute', function () 
 
     $livewire
         ->callAction(TestAction::make('resend')
-            ->schemaComponentContainer("multiFactorChallengeForm.{$emailCodeAuthentication->getId()}.code.below_content"));
+            ->schemaComponentContainer("multiFactorChallengeForm.{$emailCodeAuthentication->getId()}.code"));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 2);
 });

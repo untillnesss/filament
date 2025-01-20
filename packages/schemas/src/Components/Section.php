@@ -225,7 +225,9 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
             static::ABOVE_CONTENT_CONTAINER,
             static::BELOW_CONTENT_CONTAINER,
         ])) {
-            $schema->inline();
+            $schema
+                ->inline()
+                ->embeddedInParentComponent();
         }
 
         if (in_array($slot, [

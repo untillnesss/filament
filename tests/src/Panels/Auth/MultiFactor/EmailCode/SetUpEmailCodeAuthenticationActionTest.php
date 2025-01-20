@@ -100,7 +100,7 @@ it('can resend the code to the user', function () {
 
     $livewire
         ->callAction(TestAction::make('resend')
-            ->schemaComponentContainer('mountedActionSchema0.code.below_content'));
+            ->schemaComponentContainer('mountedActionSchema0.code'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 2);
 });
@@ -116,7 +116,7 @@ it('can resend the code to the user more than once per minute', function () {
 
     $livewire
         ->callAction(TestAction::make('resend')
-            ->schemaComponentContainer('mountedActionSchema0.code.below_content'));
+            ->schemaComponentContainer('mountedActionSchema0.code'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
 
@@ -124,7 +124,7 @@ it('can resend the code to the user more than once per minute', function () {
 
     $livewire
         ->callAction(TestAction::make('resend')
-            ->schemaComponentContainer('mountedActionSchema0.code.below_content'));
+            ->schemaComponentContainer('mountedActionSchema0.code'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 2);
 });

@@ -88,7 +88,6 @@ trait HasChildComponents
         if ($components instanceof Schema) {
             return $this->configureSchemaForSlot(
                 $components
-                    ->key(($slot === 'default') ? null : $slot)
                     ->livewire($this->getLivewire())
                     ->parentComponent($this),
                 $slot,
@@ -105,7 +104,6 @@ trait HasChildComponents
     protected function makeSchemaForSlot(string $slot): Schema
     {
         return Schema::make($this->getLivewire())
-            ->key(($slot === 'default') ? null : $slot)
             ->parentComponent($this);
     }
 

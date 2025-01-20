@@ -86,4 +86,18 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Ex
 
         return $this;
     }
+
+    protected function configureSchemaForSlot(Schema $schema, string $slot): Schema
+    {
+        $schema = parent::configureSchemaForSlot($schema, $slot);
+
+        if (in_array($slot, [
+            static::HEADER_CONTAINER,
+            static::FOOTER_CONTAINER,
+        ])) {
+            $schema->embeddedInParentComponent();
+        }
+
+        return $schema;
+    }
 }

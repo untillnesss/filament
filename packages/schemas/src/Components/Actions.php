@@ -150,6 +150,7 @@ class Actions extends Component
         ])) {
             $schema
                 ->inline()
+                ->embeddedInParentComponent()
                 ->configureActionsUsing(fn (Action $action) => $action
                     ->defaultSize(ActionSize::Small)
                     ->defaultView(Action::LINK_VIEW))

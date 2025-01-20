@@ -25,6 +25,14 @@
         },
         $getComponents(withHidden: true),
     );
+
+    $isEmbeddedInParentComponent = $isEmbeddedInParentComponent();
+    $parentComponent = $isEmbeddedInParentComponent
+        ? $getParentComponent()
+        : null;
+    $statePath = $isEmbeddedInParentComponent
+        ? $parentComponent->getContainer()->getStatePath()
+        : $getStatePath();
 @endphp
 
 @if ((! $isDirectlyHidden()) && $hasVisibleComponents)
@@ -111,11 +119,18 @@
                     }}
                 >
                     @if ($isSchemaComponentVisible)
+                        @php
+                            $schemaComponentStatePath = $isEmbeddedInParentComponent
+                                ? $parentComponent->getStatePath()
+                                : $schemaComponent->getStatePath();
+                        @endphp
+
                         <div
                             x-data="filamentSchemaComponent({
-                                        path: @js($schemaComponentStatePath = $schemaComponent->getStatePath()),
-                                        containerPath: @js($schemaComponent->getContainer()->getStatePath()),
+                                        path: @js($schemaComponentStatePath),
+                                        containerPath: @js($statePath),
                                         isLive: @js($schemaComponent->isLive()),
+                                        $wire,
                                     })"
                             @if ($afterStateUpdatedJs = $schemaComponent->getAfterStateUpdatedJs())
                                 x-init="{{
