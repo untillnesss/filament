@@ -87,8 +87,7 @@
                                         isLive: @js($schemaComponent->isLive()),
                                     })"
                             @if ($afterStateUpdatedJs = $schemaComponent->getAfterStateUpdatedJs())
-                                {{-- format-ignore-start --}}x-init="@foreach ($afterStateUpdatedJs as $js) $wire.$watch(@js($schemaComponentStatePath), ($state, $old) => eval(@js($js))); @endforeach"
-                                                                                                                                                                        {{-- format-ignore-end --}}
+                                {{-- format-ignore-start --}}x-init="@foreach ($afterStateUpdatedJs as $js) $wire.$watch(@js($schemaComponentStatePath), ($state, $old) => eval(@js($js))); @endforeach"{{-- format-ignore-end --}}
                             @endif
                             @if (filled($xShow = match ([filled($hiddenJs), filled($visibleJs)]) {
                                      [true, true] => "(! {$hiddenJs}) && ({$visibleJs})",
