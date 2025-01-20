@@ -6,8 +6,7 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Concerns\HasLabel;
-use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
-use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
+use Filament\Schemas\Schema;
 use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Concerns\HasVerticalAlignment;
 
@@ -23,13 +22,13 @@ class Actions extends Component
 
     protected bool | Closure $isFullWidth = false;
 
-    const BEFORE_LABEL_DECORATIONS = 'before_label';
+    const BEFORE_LABEL_CONTAINER = 'before_label';
 
-    const AFTER_LABEL_DECORATIONS = 'after_label';
+    const AFTER_LABEL_CONTAINER = 'after_label';
 
-    const ABOVE_CONTENT_DECORATIONS = 'above_content';
+    const ABOVE_CONTENT_CONTAINER = 'above_content';
 
-    const BELOW_CONTENT_DECORATIONS = 'below_content';
+    const BELOW_CONTENT_CONTAINER = 'below_content';
 
     /**
      * @param  array<Action>  $actions
@@ -88,47 +87,54 @@ class Actions extends Component
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function beforeLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
+    public function beforeLabel(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->decorations(static::BEFORE_LABEL_DECORATIONS, $decorations);
+        $this->childComponents($components, static::BEFORE_LABEL_CONTAINER);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function afterLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
+    public function afterLabel(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->decorations(
-            static::AFTER_LABEL_DECORATIONS,
-            $decorations,
-            makeDefaultLayoutUsing: fn (array $decorations): AlignDecorations => AlignDecorations::end($decorations),
-        );
+        $this->childComponents($components, static::AFTER_LABEL_CONTAINER);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function aboveContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
+    public function aboveContent(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->decorations(static::ABOVE_CONTENT_DECORATIONS, $decorations);
+        $this->childComponents($components, static::ABOVE_CONTENT_CONTAINER);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function belowContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
+    public function belowContent(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->decorations(static::BELOW_CONTENT_DECORATIONS, $decorations);
+        $this->childComponents($components, static::BELOW_CONTENT_CONTAINER);
 
         return $this;
+    }
+
+    protected function makeSchemaForSlot(string $slot): Schema
+    {
+        $schema = parent::makeSchemaForSlot($slot);
+
+        if ($slot === static::AFTER_LABEL_CONTAINER) {
+            $schema->alignEnd();
+        }
+
+        return $schema;
     }
 
     public function sticky(bool | Closure $condition = true): static

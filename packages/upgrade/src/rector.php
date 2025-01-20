@@ -107,8 +107,6 @@ return static function (RectorConfig $rectorConfig): void {
             'Filament\\Forms\\Components\\Concerns\\CanBeCompacted' => 'Filament\\Schemas\\Components\\Concerns\\CanBeCompact',
             'Filament\\Forms\\Components\\Concerns\\HasFooterActions' => 'Filament\\Schemas\\Components\\Concerns\\HasFooterActions',
             'Filament\\Forms\\Components\\Concerns\\HasHeaderActions' => 'Filament\\Schemas\\Components\\Concerns\\HasHeaderActions',
-            'Filament\\Forms\\Components\\Contracts\\HasFooterActions' => 'Filament\\Schemas\\Components\\Contracts\\HasFooterActions',
-            'Filament\\Forms\\Components\\Contracts\\HasHeaderActions' => 'Filament\\Schemas\\Components\\Contracts\\HasHeaderActions',
             'Filament\\Infolists\\ComponentContainer' => 'Filament\\Schemas\\Schema',
             'Filament\\Infolists\\Concerns\\BelongsToLivewire' => 'Filament\\Schemas\\Concerns\\BelongsToLivewire',
             'Filament\\Infolists\\Concerns\\BelongsToParentComponent' => 'Filament\\Schemas\\Concerns\\BelongsToParentComponent',

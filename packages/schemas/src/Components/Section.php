@@ -16,16 +16,16 @@ use Filament\Schemas\Components\Concerns\HasHeaderActions;
 use Filament\Schemas\Components\Concerns\HasHeading;
 use Filament\Schemas\Components\Contracts\CanConcealComponents;
 use Filament\Schemas\Components\Contracts\CanEntangleWithSingularRelationships;
-use Filament\Schemas\Components\Decorations\Layouts\AlignDecorations;
-use Filament\Schemas\Components\Decorations\Layouts\DecorationsLayout;
+use Filament\Schemas\Schema;
 use Filament\Support\Concerns\CanBeContained;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Filament\Support\Concerns\HasIcon;
 use Filament\Support\Concerns\HasIconColor;
+use Filament\Support\Enums\Alignment;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Str;
 
-class Section extends Component implements CanConcealComponents, CanEntangleWithSingularRelationships, Contracts\HasFooterActions, Contracts\HasHeaderActions
+class Section extends Component implements CanConcealComponents, CanEntangleWithSingularRelationships
 {
     use CanBeCollapsed;
     use CanBeCompact;
@@ -50,17 +50,17 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
 
     protected bool | Closure $isFormBefore = false;
 
-    const AFTER_HEADER_DECORATIONS = 'after_header';
+    const AFTER_HEADER_CONTAINER = 'after_header';
 
-    const FOOTER_DECORATIONS = 'footer';
+    const FOOTER_CONTAINER = 'footer';
 
-    const BEFORE_LABEL_DECORATIONS = 'before_label';
+    const BEFORE_LABEL_CONTAINER = 'before_label';
 
-    const AFTER_LABEL_DECORATIONS = 'after_label';
+    const AFTER_LABEL_CONTAINER = 'after_label';
 
-    const ABOVE_CONTENT_DECORATIONS = 'above_content';
+    const ABOVE_CONTENT_CONTAINER = 'above_content';
 
-    const BELOW_CONTENT_DECORATIONS = 'below_content';
+    const BELOW_CONTENT_CONTAINER = 'below_content';
 
     /**
      * @param  string | array<Component | Action | ActionGroup> | Htmlable | Closure | null  $heading
@@ -104,7 +104,10 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
         });
 
         $this->afterHeader(fn (Section $component): array => $component->getHeaderActions());
-        $this->setUpFooterActions();
+        $this->footer(fn (Section $component): Schema => match ($component->getFooterActionsAlignment()) {
+            Alignment::End, Alignment::Right => Schema::end($component->getFooterActions()),
+            default => Schema::start($component->getFooterActions()),
+        });
     }
 
     public function aside(bool | Closure | null $condition = true): static
@@ -137,70 +140,73 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function afterHeader(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
+    public function afterHeader(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->decorations(
-            static::AFTER_HEADER_DECORATIONS,
-            $decorations,
-            makeDefaultLayoutUsing: fn (array $decorations): AlignDecorations => AlignDecorations::end($decorations),
-        );
+        $this->childComponents($components, static::AFTER_HEADER_CONTAINER);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function footer(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
+    public function footer(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->decorations(static::FOOTER_DECORATIONS, $decorations);
+        $this->childComponents($components, static::FOOTER_CONTAINER);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function beforeLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
+    public function beforeLabel(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->decorations(static::BEFORE_LABEL_DECORATIONS, $decorations);
+        $this->childComponents($components, static::BEFORE_LABEL_CONTAINER);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function afterLabel(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
+    public function afterLabel(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->decorations(
-            static::AFTER_LABEL_DECORATIONS,
-            $decorations,
-            makeDefaultLayoutUsing: fn (array $decorations): AlignDecorations => AlignDecorations::end($decorations),
-        );
+        $this->childComponents($components, static::AFTER_LABEL_CONTAINER);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function aboveContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
+    public function aboveContent(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->decorations(static::ABOVE_CONTENT_DECORATIONS, $decorations);
+        $this->childComponents($components, static::ABOVE_CONTENT_CONTAINER);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null  $decorations
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
-    public function belowContent(array | DecorationsLayout | Component | Action | ActionGroup | string | Closure | null $decorations): static
+    public function belowContent(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->decorations(static::BELOW_CONTENT_DECORATIONS, $decorations);
+        $this->childComponents($components, static::BELOW_CONTENT_CONTAINER);
 
         return $this;
+    }
+
+    protected function makeSchemaForSlot(string $slot): Schema
+    {
+        $schema = parent::makeSchemaForSlot($slot);
+
+        if (in_array($slot, [static::AFTER_HEADER_CONTAINER, static::AFTER_LABEL_CONTAINER])) {
+            $schema->alignEnd();
+        }
+
+        return $schema;
     }
 }

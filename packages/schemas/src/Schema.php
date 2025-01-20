@@ -2,8 +2,12 @@
 
 namespace Filament\Schemas;
 
+use Closure;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Support\Components\ViewComponent;
+use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Component;
@@ -27,6 +31,7 @@ class Schema extends ViewComponent
     use Concerns\HasOperation;
     use Concerns\HasState;
     use Concerns\HasStateBindingModifiers;
+    use HasAlignment;
     use HasExtraAttributes;
 
     protected string $view = 'filament-schema::schema';
@@ -91,5 +96,35 @@ class Schema extends ViewComponent
             Model::class, $record::class => [$record],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
+    }
+
+    /**
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure  $components
+     */
+    public static function start(array | Schema | Component | Action | ActionGroup | string | Closure $components): static
+    {
+        return static::make()
+            ->components($components)
+            ->alignStart();
+    }
+
+    /**
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure  $components
+     */
+    public static function end(array | Schema | Component | Action | ActionGroup | string | Closure $components): static
+    {
+        return static::make()
+            ->components($components)
+            ->alignEnd();
+    }
+
+    /**
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure  $components
+     */
+    public static function between(array | Schema | Component | Action | ActionGroup | string | Closure $components): static
+    {
+        return static::make()
+            ->components($components)
+            ->alignBetween();
     }
 }

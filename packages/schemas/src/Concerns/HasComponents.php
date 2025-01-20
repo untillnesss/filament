@@ -7,24 +7,26 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Field;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Text;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 trait HasComponents
 {
     /**
-     * @var array<Component | Action | ActionGroup> | Closure
+     * @var array<Component | Action | ActionGroup | string> | Component | Action | ActionGroup | string | Closure
      */
-    protected array | Closure $components = [];
+    protected array | Component | Action | ActionGroup | string | Closure $components = [];
 
     /**
-     * @var array<array<array<array<array<string, Component>>>>>
+     * @var array<array<array<array<array<string, Component| Action | ActionGroup>>>>>
      */
     protected array $cachedFlatComponents = [];
 
     /**
-     * @param  array<Component | Action | ActionGroup> | Closure  $components
+     * @param  array<Component | Action | ActionGroup | string> | Component | Action | ActionGroup | string | Closure  $components
      */
-    public function components(array | Closure $components): static
+    public function components(array | Component | Action | ActionGroup | string | Closure $components): static
     {
         $this->components = $components;
 
@@ -32,9 +34,9 @@ trait HasComponents
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | Closure  $components
+     * @param  array<Component | Action | ActionGroup | string> | Component | Action | ActionGroup | string | Closure  $components
      */
-    public function schema(array | Closure $components): static
+    public function schema(array | Component | Action | ActionGroup | string | Closure $components): static
     {
         $this->components($components);
 
@@ -140,7 +142,7 @@ trait HasComponents
     }
 
     /**
-     * @return array<Component | Action | ActionGroup>
+     * @return array<Component | Action | ActionGroup | string>
      */
     public function getFlatComponents(bool $withActions = true, bool $withHidden = false, bool $withAbsoluteKeys = false, ?string $containerKey = null): array
     {
@@ -179,17 +181,21 @@ trait HasComponents
     }
 
     /**
-     * @return array<Component | Action | ActionGroup>
+     * @return array<Component | Action | ActionGroup | string>
      */
     public function getComponents(bool $withActions = true, bool $withHidden = false, bool $withOriginalKeys = false): array
     {
-        $components = array_map(function (Component | Action | ActionGroup $component): Component | Action | ActionGroup {
+        $components = array_map(function (Component | Action | ActionGroup | string $component): Component | Action | ActionGroup {
             if (($component instanceof Action) || ($component instanceof ActionGroup)) {
                 return $component->schemaComponentContainer($this);
             }
 
+            if (is_string($component)) {
+                $component = Text::make($component);
+            }
+
             return $component->container($this);
-        }, $this->evaluate($this->components));
+        }, Arr::wrap($this->evaluate($this->components)));
 
         if ($withActions && $withHidden) {
             return $components;
@@ -216,16 +222,17 @@ trait HasComponents
 
     protected function cloneComponents(): static
     {
-        if (is_array($this->components)) {
+        if (! ($this->components instanceof Closure)) {
             $this->components = array_map(
-                fn (Component | Action | ActionGroup $component): Component | Action | ActionGroup => match (true) {
+                fn (Component | Action | ActionGroup | string $component): Component | Action | ActionGroup | string => match (true) {
                     $component instanceof Action, $component instanceof ActionGroup => (clone $component)
                         ->schemaComponentContainer($this),
                     $component instanceof Component => $component
                         ->container($this)
                         ->getClone(),
+                    default => $component,
                 },
-                $this->components,
+                Arr::wrap($this->components),
             );
         }
 

@@ -6,19 +6,17 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Text;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Arr;
 
 trait HasChildComponents
 {
     /**
-     * @var array<string, array<Component | Action | ActionGroup> | Schema | Component | Action | ActionGroup | string | Closure | null>
+     * @var array<string, array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure | null>
      */
     protected array $childComponents = [];
 
     /**
-     * @param  array<Component | Action | ActionGroup> | Closure  $components
+     * @param  array<Component | Action | ActionGroup | string> | Closure  $components
      */
     public function components(array | Closure $components): static
     {
@@ -28,7 +26,7 @@ trait HasChildComponents
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
     public function childComponents(array | Schema | Component | Action | ActionGroup | string | Closure | null $components, string $slot = 'default'): static
     {
@@ -38,7 +36,7 @@ trait HasChildComponents
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | Closure  $components
+     * @param  array<Component | Action | ActionGroup | string> | Closure  $components
      */
     public function schema(array | Closure $components): static
     {
@@ -48,7 +46,7 @@ trait HasChildComponents
     }
 
     /**
-     * @return array<Component | Action | ActionGroup>
+     * @return array<Component | Action | ActionGroup | string>
      */
     public function getChildComponents(?string $slot = null): array
     {
@@ -56,7 +54,7 @@ trait HasChildComponents
     }
 
     /**
-     * @return array<Component | Action | ActionGroup>
+     * @return array<Component | Action | ActionGroup | string>
      */
     public function getDefaultChildComponents(): array
     {
@@ -92,20 +90,7 @@ trait HasChildComponents
         }
 
         return $this->makeSchemaForSlot($slot)
-            ->components($this->normalizeChildComponents($components));
-    }
-
-    /**
-     * @param  array<Component | Action | ActionGroup> | Component | Action | ActionGroup | string  $components
-     * @return array<Component | Action | ActionGroup>
-     */
-    protected function normalizeChildComponents(array | Component | Action | ActionGroup | string $components): array
-    {
-        if (is_string($components)) {
-            return [Text::make($components)];
-        }
-
-        return Arr::wrap($components);
+            ->components($components);
     }
 
     protected function makeSchemaForSlot(string $slot): Schema

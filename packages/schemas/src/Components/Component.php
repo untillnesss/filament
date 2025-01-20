@@ -14,7 +14,6 @@ use Filament\Schemas\Components\Concerns\CanPoll;
 use Filament\Schemas\Components\Concerns\Cloneable;
 use Filament\Schemas\Components\Concerns\HasActions;
 use Filament\Schemas\Components\Concerns\HasChildComponents;
-use Filament\Schemas\Components\Concerns\HasDecorations;
 use Filament\Schemas\Components\Concerns\HasEntryWrapper;
 use Filament\Schemas\Components\Concerns\HasFieldWrapper;
 use Filament\Schemas\Components\Concerns\HasId;
@@ -52,7 +51,6 @@ class Component extends ViewComponent
     use HasActions;
     use HasChildComponents;
     use HasColumns;
-    use HasDecorations;
     use HasEntryWrapper;
     use HasExtraAttributes;
     use HasFieldWrapper;

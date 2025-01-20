@@ -21,9 +21,9 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Ex
 
     protected string | Closure | null $livewireSubmitHandler = null;
 
-    const HEADER_SLOT = 'header';
+    const HEADER_CONTAINER = 'header';
 
-    const FOOTER_SLOT = 'footer';
+    const FOOTER_CONTAINER = 'footer';
 
     /**
      * @param  array<Component | Action | ActionGroup> | Closure  $schema
@@ -68,27 +68,22 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Ex
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
     public function header(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->childComponents($components, static::HEADER_SLOT);
+        $this->childComponents($components, static::HEADER_CONTAINER);
 
         return $this;
     }
 
     /**
-     * @param  array<Component | Action | ActionGroup> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
+     * @param  array<Component | Action | ActionGroup | string> | Schema | Component | Action | ActionGroup | string | Closure | null  $components
      */
     public function footer(array | Schema | Component | Action | ActionGroup | string | Closure | null $components): static
     {
-        $this->childComponents($components, static::FOOTER_SLOT);
+        $this->childComponents($components, static::FOOTER_CONTAINER);
 
         return $this;
-    }
-
-    public function prepareDecorationAction(Action $action): Action
-    {
-        return $this->prepareAction($action);
     }
 }

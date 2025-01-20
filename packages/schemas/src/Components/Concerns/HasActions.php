@@ -108,7 +108,7 @@ trait HasActions
      */
     public function cacheActions(): array
     {
-        $this->cachedActions = $this->getDecorationActions();
+        $this->cachedActions = [];
 
         if ($this instanceof HasAffixActions) {
             $this->cachedActions = [
