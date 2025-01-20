@@ -16,7 +16,7 @@
     $childComponentContainer = $getChildComponentContainer();
 @endphp
 
-@if (! empty($childComponentContainer->getCachedVisibleComponents()))
+@if (! empty($childComponentContainer->getComponents()))
     @if (blank($livewireProperty))
         <div
             x-bind:class="{
@@ -37,7 +37,7 @@
                     ->class(['fi-fo-tabs-tab outline-none'])
             }}
         >
-            {{ $getChildComponentContainer() }}
+            {{ $childComponentContainer }}
         </div>
     @elseif (strval($this->{$livewireProperty}) === strval($key))
         <div
@@ -57,7 +57,7 @@
                     ])
             }}
         >
-            {{ $getChildComponentContainer() }}
+            {{ $childComponentContainer }}
         </div>
     @endif
 @endif
