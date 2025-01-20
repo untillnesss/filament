@@ -148,7 +148,7 @@ trait HasChildComponents
                     },
                     $childComponents,
                 );
-            } else {
+            } elseif (! ($childComponents instanceof Closure)) {
                 $this->childComponents[$slot] = $childComponents->getClone();
             }
         }
