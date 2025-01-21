@@ -80,9 +80,15 @@ trait HasComponents
                     continue;
                 }
 
-                $componentNestedContainerKey = ($nestedContainerKey === $componentKey)
-                    ? null
-                    : (string) str($nestedContainerKey)->after("{$componentKey}.");
+                if ($nestedContainerKey === $componentKey) {
+                    if ($action = $component->getAction($actionName)) {
+                        return $action;
+                    }
+
+                    $componentNestedContainerKey = null;
+                } else {
+                    $componentNestedContainerKey = (string) str($nestedContainerKey)->after("{$componentKey}.");
+                }
             } else {
                 $componentNestedContainerKey = $nestedContainerKey;
             }

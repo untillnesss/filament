@@ -408,9 +408,7 @@ class Action extends ViewComponent implements Arrayable
             $context['recordKey'] = $this->resolveRecordKey($record);
         }
 
-        if (filled($schemaComponentContainerKey = $this->getSchemaComponentContainer()?->getKey())) {
-            $context['schemaComponentContainer'] = $schemaComponentContainerKey;
-        } elseif (filled($schemaComponentKey = $this->getSchemaComponent()?->getKey())) {
+        if (filled($schemaComponentKey = ($this->getSchemaComponentContainer() ?? $this->getSchemaComponent())?->getKey())) {
             $context['schemaComponent'] = $schemaComponentKey;
         }
 

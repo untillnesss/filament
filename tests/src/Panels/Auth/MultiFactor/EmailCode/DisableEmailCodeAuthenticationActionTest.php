@@ -41,7 +41,7 @@ it('can disable authentication when valid challenge code is used', function () {
     livewire(EditProfile::class)
         ->callAction(
             TestAction::make('disableEmailCodeAuthentication')
-                ->schemaComponentContainer('content.email_code'),
+                ->schemaComponent('content.email_code'),
             ['code' => $emailCodeAuthentication->getCurrentCode($user)],
         )
         ->assertHasNoActionErrors();
@@ -66,7 +66,7 @@ it('can resend the code to the user', function () {
 
     $livewire = livewire(EditProfile::class)
         ->mountAction(TestAction::make('disableEmailCodeAuthentication')
-            ->schemaComponentContainer('content.email_code'));
+            ->schemaComponent('content.email_code'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
 
@@ -74,7 +74,7 @@ it('can resend the code to the user', function () {
 
     $livewire
         ->callAction(TestAction::make('resend')
-            ->schemaComponentContainer('mountedActionSchema0.code'));
+            ->schemaComponent('mountedActionSchema0.code'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 2);
 });
@@ -84,13 +84,13 @@ it('can resend the code to the user more than once per minute', function () {
 
     $livewire = livewire(EditProfile::class)
         ->mountAction(TestAction::make('disableEmailCodeAuthentication')
-            ->schemaComponentContainer('content.email_code'));
+            ->schemaComponent('content.email_code'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
 
     $livewire
         ->callAction(TestAction::make('resend')
-            ->schemaComponentContainer('mountedActionSchema0.code'));
+            ->schemaComponent('mountedActionSchema0.code'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 1);
 
@@ -98,7 +98,7 @@ it('can resend the code to the user more than once per minute', function () {
 
     $livewire
         ->callAction(TestAction::make('resend')
-            ->schemaComponentContainer('mountedActionSchema0.code'));
+            ->schemaComponent('mountedActionSchema0.code'));
 
     Notification::assertSentTimes(VerifyEmailCodeAuthentication::class, 2);
 });
@@ -117,7 +117,7 @@ it('will not disable authentication when an invalid code is used', function () {
     livewire(EditProfile::class)
         ->callAction(
             TestAction::make('disableEmailCodeAuthentication')
-                ->schemaComponentContainer('content.email_code'),
+                ->schemaComponent('content.email_code'),
             ['code' => ($emailCodeAuthentication->getCurrentCode($user) === '000000') ? '111111' : '000000'],
         )
         ->assertHasActionErrors();
@@ -141,7 +141,7 @@ test('codes are required', function () {
     livewire(EditProfile::class)
         ->callAction(
             TestAction::make('disableEmailCodeAuthentication')
-                ->schemaComponentContainer('content.email_code'),
+                ->schemaComponent('content.email_code'),
             ['code' => ''],
         )
         ->assertHasActionErrors([
@@ -169,7 +169,7 @@ test('codes must be 6 digits', function () {
     livewire(EditProfile::class)
         ->callAction(
             TestAction::make('disableEmailCodeAuthentication')
-                ->schemaComponentContainer('content.email_code'),
+                ->schemaComponent('content.email_code'),
             ['code' => Str::limit($emailCodeAuthentication->getCurrentCode($user), limit: 5, end: '')],
         )
         ->assertHasActionErrors([
