@@ -33,6 +33,8 @@
 
     $key = $getKey();
     $statePath = $getStatePath();
+
+    $blockLabelHeadingTag = $getHeadingTag();
 @endphp
 
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
@@ -157,7 +159,7 @@
                                 @endif
 
                                 @if ($hasBlockLabels)
-                                    <h4
+                                    <{{ $blockLabelHeadingTag }}
                                         @class([
                                             'text-sm font-medium text-gray-950 dark:text-white',
                                             'truncate' => $isBlockLabelTruncated(),
@@ -168,7 +170,7 @@
                                         @if ($hasBlockNumbers)
                                             {{ $loop->iteration }}
                                         @endif
-                                    </h4>
+                                    </{{ $blockLabelHeadingTag }}>
                                 @endif
 
                                 @if ($editActionIsVisible || $cloneActionIsVisible || $deleteActionIsVisible || $isCollapsible || $visibleExtraItemActions)

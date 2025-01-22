@@ -18,6 +18,7 @@
     'footer' => null,
     'hasContentEl' => true,
     'heading' => null,
+    'headingTag' => 'h2',
     'icon' => null,
     'iconColor' => 'gray',
     'iconSize' => IconSize::Large,
@@ -88,9 +89,9 @@
             @if ($hasHeading || $hasDescription)
                 <div class="fi-section-header-text-ctn">
                     @if ($hasHeading)
-                        <h3 class="fi-section-header-heading">
+                        <{{ $headingTag }} class="fi-section-header-heading">
                             {{ $heading }}
-                        </h3>
+                        </{{ $headingTag }}>
                     @endif
 
                     @if ($hasDescription)

@@ -567,7 +567,8 @@ trait InteractsWithActions
                         ->take($actionNestingIndex + 1)
                         ->pluck('name')
                         ->implode('.'),
-                ),
+                )
+                ->defaultHeadingLevel(3),
         );
     }
 
