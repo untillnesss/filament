@@ -75,15 +75,14 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
         ob_start(); ?>
 
         <div
-            x-ignore
             wire:ignore.self
             <?= $attributes->toHtml() ?>
         >
             <input type="hidden" value="<?= $state ? 1 : 0 ?>" x-ref="serverState" />
 
-            <button
+            <div
                 x-bind:aria-checked="state?.toString()"
-                x-on:click="state = ! state"
+                x-on:click="if (! $el.hasAttribute('disabled')) state = ! state"
                 x-bind:class="state ? '<?= Arr::toCssClasses([
                     'fi-toggle-on',
                     match ($onColor) {
@@ -117,7 +116,6 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
                         }
                 "
                 role="switch"
-                type="button"
                 <?= $buttonAttributes->toHtml() ?>
             >
                 <div>
@@ -132,7 +130,7 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
                         )?->toHtml() ?>
                     </div>
                 </div>
-            </button>
+            </div>
         </div>
 
         <?php return ob_get_clean();

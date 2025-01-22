@@ -67,7 +67,6 @@
                             options: @js($this->getOptions()),
                             type: @js($this->getType()),
                         })"
-                x-ignore
                 @class([
                     match ($color) {
                         'gray' => null,
