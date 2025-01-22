@@ -568,7 +568,7 @@ trait InteractsWithActions
                         ->pluck('name')
                         ->implode('.'),
                 )
-                ->defaultHeadingLevel(3),
+                ->rootHeadingLevel(3),
         );
     }
 

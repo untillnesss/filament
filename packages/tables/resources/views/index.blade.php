@@ -137,7 +137,9 @@
                     @if ($heading || $description)
                         <div>
                             @if ($heading)
-                                <{{ $headingTag }} class="fi-ta-header-heading">
+                                <{{ $headingTag }}
+                                    class="fi-ta-header-heading"
+                                >
                                     {{ $heading }}
                                 </{{ $headingTag }}>
                             @endif
@@ -451,7 +453,9 @@
                                     </x-slot>
 
                                     <div class="fi-ta-col-toggle-form-ctn">
-                                        <{{ $secondLevelHeadingTag }} class="fi-ta-col-toggle-heading">
+                                        <{{ $secondLevelHeadingTag }}
+                                            class="fi-ta-col-toggle-heading"
+                                        >
                                             {{ __('filament-tables::table.column_toggle.heading') }}
                                         </{{ $secondLevelHeadingTag }}>
 
@@ -827,7 +831,9 @@
                                         @endif
 
                                         <div>
-                                            <{{ $secondLevelHeadingTag }} class="fi-ta-group-heading">
+                                            <{{ $secondLevelHeadingTag }}
+                                                class="fi-ta-group-heading"
+                                            >
                                                 @if (filled($recordGroupLabel = ($group->isTitlePrefixedWithLabel() ? $group->getLabel() : null)))
                                                         {{ $recordGroupLabel }}:
                                                 @endif
@@ -1821,7 +1827,9 @@
                             {{ \Filament\Support\generate_icon_html($getEmptyStateIcon()) }}
                         </div>
 
-                        <{{ $secondLevelHeadingTag }} class="fi-ta-empty-state-heading">
+                        <{{ $secondLevelHeadingTag }}
+                            class="fi-ta-empty-state-heading"
+                        >
                             {{ $getEmptyStateHeading() }}
                         </{{ $secondLevelHeadingTag }}>
 

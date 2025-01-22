@@ -6,7 +6,7 @@ trait HasHeadings
 {
     public function getHeadingLevel(int $index = 0): int
     {
-        return $this->getContainer()->getDefaultHeadingLevel() + $index;
+        return $this->getContainer()->getRootHeadingLevel() + $index;
     }
 
     public function getHeadingTag(int $index = 0): string
@@ -20,7 +20,7 @@ trait HasHeadings
         return "h{$level}";
     }
 
-    public function getChildComponentContainerDefaultHeadingLevel(): int
+    public function getChildComponentContainerRootHeadingLevel(): int
     {
         return $this->getHeadingLevel() + $this->getHeadingsCount();
     }

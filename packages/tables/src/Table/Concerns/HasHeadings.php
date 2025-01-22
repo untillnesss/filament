@@ -4,23 +4,23 @@ namespace Filament\Tables\Table\Concerns;
 
 trait HasHeadings
 {
-    protected int $defaultHeadingLevel = 2;
+    protected int $rootHeadingLevel = 2;
 
-    public function defaultHeadingLevel(int $level): static
+    public function rootHeadingLevel(int $level): static
     {
-        $this->defaultHeadingLevel = $level;
+        $this->rootHeadingLevel = $level;
 
         return $this;
     }
 
-    public function getDefaultHeadingLevel(): int
+    public function getRootHeadingLevel(): int
     {
-        return $this->defaultHeadingLevel;
+        return $this->rootHeadingLevel;
     }
 
     public function getHeadingLevel(int $index = 0): int
     {
-        return $this->getDefaultHeadingLevel() + $index;
+        return $this->getRootHeadingLevel() + $index;
     }
 
     public function getHeadingTag(int $index = 0): string

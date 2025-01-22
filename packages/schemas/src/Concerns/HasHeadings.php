@@ -4,21 +4,21 @@ namespace Filament\Schemas\Concerns;
 
 trait HasHeadings
 {
-    protected int $defaultHeadingLevel = 2;
+    protected int $rootHeadingLevel = 2;
 
-    public function defaultHeadingLevel(int $level): static
+    public function rootHeadingLevel(int $level): static
     {
-        $this->defaultHeadingLevel = $level;
+        $this->rootHeadingLevel = $level;
 
         return $this;
     }
 
-    public function getDefaultHeadingLevel(): int
+    public function getRootHeadingLevel(): int
     {
         if ($parentComponent = $this->getParentComponent()) {
-            return $parentComponent->getChildComponentContainerDefaultHeadingLevel();
+            return $parentComponent->getChildComponentContainerRootHeadingLevel();
         }
 
-        return $this->defaultHeadingLevel;
+        return $this->rootHeadingLevel;
     }
 }
