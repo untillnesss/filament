@@ -1134,4 +1134,13 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     {
         return $this->getChildComponentContainer($uuid)->getRawState();
     }
+
+    public function getHeadingsCount(): int
+    {
+        if (! $this->hasBlockLabels()) {
+            return 0;
+        }
+
+        return 1;
+    }
 }

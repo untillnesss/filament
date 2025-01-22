@@ -16,6 +16,7 @@ use Filament\Schemas\Components\Concerns\HasActions;
 use Filament\Schemas\Components\Concerns\HasChildComponents;
 use Filament\Schemas\Components\Concerns\HasEntryWrapper;
 use Filament\Schemas\Components\Concerns\HasFieldWrapper;
+use Filament\Schemas\Components\Concerns\HasHeadings;
 use Filament\Schemas\Components\Concerns\HasId;
 use Filament\Schemas\Components\Concerns\HasInlineLabel;
 use Filament\Schemas\Components\Concerns\HasKey;
@@ -55,6 +56,7 @@ class Component extends ViewComponent
     use HasExtraAttributes;
     use HasFieldWrapper;
     use HasGap;
+    use HasHeadings;
     use HasId;
     use HasInlineLabel;
     use HasKey;

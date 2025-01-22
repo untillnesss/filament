@@ -245,4 +245,13 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
 
         return $schema;
     }
+
+    public function getHeadingsCount(): int
+    {
+        if (blank($this->getHeading())) {
+            return 0;
+        }
+
+        return 1;
+    }
 }

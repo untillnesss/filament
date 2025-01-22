@@ -36,6 +36,7 @@
     :footer="$getChildComponentContainer($schemaComponent::FOOTER_CONTAINER)?->toHtmlString()"
     :has-content-el="false"
     :heading="$getHeading()"
+    :heading-tag="$getHeadingTag()"
     :icon="$getIcon()"
     :icon-color="$getIconColor()"
     :icon-size="$getIconSize()"

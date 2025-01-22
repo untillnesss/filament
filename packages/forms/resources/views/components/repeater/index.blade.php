@@ -28,6 +28,8 @@
 
     $key = $getKey();
     $statePath = $getStatePath();
+
+    $itemLabelHeadingTag = $getHeadingTag();
 @endphp
 
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
@@ -147,14 +149,14 @@
                                     @endif
 
                                     @if (filled($itemLabel))
-                                        <h4
+                                        <{{ $itemLabelHeadingTag }}
                                             @class([
                                                 'text-sm font-medium text-gray-950 dark:text-white',
                                                 'truncate' => $isItemLabelTruncated(),
                                             ])
                                         >
                                             {{ $itemLabel }}
-                                        </h4>
+                                        </{{ $itemLabelHeadingTag }}>
                                     @endif
 
                                     @if ($cloneActionIsVisible || $deleteActionIsVisible || $isCollapsible || $visibleExtraItemActions)

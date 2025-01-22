@@ -70,6 +70,8 @@
     $hasColumnToggleDropdown = $hasToggleableColumns();
     $hasHeader = $header || $heading || $description || ($headerActions && (! $isReordering)) || $isReorderable || $areGroupingSettingsVisible || $isGlobalSearchVisible || $hasFilters || count($filterIndicators) || $hasColumnToggleDropdown;
     $hasHeaderToolbar = $isReorderable || $areGroupingSettingsVisible || $isGlobalSearchVisible || $hasFiltersDialog || $hasColumnToggleDropdown;
+    $headingTag = $getHeadingTag();
+    $secondLevelHeadingTag = $heading ? $getHeadingTag(1) : $headingTag;
     $pluralModelLabel = $getPluralModelLabel();
     $records = $isLoaded ? $getRecords() : null;
     $searchDebounce = $getSearchDebounce();
@@ -135,9 +137,11 @@
                     @if ($heading || $description)
                         <div>
                             @if ($heading)
-                                <h3 class="fi-ta-header-heading">
+                                <{{ $headingTag }}
+                                    class="fi-ta-header-heading"
+                                >
                                     {{ $heading }}
-                                </h3>
+                                </{{ $headingTag }}>
                             @endif
 
                             @if ($description)
@@ -171,6 +175,7 @@
                     <x-filament-tables::filters
                         :apply-action="$getFiltersApplyAction()"
                         :form="$getFiltersForm()"
+                        :heading-tag="$secondLevelHeadingTag"
                         x-cloak
                         x-show="areFiltersOpen"
                     />
@@ -426,6 +431,7 @@
                                         <x-filament-tables::filters
                                             :apply-action="$getFiltersApplyAction()"
                                             :form="$getFiltersForm()"
+                                            :heading-tag="$secondLevelHeadingTag"
                                         />
                                     </x-filament::dropdown>
                                 @endif
@@ -447,9 +453,11 @@
                                     </x-slot>
 
                                     <div class="fi-ta-col-toggle-form-ctn">
-                                        <h4 class="fi-ta-col-toggle-heading">
+                                        <{{ $secondLevelHeadingTag }}
+                                            class="fi-ta-col-toggle-heading"
+                                        >
                                             {{ __('filament-tables::table.column_toggle.heading') }}
-                                        </h4>
+                                        </{{ $secondLevelHeadingTag }}>
 
                                         {{ $getColumnToggleForm() }}
                                     </div>
@@ -823,13 +831,15 @@
                                         @endif
 
                                         <div>
-                                            <h4 class="fi-ta-group-heading">
+                                            <{{ $secondLevelHeadingTag }}
+                                                class="fi-ta-group-heading"
+                                            >
                                                 @if (filled($recordGroupLabel = ($group->isTitlePrefixedWithLabel() ? $group->getLabel() : null)))
                                                         {{ $recordGroupLabel }}:
                                                 @endif
 
                                                 {{ $recordGroupTitle }}
-                                            </h4>
+                                            </{{ $secondLevelHeadingTag }}>
 
                                             @if (filled($recordGroupDescription = $group->getDescription($record, $recordGroupTitle)))
                                                 <p
@@ -1471,7 +1481,7 @@
                                                         ])
                                                     >
                                                         <div>
-                                                            <h4
+                                                            <{{ $secondLevelHeadingTag }}
                                                                 class="fi-ta-group-heading"
                                                             >
                                                                 @if (filled($recordGroupLabel = ($group->isTitlePrefixedWithLabel() ? $group->getLabel() : null)))
@@ -1479,7 +1489,7 @@
                                                                 @endif
 
                                                                 {{ $recordGroupTitle }}
-                                                            </h4>
+                                                            </{{ $secondLevelHeadingTag }}>
 
                                                             @if (filled($recordGroupDescription = $group->getDescription($record, $recordGroupTitle)))
                                                                 <p
@@ -1817,9 +1827,11 @@
                             {{ \Filament\Support\generate_icon_html($getEmptyStateIcon()) }}
                         </div>
 
-                        <h4 class="fi-ta-empty-state-heading">
+                        <{{ $secondLevelHeadingTag }}
+                            class="fi-ta-empty-state-heading"
+                        >
                             {{ $getEmptyStateHeading() }}
-                        </h4>
+                        </{{ $secondLevelHeadingTag }}>
 
                         @if ($emptyStateDescription = $getEmptyStateDescription())
                             <p class="fi-ta-empty-state-description">
@@ -1857,6 +1869,7 @@
             <x-filament-tables::filters
                 :apply-action="$getFiltersApplyAction()"
                 :form="$getFiltersForm()"
+                :heading-tag="$secondLevelHeadingTag"
                 class="fi-ta-filters-below-content"
             />
         @endif

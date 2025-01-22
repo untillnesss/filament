@@ -1315,4 +1315,13 @@ class Repeater extends Field implements CanConcealComponents, HasExtraItemAction
     {
         return $this->getChildComponentContainer($uuid)->getRawState();
     }
+
+    public function getHeadingsCount(): int
+    {
+        if (! $this->hasItemLabels()) {
+            return 0;
+        }
+
+        return 1;
+    }
 }
