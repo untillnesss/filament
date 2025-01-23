@@ -17,7 +17,7 @@ return [
     'notifications' => [
 
         'saved' => [
-            'title' => 'Պահպանված',
+            'title' => 'Պահպանված է',
         ],
 
     ],

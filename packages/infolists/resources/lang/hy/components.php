@@ -8,7 +8,7 @@ return [
 
             'actions' => [
                 'collapse_list' => 'Ցույց տալ :count-ից ավելի քիչ',
-                'expand_list' => 'Ցույց տալ :count-ից  ավելին',
+                'expand_list' => 'Ցույց տալ :count-ից ավելին',
             ],
 
             'more_list_items' => 'և :count-ից ավելին',

@@ -2,7 +2,7 @@
 
 return [
 
-    'label' => 'Հարցման կոնստրուկտոր',
+    'label' => 'Հարցման ձևավորիչ',
 
     'form' => [
 
@@ -15,7 +15,7 @@ return [
             'label' => 'Խմբեր',
 
             'block' => [
-                'label' => 'Անձատում (կամ)',
+                'label' => 'Տարանջատում (կամ)',
                 'or' => 'կամ',
             ],
 
@@ -26,17 +26,17 @@ return [
             'label' => 'Կանոններ',
 
             'item' => [
-                'and' => 'եվ',
+                'and' => 'և',
             ],
 
         ],
 
     ],
 
-    'no_rules' => '(Անկանոն)',
+    'no_rules' => '(Կանոններ չկան)',
 
     'item_separators' => [
-        'and' => 'եվ',
+        'and' => 'և',
         'or' => 'կամ',
     ],
 
@@ -84,8 +84,8 @@ return [
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute հետո է :date',
-                    'inverse' => ':attribute հետո չէ :date',
+                    'direct' => ':attributeը :date-ից հետո է',
+                    'inverse' => ':attribute :date-ից հետո չէ ',
                 ],
 
             ],
@@ -93,13 +93,13 @@ return [
             'is_before' => [
 
                 'label' => [
-                    'direct' => 'Նախկինում է',
-                    'inverse' => 'Նախկինում չէ',
+                    'direct' => 'Առաջ է',
+                    'inverse' => 'Առաջ չէ',
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute նախկինում է :date',
-                    'inverse' => ':attribute նախկինում չէ :date',
+                    'direct' => ':attribute :date-ից առաջ է',
+                    'inverse' => ':attribute :date-ից առաջ է',
                 ],
 
             ],
@@ -112,8 +112,8 @@ return [
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute է :date',
-                    'inverse' => ':attribute չէ :date',
+                    'direct' => ':attributeը :date է',
+                    'inverse' => ':attributeը :date չէ',
                 ],
 
             ],
@@ -126,8 +126,8 @@ return [
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute է :month',
-                    'inverse' => ':attribute չէt :month',
+                    'direct' => ':attributeը :month է',
+                    'inverse' => ':attributeը :month չէ',
                 ],
 
             ],
@@ -140,8 +140,8 @@ return [
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute է :year',
-                    'inverse' => ':attribute չէ :year',
+                    'direct' => ':attributeը :year է',
+                    'inverse' => ':attributeը :year չէ',
                 ],
 
             ],
@@ -174,8 +174,8 @@ return [
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute հավասար է :number',
-                    'inverse' => ':attribute հավասար չէ :number',
+                    'direct' => ':attributeը հավասար է :number',
+                    'inverse' => ':attributeը հավասար չէ :number',
                 ],
 
             ],
@@ -251,13 +251,13 @@ return [
             'equals' => [
 
                 'label' => [
-                    'direct' => 'Has',
-                    'inverse' => 'Does not have',
+                    'direct' => 'Ունի',
+                    'inverse' => 'Չունի',
                 ],
 
                 'summary' => [
-                    'direct' => 'Has :count :relationship',
-                    'inverse' => 'Does not have :count :relationship',
+                    'direct' => 'Ունի :count :relationship',
+                    'inverse' => 'Չունի :count :relationship',
                 ],
 
             ],
@@ -265,13 +265,13 @@ return [
             'has_max' => [
 
                 'label' => [
-                    'direct' => 'Has maximum',
-                    'inverse' => 'Has more than',
+                    'direct' => 'Ունի առավելագույնը',
+                    'inverse' => 'Ունի առավել քան',
                 ],
 
                 'summary' => [
-                    'direct' => 'Has maximum :count :relationship',
-                    'inverse' => 'Has more than :count :relationship',
+                    'direct' => 'Ունի առավելագույնը :count :relationship',
+                    'inverse' => 'Ունի առավել քան :count :relationship',
                 ],
 
             ],
@@ -279,13 +279,13 @@ return [
             'has_min' => [
 
                 'label' => [
-                    'direct' => 'Has minimum',
-                    'inverse' => 'Has less than',
+                    'direct' => 'Ունի նվազագույնը',
+                    'inverse' => 'Ունի պակաս քան',
                 ],
 
                 'summary' => [
-                    'direct' => 'Has minimum :count :relationship',
-                    'inverse' => 'Has less than :count :relationship',
+                    'direct' => 'Ունի նվազագույնը :count :relationship',
+                    'inverse' => 'Ունի պակաս քան :count :relationship',
                 ],
 
             ],
@@ -293,13 +293,13 @@ return [
             'is_empty' => [
 
                 'label' => [
-                    'direct' => 'Is empty',
-                    'inverse' => 'Is not empty',
+                    'direct' => 'Դատարկ է',
+                    'inverse' => 'Դատարկ չէ',
                 ],
 
                 'summary' => [
-                    'direct' => ':relationship is empty',
-                    'inverse' => ':relationship is not empty',
+                    'direct' => ':relationshipը դատարկ է',
+                    'inverse' => ':relationshipը դատարկ չէ',
                 ],
 
             ],
@@ -309,13 +309,13 @@ return [
                 'label' => [
 
                     'single' => [
-                        'direct' => 'Is',
-                        'inverse' => 'Is not',
+                        'direct' => 'Արդյոք',
+                        'inverse' => 'Ոչ',
                     ],
 
                     'multiple' => [
-                        'direct' => 'Contains',
-                        'inverse' => 'Does not contain',
+                        'direct' => 'Պարունակում է',
+                        'inverse' => 'Չի պարունակում',
                     ],
 
                 ],
@@ -323,18 +323,18 @@ return [
                 'summary' => [
 
                     'single' => [
-                        'direct' => ':relationship is :values',
-                        'inverse' => ':relationship is not :values',
+                        'direct' => ':relationshipը :values է',
+                        'inverse' => ':relationshipը :values չէ',
                     ],
 
                     'multiple' => [
-                        'direct' => ':relationship contains :values',
-                        'inverse' => ':relationship does not contain :values',
+                        'direct' => ':relationship պարունակում է :values',
+                        'inverse' => ':relationship չի պարունակում :values',
                     ],
 
                     'values_glue' => [
                         0 => ', ',
-                        'final' => ' or ',
+                        'final' => ' կամ ',
                     ],
 
                 ],
@@ -342,11 +342,11 @@ return [
                 'form' => [
 
                     'value' => [
-                        'label' => 'Value',
+                        'label' => 'Արժեք',
                     ],
 
                     'values' => [
-                        'label' => 'Values',
+                        'label' => 'Արժեքներ',
                     ],
 
                 ],
@@ -356,7 +356,7 @@ return [
             'form' => [
 
                 'count' => [
-                    'label' => 'Count',
+                    'label' => 'Քանակ',
                 ],
 
             ],
@@ -368,27 +368,27 @@ return [
             'is' => [
 
                 'label' => [
-                    'direct' => 'Is',
-                    'inverse' => 'Is not',
+                    'direct' => 'Արդյոք',
+                    'inverse' => 'Ոչ',
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute is :values',
-                    'inverse' => ':attribute is not :values',
+                    'direct' => ':attributeը :values է',
+                    'inverse' => ':attributeը :values չէ',
                     'values_glue' => [
                         ', ',
-                        'final' => ' or ',
+                        'final' => ' կամ ',
                     ],
                 ],
 
                 'form' => [
 
                     'value' => [
-                        'label' => 'Value',
+                        'label' => 'Արժեք',
                     ],
 
                     'values' => [
-                        'label' => 'Values',
+                        'label' => 'Արժեքներ',
                     ],
 
                 ],
@@ -402,13 +402,13 @@ return [
             'contains' => [
 
                 'label' => [
-                    'direct' => 'Contains',
-                    'inverse' => 'Does not contain',
+                    'direct' => 'Պարունակում է',
+                    'inverse' => 'Չի պարունակում',
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute contains :text',
-                    'inverse' => ':attribute does not contain :text',
+                    'direct' => ':attributeը պարունակում է :text',
+                    'inverse' => ':attributeը չի պարունակում :text',
                 ],
 
             ],
@@ -416,13 +416,13 @@ return [
             'ends_with' => [
 
                 'label' => [
-                    'direct' => 'Ends with',
-                    'inverse' => 'Does not end with',
+                    'direct' => 'Վերջանում է',
+                    'inverse' => 'Չի վերջանում',
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute ends with :text',
-                    'inverse' => ':attribute does not end with :text',
+                    'direct' => ':attributeը վերջանում է :text-ով',
+                    'inverse' => ':attributeը չի վերջանում :text-ով',
                 ],
 
             ],
@@ -430,13 +430,13 @@ return [
             'equals' => [
 
                 'label' => [
-                    'direct' => 'Equals',
-                    'inverse' => 'Does not equal',
+                    'direct' => 'Հավասար է',
+                    'inverse' => 'Հավասար չէ',
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute equals :text',
-                    'inverse' => ':attribute does not equal :text',
+                    'direct' => ':attributeը հավասար է :text-ով',
+                    'inverse' => ':attributeը հավասար չէ :text-ով',
                 ],
 
             ],
@@ -444,13 +444,13 @@ return [
             'starts_with' => [
 
                 'label' => [
-                    'direct' => 'Starts with',
-                    'inverse' => 'Does not start with',
+                    'direct' => 'Սկսում է',
+                    'inverse' => 'Չի սկսում',
                 ],
 
                 'summary' => [
-                    'direct' => ':attribute starts with :text',
-                    'inverse' => ':attribute does not start with :text',
+                    'direct' => ':attribute սկսում է :text-ով',
+                    'inverse' => ':attribute չի սկսում :text-ով',
                 ],
 
             ],
@@ -458,7 +458,7 @@ return [
             'form' => [
 
                 'text' => [
-                    'label' => 'Text',
+                    'label' => 'Տեքստ',
                 ],
 
             ],
@@ -470,11 +470,11 @@ return [
     'actions' => [
 
         'add_rule' => [
-            'label' => 'Add rule',
+            'label' => 'Ավելացնել կանոն',
         ],
 
         'add_rule_group' => [
-            'label' => 'Add rule group',
+            'label' => 'Ավելացնել կանոնի խումբ',
         ],
 
     ],

@@ -9,20 +9,20 @@ return [
     'actions' => [
 
         'resend_notification' => [
-            'label' => 'Նորից ուղարկեք այն',
+            'label' => 'Նորից ուղարկել այն',
         ],
 
     ],
 
     'messages' => [
         'notification_not_received' => 'Չե՞ք ստացել մեր ուղարկած էլ. նամակը',
-        'notification_sent' => 'Մենք էլ. նամակ ենք ուղարկել:email, որը պարունակում է հրահանգներ, թե ինչպես հաստատել Ձեր էլ.փոստը',
+        'notification_sent' => 'Մենք նամակ ենք ուղարկել :email էլ. փոստի հասցեին, որը պարունակում է հրահանգներ, թե ինչպես հաստատել Ձեր էլ. փոստը',
     ],
 
     'notifications' => [
 
         'notification_resent' => [
-            'title' => 'Կրկին ուղարկել ենք էլ.նամակ',
+            'title' => 'Կրկին էլ. նամակ ենք ուղարկել',
         ],
 
         'notification_resend_throttled' => [
