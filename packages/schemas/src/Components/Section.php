@@ -45,7 +45,7 @@ class Section extends Component implements CanConcealComponents, CanEntangleWith
     /**
      * @var view-string
      */
-    protected string $view = 'filament-schema::components.section';
+    protected string $view = 'filament-schemas::components.section';
 
     protected bool | Closure | null $isAside = null;
 

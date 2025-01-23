@@ -17,7 +17,7 @@ class Form extends Component implements CanEntangleWithSingularRelationships, Ex
     /**
      * @var view-string
      */
-    protected string $view = 'filament-schema::components.form';
+    protected string $view = 'filament-schemas::components.form';
 
     protected string | Closure | null $livewireSubmitHandler = null;
 

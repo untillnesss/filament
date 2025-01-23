@@ -11,7 +11,7 @@ class Icon extends Component
     use HasColor;
     use HasTooltip;
 
-    protected string $view = 'filament-schema::components.icon';
+    protected string $view = 'filament-schemas::components.icon';
 
     protected string | Closure $icon;
 

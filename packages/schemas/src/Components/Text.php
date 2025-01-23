@@ -27,7 +27,7 @@ class Text extends Component
 
     protected string | Closure | null $size = null;
 
-    protected string $view = 'filament-schema::components.text';
+    protected string $view = 'filament-schemas::components.text';
 
     final public function __construct(string | Htmlable | Closure $content)
     {

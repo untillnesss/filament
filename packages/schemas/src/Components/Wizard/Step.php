@@ -22,7 +22,7 @@ class Step extends Component implements CanConcealComponents
     /**
      * @var view-string
      */
-    protected string $view = 'filament-schema::components.wizard.step';
+    protected string $view = 'filament-schemas::components.wizard.step';
 
     final public function __construct(string $label)
     {

@@ -17,7 +17,7 @@ class Actions extends Component
     use HasLabel;
     use HasVerticalAlignment;
 
-    protected string $view = 'filament-schema::components.actions';
+    protected string $view = 'filament-schemas::components.actions';
 
     protected bool | Closure $isSticky = false;
 

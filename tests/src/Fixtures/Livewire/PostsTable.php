@@ -37,6 +37,10 @@ class PostsTable extends Component implements HasActions, HasForms, Tables\Contr
     {
         return $table
             ->query(Post::query())
+            ->groups(fn () => [
+                Tables\Grouping\Group::make('author.name')
+                    ->label(fn (Table $table, self $livewire) => 'Dynamic label'),
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->sortable()

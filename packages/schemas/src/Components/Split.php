@@ -18,7 +18,7 @@ class Split extends Component
     /**
      * @var view-string
      */
-    protected string $view = 'filament-schema::components.split';
+    protected string $view = 'filament-schemas::components.split';
 
     /**
      * @param  array<Component | Action | ActionGroup> | Closure  $schema

@@ -1,8 +1,8 @@
 <?php
 
 use Filament\Support\Services\RelationshipJoiner;
-use Filament\Tests\Models\Team;
-use Filament\Tests\Models\User;
+use Filament\Tests\Fixtures\Models\Team;
+use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Database\Query\Expression;
 

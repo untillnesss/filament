@@ -8,7 +8,7 @@ use Filament\Actions\ActionGroup;
 
 class UnorderedList extends Component
 {
-    protected string $view = 'filament-schema::components.unordered-list';
+    protected string $view = 'filament-schemas::components.unordered-list';
 
     protected string | Closure | null $size = null;
 

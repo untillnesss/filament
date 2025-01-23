@@ -15,7 +15,7 @@ class Group extends Component implements CanEntangleWithSingularRelationships
     /**
      * @var view-string
      */
-    protected string $view = 'filament-schema::components.grid';
+    protected string $view = 'filament-schemas::components.grid';
 
     /**
      * @param  array<Component | Action | ActionGroup> | Closure  $schema

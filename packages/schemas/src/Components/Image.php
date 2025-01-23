@@ -11,7 +11,7 @@ class Image extends Component
     use HasAlignment;
     use HasTooltip;
 
-    protected string $view = 'filament-schema::components.image';
+    protected string $view = 'filament-schemas::components.image';
 
     protected string | Closure $url;
 

@@ -38,7 +38,7 @@ class Schema extends ViewComponent
     use HasAlignment;
     use HasExtraAttributes;
 
-    protected string $view = 'filament-schema::schema';
+    protected string $view = 'filament-schemas::schema';
 
     protected string $evaluationIdentifier = 'schema';
 
