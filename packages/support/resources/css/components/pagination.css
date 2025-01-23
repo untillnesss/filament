@@ -29,7 +29,7 @@
     }
 
     & .fi-pagination-items {
-        @apply hidden justify-self-end rounded-lg bg-white shadow-sm ring-1 ring-gray-950/10 dark:bg-white/5 dark:ring-white/20;
+        @apply hidden justify-self-end rounded-lg bg-white ring-1 shadow-sm ring-gray-950/10 dark:bg-white/5 dark:ring-white/20;
     }
 
     & .fi-pagination-item {
@@ -53,7 +53,7 @@
     }
 
     & .fi-pagination-item-btn {
-        @apply relative flex overflow-hidden p-2 outline-none transition duration-75;
+        @apply relative flex overflow-hidden p-2 transition duration-75 outline-none;
 
         &:first-of-type {
             @apply rounded-s-lg;
@@ -64,7 +64,7 @@
         }
 
         &:enabled {
-            @apply hover:bg-gray-50 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-primary-600 dark:hover:bg-white/5 dark:focus-visible:ring-primary-500;
+            @apply focus-visible:ring-primary-600 dark:focus-visible:ring-primary-500 hover:bg-gray-50 focus-visible:z-10 focus-visible:ring-2 dark:hover:bg-white/5;
         }
 
         &:hover {

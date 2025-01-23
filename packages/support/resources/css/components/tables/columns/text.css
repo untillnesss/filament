@@ -114,7 +114,7 @@
 
     &:not(.fi-bulleted li.fi-ta-text-item) {
         /* Line clamping sets the `display` property of the list item to `-webkit-box` instead of `list-item`, which hides the bullet point. */
-        @apply line-clamp-[--line-clamp,none];
+        @apply line-clamp-(--line-clamp,none);
     }
 
     &.fi-copyable {

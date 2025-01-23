@@ -1,5 +1,5 @@
 .fi-btn {
-    @apply relative inline-grid grid-flow-col items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold outline-none transition duration-75;
+    @apply relative inline-grid grid-flow-col items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition duration-75 outline-none;
 
     &:not(.fi-disabled):not([disabled]) {
         @apply focus-visible:ring-2;
@@ -43,7 +43,7 @@
     }
 
     &.fi-outlined {
-        @apply text-gray-950 shadow-sm ring-1 ring-gray-300 dark:text-white dark:ring-gray-700;
+        @apply text-gray-950 ring-1 shadow-sm ring-gray-300 dark:text-white dark:ring-gray-700;
 
         &:not(.fi-disabled):not([disabled]) {
             @apply hover:bg-gray-400/10 focus-visible:ring-gray-400/40;
@@ -79,7 +79,7 @@
 
         &.fi-color-custom {
             &:not(label) {
-                @apply bg-custom-600 text-white dark:bg-custom-500;
+                @apply bg-custom-600 dark:bg-custom-500 text-white;
 
                 &:not(.fi-disabled):not([disabled]) {
                     @apply hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50;
@@ -91,7 +91,7 @@
             }
 
             &label {
-                @apply [input:checked+&]:bg-custom-600 [input:checked+&]:text-white [input:checked+&]:ring-0 dark:[input:checked+&]:bg-custom-500;
+                @apply [input:checked+&]:bg-custom-600 dark:[input:checked+&]:bg-custom-500 [input:checked+&]:text-white [input:checked+&]:ring-0;
 
                 &:not(.fi-disabled):not([disabled]) {
                     @apply [input:checked+&]:hover:bg-custom-500 dark:[input:checked+&]:hover:bg-custom-400 [input:checked:focus-visible+&]:ring-custom-500/50 dark:[input:checked:focus-visible+&]:ring-custom-400/50 [input:focus-visible+&]:z-10 [input:focus-visible+&]:ring-2 [input:focus-visible+&]:ring-gray-950/10 dark:[input:focus-visible+&]:ring-white/20;
@@ -152,12 +152,12 @@
     }
 
     & .fi-btn-badge-ctn {
-        @apply absolute start-full top-0 z-[1] w-max -translate-x-1/2 -translate-y-1/2 rounded-md bg-white dark:bg-gray-900 rtl:translate-x-1/2;
+        @apply absolute start-full top-0 z-[1] w-max -translate-x-1/2 -translate-y-1/2 rounded-md bg-white rtl:translate-x-1/2 dark:bg-gray-900;
     }
 }
 
 .fi-btn-group {
-    @apply grid grid-flow-col rounded-lg shadow-sm ring-1 ring-gray-950/10 dark:ring-white/20;
+    @apply grid grid-flow-col rounded-lg ring-1 shadow-sm ring-gray-950/10 dark:ring-white/20;
 
     & > .fi-btn {
         @apply flex-1 rounded-none;
@@ -171,11 +171,11 @@
         }
 
         &:not(:nth-child(1 of .fi-btn)) {
-            @apply shadow-[-1px_0_0_0_theme(colors.gray.200)];
+            @apply shadow-[-1px_0_0_0_var(--color-gray-100)];
         }
 
         &:not(:nth-last-child(1 of .fi-btn)) {
-            @apply me-px dark:shadow-[-1px_0_0_0_theme(colors.white/20%)];
+            @apply me-px dark:shadow-[-1px_0_0_0_rgba(255,255,255,0.2)];
         }
 
         &.fi-processing:enabled {

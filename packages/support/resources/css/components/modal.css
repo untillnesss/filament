@@ -66,12 +66,12 @@
         & .fi-modal-window-has-icon {
             &:not(.fi-modal-window-has-sticky-header) {
                 & .fi-modal-content {
-                    @apply pe-6 ps-[5.25rem];
+                    @apply ps-[5.25rem] pe-6;
                 }
 
                 & .fi-modal-footer {
                     &:not(.fi-align-center) {
-                        @apply pe-6 ps-[5.25rem];
+                        @apply ps-[5.25rem] pe-6;
                     }
                 }
             }
@@ -114,7 +114,7 @@
     }
 
     & .fi-modal-heading {
-        @apply text-base font-semibold leading-6 text-gray-950 dark:text-white;
+        @apply text-base leading-6 font-semibold text-gray-950 dark:text-white;
     }
 
     & .fi-modal-description {
@@ -146,7 +146,7 @@
     }
 
     & .fi-modal-window {
-        @apply pointer-events-auto relative row-start-2 flex w-full cursor-default flex-col bg-white shadow-xl ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10;
+        @apply pointer-events-auto relative row-start-2 flex w-full cursor-default flex-col bg-white ring-1 shadow-xl ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10;
 
         &.fi-align-start,
         &.fi-align-left {
