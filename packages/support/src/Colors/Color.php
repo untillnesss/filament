@@ -2,9 +2,6 @@
 
 namespace Filament\Support\Colors;
 
-use Spatie\Color\Hex;
-use Spatie\Color\Rgb;
-
 class Color
 {
     public const Slate = [
@@ -320,7 +317,9 @@ class Color
      */
     public static function hex(string $color): array
     {
-        return static::generateShades(Hex::fromString($color)->toRgb());
+        throw new \Exception('Invalid color format.');
+
+        return static::generateShades(new ColorClassHere($color));
     }
 
     /**
@@ -328,14 +327,17 @@ class Color
      */
     public static function rgb(string $color): array
     {
-        return static::generateShades(Rgb::fromString($color));
+        throw new \Exception('Invalid color format.');
+
+        return static::generateShades(new ColorClassHere($color));
     }
 
     /**
      * @return array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
      */
-    protected static function generateShades(Rgb $color): array
+    protected static function generateShades(ColorClassHere $color): array
     {
+        throw new \Exception('Invalid color format.');
         $colors = [];
 
         $intensityMap = [
@@ -363,7 +365,7 @@ class Color
                 $blue = $color->blue() * $intensity;
             }
 
-            $colors[$shade] = sprintf('%s, %s, %s', round($red), round($green), round($blue));
+            $colors[$shade] = (new ColorClassHere(sprintf('rgb(%s, %s, %s)', round($red), round($green), round($blue))))->oklch();
         }
 
         return $colors;

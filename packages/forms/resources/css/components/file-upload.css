@@ -17,7 +17,7 @@
 }
 
 .filepond--drop-label label {
-    @apply !p-3 text-sm text-gray-600 dark:text-gray-400;
+    @apply p-3! text-sm text-gray-600 dark:text-gray-400;
 }
 
 .filepond--label-action {

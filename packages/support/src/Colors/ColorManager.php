@@ -4,7 +4,6 @@ namespace Filament\Support\Colors;
 
 use Closure;
 use Filament\Support\Concerns\EvaluatesClosures;
-use Spatie\Color\Hex;
 
 class ColorManager
 {
@@ -56,19 +55,17 @@ class ColorManager
 
         if (is_array($color)) {
             return array_map(function (string $color): string {
-                if (str_starts_with($color, '#')) {
-                    $color = Hex::fromString($color)->toRgb();
-
-                    return "{$color->red()}, {$color->green()}, {$color->blue()}";
+                if (str_starts_with($color, 'oklch')) {
+                    return $color;
                 }
 
-                if (str_starts_with($color, 'rgb')) {
-                    return (string) str($color)
-                        ->after('rgb(')
-                        ->before(')');
+                if (str_starts_with($color, '#') || str_starts_with($color, 'rgb')) {
+                    throw new \Exception('Invalid color format.');
+                    // convert $color
                 }
 
-                return $color;
+                throw new \Exception('Invalid color format.');
+                // convert "rgb({$color})"
             }, $color);
         }
 
