@@ -173,7 +173,7 @@ class MakeThemeCommand extends Command
         $this->components->bulletList([
             "It looks like you don't have Vite installed. Please use your asset bundling system of choice to compile `resources/css/filament/{$this->panel->getId()}/theme.css` into `public/css/filament/{$this->panel->getId()}/theme.css`.",
             "If you're not currently using a bundler, we recommend using Vite. Alternatively, you can use the Tailwind CLI with the following command:",
-            "npx tailwindcss --input ./resources/css/filament/{$this->panel->getId()}/theme.css --output ./public/css/filament/{$this->panel->getId()}/theme.css --config ./resources/css/filament/{$this->panel->getId()}/tailwind.config.js --minify",
+            "npx @tailwindcss/cli --input ./resources/css/filament/{$this->panel->getId()}/theme.css --output ./public/css/filament/{$this->panel->getId()}/theme.css --config ./resources/css/filament/{$this->panel->getId()}/tailwind.config.js --minify",
             "Make sure to register the theme in the {$this->panel->getId()} panel provider using `->theme(asset('css/filament/{$this->panel->getId()}/theme.css'))`",
         ]);
 

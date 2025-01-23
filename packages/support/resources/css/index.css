@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+@import '../../../support/resources/css/tailwindcss-preset.css';
+
+@layer components {
+    @import '../../dist/index.css';
+}
