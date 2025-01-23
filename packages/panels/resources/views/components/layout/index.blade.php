@@ -60,11 +60,11 @@
                             MaxWidth::MaxContent, 'max' => 'max-w-max',
                             MaxWidth::FitContent, 'fit' => 'max-w-fit',
                             MaxWidth::Prose, 'prose' => 'max-w-prose',
-                            MaxWidth::ScreenSmall, 'screen-sm' => 'max-w-screen-sm',
-                            MaxWidth::ScreenMedium, 'screen-md' => 'max-w-screen-md',
-                            MaxWidth::ScreenLarge, 'screen-lg' => 'max-w-screen-lg',
-                            MaxWidth::ScreenExtraLarge, 'screen-xl' => 'max-w-screen-xl',
-                            MaxWidth::ScreenTwoExtraLarge, 'screen-2xl' => 'max-w-screen-2xl',
+                            MaxWidth::ScreenSmall, 'screen-sm' => 'max-w-(--breakpoint-sm)',
+                            MaxWidth::ScreenMedium, 'screen-md' => 'max-w-(--breakpoint-md)',
+                            MaxWidth::ScreenLarge, 'screen-lg' => 'max-w-(--breakpoint-lg)',
+                            MaxWidth::ScreenExtraLarge, 'screen-xl' => 'max-w-(--breakpoint-xl)',
+                            MaxWidth::ScreenTwoExtraLarge, 'screen-2xl' => 'max-w-(--breakpoint-2xl)',
                             default => $maxContentWidth,
                         },
                     ])
@@ -86,7 +86,7 @@
                     x-on:click="$store.sidebar.close()"
                     x-show="$store.sidebar.isOpen"
                     x-transition.opacity.300ms
-                    class="fi-sidebar-close-overlay fixed inset-0 z-30 bg-gray-950/50 transition duration-500 dark:bg-gray-950/75 lg:hidden"
+                    class="fi-sidebar-close-overlay fixed inset-0 z-30 bg-gray-950/50 transition duration-500 lg:hidden dark:bg-gray-950/75"
                 ></div>
 
                 @livewire(\Filament\Livewire\Sidebar::class)

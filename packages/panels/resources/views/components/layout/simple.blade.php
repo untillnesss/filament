@@ -31,7 +31,7 @@
         >
             <main
                 @class([
-                    'fi-simple-main my-16 w-full bg-white px-6 py-12 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 sm:rounded-xl sm:px-12',
+                    'fi-simple-main my-16 w-full bg-white px-6 py-12 ring-1 shadow-xs ring-gray-950/5 sm:rounded-xl sm:px-12 dark:bg-gray-900 dark:ring-white/10',
                     match ($maxWidth ??= (filament()->getSimplePageMaxContentWidth() ?? MaxWidth::Large)) {
                         MaxWidth::ExtraSmall, 'xs' => 'max-w-xs',
                         MaxWidth::Small, 'sm' => 'max-w-sm',
@@ -49,11 +49,11 @@
                         MaxWidth::MaxContent, 'max' => 'max-w-max',
                         MaxWidth::FitContent, 'fit' => 'max-w-fit',
                         MaxWidth::Prose, 'prose' => 'max-w-prose',
-                        MaxWidth::ScreenSmall, 'screen-sm' => 'max-w-screen-sm',
-                        MaxWidth::ScreenMedium, 'screen-md' => 'max-w-screen-md',
-                        MaxWidth::ScreenLarge, 'screen-lg' => 'max-w-screen-lg',
-                        MaxWidth::ScreenExtraLarge, 'screen-xl' => 'max-w-screen-xl',
-                        MaxWidth::ScreenTwoExtraLarge, 'screen-2xl' => 'max-w-screen-2xl',
+                        MaxWidth::ScreenSmall, 'screen-sm' => 'max-w-(--breakpoint-sm)',
+                        MaxWidth::ScreenMedium, 'screen-md' => 'max-w-(--breakpoint-md)',
+                        MaxWidth::ScreenLarge, 'screen-lg' => 'max-w-(--breakpoint-lg)',
+                        MaxWidth::ScreenExtraLarge, 'screen-xl' => 'max-w-(--breakpoint-xl)',
+                        MaxWidth::ScreenTwoExtraLarge, 'screen-2xl' => 'max-w-(--breakpoint-2xl)',
                         default => $maxWidth,
                     },
                 ])

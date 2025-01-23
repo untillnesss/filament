@@ -15,7 +15,7 @@
     }}
 >
     <nav
-        class="flex h-16 items-center bg-white px-4 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10"
+        class="flex h-16 items-center bg-white px-4 ring-1 shadow-xs ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10"
     >
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_START) }}
 
@@ -31,7 +31,7 @@
                 x-on:click="$store.sidebar.open()"
                 x-show="! $store.sidebar.isOpen"
                 @class([
-                    'fi-topbar-open-sidebar-btn !mx-0',
+                    'fi-topbar-open-sidebar-btn mx-0!',
                     'lg:hidden' => (! filament()->isSidebarFullyCollapsibleOnDesktop()) || filament()->isSidebarCollapsibleOnDesktop(),
                 ])
             />
@@ -46,7 +46,7 @@
                 x-data="{}"
                 x-on:click="$store.sidebar.close()"
                 x-show="$store.sidebar.isOpen"
-                class="fi-topbar-close-sidebar-btn !mx-0 lg:hidden"
+                class="fi-topbar-close-sidebar-btn mx-0! lg:hidden"
             />
         @endif
 
@@ -63,7 +63,7 @@
                     x-data="{}"
                     x-on:click="$store.sidebar.open()"
                     x-show="! $store.sidebar.isOpen"
-                    class="!mx-0"
+                    class="mx-0!"
                 />
             @endif
 
@@ -79,7 +79,7 @@
                     x-data="{}"
                     x-on:click="$store.sidebar.close()"
                     x-show="$store.sidebar.isOpen"
-                    class="!mx-0 hidden lg:flex"
+                    class="mx-0! hidden lg:flex"
                 />
             @endif
 
@@ -98,7 +98,7 @@
             @endif
 
             @if (filament()->hasNavigation())
-                <ul class="me-4 ms-4 hidden items-center gap-x-4 lg:flex">
+                <ul class="ms-4 me-4 hidden items-center gap-x-4 lg:flex">
                     @foreach ($navigation as $group)
                         @if ($groupLabel = $group->getLabel())
                             <x-filament::dropdown
