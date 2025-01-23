@@ -8,7 +8,7 @@
         {{ $getChildComponentContainer($schemaComponent::BEFORE_LABEL_CONTAINER) }}
 
         <div
-            class="text-sm font-medium leading-6 text-gray-950 dark:text-white"
+            class="text-sm leading-6 font-medium text-gray-950 dark:text-white"
         >
             {{ $label }}
         </div>

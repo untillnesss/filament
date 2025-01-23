@@ -34,7 +34,7 @@
                         'wire:key' => $getLivewireKey() . '.container',
                     ], escape: false)
                     ->merge($getExtraAttributes(), escape: false)
-                    ->class(['fi-fo-tabs-tab outline-none'])
+                    ->class(['fi-fo-tabs-tab outline-hidden'])
             }}
         >
             {{ $childComponentContainer }}
@@ -52,7 +52,7 @@
                     ], escape: false)
                     ->merge($getExtraAttributes(), escape: false)
                     ->class([
-                        'fi-fo-tabs-tab outline-none',
+                        'fi-fo-tabs-tab outline-hidden',
                         $activeTabClasses,
                     ])
             }}
