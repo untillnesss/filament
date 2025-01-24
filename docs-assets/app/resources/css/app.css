@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import '../../../../packages/support/resources/css/tailwindcss-preset.css';
+@import '../../../../packages/support/resources/css/tailwind.css';
 
 @source '../views';
 @source '../../app';

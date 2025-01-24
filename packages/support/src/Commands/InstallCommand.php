@@ -152,11 +152,10 @@ class InstallCommand extends Command
     {
         return [
             '@tailwindcss/forms' => '^0.5.2',
+            '@tailwindcss/postcss' => '^4.0.0',
             '@tailwindcss/typography' => '^0.5.4',
-            'autoprefixer' => '^10.4.7',
             'postcss' => '^8.4.14',
-            'postcss-nesting' => '^13.0.0',
-            'tailwindcss' => '^3.1',
+            'tailwindcss' => '^4.0.0',
             ...Arr::except($packages, [
                 'axios',
                 'lodash',

@@ -126,7 +126,7 @@ class MakeThemeCommand extends Command
             default => "{$this->pm} install",
         };
 
-        exec("{$installCommand} tailwindcss @tailwindcss/forms @tailwindcss/typography postcss postcss-nesting autoprefixer --save-dev");
+        exec("{$installCommand} tailwindcss @tailwindcss/forms @tailwindcss/postcss @tailwindcss/typography postcss --save-dev");
 
         $this->components->info('Dependencies installed successfully.');
     }
@@ -134,33 +134,29 @@ class MakeThemeCommand extends Command
     protected function createThemeSourceFiles(): void
     {
         $cssFilePath = resource_path("css/filament/{$this->panel->getId()}/theme.css");
-        $tailwindConfigFilePath = resource_path("css/filament/{$this->panel->getId()}/tailwind.config.js");
 
         if (! $this->option('force') && $this->checkForCollision([
             $cssFilePath,
-            $tailwindConfigFilePath,
         ])) {
             throw new FailureCommandOutput;
         }
 
-        $classPathPrefix = (string) str(Arr::first($this->panel->getPageDirectories()))
+        $classPathDirectory = (string) str(Arr::first($this->panel->getPageDirectories()))
             ->afterLast('Filament/')
             ->beforeLast('Pages');
 
-        $viewPathPrefix = str($classPathPrefix)
+        $viewPathDirectory = str($classPathDirectory)
             ->explode('/')
             ->map(fn ($segment) => Str::lower(Str::kebab($segment)))
             ->implode('/');
 
         $this->copyStubToApp('ThemeCss', $cssFilePath, [
+            'classPathPrefix' => $classPathDirectory,
             'panel' => $this->panel->getId(),
-        ]);
-        $this->copyStubToApp('ThemeTailwindConfig', $tailwindConfigFilePath, [
-            'classPathPrefix' => $classPathPrefix,
-            'viewPathPrefix' => $viewPathPrefix,
+            'viewPathPrefix' => $viewPathDirectory,
         ]);
 
-        $this->components->info("Filament theme [resources/css/filament/{$this->panel->getId()}/theme.css] and [resources/css/filament/{$this->panel->getId()}/tailwind.config.js] created successfully.");
+        $this->components->info("Filament theme [resources/css/filament/{$this->panel->getId()}/theme.css] created successfully.");
     }
 
     protected function abortIfNotVite(): void
