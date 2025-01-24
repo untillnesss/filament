@@ -171,11 +171,11 @@
         }
 
         &:not(:nth-child(1 of .fi-btn)) {
-            @apply shadow-[-1px_0_0_0_var(--color-gray-100)];
+            @apply shadow-[-1px_0_0_0_var(--color-gray-200)] dark:shadow-[-1px_0_0_0_rgba(255,255,255,0.2)];
         }
 
         &:not(:nth-last-child(1 of .fi-btn)) {
-            @apply me-px dark:shadow-[-1px_0_0_0_rgba(255,255,255,0.2)];
+            @apply me-px;
         }
 
         &.fi-processing:enabled {
