@@ -126,7 +126,7 @@ class Summarizer extends ViewComponent implements HasEmbeddedView
 
         $asName = (string) str($query->getModel()->getTable())->afterLast('.');
 
-        $query = $query->getModel()->resolveConnection()
+        $query = $query->getModel()->resolveConnection($query->getModel()->getConnectionName())
             ->table($query->toBase(), $asName);
 
         if ($this->hasQueryModification()) {
