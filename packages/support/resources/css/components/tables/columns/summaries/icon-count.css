@@ -14,7 +14,7 @@
             & > .fi-icon {
                 @apply size-6 text-gray-400 dark:text-gray-500;
 
-                &.fi-color-custom {
+                &.fi-color {
                     @apply text-custom-500 dark:text-custom-400;
                 }
             }

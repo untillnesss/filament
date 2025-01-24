@@ -185,7 +185,7 @@
                                                 'fi-modal-icon-wrp',
                                                 match ($iconColor) {
                                                     'gray' => null,
-                                                    default => 'fi-color-custom',
+                                                    default => 'fi-color',
                                                 },
                                                 is_string($iconColor) ? "fi-color-{$iconColor}" : null,
                                             ])

@@ -79,7 +79,7 @@
     & .fi-input-wrp-icon {
         @apply size-5 text-gray-400 dark:text-gray-500;
 
-        &.fi-color-custom {
+        &.fi-color {
             @apply text-custom-500;
         }
     }

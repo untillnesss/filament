@@ -193,7 +193,7 @@
         @apply font-mono;
     }
 
-    &.fi-color-custom {
+    &.fi-color {
         @apply text-custom-600 dark:text-custom-400;
 
         &li::marker {
@@ -212,7 +212,7 @@
     & > .fi-icon {
         @apply size-5 shrink-0 text-gray-400 dark:text-gray-500;
 
-        &.fi-color-custom {
+        &.fi-color {
             @apply text-custom-500;
         }
     }

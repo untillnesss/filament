@@ -70,7 +70,7 @@
                 @class([
                     match ($color) {
                         'gray' => null,
-                        default => 'fi-color-custom',
+                        default => 'fi-color',
                     },
                     is_string($color) ? "fi-color-{$color}" : null,
                 ])

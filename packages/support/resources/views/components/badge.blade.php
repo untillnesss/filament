@@ -100,7 +100,7 @@
                 'fi-disabled' => $disabled,
                 match ($color) {
                     'gray' => '',
-                    default => 'fi-color-custom',
+                    default => 'fi-color',
                 },
                 is_string($color) ? "fi-color-{$color}" : null,
                 ($size instanceof ActionSize) ? "fi-size-{$size->value}" : (is_string($size) ? $size : ''),

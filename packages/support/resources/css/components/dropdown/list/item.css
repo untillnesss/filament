@@ -61,12 +61,12 @@
             @apply size-6;
         }
 
-        &.fi-color-custom {
+        &.fi-color {
             @apply text-custom-500 dark:text-custom-400;
         }
     }
 
-    &.fi-color-custom {
+    &.fi-color {
         &:not(.fi-disabled):not([disabled]) {
             @apply hover:bg-custom-50 focus-visible:bg-custom-50 dark:hover:bg-custom-400/10 dark:focus-visible:bg-custom-400/10;
         }

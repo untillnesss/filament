@@ -39,7 +39,7 @@
         'fi-input-wrp-icon',
         match ($color) {
             'gray' => '',
-            default => 'fi-color-custom',
+            default => 'fi-color',
         },
         is_string($color) ? "fi-color-{$color}" : null,
     ]);

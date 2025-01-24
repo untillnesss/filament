@@ -112,7 +112,7 @@
                 'fi-disabled' => $disabled,
                 match ($color) {
                     'gray' => '',
-                    default => 'fi-color-custom',
+                    default => 'fi-color',
                 },
                 is_string($color) ? "fi-color-{$color}" : null,
                 ($size instanceof ActionSize) ? "fi-size-{$size->value}" : (is_string($size) ? $size : ''),
@@ -178,7 +178,7 @@
                     'fi-badge',
                     match ($badgeColor) {
                         'gray' => '',
-                        default => 'fi-color-custom',
+                        default => 'fi-color',
                     },
                     is_string($badgeColor) ? "fi-color-{$badgeColor}" : null,
                     ($badgeSize instanceof ActionSize) ? "fi-size-{$badgeSize->value}" : (is_string($badgeSize) ? $badgeSize : ''),

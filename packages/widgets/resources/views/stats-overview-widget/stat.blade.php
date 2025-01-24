@@ -49,7 +49,7 @@
                     'fi-wi-stats-overview-stat-description',
                     match ($descriptionColor) {
                         'gray' => null,
-                        default => 'fi-color-custom',
+                        default => 'fi-color',
                     },
                     is_string($descriptionColor) ? "fi-color-{$descriptionColor}" : null,
                 ])
@@ -95,7 +95,7 @@
                     'fi-wi-stats-overview-stat-chart',
                     match ($chartColor) {
                         'gray' => null,
-                        default => 'fi-color-custom',
+                        default => 'fi-color',
                     },
                     is_string($chartColor) ? "fi-color-{$chartColor}" : null,
                 ])

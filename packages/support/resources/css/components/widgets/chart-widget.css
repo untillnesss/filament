@@ -11,7 +11,7 @@
         }
     }
 
-    & .fi-color-custom {
+    & .fi-color {
         & .fi-wi-chart-bg-color {
             @apply text-custom-50 dark:text-custom-400/10;
         }

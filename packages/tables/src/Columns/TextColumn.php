@@ -264,7 +264,7 @@ class TextColumn extends Column implements HasEmbeddedView
                 ->class([
                     match ($iconColor) {
                         null, 'gray' => null,
-                        default => 'fi-color-custom',
+                        default => 'fi-color',
                     } => filled($iconColor),
                     is_string($iconColor) ? "fi-color-{$iconColor}" : null,
                 ])
@@ -325,7 +325,7 @@ class TextColumn extends Column implements HasEmbeddedView
                         ...((! $isBadge) ? [
                             match ($color) {
                                 null, 'gray' => null,
-                                default => 'fi-color-custom',
+                                default => 'fi-color',
                             },
                             is_string($color) ? "fi-color-{$color}" : null,
                             (($size = $this->getSize($stateItem)) instanceof TextColumnSize) ? "fi-size-{$size->value}" : $size,
@@ -350,7 +350,7 @@ class TextColumn extends Column implements HasEmbeddedView
                             'fi-badge',
                             match ($color ?? 'primary') {
                                 'gray' => null,
-                                default => 'fi-color-custom',
+                                default => 'fi-color',
                             },
                             is_string($color) ? "fi-color-{$color}" : null,
                             (($size = $this->getSize($stateItem)) instanceof TextColumnSize) ? "fi-size-{$size->value}" : $size,

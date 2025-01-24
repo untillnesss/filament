@@ -72,7 +72,7 @@
                         'fi-section-header-icon',
                         match ($iconColor) {
                             'gray' => null,
-                            default => 'fi-color-custom',
+                            default => 'fi-color',
                         },
                         is_string($iconColor) ? "fi-color-{$iconColor}" : null,
                         ($iconSize instanceof IconSize) ? "fi-size-{$iconSize->value}" : (is_string($iconSize) ? $iconSize : null),

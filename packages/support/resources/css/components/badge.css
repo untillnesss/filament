@@ -2,7 +2,7 @@
     @apply inline-flex min-w-[theme(spacing.6)] items-center justify-center gap-x-1 rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-600/10 ring-inset dark:bg-gray-400/10 dark:text-gray-400 dark:ring-gray-400/20;
 
     &:not(.fi-disabled):not([disabled]) {
-        &.fi-color-custom {
+        &.fi-color {
             & .fi-badge-delete-btn {
                 @apply hover:text-custom-700/75 focus-visible:text-custom-700/75 dark:hover:text-custom-300/75 dark:focus-visible:text-custom-300/75;
             }
@@ -50,7 +50,7 @@
         @apply min-w-[theme(spacing.5)] px-1.5 py-0.5 tracking-tight;
     }
 
-    &.fi-color-custom {
+    &.fi-color {
         @apply bg-custom-50 text-custom-600 ring-custom-600/10 dark:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-400/30;
 
         & .fi-icon {

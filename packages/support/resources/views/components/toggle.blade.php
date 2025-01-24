@@ -19,14 +19,14 @@
                     'fi-toggle-on',
                     match ($onColor) {
                         null, 'gray' => null,
-                        default => 'fi-color-custom',
+                        default => 'fi-color',
                     },
                     is_string($onColor) ? "fi-color-{$onColor}" : null,
                 ])) : @js(Arr::toCssClasses([
                             'fi-toggle-off',
                             match ($offColor) {
                                 null, 'gray' => null,
-                                default => 'fi-color-custom bg-custom-600',
+                                default => 'fi-color bg-custom-600',
                             },
                             is_string($offColor) ? "fi-color-{$offColor}" : null,
                         ]))

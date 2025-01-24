@@ -362,7 +362,7 @@
             @apply size-6 text-gray-500 dark:text-gray-400;
         }
 
-        &.fi-color-custom {
+        &.fi-color {
             @apply bg-custom-100 dark:bg-custom-500/20;
 
             & > .fi-icon {

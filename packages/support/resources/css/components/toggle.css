@@ -5,7 +5,7 @@
         @apply pointer-events-none opacity-70;
     }
 
-    &.fi-color-custom {
+    &.fi-color {
         @apply bg-custom-600;
 
         & .fi-icon {

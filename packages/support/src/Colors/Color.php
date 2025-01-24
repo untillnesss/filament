@@ -114,6 +114,14 @@ class Color
         800 => 'oklch(0.473 0.137 46.201)',
         900 => 'oklch(0.414 0.112 45.904)',
         950 => 'oklch(0.279 0.077 45.635)',
+        'button:bg' => 600,
+        'button:text' => 0,
+        'button:hover:bg' => 500,
+        'button:hover:text' => 0,
+        'button:dark:bg' => 500,
+        'button:dark:text' => 0,
+        'button:dark:hover:bg' => 600,
+        'button:dark:hover:text' => 0,
     ];
 
     public const Yellow = [

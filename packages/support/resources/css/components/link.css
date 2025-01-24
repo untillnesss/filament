@@ -84,7 +84,7 @@
         @apply font-black;
     }
 
-    &.fi-color-custom {
+    &.fi-color {
         @apply text-custom-600 dark:text-custom-400;
 
         & > .fi-icon {

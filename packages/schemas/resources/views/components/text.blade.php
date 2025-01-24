@@ -52,7 +52,7 @@
             match ($color) {
                 'gray' => 'text-gray-600 dark:text-gray-400',
                 'neutral' => 'text-gray-950 dark:text-white',
-                default => 'fi-color-custom text-custom-600 dark:text-custom-400',
+                default => 'fi-color text-custom-600 dark:text-custom-400',
             },
             is_string($color) ? "fi-color-{$color}" : null,
             match ($size) {

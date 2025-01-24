@@ -87,14 +87,14 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
                     'fi-toggle-on',
                     match ($onColor) {
                         'gray' => null,
-                        default => 'fi-color-custom',
+                        default => 'fi-color',
                     },
                     is_string($onColor) ? "fi-color-{$onColor}" : null,
                 ]) ?>' : '<?= Arr::toCssClasses([
                     'fi-toggle-off',
                     match ($offColor) {
                         'gray' => null,
-                        default => 'fi-color-custom bg-custom-600',
+                        default => 'fi-color bg-custom-600',
                     },
                     is_string($offColor) ? "fi-color-{$offColor}" : null,
                 ]) ?>'"

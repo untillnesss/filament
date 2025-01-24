@@ -24,7 +24,7 @@
     & .fi-wi-stats-overview-stat-description {
         @apply flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-400;
 
-        &.fi-color-custom {
+        &.fi-color {
             @apply text-custom-600 dark:text-custom-400;
 
             & .fi-wi-stats-overview-stat-description-icon {
@@ -52,7 +52,7 @@
             @apply text-gray-400;
         }
 
-        &.fi-color-custom {
+        &.fi-color {
             & .fi-wi-stats-overview-stat-chart-bg-color {
                 @apply text-custom-50 dark:text-custom-400/10;
             }

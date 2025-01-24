@@ -36,7 +36,7 @@
         ($iconSize instanceof IconSize) ? ('fi-size-' . $iconSize->value) : (is_string($iconSize) ? $iconSize : ''),
         match ($iconColor) {
             'gray' => '',
-            default => 'fi-color-custom',
+            default => 'fi-color',
         },
         is_string($iconColor) ? "fi-color-{$iconColor}" : null,
     ]);
@@ -106,7 +106,7 @@
                 'fi-disabled' => $disabled,
                 match ($color) {
                     'gray' => '',
-                    default => 'fi-color-custom',
+                    default => 'fi-color',
                 },
                 is_string($color) ? "fi-color-{$color}" : null,
             ])
@@ -173,7 +173,7 @@
                 'fi-badge',
                 match ($badgeColor) {
                     'gray' => '',
-                    default => 'fi-color-custom',
+                    default => 'fi-color',
                 },
                 is_string($badgeColor) ? "fi-color-{$badgeColor}" : null,
             ])

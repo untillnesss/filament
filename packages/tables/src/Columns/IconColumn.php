@@ -312,7 +312,7 @@ class IconColumn extends Column implements HasEmbeddedView
                     ->class([
                         match ($color) {
                             null, 'gray' => null,
-                            default => 'fi-color-custom',
+                            default => 'fi-color',
                         } => filled($color),
                         is_string($color) ? "fi-color-{$color}" : null,
                         (($size = $this->getSize($stateItem)) instanceof IconColumnSize) ? "fi-size-{$size->value}" : $size,
