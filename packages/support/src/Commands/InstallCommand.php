@@ -151,15 +151,15 @@ class InstallCommand extends Command
     protected static function updateNpmPackageArray(array $packages): array
     {
         return [
+            ...Arr::except($packages, [
+                'axios',
+                'lodash',
+            ]),
             '@tailwindcss/forms' => '^0.5.2',
             '@tailwindcss/postcss' => '^4.0.0',
             '@tailwindcss/typography' => '^0.5.4',
             'postcss' => '^8.4.14',
             'tailwindcss' => '^4.0.0',
-            ...Arr::except($packages, [
-                'axios',
-                'lodash',
-            ]),
         ];
     }
 

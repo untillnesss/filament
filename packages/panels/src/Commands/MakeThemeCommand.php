@@ -126,7 +126,7 @@ class MakeThemeCommand extends Command
             default => "{$this->pm} install",
         };
 
-        exec("{$installCommand} tailwindcss @tailwindcss/forms @tailwindcss/postcss @tailwindcss/typography postcss --save-dev");
+        exec("{$installCommand} tailwindcss@latest @tailwindcss/forms @tailwindcss/postcss @tailwindcss/typography postcss --save-dev");
 
         $this->components->info('Dependencies installed successfully.');
     }
@@ -141,19 +141,19 @@ class MakeThemeCommand extends Command
             throw new FailureCommandOutput;
         }
 
-        $classPathDirectory = (string) str(Arr::first($this->panel->getPageDirectories()))
+        $classDirectory = (string) str(Arr::first($this->panel->getPageDirectories()))
             ->afterLast('Filament/')
             ->beforeLast('Pages');
 
-        $viewPathDirectory = str($classPathDirectory)
+        $viewDirectory = str($classDirectory)
             ->explode('/')
             ->map(fn ($segment) => Str::lower(Str::kebab($segment)))
             ->implode('/');
 
         $this->copyStubToApp('ThemeCss', $cssFilePath, [
-            'classPathPrefix' => $classPathDirectory,
+            'classDirectory' => filled($classDirectory) ? "/{$classDirectory}" : '',
             'panel' => $this->panel->getId(),
-            'viewPathPrefix' => $viewPathDirectory,
+            'viewDirectory' => filled($viewDirectory) ? "/{$viewDirectory}" : '',
         ]);
 
         $this->components->info("Filament theme [resources/css/filament/{$this->panel->getId()}/theme.css] created successfully.");
@@ -181,6 +181,8 @@ class MakeThemeCommand extends Command
         $postcssConfigPath = base_path('postcss.config.js');
 
         if (file_exists($postcssConfigPath)) {
+            $this->components->warn('A [postcss.config.js] file already exists in your project. Please ensure that it imports the [@tailwindcss/postcss] plugin.');
+
             return;
         }
 

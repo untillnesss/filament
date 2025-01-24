@@ -1,5 +1,2 @@
 @import 'tailwindcss';
 @import '/vendor/filament/support/resources/css/tailwind.css';
-
-@source '/app/Filament';
-@source '/resources/views';
