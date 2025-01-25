@@ -16,6 +16,29 @@ class Color
         800 => 'oklch(0.279 0.041 260.031)',
         900 => 'oklch(0.208 0.042 265.755)',
         950 => 'oklch(0.129 0.042 264.695)',
+        '50-text' => 500,
+        '100-text' => 600,
+        '200-text' => 600,
+        '300-text' => 600,
+        '400-text' => 800,
+        '500-text' => 50,
+        '600-text' => 50,
+        '700-text' => 50,
+        '800-text' => 50,
+        '900-text' => 50,
+        '950-text' => 50,
+        'gray-0-text' => 500,
+        'gray-50-text' => 500,
+        'gray-100-text' => 600,
+        'gray-200-text' => 600,
+        'gray-300-text' => 600,
+        'gray-400-text' => 800,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 400,
+        'gray-950-text' => 400,
     ];
 
     public const Gray = [
@@ -30,6 +53,29 @@ class Color
         800 => 'oklch(0.278 0.033 256.848)',
         900 => 'oklch(0.21 0.034 264.665)',
         950 => 'oklch(0.13 0.028 261.692)',
+        '50-text' => 500,
+        '100-text' => 600,
+        '200-text' => 600,
+        '300-text' => 600,
+        '400-text' => 800,
+        '500-text' => 50,
+        '600-text' => 50,
+        '700-text' => 50,
+        '800-text' => 50,
+        '900-text' => 50,
+        '950-text' => 50,
+        'gray-0-text' => 500,
+        'gray-50-text' => 500,
+        'gray-100-text' => 600,
+        'gray-200-text' => 600,
+        'gray-300-text' => 600,
+        'gray-400-text' => 800,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 400,
+        'gray-950-text' => 400,
     ];
 
     public const Zinc = [
@@ -44,6 +90,29 @@ class Color
         800 => 'oklch(0.274 0.006 286.033)',
         900 => 'oklch(0.21 0.006 285.885)',
         950 => 'oklch(0.141 0.005 285.823)',
+        '50-text' => 500,
+        '100-text' => 600,
+        '200-text' => 600,
+        '300-text' => 600,
+        '400-text' => 800,
+        '500-text' => 50,
+        '600-text' => 50,
+        '700-text' => 50,
+        '800-text' => 50,
+        '900-text' => 50,
+        '950-text' => 50,
+        'gray-0-text' => 500,
+        'gray-50-text' => 500,
+        'gray-100-text' => 600,
+        'gray-200-text' => 600,
+        'gray-300-text' => 600,
+        'gray-400-text' => 800,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 400,
+        'gray-950-text' => 400,
     ];
 
     public const Neutral = [
@@ -58,6 +127,29 @@ class Color
         800 => 'oklch(0.269 0 0)',
         900 => 'oklch(0.205 0 0)',
         950 => 'oklch(0.145 0 0)',
+        '50-text' => 500,
+        '100-text' => 600,
+        '200-text' => 600,
+        '300-text' => 600,
+        '400-text' => 800,
+        '500-text' => 50,
+        '600-text' => 50,
+        '700-text' => 50,
+        '800-text' => 50,
+        '900-text' => 50,
+        '950-text' => 50,
+        'gray-0-text' => 500,
+        'gray-50-text' => 500,
+        'gray-100-text' => 600,
+        'gray-200-text' => 600,
+        'gray-300-text' => 600,
+        'gray-400-text' => 800,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 400,
+        'gray-950-text' => 400,
     ];
 
     public const Stone = [
@@ -72,6 +164,29 @@ class Color
         800 => 'oklch(0.268 0.007 34.298)',
         900 => 'oklch(0.216 0.006 56.043)',
         950 => 'oklch(0.147 0.004 49.25)',
+        '50-text' => 500,
+        '100-text' => 600,
+        '200-text' => 600,
+        '300-text' => 600,
+        '400-text' => 800,
+        '500-text' => 50,
+        '600-text' => 50,
+        '700-text' => 50,
+        '800-text' => 50,
+        '900-text' => 50,
+        '950-text' => 50,
+        'gray-0-text' => 500,
+        'gray-50-text' => 500,
+        'gray-100-text' => 600,
+        'gray-200-text' => 600,
+        'gray-300-text' => 600,
+        'gray-400-text' => 800,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 400,
+        'gray-950-text' => 400,
     ];
 
     public const Red = [
@@ -86,6 +201,29 @@ class Color
         800 => 'oklch(0.444 0.177 26.899)',
         900 => 'oklch(0.396 0.141 25.723)',
         950 => 'oklch(0.258 0.092 26.042)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 900,
+        '400-text' => 950,
+        '500-text' => 0,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 600,
+        'gray-50-text' => 600,
+        'gray-100-text' => 700,
+        'gray-200-text' => 700,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 0,
+        'gray-600-text' => 200,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 500,
+        'gray-950-text' => 500,
     ];
 
     public const Orange = [
@@ -100,6 +238,29 @@ class Color
         800 => 'oklch(0.47 0.157 37.304)',
         900 => 'oklch(0.408 0.123 38.172)',
         950 => 'oklch(0.266 0.079 36.259)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 900,
+        '400-text' => 950,
+        '500-text' => 950,
+        '600-text' => 950,
+        '700-text' => 50,
+        '800-text' => 50,
+        '900-text' => 50,
+        '950-text' => 50,
+        'gray-0-text' => 700,
+        'gray-50-text' => 700,
+        'gray-100-text' => 700,
+        'gray-200-text' => 800,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 400,
+        'gray-800-text' => 500,
+        'gray-900-text' => 600,
+        'gray-950-text' => 600,
     ];
 
     public const Amber = [
@@ -114,29 +275,29 @@ class Color
         800 => 'oklch(0.473 0.137 46.201)',
         900 => 'oklch(0.414 0.112 45.904)',
         950 => 'oklch(0.279 0.077 45.635)',
-        //        '0-text' => 700,
-        //        '50-text' => 700,
-        //        '100-text' => 700,
-        //        '200-text' => 800,
-        //        '300-text' => 800,
-        //        '400-text' => 900,
-        //        '500-text' => 950,
-        //        '600-text' => 950,
-        //        '700-text' => 50,
-        //        '800-text' => 50,
-        //        '900-text' => 50,
-        //        '950-text' => 50,
-        //        'gray-50-text' => 700,
-        //        'gray-100-text' => 700,
-        //        'gray-200-text' => 800,
-        //        'gray-300-text' => 800,
-        //        'gray-400-text' => 950,
-        //        'gray-500-text' => 50,
-        //        'gray-600-text' => 300,
-        //        'gray-700-text' => 500,
-        //        'gray-800-text' => 600,
-        //        'gray-900-text' => 600,
-        //        'gray-950-text' => 600,
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 800,
+        '400-text' => 900,
+        '500-text' => 950,
+        '600-text' => 950,
+        '700-text' => 50,
+        '800-text' => 50,
+        '900-text' => 50,
+        '950-text' => 50,
+        'gray-0-text' => 700,
+        'gray-50-text' => 700,
+        'gray-100-text' => 700,
+        'gray-200-text' => 800,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 500,
+        'gray-800-text' => 600,
+        'gray-900-text' => 600,
+        'gray-950-text' => 600,
         //        'button:bg' => 500,
         //        'button:text' => '500-text', // can be inferred successfully from above
         //        'button:hover:bg' => 400, // can be inferred successfully (check closest shade with same text color, favour lighter bg on hover)
@@ -163,6 +324,29 @@ class Color
         800 => 'oklch(0.476 0.114 61.907)',
         900 => 'oklch(0.421 0.095 57.708)',
         950 => 'oklch(0.286 0.066 53.813)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 800,
+        '400-text' => 900,
+        '500-text' => 900,
+        '600-text' => 950,
+        '700-text' => 50,
+        '800-text' => 50,
+        '900-text' => 50,
+        '950-text' => 50,
+        'gray-0-text' => 700,
+        'gray-50-text' => 700,
+        'gray-100-text' => 800,
+        'gray-200-text' => 800,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 50,
+        'gray-600-text' => 400,
+        'gray-700-text' => 500,
+        'gray-800-text' => 600,
+        'gray-900-text' => 600,
+        'gray-950-text' => 600,
     ];
 
     public const Lime = [
@@ -177,6 +361,29 @@ class Color
         800 => 'oklch(0.453 0.124 130.933)',
         900 => 'oklch(0.405 0.101 131.063)',
         950 => 'oklch(0.274 0.072 132.109)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 800,
+        '400-text' => 800,
+        '500-text' => 900,
+        '600-text' => 950,
+        '700-text' => 50,
+        '800-text' => 50,
+        '900-text' => 50,
+        '950-text' => 50,
+        'gray-0-text' => 700,
+        'gray-50-text' => 700,
+        'gray-100-text' => 700,
+        'gray-200-text' => 800,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 50,
+        'gray-600-text' => 400,
+        'gray-700-text' => 500,
+        'gray-800-text' => 600,
+        'gray-900-text' => 600,
+        'gray-950-text' => 600,
     ];
 
     public const Green = [
@@ -191,6 +398,29 @@ class Color
         800 => 'oklch(0.448 0.119 151.328)',
         900 => 'oklch(0.393 0.095 152.535)',
         950 => 'oklch(0.266 0.065 152.934)',
+        '50-text' => 700,
+        '100-text' => 800,
+        '200-text' => 800,
+        '300-text' => 800,
+        '400-text' => 900,
+        '500-text' => 950,
+        '600-text' => 950,
+        '700-text' => 50,
+        '800-text' => 50,
+        '900-text' => 50,
+        '950-text' => 50,
+        'gray-0-text' => 700,
+        'gray-50-text' => 700,
+        'gray-100-text' => 800,
+        'gray-200-text' => 800,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 500,
+        'gray-800-text' => 600,
+        'gray-900-text' => 600,
+        'gray-950-text' => 600,
     ];
 
     public const Emerald = [
@@ -205,6 +435,29 @@ class Color
         800 => 'oklch(0.432 0.095 166.913)',
         900 => 'oklch(0.378 0.077 168.94)',
         950 => 'oklch(0.262 0.051 172.552)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 800,
+        '400-text' => 900,
+        '500-text' => 950,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 700,
+        'gray-50-text' => 700,
+        'gray-100-text' => 700,
+        'gray-200-text' => 800,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 400,
+        'gray-800-text' => 500,
+        'gray-900-text' => 600,
+        'gray-950-text' => 600,
     ];
 
     public const Teal = [
@@ -219,6 +472,29 @@ class Color
         800 => 'oklch(0.437 0.078 188.216)',
         900 => 'oklch(0.386 0.063 188.416)',
         950 => 'oklch(0.277 0.046 192.524)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 800,
+        '400-text' => 900,
+        '500-text' => 950,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 700,
+        'gray-50-text' => 700,
+        'gray-100-text' => 700,
+        'gray-200-text' => 800,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 400,
+        'gray-800-text' => 500,
+        'gray-900-text' => 600,
+        'gray-950-text' => 600,
     ];
 
     public const Cyan = [
@@ -233,6 +509,29 @@ class Color
         800 => 'oklch(0.45 0.085 224.283)',
         900 => 'oklch(0.398 0.07 227.392)',
         950 => 'oklch(0.302 0.056 229.695)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 800,
+        '400-text' => 900,
+        '500-text' => 950,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 700,
+        'gray-50-text' => 700,
+        'gray-100-text' => 700,
+        'gray-200-text' => 800,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 500,
+        'gray-800-text' => 500,
+        'gray-900-text' => 600,
+        'gray-950-text' => 600,
     ];
 
     public const Sky = [
@@ -247,6 +546,29 @@ class Color
         800 => 'oklch(0.443 0.11 240.79)',
         900 => 'oklch(0.391 0.09 240.876)',
         950 => 'oklch(0.293 0.066 243.157)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 800,
+        '400-text' => 950,
+        '500-text' => 950,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 700,
+        'gray-50-text' => 700,
+        'gray-100-text' => 700,
+        'gray-200-text' => 700,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 50,
+        'gray-600-text' => 300,
+        'gray-700-text' => 400,
+        'gray-800-text' => 500,
+        'gray-900-text' => 600,
+        'gray-950-text' => 600,
     ];
 
     public const Blue = [
@@ -261,6 +583,29 @@ class Color
         800 => 'oklch(0.424 0.199 265.638)',
         900 => 'oklch(0.379 0.146 265.522)',
         950 => 'oklch(0.282 0.091 267.935)',
+        '50-text' => 600,
+        '100-text' => 700,
+        '200-text' => 700,
+        '300-text' => 800,
+        '400-text' => 950,
+        '500-text' => 0,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 600,
+        'gray-50-text' => 600,
+        'gray-100-text' => 600,
+        'gray-200-text' => 700,
+        'gray-300-text' => 700,
+        'gray-400-text' => 950,
+        'gray-500-text' => 0,
+        'gray-600-text' => 200,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 500,
+        'gray-950-text' => 500,
     ];
 
     public const Indigo = [
@@ -275,6 +620,29 @@ class Color
         800 => 'oklch(0.398 0.195 277.366)',
         900 => 'oklch(0.359 0.144 278.697)',
         950 => 'oklch(0.257 0.09 281.288)',
+        '50-text' => 600,
+        '100-text' => 600,
+        '200-text' => 700,
+        '300-text' => 800,
+        '400-text' => 950,
+        '500-text' => 0,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 500,
+        'gray-50-text' => 600,
+        'gray-100-text' => 600,
+        'gray-200-text' => 600,
+        'gray-300-text' => 600,
+        'gray-400-text' => 900,
+        'gray-500-text' => 0,
+        'gray-600-text' => 200,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 400,
+        'gray-950-text' => 500,
     ];
 
     public const Violet = [
@@ -289,6 +657,29 @@ class Color
         800 => 'oklch(0.432 0.232 292.759)',
         900 => 'oklch(0.38 0.189 293.745)',
         950 => 'oklch(0.283 0.141 291.089)',
+        '50-text' => 600,
+        '100-text' => 600,
+        '200-text' => 700,
+        '300-text' => 800,
+        '400-text' => 950,
+        '500-text' => 0,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 600,
+        'gray-50-text' => 600,
+        'gray-100-text' => 600,
+        'gray-200-text' => 600,
+        'gray-300-text' => 700,
+        'gray-400-text' => 950,
+        'gray-500-text' => 0,
+        'gray-600-text' => 200,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 400,
+        'gray-950-text' => 500,
     ];
 
     public const Purple = [
@@ -303,6 +694,29 @@ class Color
         800 => 'oklch(0.438 0.218 303.724)',
         900 => 'oklch(0.381 0.176 304.987)',
         950 => 'oklch(0.291 0.149 302.717)',
+        '50-text' => 600,
+        '100-text' => 600,
+        '200-text' => 700,
+        '300-text' => 800,
+        '400-text' => 950,
+        '500-text' => 0,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 600,
+        'gray-50-text' => 600,
+        'gray-100-text' => 600,
+        'gray-200-text' => 600,
+        'gray-300-text' => 700,
+        'gray-400-text' => 950,
+        'gray-500-text' => 0,
+        'gray-600-text' => 200,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 500,
+        'gray-950-text' => 500,
     ];
 
     public const Fuchsia = [
@@ -317,6 +731,29 @@ class Color
         800 => 'oklch(0.452 0.211 324.591)',
         900 => 'oklch(0.401 0.17 325.612)',
         950 => 'oklch(0.293 0.136 325.661)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 700,
+        '300-text' => 800,
+        '400-text' => 950,
+        '500-text' => 0,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 600,
+        'gray-50-text' => 700,
+        'gray-100-text' => 700,
+        'gray-200-text' => 700,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 0,
+        'gray-600-text' => 200,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 500,
+        'gray-950-text' => 600,
     ];
 
     public const Pink = [
@@ -331,6 +768,29 @@ class Color
         800 => 'oklch(0.459 0.187 3.815)',
         900 => 'oklch(0.408 0.153 2.432)',
         950 => 'oklch(0.284 0.109 3.907)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 900,
+        '400-text' => 950,
+        '500-text' => 0,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 600,
+        'gray-50-text' => 700,
+        'gray-100-text' => 700,
+        'gray-200-text' => 700,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 0,
+        'gray-600-text' => 200,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 500,
+        'gray-950-text' => 600,
     ];
 
     public const Rose = [
@@ -345,6 +805,29 @@ class Color
         800 => 'oklch(0.455 0.188 13.697)',
         900 => 'oklch(0.41 0.159 10.272)',
         950 => 'oklch(0.271 0.105 12.094)',
+        '50-text' => 700,
+        '100-text' => 700,
+        '200-text' => 800,
+        '300-text' => 900,
+        '400-text' => 950,
+        '500-text' => 0,
+        '600-text' => 0,
+        '700-text' => 0,
+        '800-text' => 0,
+        '900-text' => 0,
+        '950-text' => 0,
+        'gray-0-text' => 600,
+        'gray-50-text' => 700,
+        'gray-100-text' => 700,
+        'gray-200-text' => 700,
+        'gray-300-text' => 800,
+        'gray-400-text' => 950,
+        'gray-500-text' => 0,
+        'gray-600-text' => 200,
+        'gray-700-text' => 300,
+        'gray-800-text' => 400,
+        'gray-900-text' => 500,
+        'gray-950-text' => 600,
     ];
 
     public static function convertToOklch(string $color): string
@@ -484,7 +967,11 @@ class Color
         return static::calculateContrastRatio($color1, $color2) >= 4.5;
     }
 
-    public static function findMatchingAccessibleTextColors(array $oklchColors): array
+    /**
+     * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}  $oklchColors
+     * @return array{50: int, 100: int, 200: int, 300: int, 400: int, 500: int, 600: int, 700: int, 800: int, 900: int, 950: int}
+     */
+    public static function findMatchingAccessibleTextColorsForBackgroundColors(array $oklchColors): array
     {
         $textColors = [];
 
@@ -525,7 +1012,11 @@ class Color
         return $textColors;
     }
 
-    public static function findMatchingAccessibleTextColorsForGrayBackgrounds(array $oklchColors, bool $withWhite = true): array
+    /**
+     * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}  $oklchColors
+     * @return array{50: int, 100: int, 200: int, 300: int, 400: int, 500: int, 600: int, 700: int, 800: int, 900: int, 950: int}
+     */
+    public static function findMatchingAccessibleTextColorsForGrayBackgroundColors(array $oklchColors, bool $withWhite = true): array
     {
         ksort($oklchColors);
 
@@ -565,6 +1056,37 @@ class Color
         }
 
         return $textColors;
+    }
+
+    public static function findMatchingAccessibleTextColorForBackgroundColor(string $oklchColor): string
+    {
+        [$originalLightness, $chroma, $hue] = sscanf($oklchColor, 'oklch(%f %f %f)');
+
+        $lightness = min($originalLightness, 0.4); // Do not go darker than 35% lightness
+
+        while ($lightness >= 0) {
+            $lightness -= 0.05;
+
+            $textColor = "oklch({$lightness} {$chroma} {$hue})";
+
+            if (static::isContrastRatioAccessible($oklchColor, $textColor)) {
+                return $textColor;
+            }
+        }
+
+        $lightness = max($originalLightness, 0.8); // Do not go lighter than 85% lightness
+
+        while ($lightness <= 1) {
+            $lightness += 0.05;
+
+            $textColor = "oklch({$lightness} {$chroma} {$hue})";
+
+            if (static::isContrastRatioAccessible($oklchColor, $textColor)) {
+                return $textColor;
+            }
+        }
+
+        return 'oklch(1 0 0)';
     }
 
     /**
