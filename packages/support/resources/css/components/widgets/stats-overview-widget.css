@@ -25,10 +25,10 @@
         @apply flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-400;
 
         &.fi-color {
-            @apply text-custom-600 dark:text-custom-400;
+            @apply text-color-600 dark:text-color-400;
 
             & .fi-wi-stats-overview-stat-description-icon {
-                @apply text-custom-500;
+                @apply text-color-500;
             }
         }
     }
@@ -54,11 +54,11 @@
 
         &.fi-color {
             & .fi-wi-stats-overview-stat-chart-bg-color {
-                @apply text-custom-50 dark:text-custom-400/10;
+                @apply text-color-50 dark:text-color-400/10;
             }
 
             & .fi-wi-stats-overview-stat-chart-border-color {
-                @apply text-custom-500 dark:text-custom-400;
+                @apply text-color-500 dark:text-color-400;
             }
         }
     }

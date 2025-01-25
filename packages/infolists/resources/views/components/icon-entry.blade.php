@@ -45,7 +45,7 @@
                             },
                             match ($color) {
                                 'gray' => 'text-gray-400 dark:text-gray-500',
-                                default => 'fi-color text-custom-500 dark:text-custom-400',
+                                default => 'fi-color text-color-500 dark:text-color-400',
                             },
                             is_string($color) ? 'fi-color-' . $color : null,
                         ])

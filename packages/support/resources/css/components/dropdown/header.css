@@ -19,11 +19,11 @@
 
     &.fi-color {
         & .fi-icon {
-            @apply text-custom-500 dark:text-custom-400;
+            @apply text-color-500 dark:text-color-400;
         }
 
         & span {
-            @apply text-custom-600 dark:text-custom-400;
+            @apply text-color-600 dark:text-color-400;
         }
     }
 }

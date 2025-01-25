@@ -115,10 +115,10 @@
     }
 
     &.fi-color {
-        @apply text-custom-500 dark:text-custom-400;
+        @apply text-color-500 dark:text-color-400;
 
         &:not(.fi-disabled):not([disabled]) {
-            @apply hover:text-custom-600 focus-visible:ring-custom-600 dark:hover:text-custom-300 dark:focus-visible:ring-custom-500;
+            @apply hover:text-color-600 focus-visible:ring-color-600 dark:hover:text-color-300 dark:focus-visible:ring-color-500;
         }
     }
 

@@ -363,10 +363,10 @@
         }
 
         &.fi-color {
-            @apply bg-custom-100 dark:bg-custom-500/20;
+            @apply bg-color-100 dark:bg-color-500/20;
 
             & > .fi-icon {
-                @apply text-custom-600 dark:text-custom-400;
+                @apply text-color-600 dark:text-color-400;
             }
         }
     }

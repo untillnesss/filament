@@ -157,7 +157,7 @@
         @apply size-6 self-start text-gray-400 dark:text-gray-500;
 
         &.fi-color {
-            @apply text-custom-500 dark:text-custom-400;
+            @apply text-color-500 dark:text-color-400;
         }
 
         &.fi-size-sm {

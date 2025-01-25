@@ -134,7 +134,7 @@
                                     'fi-in-text-item-icon size-5 shrink-0',
                                     match ($iconColor) {
                                         'gray', null => 'text-gray-400 dark:text-gray-500',
-                                        default => 'text-custom-500',
+                                        default => 'text-color-500',
                                     },
                                 ]);
 
@@ -170,7 +170,7 @@
                                     match ($color) {
                                         null => 'text-gray-950 dark:text-white',
                                         'gray' => 'text-gray-500 dark:text-gray-400',
-                                        default => 'text-custom-600 dark:text-custom-400',
+                                        default => 'text-color-600 dark:text-color-400',
                                     } => $isBulleted,
                                 ])
                                 @style([
@@ -224,7 +224,7 @@
                                                 match ($color) {
                                                     null => 'text-gray-950 dark:text-white',
                                                     'gray' => 'text-gray-500 dark:text-gray-400',
-                                                    default => 'text-custom-600 dark:text-custom-400',
+                                                    default => 'text-color-600 dark:text-color-400',
                                                 },
                                                 match ($weight) {
                                                     FontWeight::Thin, 'thin' => 'font-thin',

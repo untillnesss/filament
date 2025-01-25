@@ -6,10 +6,10 @@
     }
 
     &.fi-color {
-        @apply bg-custom-600;
+        @apply bg-color-600;
 
         & .fi-icon {
-            @apply text-custom-600;
+            @apply text-color-600;
         }
     }
 

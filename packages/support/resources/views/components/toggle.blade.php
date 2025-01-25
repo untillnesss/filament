@@ -26,7 +26,7 @@
                             'fi-toggle-off',
                             match ($offColor) {
                                 null, 'gray' => null,
-                                default => 'fi-color bg-custom-600',
+                                default => 'fi-color bg-color-600',
                             },
                             is_string($offColor) ? "fi-color-{$offColor}" : null,
                         ]))

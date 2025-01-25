@@ -4,7 +4,7 @@
     &:not(.fi-disabled):not([disabled]) {
         &.fi-color {
             & .fi-badge-delete-btn {
-                @apply hover:text-custom-700/75 focus-visible:text-custom-700/75 dark:hover:text-custom-300/75 dark:focus-visible:text-custom-300/75;
+                @apply hover:text-color-700/75 focus-visible:text-color-700/75 dark:hover:text-color-300/75 dark:focus-visible:text-color-300/75;
             }
         }
 
@@ -51,14 +51,14 @@
     }
 
     &.fi-color {
-        @apply bg-custom-50 text-custom-600 ring-custom-600/10 dark:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-400/30;
+        @apply bg-color-50 text-color-600 ring-color-600/10 dark:bg-color-400/10 dark:text-color-400 dark:ring-color-400/30;
 
         & .fi-icon {
-            @apply text-custom-500;
+            @apply text-color-500;
         }
 
         & .fi-badge-delete-btn {
-            @apply text-custom-700/50 dark:text-custom-300/50;
+            @apply text-color-700/50 dark:text-color-300/50;
         }
     }
 

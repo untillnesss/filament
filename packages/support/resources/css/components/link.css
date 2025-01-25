@@ -85,10 +85,10 @@
     }
 
     &.fi-color {
-        @apply text-custom-600 dark:text-custom-400;
+        @apply text-color-600 dark:text-color-400;
 
         & > .fi-icon {
-            @apply text-custom-600 dark:text-custom-400;
+            @apply text-color-600 dark:text-color-400;
         }
     }
 
