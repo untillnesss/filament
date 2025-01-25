@@ -90,13 +90,13 @@ if (! function_exists('Filament\Support\get_color_css_variables')) {
 
         if (is_string($color)) {
             foreach ($shades as $shade) {
-                $variables[] = "--c-{$shade}:var(--{$color}-{$shade})";
+                $variables[] = "--color-{$shade}:var(--{$color}-{$shade})";
             }
         }
 
         if (is_array($color)) {
             foreach ($shades as $shade) {
-                $variables[] = "--c-{$shade}:{$color[$shade]}";
+                $variables[] = "--color-{$shade}:{$color[$shade]}";
             }
         }
 

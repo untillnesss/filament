@@ -4,17 +4,17 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-    --color-color-50: var(--c-50);
-    --color-color-100: var(--c-100);
-    --color-color-200: var(--c-200);
-    --color-color-300: var(--c-300);
-    --color-color-400: var(--c-400);
-    --color-color-500: var(--c-500);
-    --color-color-600: var(--c-600);
-    --color-color-700: var(--c-700);
-    --color-color-800: var(--c-800);
-    --color-color-900: var(--c-900);
-    --color-color-950: var(--c-950);
+    --color-color-50: var(--color-50);
+    --color-color-100: var(--color-100);
+    --color-color-200: var(--color-200);
+    --color-color-300: var(--color-300);
+    --color-color-400: var(--color-400);
+    --color-color-500: var(--color-500);
+    --color-color-600: var(--color-600);
+    --color-color-700: var(--color-700);
+    --color-color-800: var(--color-800);
+    --color-color-900: var(--color-900);
+    --color-color-950: var(--color-950);
 
     --color-danger-50: var(--danger-50);
     --color-danger-100: var(--danger-100);
