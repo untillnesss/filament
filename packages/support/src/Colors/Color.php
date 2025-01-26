@@ -27,7 +27,7 @@ class Color
         '800-text' => 50,
         '900-text' => 50,
         '950-text' => 50,
-        'gray-0-text' => 500,
+        'white-text' => 500,
         'gray-50-text' => 500,
         'gray-100-text' => 600,
         'gray-200-text' => 600,
@@ -64,7 +64,7 @@ class Color
         '800-text' => 50,
         '900-text' => 50,
         '950-text' => 50,
-        'gray-0-text' => 500,
+        'white-text' => 500,
         'gray-50-text' => 500,
         'gray-100-text' => 600,
         'gray-200-text' => 600,
@@ -101,7 +101,7 @@ class Color
         '800-text' => 50,
         '900-text' => 50,
         '950-text' => 50,
-        'gray-0-text' => 500,
+        'white-text' => 500,
         'gray-50-text' => 500,
         'gray-100-text' => 600,
         'gray-200-text' => 600,
@@ -138,7 +138,7 @@ class Color
         '800-text' => 50,
         '900-text' => 50,
         '950-text' => 50,
-        'gray-0-text' => 500,
+        'white-text' => 500,
         'gray-50-text' => 500,
         'gray-100-text' => 600,
         'gray-200-text' => 600,
@@ -175,7 +175,7 @@ class Color
         '800-text' => 50,
         '900-text' => 50,
         '950-text' => 50,
-        'gray-0-text' => 500,
+        'white-text' => 500,
         'gray-50-text' => 500,
         'gray-100-text' => 600,
         'gray-200-text' => 600,
@@ -212,7 +212,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 600,
+        'white-text' => 600,
         'gray-50-text' => 600,
         'gray-100-text' => 700,
         'gray-200-text' => 700,
@@ -249,7 +249,7 @@ class Color
         '800-text' => 50,
         '900-text' => 50,
         '950-text' => 50,
-        'gray-0-text' => 700,
+        'white-text' => 700,
         'gray-50-text' => 700,
         'gray-100-text' => 700,
         'gray-200-text' => 800,
@@ -286,7 +286,7 @@ class Color
         '800-text' => 50,
         '900-text' => 50,
         '950-text' => 50,
-        'gray-0-text' => 700,
+        'white-text' => 700,
         'gray-50-text' => 700,
         'gray-100-text' => 700,
         'gray-200-text' => 800,
@@ -298,18 +298,6 @@ class Color
         'gray-800-text' => 600,
         'gray-900-text' => 600,
         'gray-950-text' => 600,
-        //        'button:bg' => 500,
-        //        'button:text' => '500-text', // can be inferred successfully from above
-        //        'button:hover:bg' => 400, // can be inferred successfully (check closest shade with same text color, favour lighter bg on hover)
-        //        'button:hover:text' => '400-text', // can be inferred successfully from above
-        //        'button:dark:bg' => 500,
-        //        'button:dark:text' => '500-text', // can be inferred successfully from above
-        //        'button:dark:hover:bg' => 400, // can be inferred successfully (check closest shade with same text color, favour lighter bg on hover)
-        //        'button:dark:hover:text' => '400-text', // can be inferred successfully from above
-        //        'badge:bg' => 50,
-        //        'badge:text' => '50-text',
-        //        'badge:dark:bg' => 400, // this also has 10% opactity though
-        //        'badge:dark:text' => 400, // because of the 10% opacity, it is not possible to infer this
     ];
 
     public const Yellow = [
@@ -335,7 +323,7 @@ class Color
         '800-text' => 50,
         '900-text' => 50,
         '950-text' => 50,
-        'gray-0-text' => 700,
+        'white-text' => 700,
         'gray-50-text' => 700,
         'gray-100-text' => 800,
         'gray-200-text' => 800,
@@ -372,7 +360,7 @@ class Color
         '800-text' => 50,
         '900-text' => 50,
         '950-text' => 50,
-        'gray-0-text' => 700,
+        'white-text' => 700,
         'gray-50-text' => 700,
         'gray-100-text' => 700,
         'gray-200-text' => 800,
@@ -409,7 +397,7 @@ class Color
         '800-text' => 50,
         '900-text' => 50,
         '950-text' => 50,
-        'gray-0-text' => 700,
+        'white-text' => 700,
         'gray-50-text' => 700,
         'gray-100-text' => 800,
         'gray-200-text' => 800,
@@ -446,7 +434,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 700,
+        'white-text' => 700,
         'gray-50-text' => 700,
         'gray-100-text' => 700,
         'gray-200-text' => 800,
@@ -483,7 +471,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 700,
+        'white-text' => 700,
         'gray-50-text' => 700,
         'gray-100-text' => 700,
         'gray-200-text' => 800,
@@ -520,7 +508,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 700,
+        'white-text' => 700,
         'gray-50-text' => 700,
         'gray-100-text' => 700,
         'gray-200-text' => 800,
@@ -557,7 +545,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 700,
+        'white-text' => 700,
         'gray-50-text' => 700,
         'gray-100-text' => 700,
         'gray-200-text' => 700,
@@ -594,7 +582,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 600,
+        'white-text' => 600,
         'gray-50-text' => 600,
         'gray-100-text' => 600,
         'gray-200-text' => 700,
@@ -631,7 +619,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 500,
+        'white-text' => 500,
         'gray-50-text' => 600,
         'gray-100-text' => 600,
         'gray-200-text' => 600,
@@ -668,7 +656,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 600,
+        'white-text' => 600,
         'gray-50-text' => 600,
         'gray-100-text' => 600,
         'gray-200-text' => 600,
@@ -705,7 +693,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 600,
+        'white-text' => 600,
         'gray-50-text' => 600,
         'gray-100-text' => 600,
         'gray-200-text' => 600,
@@ -742,7 +730,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 600,
+        'white-text' => 600,
         'gray-50-text' => 700,
         'gray-100-text' => 700,
         'gray-200-text' => 700,
@@ -779,7 +767,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 600,
+        'white-text' => 600,
         'gray-50-text' => 700,
         'gray-100-text' => 700,
         'gray-200-text' => 700,
@@ -816,7 +804,7 @@ class Color
         '800-text' => 0,
         '900-text' => 0,
         '950-text' => 0,
-        'gray-0-text' => 600,
+        'white-text' => 600,
         'gray-50-text' => 700,
         'gray-100-text' => 700,
         'gray-200-text' => 700,
@@ -969,7 +957,7 @@ class Color
 
     /**
      * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}  $oklchColors
-     * @return array{50: int, 100: int, 200: int, 300: int, 400: int, 500: int, 600: int, 700: int, 800: int, 900: int, 950: int}
+     * @return array{50-text: int, 100-text: int, 200-text: int, 300-text: int, 400-text: int, 500-text: int, 600-text: int, 700-text: int, 800-text: int, 900-text: int, 950-text: int}
      */
     public static function findMatchingAccessibleTextColorsForBackgroundColors(array $oklchColors): array
     {
@@ -983,9 +971,11 @@ class Color
         ksort($oklchColors);
 
         foreach ($oklchColors as $shade => $color) {
+            $shadeKey = "{$shade}-text";
+
             foreach ($possibleDarkTextColors as $possibleDarkTextColorShade => $possibleDarkTextColor) {
                 if (static::isContrastRatioAccessible($color, $possibleDarkTextColor)) {
-                    $textColors[$shade] = $possibleDarkTextColorShade;
+                    $textColors[$shadeKey] = $possibleDarkTextColorShade;
 
                     continue 2;
                 }
@@ -998,7 +988,7 @@ class Color
                 array_key_exists(50, $oklchColors)
             ) {
                 if (static::isContrastRatioAccessible($color, $oklchColors[50])) {
-                    $textColors[$shade] = 50;
+                    $textColors[$shadeKey] = 50;
 
                     continue;
                 } else {
@@ -1006,7 +996,7 @@ class Color
                 }
             }
 
-            $textColors[$shade] = 0;
+            $textColors[$shadeKey] = 0;
         }
 
         return $textColors;
@@ -1014,9 +1004,9 @@ class Color
 
     /**
      * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}  $oklchColors
-     * @return array{50: int, 100: int, 200: int, 300: int, 400: int, 500: int, 600: int, 700: int, 800: int, 900: int, 950: int}
+     * @return array{white-text: int, gray-50-text: int, gray-100-text: int, gray-200-text: int, gray-300-text: int, gray-400-text: int, gray-500-text: int, gray-600-text: int, gray-700-text: int, gray-800-text: int, gray-900-text: int, gray-950-text: int}
      */
-    public static function findMatchingAccessibleTextColorsForGrayBackgroundColors(array $oklchColors, bool $withWhite = true): array
+    public static function findMatchingAccessibleTextColorsForGrayBackgroundColors(array $oklchColors): array
     {
         ksort($oklchColors);
 
@@ -1026,17 +1016,16 @@ class Color
         $possibleLightTextColors = array_reverse($oklchColors, preserve_keys: true); // Copy the array so we can remove elements from it
 
         $grayColors = static::Gray;
-
-        if ($withWhite) {
-            $grayColors[0] ??= 'oklch(1 0 0)';
-        }
+        $grayColors[0] ??= 'oklch(1 0 0)';
 
         ksort($grayColors);
 
         foreach ($grayColors as $grayShade => $grayColor) {
+            $grayShadeKey = $grayShade ? "gray-{$grayShade}-text" : 'white-text';
+
             foreach ($possibleDarkTextColors as $possibleDarkTextColorShade => $possibleDarkTextColor) {
                 if (static::isContrastRatioAccessible($grayColor, $possibleDarkTextColor)) {
-                    $textColors[$grayShade] = $possibleDarkTextColorShade;
+                    $textColors[$grayShadeKey] = $possibleDarkTextColorShade;
 
                     continue 2;
                 }
@@ -1046,13 +1035,13 @@ class Color
 
             foreach ($possibleLightTextColors as $possibleLightTextColorShade => $possibleLightTextColor) {
                 if (static::isContrastRatioAccessible($grayColor, $possibleLightTextColor)) {
-                    $textColors[$grayShade] = $possibleLightTextColorShade;
+                    $textColors[$grayShadeKey] = $possibleLightTextColorShade;
 
                     continue 2;
                 }
             }
 
-            $textColors[$grayShade] = 0;
+            $textColors[$grayShadeKey] = 0;
         }
 
         return $textColors;
@@ -1094,7 +1083,7 @@ class Color
      */
     public static function hex(string $hexColor): array
     {
-        return static::palette($hexColor);
+        return static::generatePalette($hexColor);
     }
 
     /**
@@ -1102,13 +1091,13 @@ class Color
      */
     public static function rgb(string $rgbColor): array
     {
-        return static::palette($rgbColor);
+        return static::generatePalette($rgbColor);
     }
 
     /**
      * @return array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
      */
-    public static function palette(string $color): array
+    public static function generatePalette(string $color): array
     {
         return static::generateShades(static::convertToOklch($color));
     }
@@ -1167,5 +1156,27 @@ class Color
             'pink' => static::Pink,
             'rose' => static::Rose,
         ];
+    }
+
+    public static function resolveShadeFromPalette(array $palette, string | int $shade): string
+    {
+        $color = $palette[$shade];
+
+        while (! str_starts_with($color, 'oklch(')) {
+            if ($color === 0) {
+                return 'oklch(1 0 0)';
+            }
+
+            $color = $palette[$color];
+        }
+
+        return $color;
+    }
+
+    public static function isLight(string $oklchColor): bool
+    {
+        [$lightness] = sscanf($oklchColor, 'oklch(%f %f %f)');
+
+        return $lightness >= 0.65;
     }
 }

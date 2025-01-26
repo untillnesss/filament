@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 uses(TestCase::class);
 
 it('generates colors from a HEX value', function (string $color) {
-    expect(Color::palette($color))
+    expect(Color::generatePalette($color))
         ->toMatchSnapshot();
 })->with([
     '#49D359',
@@ -18,7 +18,7 @@ it('generates colors from a HEX value', function (string $color) {
 ]);
 
 it('generates colors from an RGB value', function (string $color) {
-    expect(Color::palette($color))
+    expect(Color::generatePalette($color))
         ->toMatchSnapshot();
 
 })->with([

@@ -50,10 +50,10 @@
         }
 
         &.fi-color {
-            @apply text-color-600 ring-color-600 dark:text-color-400 dark:ring-color-500;
+            @apply text-(--color-gray-100-text) ring-color-600 dark:text-(--color-gray-700-text) dark:ring-color-500;
 
             &:not(.fi-disabled):not([disabled]) {
-                @apply hover:bg-color-400/10;
+                @apply hover:bg-(--hover-bg)/10 dark:hover:bg-(--dark-hover-bg)/10;
             }
 
             & > .fi-icon {
@@ -69,20 +69,20 @@
             @apply hover:bg-gray-50 dark:hover:bg-white/10;
         }
 
-        &label {
-            @apply [input:checked+&]:bg-gray-400 [input:checked+&]:text-white [input:checked+&]:ring-0 dark:[input:checked+&]:bg-gray-600;
+        input:checked + &label {
+            @apply bg-gray-400 text-white ring-0 dark:bg-gray-600;
 
             &:not(.fi-disabled):not([disabled]) {
-                @apply [input:checked+&]:hover:bg-gray-300 dark:[input:checked+&]:hover:bg-gray-500;
+                @apply hover:bg-gray-300 dark:hover:bg-gray-500;
             }
         }
 
         &.fi-color {
             &:not(label) {
-                @apply bg-color-600 dark:bg-color-500 text-white;
+                @apply bg-(--bg) dark:bg-(--dark-bg) text-(--text) dark:text-(--dark-text);
 
                 &:not(.fi-disabled):not([disabled]) {
-                    @apply hover:bg-color-500 focus-visible:ring-color-500/50 dark:hover:bg-color-400 dark:focus-visible:ring-color-400/50;
+                    @apply hover:bg-(--hover-bg) hover:text-(--hover-text) focus-visible:ring-color-500/50 dark:hover:bg-(--dark-hover-bg) dark:hover:text-(--dark-hover-text) dark:focus-visible:ring-color-400/50;
                 }
 
                 & > .fi-icon {
@@ -91,10 +91,22 @@
             }
 
             &label {
-                @apply [input:checked+&]:bg-color-600 dark:[input:checked+&]:bg-color-500 [input:checked+&]:text-white [input:checked+&]:ring-0;
+                input:checked + & {
+                    @apply bg-(--bg) dark:bg-(--dark-bg) text-(--text) dark:text-(--dark-text) ring-0;
+                }
 
                 &:not(.fi-disabled):not([disabled]) {
-                    @apply [input:checked+&]:hover:bg-color-500 dark:[input:checked+&]:hover:bg-color-400 [input:checked:focus-visible+&]:ring-color-500/50 dark:[input:checked:focus-visible+&]:ring-color-400/50 [input:focus-visible+&]:z-10 [input:focus-visible+&]:ring-2 [input:focus-visible+&]:ring-gray-950/10 dark:[input:focus-visible+&]:ring-white/20;
+                    input:checked + & {
+                        @apply hover:bg-(--hover-bg) dark:hover:bg-(--dark-hover-bg) hover:text-(--hover-text) dark:hover:text-(--dark-hover-text);
+                    }
+
+                    input:focus-visible + & {
+                        @apply z-10 ring-2 ring-gray-950/10 dark:ring-white/20;
+                    }
+
+                    input:checked:focus-visible + & {
+                        @apply ring-color-500/50 dark:ring-color-400/50;
+                    }
                 }
             }
         }
