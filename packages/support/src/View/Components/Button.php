@@ -18,10 +18,11 @@ class Button implements HasColor, DoesNotHaveGrayColor
         $palette['hover:bg:light'] = $this->changeColorLightness($color, 0.1);
         $palette['bg'] = $color;
         $palette['hover:bg:dark'] = $this->changeColorLightness($color, -0.1);
-        $palette = [
-            ...$palette,
-            ...Color::findMatchingAccessibleTextColorsForBackgroundColors($palette),
-        ];
+        $palette = array_replace(
+            $palette,
+            Color::findMatchingAccessibleTextColorsForBackgroundColors($palette),
+            Color::findMatchingAccessibleTextColorsForGrayBackgroundColors($palette),
+        );
 
         $textLightnessIndex = [
             'hover:bg:light' => FilamentColor::isLight($palette['hover:bg:light']),
@@ -33,6 +34,45 @@ class Button implements HasColor, DoesNotHaveGrayColor
             || ($textLightnessIndex['bg'] !== $textLightnessIndex['hover:bg:dark']);
 
         return [
+            ...collect($palette)
+                ->only([
+                    50,
+                    100,
+                    200,
+                    300,
+                    400,
+                    500,
+                    600,
+                    700,
+                    800,
+                    900,
+                    950,
+                    '50-text',
+                    '100-text',
+                    '200-text',
+                    '300-text',
+                    '400-text',
+                    '500-text',
+                    '600-text',
+                    '700-text',
+                    '800-text',
+                    '900-text',
+                    '950-text',
+                    'white-text',
+                    'gray-50-text',
+                    'gray-100-text',
+                    'gray-200-text',
+                    'gray-300-text',
+                    'gray-400-text',
+                    'gray-500-text',
+                    'gray-600-text',
+                    'gray-700-text',
+                    'gray-800-text',
+                    'gray-900-text',
+                    'gray-950-text',
+                ])
+                ->mapWithKeys(fn ($value, $key) => ["color-{$key}" => is_string($value) ? $value : Color::resolveShadeFromPalette($palette, $value)])
+                ->all(),
             'bg' => $color,
             'hover-bg' => $hoverColor = $isHoverColorLighter ? $palette['hover:bg:light'] : $palette['hover:bg:dark'],
             'dark-bg' => $color,

@@ -53,7 +53,7 @@
             @apply text-(--color-gray-100-text) ring-color-600 dark:text-(--color-gray-700-text) dark:ring-color-500;
 
             &:not(.fi-disabled):not([disabled]) {
-                @apply hover:bg-(--hover-bg)/10 dark:hover:bg-(--dark-hover-bg)/10;
+                @apply hover:bg-(--hover-bg)/10 dark:hover:bg-(--dark-hover-bg)/10 focus-visible:ring-color-500/40 dark:focus-visible:ring-color-400/40;
             }
 
             & > .fi-icon {

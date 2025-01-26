@@ -1015,7 +1015,9 @@ class Color
         $possibleDarkTextColors = $oklchColors; // Copy the array so we can remove elements from it
         $possibleLightTextColors = array_reverse($oklchColors, preserve_keys: true); // Copy the array so we can remove elements from it
 
-        $grayColors = static::Gray;
+        $grayColors = collect(static::Gray)
+            ->filter(fn ($value, $key): bool => is_numeric($key))
+            ->all();
         $grayColors[0] ??= 'oklch(1 0 0)';
 
         ksort($grayColors);
@@ -1160,6 +1162,10 @@ class Color
 
     public static function resolveShadeFromPalette(array $palette, string | int $shade): string
     {
+        if ($shade === 0) {
+            return 'oklch(1 0 0)';
+        }
+
         $color = $palette[$shade];
 
         while (! str_starts_with($color, 'oklch(')) {
