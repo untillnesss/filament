@@ -50,10 +50,10 @@
         }
 
         &.fi-color {
-            @apply text-(--color-gray-100-text) ring-color-600 dark:text-(--color-gray-700-text) dark:ring-color-500;
+            @apply ring-color-600 dark:ring-color-500 text-(--color-gray-100-text) dark:text-(--color-gray-700-text);
 
             &:not(.fi-disabled):not([disabled]) {
-                @apply hover:bg-(--hover-bg)/10 dark:hover:bg-(--dark-hover-bg)/10 focus-visible:ring-color-500/40 dark:focus-visible:ring-color-400/40;
+                @apply focus-visible:ring-color-500/40 dark:focus-visible:ring-color-400/40 hover:bg-(--hover-bg)/10 dark:hover:bg-(--dark-hover-bg)/10;
             }
 
             & > .fi-icon {
@@ -79,10 +79,10 @@
 
         &.fi-color {
             &:not(label) {
-                @apply bg-(--bg) dark:bg-(--dark-bg) text-(--text) dark:text-(--dark-text);
+                @apply bg-(--bg) text-(--text) dark:bg-(--dark-bg) dark:text-(--dark-text);
 
                 &:not(.fi-disabled):not([disabled]) {
-                    @apply hover:bg-(--hover-bg) hover:text-(--hover-text) focus-visible:ring-color-500/50 dark:hover:bg-(--dark-hover-bg) dark:hover:text-(--dark-hover-text) dark:focus-visible:ring-color-400/50;
+                    @apply focus-visible:ring-color-500/50 dark:focus-visible:ring-color-400/50 hover:bg-(--hover-bg) hover:text-(--hover-text) dark:hover:bg-(--dark-hover-bg) dark:hover:text-(--dark-hover-text);
                 }
 
                 & > .fi-icon {
@@ -92,12 +92,12 @@
 
             &label {
                 input:checked + & {
-                    @apply bg-(--bg) dark:bg-(--dark-bg) text-(--text) dark:text-(--dark-text) ring-0;
+                    @apply bg-(--bg) text-(--text) ring-0 dark:bg-(--dark-bg) dark:text-(--dark-text);
                 }
 
                 &:not(.fi-disabled):not([disabled]) {
                     input:checked + & {
-                        @apply hover:bg-(--hover-bg) dark:hover:bg-(--dark-hover-bg) hover:text-(--hover-text) dark:hover:text-(--dark-hover-text);
+                        @apply hover:bg-(--hover-bg) hover:text-(--hover-text) dark:hover:bg-(--dark-hover-bg) dark:hover:text-(--dark-hover-text);
                     }
 
                     input:focus-visible + & {

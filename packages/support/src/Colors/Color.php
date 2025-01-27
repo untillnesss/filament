@@ -956,8 +956,8 @@ class Color
     }
 
     /**
-     * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}  $palette
-     * @return array{50-text: int, 100-text: int, 200-text: int, 300-text: int, 400-text: int, 500-text: int, 600-text: int, 700-text: int, 800-text: int, 900-text: int, 950-text: int}
+     * @param  array<int | string, string | int>  $palette
+     * @return array<string, int>
      */
     public static function findMatchingAccessibleTextColorsForBackgroundColors(array $palette): array
     {
@@ -1003,8 +1003,8 @@ class Color
     }
 
     /**
-     * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}  $palette
-     * @return array{white-text: int, gray-50-text: int, gray-100-text: int, gray-200-text: int, gray-300-text: int, gray-400-text: int, gray-500-text: int, gray-600-text: int, gray-700-text: int, gray-800-text: int, gray-900-text: int, gray-950-text: int}
+     * @param  array<int | string, string | int>  $palette
+     * @return array<string, int>
      */
     public static function findMatchingAccessibleTextColorsForGrayBackgroundColors(array $palette): array
     {
@@ -1083,7 +1083,7 @@ class Color
     }
 
     /**
-     * @return array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
+     * @return array<int | string, string | int>
      */
     public static function hex(string $color): array
     {
@@ -1091,7 +1091,7 @@ class Color
     }
 
     /**
-     * @return array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
+     * @return array<int | string, string | int>
      */
     public static function rgb(string $color): array
     {
@@ -1099,13 +1099,13 @@ class Color
     }
 
     /**
-     * @return array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
+     * @return array<int | string, string | int>
      */
     public static function generatePalette(string $color): array
     {
         $color = static::convertToOklch($color);
 
-        [$originalLightness, $chroma, $hue] = sscanf($color, 'oklch(%f %f %f)');
+        [, $chroma, $hue] = sscanf($color, 'oklch(%f %f %f)');
 
         return array_map(
             fn (float $lightness): string => "oklch({$lightness} {$chroma} {$hue})",
@@ -1126,7 +1126,7 @@ class Color
     }
 
     /**
-     * @return array<string, array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}>
+     * @return array<string, array<int | string, string | int>>
      */
     public static function all(): array
     {

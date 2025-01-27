@@ -24,7 +24,7 @@ class Stat extends Component
     protected ?array $chart = null;
 
     /**
-     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     * @var string | array<int | string, string | int> | null
      */
     protected string | array | null $chartColor = null;
 
@@ -35,7 +35,7 @@ class Stat extends Component
     protected IconPosition | string | null $descriptionIconPosition = null;
 
     /**
-     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     * @var string | array<int | string, string | int> | null
      */
     protected string | array | null $descriptionColor = null;
 
@@ -62,7 +62,7 @@ class Stat extends Component
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null  $color
+     * @param  string | array<int | string, string | int> | null  $color
      */
     public function chartColor(string | array | null $color): static
     {
@@ -79,7 +79,7 @@ class Stat extends Component
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null  $color
+     * @param  string | array<int | string, string | int> | null  $color
      */
     public function descriptionColor(string | array | null $color): static
     {
@@ -125,7 +125,7 @@ class Stat extends Component
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     * @return string | array<int | string, string | int> | null
      */
     public function getChartColor(): string | array | null
     {
@@ -138,7 +138,7 @@ class Stat extends Component
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     * @return string | array<int | string, string | int> | null
      */
     public function getDescriptionColor(): string | array | null
     {

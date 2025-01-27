@@ -37,14 +37,14 @@ trait HasAffixes
     protected string | Closure | null $prefixIcon = null;
 
     /**
-     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null
+     * @var string | array<int | string, string | int> | Closure | null
      */
     protected string | array | Closure | null $prefixIconColor = null;
 
     protected string | Closure | null $suffixIcon = null;
 
     /**
-     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null
+     * @var string | array<int | string, string | int> | Closure | null
      */
     protected string | array | Closure | null $suffixIconColor = null;
 
@@ -138,7 +138,7 @@ trait HasAffixes
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
     public function prefixIconColor(string | array | Closure | null $color = null): static
     {
@@ -156,7 +156,7 @@ trait HasAffixes
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
     public function suffixIconColor(string | array | Closure | null $color = null): static
     {
@@ -242,7 +242,7 @@ trait HasAffixes
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     * @return string | array<int | string, string | int> | null
      */
     public function getPrefixIconColor(): string | array | null
     {
@@ -250,7 +250,7 @@ trait HasAffixes
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     * @return string | array<int | string, string | int> | null
      */
     public function getSuffixIconColor(): string | array | null
     {

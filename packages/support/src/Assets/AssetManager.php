@@ -3,7 +3,6 @@
 namespace Filament\Support\Assets;
 
 use Exception;
-use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Support\Arr;
 
@@ -286,6 +285,9 @@ class AssetManager
         ])->render();
     }
 
+    /**
+     * @param  array<int | string, string | int>  $palette
+     */
     protected function resolveColorShadeFromPalette(array $palette, string | int $shade): string
     {
         $color = $palette[$shade];

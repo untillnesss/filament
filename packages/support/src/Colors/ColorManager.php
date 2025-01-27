@@ -4,10 +4,9 @@ namespace Filament\Support\Colors;
 
 use Closure;
 use Filament\Support\Concerns\EvaluatesClosures;
-use Filament\Support\Facades\FilamentColor;
-use Filament\Support\View\Components\Contracts\DoesNotHaveGrayColor;
+use Filament\Support\View\Components\Contracts\HasColor;
+use Filament\Support\View\Components\Contracts\HasDefaultGrayColor;
 use Illuminate\Support\Arr;
-use Illuminate\View\ComponentAttributeBag;
 
 class ColorManager
 {
@@ -23,12 +22,12 @@ class ColorManager
     ];
 
     /**
-     * @var array<array<string, array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | string> | Closure>
+     * @var array<array<string, array<int | string, string | int> | string> | Closure>
      */
     protected array $colors = [];
 
     /**
-     * @var array<string, array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}>
+     * @var array<string, array<int | string, string | int>>
      */
     protected array $cachedColors;
 
@@ -47,10 +46,13 @@ class ColorManager
      */
     protected array $removedShades = [];
 
-    protected array $componentColorClasses = [];
+    /**
+     * @var array<class-string<HasColor>, array<string, array<string>>>
+     */
+    protected array $componentClasses = [];
 
     /**
-     * @param  array<string, array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | string> | Closure  $colors
+     * @param  array<string, array<int | string, string | int> | string> | Closure  $colors
      */
     public function register(array | Closure $colors): static
     {
@@ -60,7 +62,7 @@ class ColorManager
     }
 
     /**
-     * @return array<string, array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}>
+     * @return array<string, array<int | string, string | int>>
      */
     public function getColors(): array
     {
@@ -70,10 +72,10 @@ class ColorManager
 
         $this->cachedColors = static::DEFAULT_COLORS;
 
-        foreach ($this->colors as $index => $colors) {
-            $this->colors[$index] = $this->evaluate($colors);
+        foreach ($this->colors as $colors) {
+            $colors = $this->evaluate($colors);
 
-            foreach ($this->colors[$index] as $name => $color) {
+            foreach ($colors as $name => $color) {
                 if (is_string($color)) {
                     $color = Color::generatePalette($color);
                 } else {
@@ -85,7 +87,7 @@ class ColorManager
 
                 $shades = collect($color)
                     ->keys()
-                    ->filter(fn (int | string $key): bool => is_numeric($key))
+                    ->filter(fn (int | string $shade): bool => is_numeric($shade))
                     ->all();
 
                 $colorOnlyShades = Arr::only($color, $shades);
@@ -97,7 +99,7 @@ class ColorManager
                     ];
                 }
 
-                if (! array_key_exists("white-text", $color)) {
+                if (! array_key_exists('white-text', $color)) {
                     $color = [
                         ...Color::findMatchingAccessibleTextColorsForGrayBackgroundColors($colorOnlyShades),
                         ...$color,
@@ -112,7 +114,7 @@ class ColorManager
     }
 
     /**
-     * @return array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
+     * @return ?array<int | string, string | int>
      */
     public function getColor(string $color): ?array
     {
@@ -167,35 +169,33 @@ class ColorManager
         return $this->removedShades[$alias] ?? null;
     }
 
-    public function applyColorToComponentAttributes(string $color, string $component, ComponentAttributeBag $attributes): ComponentAttributeBag
+    /**
+     * @param  class-string<HasColor>  $component
+     * @return array<string>
+     */
+    public function getComponentClasses(string $component, string $color): array
     {
         $component = app($component);
 
-        if (($color === 'gray') && ($component instanceof DoesNotHaveGrayColor)) {
-            return $attributes;
+        if (($color === 'gray') && ($component instanceof HasDefaultGrayColor)) {
+            return [];
         }
 
-        if ($this->componentColorClasses[$component::class][$color] ?? []) {
-            return $attributes->class($this->componentColorClasses[$component::class][$color]);
+        if ($this->componentClasses[$component::class][$color] ?? []) {
+            return $this->componentClasses[$component::class][$color];
         }
 
         $classes = ['fi-color', "fi-color-{$color}"];
 
-        $resolvedColor = FilamentColor::getColor($color);
+        $resolvedColor = $this->getColor($color);
 
         if (! $resolvedColor) {
-            $this->componentColorClasses[$component::class][$color] = $classes;
-
-            return $attributes->class($classes);
+            return $this->componentClasses[$component::class][$color] = $classes;
         }
 
-        $classes = [
+        return $this->componentClasses[$component::class][$color] = [
             ...$classes,
             ...$component->getColorClasses($resolvedColor),
         ];
-
-        $this->componentColorClasses[$component::class][$color] = $classes;
-
-        return $attributes->class($classes);
     }
 }

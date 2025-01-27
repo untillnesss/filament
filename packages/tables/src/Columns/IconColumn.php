@@ -29,14 +29,14 @@ class IconColumn extends Column implements HasEmbeddedView
     protected bool | Closure | null $isBoolean = null;
 
     /**
-     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null
+     * @var string | array<int | string, string | int> | Closure | null
      */
     protected string | array | Closure | null $falseColor = null;
 
     protected string | Closure | null $falseIcon = null;
 
     /**
-     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null
+     * @var string | array<int | string, string | int> | Closure | null
      */
     protected string | array | Closure | null $trueColor = null;
 
@@ -61,7 +61,7 @@ class IconColumn extends Column implements HasEmbeddedView
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
     public function false(string | Closure | null $icon = null, string | array | Closure | null $color = null): static
     {
@@ -72,7 +72,7 @@ class IconColumn extends Column implements HasEmbeddedView
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
     public function falseColor(string | array | Closure | null $color): static
     {
@@ -91,7 +91,7 @@ class IconColumn extends Column implements HasEmbeddedView
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
     public function true(string | Closure | null $icon = null, string | array | Closure | null $color = null): static
     {
@@ -102,7 +102,7 @@ class IconColumn extends Column implements HasEmbeddedView
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
     public function trueColor(string | array | Closure | null $color): static
     {
@@ -178,7 +178,7 @@ class IconColumn extends Column implements HasEmbeddedView
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     * @return string | array<int | string, string | int> | null
      */
     public function getColor(mixed $state): string | array | null
     {
@@ -198,7 +198,7 @@ class IconColumn extends Column implements HasEmbeddedView
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
+     * @return string | array<int | string, string | int>
      */
     public function getFalseColor(): string | array
     {
@@ -213,7 +213,7 @@ class IconColumn extends Column implements HasEmbeddedView
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
+     * @return string | array<int | string, string | int>
      */
     public function getTrueColor(): string | array
     {

@@ -2,7 +2,4 @@
 
 namespace Filament\Support\View\Components\Contracts;
 
-interface DoesNotHaveGrayColor
-{
-
-}
+interface HasDefaultGrayColor {}

@@ -129,7 +129,7 @@
                 ($size instanceof ActionSize) ? "fi-size-{$size->value}" : (is_string($size) ? $size : ''),
                 is_string($labeledFrom) ? "fi-labeled-from-{$labeledFrom}" : null,
             ])
-            ->color($color, Button::class)
+            ->color(Button::class, $color)
     }}
 >
     @if ($iconPosition === IconPosition::Before)

@@ -4,13 +4,15 @@ namespace Filament\Support\Facades;
 
 use Closure;
 use Filament\Support\Colors\ColorManager;
+use Filament\Support\View\Components\Contracts\HasColor;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static void addShades(string $alias, array<int | string> $shades)
  * @method static array<int | string> | null getAddedShades(string $alias)
- * @method static array<string, array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}> getColors()
- * @method static array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} getColor(string $color)
+ * @method static array<string, array<int | string, string | int>> getColors()
+ * @method static ?array<int | string, string | int> getColor(string $color)
+ * @method static array<string> getComponentClasses(class-string<HasColor> $component, string $color)
  * @method static array<int | string> | null getOverridingShades(string $alias)
  * @method static array<int | string> | null getRemovedShades(string $alias)
  * @method static void overrideShades(string $alias, array<int | string> $shades)
@@ -26,7 +28,7 @@ class FilamentColor extends Facade
     }
 
     /**
-     * @param  array<string, array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | string> | Closure  $colors
+     * @param  array<string, array<int | string, string | int> | string> | Closure  $colors
      */
     public static function register(array | Closure $colors): void
     {
