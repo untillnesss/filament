@@ -34,53 +34,15 @@ class Button implements HasColor, DoesNotHaveGrayColor
             || ($textLightnessIndex['bg'] !== $textLightnessIndex['hover:bg:dark']);
 
         return [
-            ...collect($palette)
-                ->only([
-                    50,
-                    100,
-                    200,
-                    300,
-                    400,
-                    500,
-                    600,
-                    700,
-                    800,
-                    900,
-                    950,
-                    '50-text',
-                    '100-text',
-                    '200-text',
-                    '300-text',
-                    '400-text',
-                    '500-text',
-                    '600-text',
-                    '700-text',
-                    '800-text',
-                    '900-text',
-                    '950-text',
-                    'white-text',
-                    'gray-50-text',
-                    'gray-100-text',
-                    'gray-200-text',
-                    'gray-300-text',
-                    'gray-400-text',
-                    'gray-500-text',
-                    'gray-600-text',
-                    'gray-700-text',
-                    'gray-800-text',
-                    'gray-900-text',
-                    'gray-950-text',
-                ])
-                ->mapWithKeys(fn ($value, $key) => ["color-{$key}" => is_string($value) ? $value : Color::resolveShadeFromPalette($palette, $value)])
-                ->all(),
+            ...$this->getCustomShadeCssVariablesFromPalette($palette, 'button', [400, 500, 600, 'gray-100-text', 'gray-700-text']),
             'bg' => $color,
             'hover-bg' => $hoverColor = $isHoverColorLighter ? $palette['hover:bg:light'] : $palette['hover:bg:dark'],
             'dark-bg' => $color,
             'dark-hover-bg' => $hoverColor,
-            'text' => Color::resolveShadeFromPalette($palette, 'bg-text'),
-            'hover-text' => Color::resolveShadeFromPalette($palette, $isHoverColorLighter ? 'hover:bg:light-text' : 'hover:bg:dark-text'),
-            'dark-text' => Color::resolveShadeFromPalette($palette, 'bg-text'),
-            'dark-hover-text' => Color::resolveShadeFromPalette($palette, $isHoverColorLighter ? 'hover:bg:light-text' : 'hover:bg:dark-text'),
+            'text' => $textColor = Color::resolveShadeFromPalette($palette, 'bg-text'),
+            'hover-text' => $hoverTextColor = Color::resolveShadeFromPalette($palette, $isHoverColorLighter ? 'hover:bg:light-text' : 'hover:bg:dark-text'),
+            'dark-text' => $textColor,
+            'dark-hover-text' => $hoverTextColor,
         ];
     }
 
@@ -148,6 +110,28 @@ class Button implements HasColor, DoesNotHaveGrayColor
             "dark:fi-bg-color-{$darkBg}",
             "dark:hover:fi-bg-color-{$darkHoverBg}",
         ];
+    }
+
+    protected function getCustomShadeCssVariablesFromPalette(array $palette, string $alias, array $defaultShades): array
+    {
+        $shades = $defaultShades;
+
+        if (($overridingShades = FilamentColor::getOverridingShades($alias)) !== null) {
+            $shades = $overridingShades;
+        } else {
+            if ($addedShades = FilamentColor::getAddedShades($alias)) {
+                $shades = [...$shades, ...$addedShades];
+            }
+
+            if ($removedShades = FilamentColor::getRemovedShades($alias)) {
+                $shades = array_diff($shades, $removedShades);
+            }
+        }
+
+        return collect($palette)
+            ->only($shades)
+            ->mapWithKeys(fn ($value, $key) => ["color-{$key}" => is_string($value) ? $value : Color::resolveShadeFromPalette($palette, $value)])
+            ->all();
     }
 
     protected function generateTextLightnessIndexForColor(array $color): array

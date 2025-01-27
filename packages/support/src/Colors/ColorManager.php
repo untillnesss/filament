@@ -33,17 +33,17 @@ class ColorManager
     protected array $cachedColors;
 
     /**
-     * @var array<string,array<int>>
+     * @var array<string,array<int | string>>
      */
     protected array $overridingShades = [];
 
     /**
-     * @var array<string,array<int>>
+     * @var array<string,array<int | string>>
      */
     protected array $addedShades = [];
 
     /**
-     * @var array<string,array<int>>
+     * @var array<string,array<int | string>>
      */
     protected array $removedShades = [];
 
@@ -151,7 +151,7 @@ class ColorManager
     }
 
     /**
-     * @param  array<int>  $shades
+     * @param  array<int | string>  $shades
      */
     public function overrideShades(string $alias, array $shades): void
     {
@@ -159,7 +159,7 @@ class ColorManager
     }
 
     /**
-     * @return array<int> | null
+     * @return array<int | string> | null
      */
     public function getOverridingShades(string $alias): ?array
     {
@@ -167,7 +167,7 @@ class ColorManager
     }
 
     /**
-     * @param  array<int>  $shades
+     * @param  array<int | string>  $shades
      */
     public function addShades(string $alias, array $shades): void
     {
@@ -175,7 +175,7 @@ class ColorManager
     }
 
     /**
-     * @return array<int> | null
+     * @return array<int | string> | null
      */
     public function getAddedShades(string $alias): ?array
     {
@@ -183,7 +183,7 @@ class ColorManager
     }
 
     /**
-     * @param  array<int>  $shades
+     * @param  array<int | string>  $shades
      */
     public function removeShades(string $alias, array $shades): void
     {
@@ -191,7 +191,7 @@ class ColorManager
     }
 
     /**
-     * @return array<int> | null
+     * @return array<int | string> | null
      */
     public function getRemovedShades(string $alias): ?array
     {
