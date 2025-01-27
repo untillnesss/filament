@@ -928,13 +928,13 @@ class Color
         return "rgb({$red}, {$green}, {$blue})";
     }
 
-    public static function calculateContrastRatio(string $oklchColor1, string $oklchColor2): float
+    public static function calculateContrastRatio(string $color1, string $color2): float
     {
-        $rgbColor1 = str_replace(' ', '', static::convertToRgb($oklchColor1));
-        $rgbColor2 = str_replace(' ', '', static::convertToRgb($oklchColor2));
+        $color1 = str_replace(' ', '', static::convertToRgb($color1));
+        $color2 = str_replace(' ', '', static::convertToRgb($color2));
 
-        [$red1, $green1, $blue1] = sscanf($rgbColor1, 'rgb(%d,%d,%d)');
-        [$red2, $green2, $blue2] = sscanf($rgbColor2, 'rgb(%d,%d,%d)');
+        [$red1, $green1, $blue1] = sscanf($color1, 'rgb(%d,%d,%d)');
+        [$red2, $green2, $blue2] = sscanf($color2, 'rgb(%d,%d,%d)');
 
         $luminosity1 = 0.2126 * pow($red1 / 255, 2.2) +
             0.7152 * pow($green1 / 255, 2.2) +
@@ -956,21 +956,21 @@ class Color
     }
 
     /**
-     * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}  $oklchColors
+     * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}  $palette
      * @return array{50-text: int, 100-text: int, 200-text: int, 300-text: int, 400-text: int, 500-text: int, 600-text: int, 700-text: int, 800-text: int, 900-text: int, 950-text: int}
      */
-    public static function findMatchingAccessibleTextColorsForBackgroundColors(array $oklchColors): array
+    public static function findMatchingAccessibleTextColorsForBackgroundColors(array $palette): array
     {
         $textColors = [];
 
-        $possibleDarkTextColors = $oklchColors; // Copy the array so we can remove elements from it
+        $possibleDarkTextColors = $palette; // Copy the array so we can remove elements from it
         unset($possibleDarkTextColors[array_key_first($possibleDarkTextColors)]); // It is not possible for the text color to be the same as the background color
 
         $is50AccessibleOnDarkerShades = true;
 
-        ksort($oklchColors);
+        ksort($palette);
 
-        foreach ($oklchColors as $shade => $color) {
+        foreach ($palette as $shade => $color) {
             $shadeKey = "{$shade}-text";
 
             foreach ($possibleDarkTextColors as $possibleDarkTextColorShade => $possibleDarkTextColor) {
@@ -985,9 +985,9 @@ class Color
 
             if (
                 $is50AccessibleOnDarkerShades &&
-                array_key_exists(50, $oklchColors)
+                array_key_exists(50, $palette)
             ) {
-                if (static::isContrastRatioAccessible($color, $oklchColors[50])) {
+                if (static::isContrastRatioAccessible($color, $palette[50])) {
                     $textColors[$shadeKey] = 50;
 
                     continue;
@@ -1003,17 +1003,17 @@ class Color
     }
 
     /**
-     * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}  $oklchColors
+     * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}  $palette
      * @return array{white-text: int, gray-50-text: int, gray-100-text: int, gray-200-text: int, gray-300-text: int, gray-400-text: int, gray-500-text: int, gray-600-text: int, gray-700-text: int, gray-800-text: int, gray-900-text: int, gray-950-text: int}
      */
-    public static function findMatchingAccessibleTextColorsForGrayBackgroundColors(array $oklchColors): array
+    public static function findMatchingAccessibleTextColorsForGrayBackgroundColors(array $palette): array
     {
-        ksort($oklchColors);
+        ksort($palette);
 
         $textColors = [];
 
-        $possibleDarkTextColors = $oklchColors; // Copy the array so we can remove elements from it
-        $possibleLightTextColors = array_reverse($oklchColors, preserve_keys: true); // Copy the array so we can remove elements from it
+        $possibleDarkTextColors = $palette; // Copy the array so we can remove elements from it
+        $possibleLightTextColors = array_reverse($palette, preserve_keys: true); // Copy the array so we can remove elements from it
 
         $grayColors = collect(static::Gray)
             ->filter(fn ($value, $key): bool => is_numeric($key))
@@ -1049,9 +1049,11 @@ class Color
         return $textColors;
     }
 
-    public static function findMatchingAccessibleTextColorForBackgroundColor(string $oklchColor): string
+    public static function findMatchingAccessibleTextColorForBackgroundColor(string $color): string
     {
-        [$originalLightness, $chroma, $hue] = sscanf($oklchColor, 'oklch(%f %f %f)');
+        $color = static::convertToOklch($color);
+
+        [$originalLightness, $chroma, $hue] = sscanf($color, 'oklch(%f %f %f)');
 
         $lightness = min($originalLightness, 0.4); // Do not go darker than 35% lightness
 
@@ -1060,7 +1062,7 @@ class Color
 
             $textColor = "oklch({$lightness} {$chroma} {$hue})";
 
-            if (static::isContrastRatioAccessible($oklchColor, $textColor)) {
+            if (static::isContrastRatioAccessible($color, $textColor)) {
                 return $textColor;
             }
         }
@@ -1072,7 +1074,7 @@ class Color
 
             $textColor = "oklch({$lightness} {$chroma} {$hue})";
 
-            if (static::isContrastRatioAccessible($oklchColor, $textColor)) {
+            if (static::isContrastRatioAccessible($color, $textColor)) {
                 return $textColor;
             }
         }
@@ -1083,17 +1085,17 @@ class Color
     /**
      * @return array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
      */
-    public static function hex(string $hexColor): array
+    public static function hex(string $color): array
     {
-        return static::generatePalette($hexColor);
+        return static::generatePalette($color);
     }
 
     /**
      * @return array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
      */
-    public static function rgb(string $rgbColor): array
+    public static function rgb(string $color): array
     {
-        return static::generatePalette($rgbColor);
+        return static::generatePalette($color);
     }
 
     /**
@@ -1101,15 +1103,9 @@ class Color
      */
     public static function generatePalette(string $color): array
     {
-        return static::generateShades(static::convertToOklch($color));
-    }
+        $color = static::convertToOklch($color);
 
-    /**
-     * @return array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
-     */
-    protected static function generateShades(string $oklchColor): array
-    {
-        [$originalLightness, $chroma, $hue] = sscanf($oklchColor, 'oklch(%f %f %f)');
+        [$originalLightness, $chroma, $hue] = sscanf($color, 'oklch(%f %f %f)');
 
         return array_map(
             fn (float $lightness): string => "oklch({$lightness} {$chroma} {$hue})",
@@ -1160,28 +1156,11 @@ class Color
         ];
     }
 
-    public static function resolveShadeFromPalette(array $palette, string | int $shade): string
+    public static function isLight(string $color): bool
     {
-        if ($shade === 0) {
-            return 'oklch(1 0 0)';
-        }
+        $color = static::convertToOklch($color);
 
-        $color = $palette[$shade];
-
-        while (! str_starts_with($color, 'oklch(')) {
-            if ($color === 0) {
-                return 'oklch(1 0 0)';
-            }
-
-            $color = $palette[$color];
-        }
-
-        return $color;
-    }
-
-    public static function isLight(string $oklchColor): bool
-    {
-        [$lightness] = sscanf($oklchColor, 'oklch(%f %f %f)');
+        [$lightness] = sscanf($color, 'oklch(%f %f %f)');
 
         return $lightness >= 0.65;
     }

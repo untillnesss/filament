@@ -270,7 +270,7 @@ class AssetManager
 
         foreach (FilamentColor::getColors() as $name => $palette) {
             foreach (array_keys($palette) as $shade) {
-                $variables["{$name}-{$shade}"] = Color::resolveShadeFromPalette($palette, $shade);
+                $variables["{$name}-{$shade}"] = $this->resolveColorShadeFromPalette($palette, $shade);
             }
         }
 
@@ -284,6 +284,21 @@ class AssetManager
             ],
             'cssVariables' => $variables,
         ])->render();
+    }
+
+    protected function resolveColorShadeFromPalette(array $palette, string | int $shade): string
+    {
+        $color = $palette[$shade];
+
+        while (! str_starts_with($color, 'oklch(')) {
+            if ($color === 0) {
+                return 'oklch(1 0 0)';
+            }
+
+            $color = $palette[$color];
+        }
+
+        return $color;
     }
 
     public function getTheme(?string $id): ?Theme

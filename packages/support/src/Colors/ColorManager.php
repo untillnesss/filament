@@ -47,24 +47,7 @@ class ColorManager
      */
     protected array $removedShades = [];
 
-    /**
-     * @var array<string, array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}>
-     */
-    protected array $normalizedColors = [];
-
-    /**
-     * @var array<string, ?array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}>
-     */
-    protected array $indexedColors = [];
-
-    /**
-     * @var array<string, bool>
-     */
-    protected array $lightnessIndex = [];
-
     protected array $componentColorClasses = [];
-
-    protected array $componentColorStyles = [];
 
     /**
      * @param  array<string, array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | string> | Closure  $colors
@@ -77,50 +60,6 @@ class ColorManager
     }
 
     /**
-     * @param  array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | string  $color
-     * @return array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
-     */
-    public function normalizeColor(array | string $color): array
-    {
-        $serializedColor = serialize($color);
-
-        if (array_key_exists($serializedColor, $this->normalizedColors)) {
-            return $this->normalizedColors[$serializedColor];
-        }
-
-        if (is_string($color)) {
-            $color = Color::generatePalette($color);
-        } else {
-            $color = array_map(
-                fn (string | int $color): string | int => is_string($color)
-                    ? Color::convertToOklch($color)
-                    : $color,
-                $color,
-            );
-        }
-
-        $firstShade = collect($color)
-            ->keys()
-            ->first(fn (int | string $key): bool => is_numeric($key));
-
-        if (! array_key_exists("{$firstShade}-text", $color)) {
-            $color = [
-                ...Color::findMatchingAccessibleTextColorsForBackgroundColors($color),
-                ...$color,
-            ];
-        }
-
-        if (! array_key_exists("white-text", $color)) {
-            $color = [
-                ...Color::findMatchingAccessibleTextColorsForGrayBackgroundColors($color),
-                ...$color,
-            ];
-        }
-
-        return $this->normalizedColors[$serializedColor] = $color;
-    }
-
-    /**
      * @return array<string, array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}>
      */
     public function getColors(): array
@@ -129,17 +68,47 @@ class ColorManager
             return $this->cachedColors;
         }
 
-        $cachedColors = static::DEFAULT_COLORS;
+        $this->cachedColors = static::DEFAULT_COLORS;
 
         foreach ($this->colors as $index => $colors) {
             $this->colors[$index] = $this->evaluate($colors);
 
             foreach ($this->colors[$index] as $name => $color) {
-                $cachedColors[$name] = $this->normalizeColor($color);
+                if (is_string($color)) {
+                    $color = Color::generatePalette($color);
+                } else {
+                    $color = array_map(
+                        fn (string | int $color): string | int => is_string($color) ? Color::convertToOklch($color) : $color,
+                        $color,
+                    );
+                }
+
+                $shades = collect($color)
+                    ->keys()
+                    ->filter(fn (int | string $key): bool => is_numeric($key))
+                    ->all();
+
+                $colorOnlyShades = Arr::only($color, $shades);
+
+                if (! array_key_exists((Arr::first($shades) . '-text'), $color)) {
+                    $color = [
+                        ...Color::findMatchingAccessibleTextColorsForBackgroundColors($colorOnlyShades),
+                        ...$color,
+                    ];
+                }
+
+                if (! array_key_exists("white-text", $color)) {
+                    $color = [
+                        ...Color::findMatchingAccessibleTextColorsForGrayBackgroundColors($colorOnlyShades),
+                        ...$color,
+                    ];
+                }
+
+                $this->cachedColors[$name] = $color;
             }
         }
 
-        return $this->cachedColors = $cachedColors;
+        return $this->cachedColors;
     }
 
     /**
@@ -147,7 +116,7 @@ class ColorManager
      */
     public function getColor(string $color): ?array
     {
-        return $this->indexedColors[$color] ??= $this->getColors()[$color] ?? null;
+        return $this->getColors()[$color] ?? null;
     }
 
     /**
@@ -198,12 +167,7 @@ class ColorManager
         return $this->removedShades[$alias] ?? null;
     }
 
-    public function isLight(string $oklchColor): bool
-    {
-        return $this->lightnessIndex[$oklchColor] ??= Color::isLight($oklchColor);
-    }
-
-    public function applyColorToComponentAttributes(string | array $color, string $component, ComponentAttributeBag $attributes): ComponentAttributeBag
+    public function applyColorToComponentAttributes(string $color, string $component, ComponentAttributeBag $attributes): ComponentAttributeBag
     {
         $component = app($component);
 
@@ -211,53 +175,26 @@ class ColorManager
             return $attributes;
         }
 
-        $serializedColor = serialize($color);
-
-        if (
-            filled($this->componentColorClasses[$component::class][$serializedColor] ?? []) ||
-            filled($this->componentColorStyles[$component::class][$serializedColor] ?? [])
-        ) {
-            return $attributes
-                ->class($this->componentColorClasses[$component::class][$serializedColor] ?? [])
-                ->style($this->componentColorStyles[$component::class][$serializedColor] ?? []);
+        if ($this->componentColorClasses[$component::class][$color] ?? []) {
+            return $attributes->class($this->componentColorClasses[$component::class][$color]);
         }
 
-        $classes = ['fi-color'];
+        $classes = ['fi-color', "fi-color-{$color}"];
 
-        if (is_string($color) && ($resolvedColor = FilamentColor::getColor($color))) {
-            $classes[] = "fi-color-{$color}";
+        $resolvedColor = FilamentColor::getColor($color);
 
-            $color = $resolvedColor;
-        }
+        if (! $resolvedColor) {
+            $this->componentColorClasses[$component::class][$color] = $classes;
 
-        if (is_string($color)) {
-            $cssVariables = $component->getCustomColorCssVariables(
-                Color::convertToOklch($color),
-            );
-
-            $styles = array_reduce(
-                array_keys($cssVariables),
-                fn (array $carry, string $key): array => [
-                    ...$carry,
-                    "--{$key}:{$cssVariables[$key]}",
-                ],
-                initial: [],
-            );
-
-            $this->componentColorClasses[$component::class][$serializedColor] = $classes;
-            $this->componentColorStyles[$component::class][$serializedColor] = $styles;
-
-            return $attributes
-                ->class($classes)
-                ->style($styles);
+            return $attributes->class($classes);
         }
 
         $classes = [
             ...$classes,
-            ...$component->getColorClasses($color),
+            ...$component->getColorClasses($resolvedColor),
         ];
 
-        $this->componentColorClasses[$component::class][$serializedColor] = $classes;
+        $this->componentColorClasses[$component::class][$color] = $classes;
 
         return $attributes->class($classes);
     }
