@@ -3,6 +3,7 @@
 namespace Filament\Support\View\Components;
 
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentColor;
 use Filament\Support\View\Components\Contracts\HasColor;
 use Filament\Support\View\Components\Contracts\HasDefaultGrayColor;
 
@@ -28,7 +29,7 @@ class Button implements HasColor, HasDefaultGrayColor
             ];
         }
 
-        $textLightnessIndex = $this->generateTextLightnessIndexForColorShades($color);
+        $textLightnessIndex = FilamentColor::generateTextLightnessIndex($color);
 
         if (blank($bg)) {
             if ($textLightnessIndex[600] && $textLightnessIndex[500]) {

@@ -6,7 +6,6 @@ use Closure;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Support\View\Components\Contracts\HasColor;
 use Filament\Support\View\Components\Contracts\HasDefaultGrayColor;
-use Illuminate\Support\Arr;
 
 class ColorManager
 {
@@ -70,7 +69,7 @@ class ColorManager
             return $this->cachedColors;
         }
 
-        $this->cachedColors = static::DEFAULT_COLORS;
+        array_unshift($this->colors, static::DEFAULT_COLORS);
 
         foreach ($this->colors as $colors) {
             $colors = $this->evaluate($colors);
@@ -85,32 +84,67 @@ class ColorManager
                     );
                 }
 
-                $shades = collect($color)
-                    ->keys()
-                    ->filter(fn (int | string $shade): bool => is_numeric($shade))
-                    ->all();
+                $colorShades = $this->filterColorForShadesOnly($color);
 
-                $colorOnlyShades = Arr::only($color, $shades);
-
-                if (! array_key_exists((Arr::first($shades) . '-text'), $color)) {
-                    $color = [
-                        ...Color::findMatchingAccessibleTextColorsForBackgroundColors($colorOnlyShades),
-                        ...$color,
-                    ];
-                }
-
-                if (! array_key_exists('white-text', $color)) {
-                    $color = [
-                        ...Color::findMatchingAccessibleTextColorsForGrayBackgroundColors($colorOnlyShades),
-                        ...$color,
-                    ];
+                if (! array_key_exists((array_key_first($colorShades) . '-text'), $color)) {
+                    $color = array_replace(
+                        Color::findMatchingAccessibleTextColorsForBackgroundColors($colorShades),
+                        $color,
+                    );
                 }
 
                 $this->cachedColors[$name] = $color;
             }
         }
 
+        if (array_key_exists('gray', $this->cachedColors)) {
+            $gray = $this->cachedColors['gray'];
+
+            foreach ($this->cachedColors as $name => $color) {
+                if (! array_key_exists('white-text', $color)) {
+                    $this->cachedColors[$name] = array_replace(
+                        Color::findMatchingAccessibleTextColorsForGrayBackgroundColors($this->filterColorForShadesOnly($color), $gray),
+                        $color,
+                    );
+                }
+            }
+        }
+
         return $this->cachedColors;
+    }
+
+    /**
+     * @param  array<int | string, string | int>  $color
+     * @return array<int, bool>
+     */
+    public function generateTextLightnessIndex(array $color): array
+    {
+        $textLightnessIndex = [];
+
+        foreach (array_keys($this->filterColorForShadesOnly($color)) as $shade) {
+            $textShade = $color["{$shade}-text"];
+
+            if ($textShade === 0) { // White
+                $textLightnessIndex[$shade] = true;
+
+                continue;
+            }
+
+            $textLightnessIndex[$shade] = Color::isLight($color[$textShade]);
+        }
+
+        return $textLightnessIndex;
+    }
+
+    /**
+     * @param  array<int | string, string | int>  $color
+     * @return array<int, string | int>
+     */
+    protected function filterColorForShadesOnly(array $color): array
+    {
+        return collect($color)
+            ->filter(fn ($value, $key): bool => is_numeric($key))
+            ->all();
     }
 
     /**

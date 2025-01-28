@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static void addShades(string $alias, array<int | string> $shades)
+ * @method static array<int, bool> generateTextLightnessIndex(array<int | string, string | int> $color)
  * @method static array<int | string> | null getAddedShades(string $alias)
  * @method static array<string, array<int | string, string | int>> getColors()
  * @method static ?array<int | string, string | int> getColor(string $color)
