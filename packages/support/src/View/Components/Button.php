@@ -2,7 +2,6 @@
 
 namespace Filament\Support\View\Components;
 
-use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\View\Components\Contracts\HasColor;
 use Filament\Support\View\Components\Contracts\HasDefaultGrayColor;
@@ -72,32 +71,5 @@ class Button implements HasColor, HasDefaultGrayColor
             "dark:fi-bg-color-{$darkBg}",
             "dark:hover:fi-bg-color-{$darkHoverBg}",
         ];
-    }
-
-    /**
-     * @param  array<int | string, string | int>  $color
-     * @return array<int, bool>
-     */
-    protected function generateTextLightnessIndexForColorShades(array $color): array
-    {
-        $textLightnessIndex = [];
-
-        foreach (array_keys($color) as $shade) {
-            if (! is_numeric($shade)) {
-                continue;
-            }
-
-            $textShade = $color["{$shade}-text"];
-
-            if ($textShade === 0) { // White
-                $textLightnessIndex[$shade] = true;
-
-                continue;
-            }
-
-            $textLightnessIndex[$shade] = Color::isLight($color[$textShade]);
-        }
-
-        return $textLightnessIndex;
     }
 }
