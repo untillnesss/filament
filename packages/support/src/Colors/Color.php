@@ -545,39 +545,6 @@ class Color
         return $textColors;
     }
 
-    public static function findMatchingAccessibleTextColorForBackgroundColor(string $color): string
-    {
-        $color = static::convertToOklch($color);
-
-        [$originalLightness, $chroma, $hue] = sscanf($color, 'oklch(%f %f %f)');
-
-        $lightness = min($originalLightness, 0.4); // Do not go darker than 35% lightness
-
-        while ($lightness >= 0) {
-            $lightness -= 0.05;
-
-            $textColor = "oklch({$lightness} {$chroma} {$hue})";
-
-            if (static::isContrastRatioAccessible($color, $textColor)) {
-                return $textColor;
-            }
-        }
-
-        $lightness = max($originalLightness, 0.8); // Do not go lighter than 85% lightness
-
-        while ($lightness <= 1) {
-            $lightness += 0.05;
-
-            $textColor = "oklch({$lightness} {$chroma} {$hue})";
-
-            if (static::isContrastRatioAccessible($color, $textColor)) {
-                return $textColor;
-            }
-        }
-
-        return 'oklch(1 0 0)';
-    }
-
     /**
      * @return array<int | string, string | int>
      */
