@@ -132,7 +132,7 @@ trait InteractsWithSchemas
         }
     }
 
-    public function getSchemaComponent(string $key, bool $withHidden = false): Component | Action | ActionGroup | null
+    public function getSchemaComponent(string $key, bool $withHidden = false, ?Component $skipComponentChildContainersWhileSearching = null): Component | Action | ActionGroup | null
     {
         if (! str($key)->contains('.')) {
             return null;
@@ -142,7 +142,7 @@ trait InteractsWithSchemas
 
         $schema = $this->getSchema($schemaName);
 
-        return $schema?->getComponent($key, withHidden: $withHidden, isAbsoluteKey: true);
+        return $schema?->getComponent($key, withHidden: $withHidden, isAbsoluteKey: true, skipComponentChildContainersWhileSearching: $skipComponentChildContainersWhileSearching);
     }
 
     protected function cacheSchema(string $name, Schema | Closure | null $schema = null): ?Schema
