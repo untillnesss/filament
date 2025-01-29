@@ -127,23 +127,8 @@
             <span
                 @class([
                     'fi-badge',
-                    match ($badgeColor) {
-                        'gray' => '',
-                        default => 'fi-color',
-                    },
-                    is_string($badgeColor) ? "fi-color-{$badgeColor}" : null,
+                    ...\Filament\Support\get_component_color_classes(Badge::class, $badgeColor),
                     ($badgeSize instanceof ActionSize) ? "fi-size-{$badgeSize->value}" : (is_string($badgeSize) ? $badgeSize : ''),
-                ])
-                @style([
-                    \Filament\Support\get_color_css_variables(
-                        $badgeColor,
-                        shades: [
-                            50,
-                            400,
-                            600,
-                        ],
-                        alias: 'badge',
-                    ) => $badgeColor !== 'gray',
                 ])
             >
                 {{ $badge }}
