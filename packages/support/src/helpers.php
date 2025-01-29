@@ -61,6 +61,17 @@ if (! function_exists('Filament\Support\locale_has_pluralization')) {
     }
 }
 
+if (! function_exists('Filament\Support\get_component_color_classes')) {
+    /**
+     * @param  class-string<HasColor>  $component
+     * @return array<string>
+     */
+    function get_component_color_classes(string $component, string $color): array
+    {
+        return FilamentColor::getComponentClasses($component, $color);
+    }
+}
+
 if (! function_exists('Filament\Support\get_color_css_variables')) {
     /**
      * @param  string | array<int | string, string | int> | null  $color

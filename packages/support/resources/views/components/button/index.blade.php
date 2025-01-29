@@ -2,6 +2,7 @@
     use Filament\Support\Enums\ActionSize;
     use Filament\Support\Enums\IconPosition;
     use Filament\Support\Enums\IconSize;
+    use Filament\Support\View\Components\Badge;
     use Filament\Support\View\Components\Button;
     use Illuminate\View\ComponentAttributeBag;
 @endphp
@@ -213,23 +214,8 @@
             <span
                 @class([
                     'fi-badge',
-                    match ($badgeColor) {
-                        'gray' => '',
-                        default => 'fi-color',
-                    },
-                    is_string($badgeColor) ? "fi-color-{$badgeColor}" : null,
+                    ...\Filament\Support\get_component_color_classes(Badge::class, $badgeColor),
                     ($badgeSize instanceof ActionSize) ? "fi-size-{$badgeSize->value}" : (is_string($badgeSize) ? $badgeSize : ''),
-                ])
-                @style([
-                    \Filament\Support\get_color_css_variables(
-                        $badgeColor,
-                        shades: [
-                            50,
-                            400,
-                            600,
-                        ],
-                        alias: 'badge',
-                    ) => $badgeColor !== 'gray',
                 ])
             >
                 {{ $badge }}

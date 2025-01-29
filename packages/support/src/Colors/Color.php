@@ -457,25 +457,24 @@ class Color
     {
         $textColors = [];
 
-        $is950AccessibleOnLighterShades = true;
-        $is50AccessibleOnDarkerShades = true;
-
         ksort($palette);
+
+        $possibleDarkTextColors = $palette; // Copy the array so we can remove elements from it
+        unset($possibleDarkTextColors[array_key_first($palette)]); // It is not possible for the text color to be the same as the first background color
+
+        $is50AccessibleOnDarkerShades = true;
 
         foreach ($palette as $shade => $color) {
             $shadeKey = "{$shade}-text";
 
-            if (
-                $is950AccessibleOnLighterShades &&
-                array_key_exists(950, $palette)
-            ) {
-                if (static::isContrastRatioAccessible($color, $palette[950])) {
-                    $textColors[$shadeKey] = 950;
+            foreach ($possibleDarkTextColors as $possibleDarkTextColorShade => $possibleDarkTextColor) {
+                if (($possibleDarkTextColorShade >= 800) && static::isContrastRatioAccessible($color, $possibleDarkTextColor)) {
+                    $textColors[$shadeKey] = $possibleDarkTextColorShade;
 
-                    continue;
-                } else {
-                    $is950AccessibleOnLighterShades = false;
+                    continue 2;
                 }
+
+                unset($possibleDarkTextColors[$possibleDarkTextColorShade]); // If it is not possible for this text color to be accessible, it's not possible for a darker color to find a match either, until all dark colors have been tried.
             }
 
             if (
