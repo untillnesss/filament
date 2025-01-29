@@ -3,6 +3,7 @@
 namespace Filament\Support\Assets;
 
 use Exception;
+use Filament\Support\Colors\ColorManager;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Support\Arr;
 
@@ -265,11 +266,18 @@ class AssetManager
      */
     public function renderStyles(?array $packages = null): string
     {
-        $variables = $this->getCssVariables($packages);
+        $cssVariables = $this->getCssVariables($packages);
+        $customColors = [];
+
+        $defaultColorNames = array_keys(ColorManager::DEFAULT_COLORS);
 
         foreach (FilamentColor::getColors() as $name => $palette) {
             foreach (array_keys($palette) as $shade) {
-                $variables["{$name}-{$shade}"] = $this->resolveColorShadeFromPalette($palette, $shade);
+                $cssVariables["{$name}-{$shade}"] = $this->resolveColorShadeFromPalette($palette, $shade);
+            }
+
+            if (! in_array($name, $defaultColorNames)) {
+                $customColors[$name] = array_keys($palette);
             }
         }
 
@@ -281,7 +289,8 @@ class AssetManager
                     $this->getFonts($packages),
                 ),
             ],
-            'cssVariables' => $variables,
+            'cssVariables' => $cssVariables,
+            'customColors' => $customColors,
         ])->render();
     }
 
