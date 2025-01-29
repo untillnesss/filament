@@ -5,6 +5,7 @@ namespace Filament\Support;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Support\Facades\FilamentView;
+use Filament\Support\View\Components\Contracts\HasColor;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
@@ -66,7 +67,7 @@ if (! function_exists('Filament\Support\get_component_color_classes')) {
      * @param  class-string<HasColor>  $component
      * @return array<string>
      */
-    function get_component_color_classes(string $component, string $color): array
+    function get_component_color_classes(string | HasColor $component, string $color): array
     {
         return FilamentColor::getComponentClasses($component, $color);
     }

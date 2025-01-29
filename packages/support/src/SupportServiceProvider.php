@@ -24,6 +24,7 @@ use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Icons\IconManager;
 use Filament\Support\Overrides\DataStoreOverride;
 use Filament\Support\Partials\SupportPartials;
+use Filament\Support\View\Components\Contracts\HasColor;
 use Filament\Support\View\ViewManager;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\Facades\Blade;
@@ -157,7 +158,7 @@ class SupportServiceProvider extends PackageServiceProvider
             return preg_replace('/\s*@trim\s*/m', '', $view);
         });
 
-        ComponentAttributeBag::macro('color', function (string $component, string $color): ComponentAttributeBag {
+        ComponentAttributeBag::macro('color', function (string | HasColor $component, string $color): ComponentAttributeBag {
             return $this->class(FilamentColor::getComponentClasses($component, $color));
         });
 

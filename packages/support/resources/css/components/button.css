@@ -50,10 +50,10 @@
         }
 
         &.fi-color {
-            @apply ring-color-600 dark:ring-color-500 text-(--color-gray-100-text) dark:text-(--color-gray-700-text);
+            @apply ring-color-600 dark:ring-color-500 text-(--text) dark:text-(--dark-text);
 
             &:not(.fi-disabled):not([disabled]) {
-                @apply focus-visible:ring-color-500/40 dark:focus-visible:ring-color-400/40 hover:bg-(--hover-bg)/10 dark:hover:bg-(--dark-hover-bg)/10;
+                @apply focus-visible:ring-color-500/40 dark:focus-visible:ring-color-400/40 hover:bg-color-500/10 dark:hover:bg-color-600/10;
             }
 
             & > .fi-icon {

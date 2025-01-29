@@ -1,6 +1,7 @@
 @php
     use Filament\Support\Enums\ActionSize;
     use Filament\Support\Enums\IconSize;
+    use Filament\Support\View\Components\Badge;
     use Filament\Support\View\Components\IconButton;
     use Illuminate\View\ComponentAttributeBag;
 @endphp

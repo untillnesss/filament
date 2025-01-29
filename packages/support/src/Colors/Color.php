@@ -455,102 +455,7 @@ class Color
     }
 
     /**
-     * @param  array<int | string, string | int>  $palette
-     * @return array<string, int>
-     */
-    public static function findMatchingAccessibleTextColorsForBackgroundColors(array $palette): array
-    {
-        $textColors = [];
-
-        ksort($palette);
-
-        $possibleDarkTextColors = $palette; // Copy the array so we can remove elements from it
-        unset($possibleDarkTextColors[array_key_first($palette)]); // It is not possible for the text color to be the same as the first background color
-
-        $is50AccessibleOnDarkerShades = true;
-
-        foreach ($palette as $shade => $color) {
-            $shadeKey = "{$shade}-text";
-
-            foreach ($possibleDarkTextColors as $possibleDarkTextColorShade => $possibleDarkTextColor) {
-                if (($possibleDarkTextColorShade >= 800) && static::isTextContrastRatioAccessible($color, $possibleDarkTextColor)) {
-                    $textColors[$shadeKey] = $possibleDarkTextColorShade;
-
-                    continue 2;
-                }
-
-                unset($possibleDarkTextColors[$possibleDarkTextColorShade]); // If it is not possible for this text color to be accessible, it's not possible for a darker color to find a match either, until all dark colors have been tried.
-            }
-
-            if (
-                $is50AccessibleOnDarkerShades &&
-                array_key_exists(50, $palette)
-            ) {
-                if (static::isTextContrastRatioAccessible($color, $palette[50])) {
-                    $textColors[$shadeKey] = 50;
-
-                    continue;
-                } else {
-                    $is50AccessibleOnDarkerShades = false;
-                }
-            }
-
-            $textColors[$shadeKey] = 0;
-        }
-
-        return $textColors;
-    }
-
-    /**
-     * @param  array<int | string, string | int>  $palette
-     * @param  array<int | string, string | int>  $grayPalette
-     * @return array<string, int>
-     */
-    public static function findMatchingAccessibleTextColorsForGrayBackgroundColors(array $palette, array $grayPalette = self::Gray): array
-    {
-        ksort($palette);
-
-        $textColors = [];
-
-        $possibleDarkTextColors = $palette; // Copy the array so we can remove elements from it
-        $possibleLightTextColors = array_reverse($palette, preserve_keys: true); // Copy the array so we can remove elements from it
-
-        $grayPalette = collect($grayPalette)
-            ->filter(fn ($value, $key): bool => is_numeric($key))
-            ->all();
-        $grayPalette[0] ??= 'oklch(1 0 0)';
-
-        ksort($grayPalette);
-
-        foreach ($grayPalette as $grayShade => $grayColor) {
-            $grayShadeKey = ($grayShade !== 0) ? "gray-{$grayShade}-text" : 'white-text';
-
-            foreach ($possibleDarkTextColors as $possibleDarkTextColorShade => $possibleDarkTextColor) {
-                if (static::isTextContrastRatioAccessible($grayColor, $possibleDarkTextColor)) {
-                    $textColors[$grayShadeKey] = $possibleDarkTextColorShade;
-
-                    continue 2;
-                }
-
-                unset($possibleDarkTextColors[$possibleDarkTextColorShade]); // If it is not possible for this text color to be accessible, it's not possible for a darker color to find a match either, until all dark colors have been tried.
-            }
-
-            foreach ($possibleLightTextColors as $possibleLightTextColorShade => $possibleLightTextColor) {
-                if (static::isTextContrastRatioAccessible($grayColor, $possibleLightTextColor)) {
-                    $textColors[$grayShadeKey] = $possibleLightTextColorShade;
-
-                    continue 2;
-                }
-            }
-
-            $textColors[$grayShadeKey] = 0;
-        }
-
-        return $textColors;
-    }
-
-    /**
-     * @return array<int | string, string | int>
+     * @return array<int, string>
      */
     public static function hex(string $color): array
     {
@@ -558,7 +463,7 @@ class Color
     }
 
     /**
-     * @return array<int | string, string | int>
+     * @return array<int, string>
      */
     public static function rgb(string $color): array
     {
@@ -566,7 +471,7 @@ class Color
     }
 
     /**
-     * @return array<int | string, string | int>
+     * @return array<int, string>
      */
     public static function generatePalette(string $color): array
     {
@@ -593,7 +498,7 @@ class Color
     }
 
     /**
-     * @return array<string, array<int | string, string | int>>
+     * @return array<string, array<int, string>>
      */
     public static function all(): array
     {

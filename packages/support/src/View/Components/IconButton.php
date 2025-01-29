@@ -10,24 +10,12 @@ use Filament\Support\View\Components\Contracts\HasDefaultGrayColor;
 class IconButton implements HasColor, HasDefaultGrayColor
 {
     /**
-     * @param  array<int | string, string | int>  $color
+     * @param  array<int, string>  $color
      * @return array<string>
      */
     public function getColorClasses(array $color): array
     {
-        $text = $color['icon-button.text'] ?? null;
-        $hoverText = $color['icon-button.hover:text'] ?? null;
-        $darkText = $color['icon-button.dark:text'] ?? null;
-        $darkHoverText = $color['icon-button.dark:hover:text'] ?? null;
-
-        if ($text && $hoverText && $darkText && $darkHoverText) {
-            return [
-                "fi-text-color-{$text}",
-                "hover:fi-text-color-{$hoverText}",
-                "dark:fi-text-color-{$darkText}",
-                "dark:hover:fi-text-color-{$darkHoverText}",
-            ];
-        }
+        $gray = FilamentColor::getColor('gray');
 
         /**
          * Since the icon button doesn't contain text, the icon is imperative for the user to understand the
@@ -36,56 +24,48 @@ class IconButton implements HasColor, HasDefaultGrayColor
          *
          * @ref https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html
          */
-        if (blank($text) || blank($hoverText)) {
-            ksort($color);
+        ksort($color);
 
-            $darkestLightGrayBg = FilamentColor::getColor('gray')[50];
+        $darkestLightGrayBg = $gray[50];
 
-            foreach ($color as $shade => $shadeValue) {
-                if (! is_numeric($shade)) {
-                    continue;
+        foreach ($color as $shade => $shadeValue) {
+            if (Color::isIconContrastRatioAccessible($darkestLightGrayBg, $shadeValue)) {
+                if ($shade > 500) {
+                    // Shades above 500 are likely to be quite dark, so instead of lightening the button
+                    // when it is hovered, we darken it.
+                    $text = $shade;
+                    $hoverText = $shade + 100;
+                } else {
+                    $text = $shade + 100;
+                    $hoverText = $shade;
                 }
 
-                if (Color::isIconContrastRatioAccessible($darkestLightGrayBg, $shadeValue)) {
-                    if ($shade > 500) {
-                        // Shades above 500 are likely to be quite dark, so instead of lightening the button
-                        // when it is hovered, we darken it.
-                        $text ??= $shade;
-                        $hoverText ??= $shade + 100;
-                    } else {
-                        $text ??= $shade + 100;
-                        $hoverText ??= $shade;
-                    }
-
-                    break;
-                }
+                break;
             }
-
-            $text ??= 900;
-            $hoverText ??= 800;
         }
 
-        if (blank($darkText) || blank($darkHoverText)) {
-            krsort($color);
+        $text ??= 900;
+        $hoverText ??= 800;
 
-            $lightestDarkGrayBg = FilamentColor::getColor('gray')[800];
+        krsort($color);
 
-            foreach ($color as $shade => $shadeValue) {
-                if (! is_numeric($shade)) {
-                    continue;
-                }
+        $lightestDarkGrayBg = $gray[700];
 
-                if (Color::isIconContrastRatioAccessible($lightestDarkGrayBg, $shadeValue)) {
-                    $darkText ??= $shade;
-                    $darkHoverText ??= $shade - 100;
-
-                    break;
-                }
+        foreach ($color as $shade => $shadeValue) {
+            if ($shade > 500) {
+                continue;
             }
 
-            $darkText ??= 200;
-            $darkHoverText ??= 100;
+            if (Color::isIconContrastRatioAccessible($lightestDarkGrayBg, $shadeValue)) {
+                $darkText = $shade;
+                $darkHoverText = $shade - 100;
+
+                break;
+            }
         }
+
+        $darkText ??= 200;
+        $darkHoverText ??= 100;
 
         return [
             "fi-text-color-{$text}",

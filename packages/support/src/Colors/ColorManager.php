@@ -21,12 +21,12 @@ class ColorManager
     ];
 
     /**
-     * @var array<array<string, array<int | string, string | int> | string> | Closure>
+     * @var array<array<string, array<int, string> | string> | Closure>
      */
     protected array $colors = [];
 
     /**
-     * @var array<string, array<int | string, string | int>>
+     * @var array<string, array<int, string>>
      */
     protected array $cachedColors;
 
@@ -51,7 +51,7 @@ class ColorManager
     protected array $componentClasses = [];
 
     /**
-     * @param  array<string, array<int | string, string | int> | string> | Closure  $colors
+     * @param  array<string, array<int, string> | string> | Closure  $colors
      */
     public function register(array | Closure $colors): static
     {
@@ -61,7 +61,7 @@ class ColorManager
     }
 
     /**
-     * @return array<string, array<int | string, string | int>>
+     * @return array<string, array<int, string>>
      */
     public function getColors(): array
     {
@@ -84,29 +84,7 @@ class ColorManager
                     );
                 }
 
-                $colorShades = $this->filterColorForShadesOnly($color);
-
-                if (! array_key_exists((array_key_first($colorShades) . '-text'), $color)) {
-                    $color = array_replace(
-                        Color::findMatchingAccessibleTextColorsForBackgroundColors($colorShades),
-                        $color,
-                    );
-                }
-
                 $this->cachedColors[$name] = $color;
-            }
-        }
-
-        if (array_key_exists('gray', $this->cachedColors)) {
-            $gray = $this->cachedColors['gray'];
-
-            foreach ($this->cachedColors as $name => $color) {
-                if (! array_key_exists('white-text', $this->cachedColors[$name])) {
-                    $this->cachedColors[$name] = array_replace(
-                        Color::findMatchingAccessibleTextColorsForGrayBackgroundColors($this->filterColorForShadesOnly($this->cachedColors[$name]), $gray),
-                        $this->cachedColors[$name],
-                    );
-                }
             }
         }
 
@@ -114,41 +92,7 @@ class ColorManager
     }
 
     /**
-     * @param  array<int | string, string | int>  $color
-     * @return array<int, bool>
-     */
-    public function generateTextLightnessIndex(array $color): array
-    {
-        $textLightnessIndex = [];
-
-        foreach (array_keys($this->filterColorForShadesOnly($color)) as $shade) {
-            $textShade = $color["{$shade}-text"];
-
-            if ($textShade === 0) { // White
-                $textLightnessIndex[$shade] = true;
-
-                continue;
-            }
-
-            $textLightnessIndex[$shade] = Color::isLight($color[$textShade]);
-        }
-
-        return $textLightnessIndex;
-    }
-
-    /**
-     * @param  array<int | string, string | int>  $color
-     * @return array<int, string | int>
-     */
-    protected function filterColorForShadesOnly(array $color): array
-    {
-        return collect($color)
-            ->filter(fn ($value, $key): bool => is_numeric($key))
-            ->all();
-    }
-
-    /**
-     * @return ?array<int | string, string | int>
+     * @return ?array<int, string>
      */
     public function getColor(string $color): ?array
     {
@@ -204,19 +148,20 @@ class ColorManager
     }
 
     /**
-     * @param  class-string<HasColor>  $component
+     * @param  class-string<HasColor> | HasColor  $component
      * @return array<string>
      */
-    public function getComponentClasses(string $component, string $color): array
+    public function getComponentClasses(string | HasColor $component, string $color): array
     {
-        $component = app($component);
+        $component = is_string($component) ? app($component) : $component;
+        $componentKey = serialize($component);
 
         if (($color === 'gray') && ($component instanceof HasDefaultGrayColor)) {
             return [];
         }
 
-        if ($this->componentClasses[$component::class][$color] ?? []) {
-            return $this->componentClasses[$component::class][$color];
+        if ($this->componentClasses[$componentKey][$color] ?? []) {
+            return $this->componentClasses[$componentKey][$color];
         }
 
         $classes = ['fi-color', "fi-color-{$color}"];
@@ -224,10 +169,10 @@ class ColorManager
         $resolvedColor = $this->getColor($color);
 
         if (! $resolvedColor) {
-            return $this->componentClasses[$component::class][$color] = $classes;
+            return $this->componentClasses[$componentKey][$color] = $classes;
         }
 
-        return $this->componentClasses[$component::class][$color] = [
+        return $this->componentClasses[$componentKey][$color] = [
             ...$classes,
             ...$component->getColorClasses($resolvedColor),
         ];
