@@ -1,6 +1,7 @@
 @php
     use Filament\Support\Enums\ActionSize;
     use Filament\Support\Enums\IconSize;
+    use Filament\Support\View\Components\IconButton;
     use Illuminate\View\ComponentAttributeBag;
 @endphp
 
@@ -100,20 +101,9 @@
             ->class([
                 'fi-icon-btn',
                 'fi-disabled' => $disabled,
-                match ($color) {
-                    'gray' => '',
-                    default => 'fi-color',
-                },
-                is_string($color) ? "fi-color-{$color}" : null,
                 ($size instanceof ActionSize) ? "fi-size-{$size->value}" : (is_string($size) ? $size : ''),
             ])
-            ->style([
-                \Filament\Support\get_color_css_variables(
-                    $color,
-                    shades: [300, 400, 500, 600],
-                    alias: 'icon-button',
-                ),
-            ])
+            ->color(IconButton::class, $color)
     }}
 >
     {{

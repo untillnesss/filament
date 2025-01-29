@@ -531,4 +531,180 @@
         --dark-hover-bg: var(--color-950);
         --dark-hover-text: var(--color-950-text);
     }
+
+    .fi-text-color-50 {
+        --text: var(--color-50);
+    }
+
+    .fi-text-color-100 {
+        --text: var(--color-100);
+    }
+
+    .fi-text-color-200 {
+        --text: var(--color-200);
+    }
+
+    .fi-text-color-300 {
+        --text: var(--color-300);
+    }
+
+    .fi-text-color-400 {
+        --text: var(--color-400);
+    }
+
+    .fi-text-color-500 {
+        --text: var(--color-500);
+    }
+
+    .fi-text-color-600 {
+        --text: var(--color-600);
+    }
+
+    .fi-text-color-700 {
+        --text: var(--color-700);
+    }
+
+    .fi-text-color-800 {
+        --text: var(--color-800);
+    }
+
+    .fi-text-color-900 {
+        --text: var(--color-900);
+    }
+
+    .fi-text-color-950 {
+        --text: var(--color-950);
+    }
+
+    .hover\:fi-text-color-50 {
+        --hover-text: var(--color-50);
+    }
+
+    .hover\:fi-text-color-100 {
+        --hover-text: var(--color-100);
+    }
+
+    .hover\:fi-text-color-200 {
+        --hover-text: var(--color-200);
+    }
+
+    .hover\:fi-text-color-300 {
+        --hover-text: var(--color-300);
+    }
+
+    .hover\:fi-text-color-400 {
+        --hover-text: var(--color-400);
+    }
+
+    .hover\:fi-text-color-500 {
+        --hover-text: var(--color-500);
+    }
+
+    .hover\:fi-text-color-600 {
+        --hover-text: var(--color-600);
+    }
+
+    .hover\:fi-text-color-700 {
+        --hover-text: var(--color-700);
+    }
+
+    .hover\:fi-text-color-800 {
+        --hover-text: var(--color-800);
+    }
+
+    .hover\:fi-text-color-900 {
+        --hover-text: var(--color-900);
+    }
+
+    .hover\:fi-text-color-950 {
+        --hover-text: var(--color-950);
+    }
+
+    .dark\:fi-text-color-50 {
+        --dark-text: var(--color-50);
+    }
+
+    .dark\:fi-text-color-100 {
+        --dark-text: var(--color-100);
+    }
+
+    .dark\:fi-text-color-200 {
+        --dark-text: var(--color-200);
+    }
+
+    .dark\:fi-text-color-300 {
+        --dark-text: var(--color-300);
+    }
+
+    .dark\:fi-text-color-400 {
+        --dark-text: var(--color-400);
+    }
+
+    .dark\:fi-text-color-500 {
+        --dark-text: var(--color-500);
+    }
+
+    .dark\:fi-text-color-600 {
+        --dark-text: var(--color-600);
+    }
+
+    .dark\:fi-text-color-700 {
+        --dark-text: var(--color-700);
+    }
+
+    .dark\:fi-text-color-800 {
+        --dark-text: var(--color-800);
+    }
+
+    .dark\:fi-text-color-900 {
+        --dark-text: var(--color-900);
+    }
+
+    .dark\:fi-text-color-950 {
+        --dark-text: var(--color-950);
+    }
+
+    .dark\:hover\:fi-text-color-50 {
+        --dark-hover-text: var(--color-50);
+    }
+
+    .dark\:hover\:fi-text-color-100 {
+        --dark-hover-text: var(--color-100);
+    }
+
+    .dark\:hover\:fi-text-color-200 {
+        --dark-hover-text: var(--color-200);
+    }
+
+    .dark\:hover\:fi-text-color-300 {
+        --dark-hover-text: var(--color-300);
+    }
+
+    .dark\:hover\:fi-text-color-400 {
+        --dark-hover-text: var(--color-400);
+    }
+
+    .dark\:hover\:fi-text-color-500 {
+        --dark-hover-text: var(--color-500);
+    }
+
+    .dark\:hover\:fi-text-color-600 {
+        --dark-hover-text: var(--color-600);
+    }
+
+    .dark\:hover\:fi-text-color-700 {
+        --dark-hover-text: var(--color-700);
+    }
+
+    .dark\:hover\:fi-text-color-800 {
+        --dark-hover-text: var(--color-800);
+    }
+
+    .dark\:hover\:fi-text-color-900 {
+        --dark-hover-text: var(--color-900);
+    }
+
+    .dark\:hover\:fi-text-color-950 {
+        --dark-hover-text: var(--color-950);
+    }
 }

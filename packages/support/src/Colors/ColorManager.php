@@ -101,10 +101,10 @@ class ColorManager
             $gray = $this->cachedColors['gray'];
 
             foreach ($this->cachedColors as $name => $color) {
-                if (! array_key_exists('white-text', $color)) {
+                if (! array_key_exists('white-text', $this->cachedColors[$name])) {
                     $this->cachedColors[$name] = array_replace(
-                        Color::findMatchingAccessibleTextColorsForGrayBackgroundColors($this->filterColorForShadesOnly($color), $gray),
-                        $color,
+                        Color::findMatchingAccessibleTextColorsForGrayBackgroundColors($this->filterColorForShadesOnly($this->cachedColors[$name]), $gray),
+                        $this->cachedColors[$name],
                     );
                 }
             }

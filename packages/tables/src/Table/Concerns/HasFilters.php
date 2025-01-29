@@ -200,7 +200,6 @@ trait HasFilters
             ->label(__('filament-tables::table.actions.filter.label'))
             ->iconButton()
             ->icon(FilamentIcon::resolve('tables::actions.filter') ?? 'heroicon-m-funnel')
-            ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->modalSubmitAction(false)
             ->extraModalFooterActions([

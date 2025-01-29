@@ -444,9 +444,14 @@ class Color
         return ($lighter + 0.05) / ($darker + 0.05);
     }
 
-    public static function isContrastRatioAccessible(string $color1, string $color2): bool
+    public static function isTextContrastRatioAccessible(string $color1, string $color2): bool
     {
         return static::calculateContrastRatio($color1, $color2) >= 4.5;
+    }
+
+    public static function isIconContrastRatioAccessible(string $color1, string $color2): bool
+    {
+        return static::calculateContrastRatio($color1, $color2) >= 3;
     }
 
     /**
@@ -468,7 +473,7 @@ class Color
             $shadeKey = "{$shade}-text";
 
             foreach ($possibleDarkTextColors as $possibleDarkTextColorShade => $possibleDarkTextColor) {
-                if (($possibleDarkTextColorShade >= 800) && static::isContrastRatioAccessible($color, $possibleDarkTextColor)) {
+                if (($possibleDarkTextColorShade >= 800) && static::isTextContrastRatioAccessible($color, $possibleDarkTextColor)) {
                     $textColors[$shadeKey] = $possibleDarkTextColorShade;
 
                     continue 2;
@@ -481,7 +486,7 @@ class Color
                 $is50AccessibleOnDarkerShades &&
                 array_key_exists(50, $palette)
             ) {
-                if (static::isContrastRatioAccessible($color, $palette[50])) {
+                if (static::isTextContrastRatioAccessible($color, $palette[50])) {
                     $textColors[$shadeKey] = 50;
 
                     continue;
@@ -521,7 +526,7 @@ class Color
             $grayShadeKey = ($grayShade !== 0) ? "gray-{$grayShade}-text" : 'white-text';
 
             foreach ($possibleDarkTextColors as $possibleDarkTextColorShade => $possibleDarkTextColor) {
-                if (static::isContrastRatioAccessible($grayColor, $possibleDarkTextColor)) {
+                if (static::isTextContrastRatioAccessible($grayColor, $possibleDarkTextColor)) {
                     $textColors[$grayShadeKey] = $possibleDarkTextColorShade;
 
                     continue 2;
@@ -531,7 +536,7 @@ class Color
             }
 
             foreach ($possibleLightTextColors as $possibleLightTextColorShade => $possibleLightTextColor) {
-                if (static::isContrastRatioAccessible($grayColor, $possibleLightTextColor)) {
+                if (static::isTextContrastRatioAccessible($grayColor, $possibleLightTextColor)) {
                     $textColors[$grayShadeKey] = $possibleLightTextColorShade;
 
                     continue 2;
