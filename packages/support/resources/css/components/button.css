@@ -1,5 +1,5 @@
 .fi-btn {
-    @apply relative inline-grid grid-flow-col items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition duration-75 outline-none;
+    @apply relative inline-grid grid-flow-col items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition duration-75 outline-none;
 
     &:not(.fi-disabled):not([disabled]) {
         @apply focus-visible:ring-2;
