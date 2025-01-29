@@ -124,14 +124,55 @@ trait HasComponents
         return null;
     }
 
-    public function getComponent(string | Closure $findComponentUsing, bool $withActions = true, bool $withHidden = false, bool $isAbsoluteKey = false): Component | Action | ActionGroup | null
+    public function getComponent(string | Closure $findComponentUsing, bool $withActions = true, bool $withHidden = false, bool $isAbsoluteKey = false, ?Component $skipComponentChildContainersWhileSearching = null): Component | Action | ActionGroup | null
     {
-        if (! is_string($findComponentUsing)) {
-            return collect($this->getFlatComponents($withActions, $withHidden))->first($findComponentUsing);
+        if (is_string($findComponentUsing) && (! $isAbsoluteKey) && filled($key = $this->getKey())) {
+            $findComponentUsing = "{$key}.$findComponentUsing";
+            $isAbsoluteKey = true;
         }
 
-        if ((! $isAbsoluteKey) && filled($key = $this->getKey())) {
-            $findComponentUsing = "{$key}.$findComponentUsing";
+        if ($skipComponentChildContainersWhileSearching) {
+            foreach ($this->getComponents($withActions, $withHidden) as $component) {
+                if ($findComponentUsing instanceof Closure) {
+                    if ($findComponentUsing($component)) {
+                        return $component;
+                    }
+
+                    if ($component === $skipComponentChildContainersWhileSearching) {
+                        continue;
+                    }
+
+                    foreach ($component->getChildComponentContainers($withHidden) as $childComponentContainer) {
+                        if ($foundComponent = $childComponentContainer->getComponent($findComponentUsing, $withActions, $withHidden, $isAbsoluteKey, skipComponentChildContainersWhileSearching: $skipComponentChildContainersWhileSearching)) {
+                            return $foundComponent;
+                        }
+                    }
+
+                    continue;
+                }
+
+                $componentKey = $component->getKey();
+
+                if (filled($componentKey) && ($componentKey === $findComponentUsing)) {
+                    return $component;
+                }
+
+                if ($component === $skipComponentChildContainersWhileSearching) {
+                    continue;
+                }
+
+                if (blank($componentKey) || str_starts_with($findComponentUsing, "{$componentKey}.")) {
+                    foreach ($component->getChildComponentContainers($withHidden) as $childComponentContainer) {
+                        if ($foundComponent = $childComponentContainer->getComponent($findComponentUsing, $withActions, $withHidden, $isAbsoluteKey, $skipComponentChildContainersWhileSearching)) {
+                            return $foundComponent;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (! is_string($findComponentUsing)) {
+            return collect($this->getFlatComponents($withActions, $withHidden))->first($findComponentUsing);
         }
 
         return $this->getFlatComponents($withActions, $withHidden, withAbsoluteKeys: true)[$findComponentUsing] ?? null;
