@@ -48,6 +48,8 @@ class IconButton implements HasColor, HasDefaultGrayColor
 
                 if (Color::isIconContrastRatioAccessible($darkestLightGrayBg, $shadeValue)) {
                     if ($shade > 500) {
+                        // Shades above 500 are likely to be quite dark, so instead of lightening the button
+                        // when it is hovered, we darken it.
                         $text ??= $shade;
                         $hoverText ??= $shade + 100;
                     } else {
