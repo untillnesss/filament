@@ -449,7 +449,7 @@ class Color
         return static::calculateContrastRatio($color1, $color2) >= 4.5;
     }
 
-    public static function isIconContrastRatioAccessible(string $color1, string $color2): bool
+    public static function isNonTextContrastRatioAccessible(string $color1, string $color2): bool
     {
         return static::calculateContrastRatio($color1, $color2) >= 3;
     }

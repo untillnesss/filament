@@ -2,7 +2,10 @@
 
 namespace Filament\Support\View\Components\Dropdown\Item;
 
-class Icon
+use Filament\Support\View\Components\Contracts\HasColor;
+use Filament\Support\View\Components\Contracts\HasDefaultGrayColor;
+
+class Icon implements HasColor, HasDefaultGrayColor
 {
     /**
      * @param  array<int, string>  $color

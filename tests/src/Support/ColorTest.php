@@ -11,6 +11,7 @@ use Filament\Support\View\Components\Dropdown\Item as DropdownItem;
 use Filament\Support\View\Components\Dropdown\Item\Icon as DropdownItemIcon;
 use Filament\Support\View\Components\IconButton;
 use Filament\Support\View\Components\Link;
+use Filament\Support\View\Components\Toggle;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Str;
 
@@ -62,5 +63,6 @@ it('generates component classes', function (string | HasColor $component, string
         'dropdown item' => DropdownItem::class,
         'icon button' => IconButton::class,
         'link' => Link::class,
+        'toggle' => Toggle::class,
     ])
     ->with(fn (): array => array_keys(app(ColorManager::class)->getColors()));

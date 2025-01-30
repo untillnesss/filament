@@ -151,8 +151,12 @@ class ColorManager
      * @param  class-string<HasColor> | HasColor  $component
      * @return array<string>
      */
-    public function getComponentClasses(string | HasColor $component, string $color): array
+    public function getComponentClasses(string | HasColor $component, ?string $color): array
     {
+        if (blank($color)) {
+            return [];
+        }
+
         $component = is_string($component) ? app($component) : $component;
         $componentKey = serialize($component);
 

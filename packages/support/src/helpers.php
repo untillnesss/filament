@@ -67,8 +67,12 @@ if (! function_exists('Filament\Support\get_component_color_classes')) {
      * @param  class-string<HasColor>  $component
      * @return array<string>
      */
-    function get_component_color_classes(string | HasColor $component, string $color): array
+    function get_component_color_classes(string | HasColor $component, ?string $color): array
     {
+        if (blank($color)) {
+            return [];
+        }
+
         return FilamentColor::getComponentClasses($component, $color);
     }
 }

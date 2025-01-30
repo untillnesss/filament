@@ -18,7 +18,7 @@ class Badge implements HasColor, HasDefaultGrayColor
         ksort($color);
 
         foreach (array_keys($color) as $shade) {
-            if (Color::isIconContrastRatioAccessible($color[50], $color[$shade])) {
+            if (Color::isNonTextContrastRatioAccessible($color[50], $color[$shade])) {
                 $text = $shade;
 
                 break;
@@ -37,7 +37,7 @@ class Badge implements HasColor, HasDefaultGrayColor
                 continue;
             }
 
-            if (Color::isIconContrastRatioAccessible($lightestDarkGrayBg, $color[$shade])) {
+            if (Color::isNonTextContrastRatioAccessible($lightestDarkGrayBg, $color[$shade])) {
                 $darkText = $shade;
 
                 break;
