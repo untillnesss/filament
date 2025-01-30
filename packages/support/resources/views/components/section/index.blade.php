@@ -67,12 +67,14 @@
             @endif
             class="fi-section-header"
         >
-            {{ \Filament\Support\generate_icon_html($icon, attributes: (new \Illuminate\View\ComponentAttributeBag)
+            {{
+                \Filament\Support\generate_icon_html($icon, attributes: (new \Illuminate\View\ComponentAttributeBag)
                     ->class([
                         'fi-section-header-icon',
                         ...\Filament\Support\get_component_color_classes(Icon::class, $iconColor),
                         ($iconSize instanceof IconSize) ? "fi-size-{$iconSize->value}" : (is_string($iconSize) ? $iconSize : null),
-                    ])) }}
+                    ]))
+            }}
 
             @if ($hasHeading || $hasDescription)
                 <div class="fi-section-header-text-ctn">

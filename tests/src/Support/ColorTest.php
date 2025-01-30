@@ -16,7 +16,9 @@ use Filament\Support\View\Components\Modal\Icon as ModalIcon;
 use Filament\Support\View\Components\Section\Icon as SectionIcon;
 use Filament\Support\View\Components\Toggle;
 use Filament\Tests\TestCase;
-use Filament\Widgets\View\Components\Chart;
+use Filament\Widgets\View\Components\ChartWidget;
+use Filament\Widgets\View\Components\StatsOverviewWidget\Stat\Description as StatsOverviewWidgetStatDescription;
+use Filament\Widgets\View\Components\StatsOverviewWidget\Stat\StatsOverviewWidgetStatChart;
 use Illuminate\Support\Str;
 
 uses(TestCase::class);
@@ -59,11 +61,10 @@ it('generates component classes', function (string | HasColor $component, string
         ->toMatchSnapshot();
 })
     ->with([
-        // Support
         'badge' => Badge::class,
         'button' => new Button(isOutlined: false),
         'outlined button' => new Button(isOutlined: true),
-        'chart widget' => Chart::class,
+        'chart widget' => ChartWidget::class,
         'dropdown header' => DropdownHeader::class,
         'dropdown item icon' => DropdownItemIcon::class,
         'dropdown item' => DropdownItem::class,
@@ -72,6 +73,8 @@ it('generates component classes', function (string | HasColor $component, string
         'link' => Link::class,
         'modal icon' => ModalIcon::class,
         'section icon' => SectionIcon::class,
+        'stats overview widget stat description' => StatsOverviewWidgetStatDescription::class,
+        'stats overview widget stat chart' => StatsOverviewWidgetStatChart::class,
         'toggle' => Toggle::class,
     ])
     ->with(fn (): array => array_keys(app(ColorManager::class)->getColors()));

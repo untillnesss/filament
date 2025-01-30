@@ -24,17 +24,17 @@
     & .fi-wi-stats-overview-stat-description {
         @apply flex items-center gap-x-1 text-sm text-gray-500 dark:text-gray-400;
 
-        &.fi-color {
-            @apply text-color-600 dark:text-color-400;
+        & .fi-icon {
+            @apply size-5 text-gray-400 dark:text-gray-500;
+        }
 
-            & .fi-wi-stats-overview-stat-description-icon {
+        &.fi-color {
+            @apply text-(--text) dark:text-(--dark-text);
+
+            & .fi-icon {
                 @apply text-color-500;
             }
         }
-    }
-
-    & .fi-wi-stats-overview-stat-description-icon {
-        @apply size-5 text-gray-400 dark:text-gray-500;
     }
 
     & .fi-wi-stats-overview-stat-chart {

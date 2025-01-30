@@ -1,6 +1,6 @@
 @php
     use Filament\Support\Facades\FilamentView;
-    use Filament\Widgets\View\Components\Chart;
+    use Filament\Widgets\View\Components\ChartWidget;
 
     $color = $this->getColor();
     $heading = $this->getHeading();
@@ -69,7 +69,7 @@
                             type: @js($this->getType()),
                         })"
                 @class([
-                    ...\Filament\Support\get_component_color_classes(Chart::class, $color),
+                    ...\Filament\Support\get_component_color_classes(ChartWidget::class, $color),
                 ])
             >
                 <canvas
