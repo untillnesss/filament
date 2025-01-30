@@ -13,7 +13,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Illuminate\Support\Facades\DB;
 
 class DisableGoogleTwoFactorAuthenticationAction
@@ -27,7 +27,7 @@ class DisableGoogleTwoFactorAuthenticationAction
             ->color('danger')
             ->icon('heroicon-m-lock-open')
             ->link()
-            ->modalWidth(MaxWidth::Medium)
+            ->modalWidth(Width::Medium)
             ->modalIcon('heroicon-o-lock-open')
             ->modalHeading(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.heading'))
             ->modalDescription(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.description'))

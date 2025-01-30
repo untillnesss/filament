@@ -229,6 +229,7 @@ return static function (RectorConfig $rectorConfig): void {
             'Filament\\Pages\\Auth\\PasswordReset\\RequestPasswordReset' => 'Filament\\Auth\\Pages\\PasswordReset\\RequestPasswordReset',
             'Filament\\Pages\\Auth\\PasswordReset\\ResetPassword' => 'Filament\\Auth\\Pages\\PasswordReset\\ResetPassword',
             'Filament\\Pages\\Auth\\Register' => 'Filament\\Auth\\Pages\\Register',
+            'Filament\\Support\\Enums\\MaxWidth' => 'Filament\\Support\\Enums\\Width',
         ],
     );
 

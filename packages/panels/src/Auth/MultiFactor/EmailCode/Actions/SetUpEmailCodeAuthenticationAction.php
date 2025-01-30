@@ -10,7 +10,7 @@ use Filament\Auth\MultiFactor\EmailCode\EmailCodeAuthentication;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Notifications\Notification;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\DB;
 
@@ -36,7 +36,7 @@ class SetUpEmailCodeAuthenticationAction
 
                 $emailCodeAuthentication->sendCode($user, $secret);
             })
-            ->modalWidth(MaxWidth::Large)
+            ->modalWidth(Width::Large)
             ->modalIcon('heroicon-o-lock-closed')
             ->modalIconColor('primary')
             ->modalHeading(__('filament-panels::auth/multi-factor/email-code/actions/set-up.modal.heading'))

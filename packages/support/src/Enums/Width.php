@@ -2,7 +2,7 @@
 
 namespace Filament\Support\Enums;
 
-enum MaxWidth: string
+enum Width: string
 {
     case ExtraSmall = 'xs';
 

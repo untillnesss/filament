@@ -1,6 +1,6 @@
 @php
     use Filament\Support\Enums\Alignment;
-    use Filament\Support\Enums\MaxWidth;
+    use Filament\Support\Enums\Width;
     use Filament\Support\Facades\FilamentView;
     use Filament\Support\View\Components\Modal\Icon;
 @endphp
@@ -49,8 +49,8 @@
         $footerActionsAlignment = filled($footerActionsAlignment) ? (Alignment::tryFrom($footerActionsAlignment) ?? $footerActionsAlignment) : null;
     }
 
-    if (! $width instanceof MaxWidth) {
-        $width = filled($width) ? (MaxWidth::tryFrom($width) ?? $width) : null;
+    if (! $width instanceof Width) {
+        $width = filled($width) ? (Width::tryFrom($width) ?? $width) : null;
     }
 
     $closeEventHandler = filled($id) ? '$dispatch(' . \Illuminate\Support\Js::from($closeEventName) . ', { id: ' . \Illuminate\Support\Js::from($id) . ' })' : 'close()';
@@ -79,7 +79,7 @@
     @class([
         'fi-modal',
         'fi-modal-slide-over' => $slideOver,
-        'fi-width-screen' => $width === MaxWidth::Screen,
+        'fi-width-screen' => $width === Width::Screen,
     ])
 >
     @if ($trigger)
@@ -135,7 +135,7 @@
                     x-show="isShown"
                     x-transition:enter="fi-transition-enter"
                     x-transition:leave="fi-transition-leave"
-                    @if ($width !== MaxWidth::Screen)
+                    @if ($width !== Width::Screen)
                         x-transition:enter-start="fi-transition-enter-start"
                         x-transition:enter-end="fi-transition-enter-end"
                         x-transition:leave-start="fi-transition-leave-start"
@@ -151,7 +151,7 @@
                             'fi-modal-window-has-sticky-header' => $stickyHeader,
                             'fi-hidden' => ! $visible,
                             ($alignment instanceof Alignment) ? "fi-align-{$alignment->value}" : null,
-                            ($width instanceof MaxWidth) ? "fi-width-{$width->value}" : (is_string($width) ? $width : null),
+                            ($width instanceof Width) ? "fi-width-{$width->value}" : (is_string($width) ? $width : null),
                         ])
                     }}
                 >

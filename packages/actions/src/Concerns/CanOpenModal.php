@@ -5,7 +5,7 @@ namespace Filament\Actions\Concerns;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Support\View\Components\Modal;
 use Illuminate\Contracts\Support\Htmlable;
@@ -69,7 +69,7 @@ trait CanOpenModal
 
     protected string | Htmlable | Closure | null $modalDescription = null;
 
-    protected MaxWidth | string | Closure | null $modalWidth = null;
+    protected Width | string | Closure | null $modalWidth = null;
 
     protected bool | Closure | null $hasModal = null;
 
@@ -309,7 +309,7 @@ trait CanOpenModal
         return $this;
     }
 
-    public function modalWidth(MaxWidth | string | Closure | null $width = null): static
+    public function modalWidth(Width | string | Closure | null $width = null): static
     {
         $this->modalWidth = $width;
 
@@ -507,7 +507,7 @@ trait CanOpenModal
             return $alignment;
         }
 
-        if ($this->isConfirmationRequired() || in_array($this->getModalWidth(), [MaxWidth::ExtraSmall, MaxWidth::Small, 'xs', 'sm'])) {
+        if ($this->isConfirmationRequired() || in_array($this->getModalWidth(), [Width::ExtraSmall, Width::Small, 'xs', 'sm'])) {
             return Alignment::Center;
         }
 
@@ -585,17 +585,17 @@ trait CanOpenModal
         return filled($this->getModalDescription());
     }
 
-    public function getModalWidth(): MaxWidth | string
+    public function getModalWidth(): Width | string
     {
         if ($width = $this->evaluate($this->modalWidth)) {
             return $width;
         }
 
         if ($this->isConfirmationRequired()) {
-            return MaxWidth::Medium;
+            return Width::Medium;
         }
 
-        return MaxWidth::FourExtraLarge;
+        return Width::FourExtraLarge;
     }
 
     public function isModalFooterSticky(): bool

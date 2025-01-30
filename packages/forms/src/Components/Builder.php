@@ -12,7 +12,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Concerns\HasReorderAnimationDuration;
 use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -93,7 +93,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
      */
     protected ?array $blockPickerColumns = [];
 
-    protected MaxWidth | string | Closure | null $blockPickerWidth = null;
+    protected Width | string | Closure | null $blockPickerWidth = null;
 
     protected function setUp(): void
     {
@@ -1088,14 +1088,14 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
         return $columns;
     }
 
-    public function blockPickerWidth(MaxWidth | string | Closure | null $width): static
+    public function blockPickerWidth(Width | string | Closure | null $width): static
     {
         $this->blockPickerWidth = $width;
 
         return $this;
     }
 
-    public function getBlockPickerWidth(): MaxWidth | string | null
+    public function getBlockPickerWidth(): Width | string | null
     {
         $width = $this->evaluate($this->blockPickerWidth);
 

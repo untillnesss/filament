@@ -3,7 +3,7 @@
     use Filament\Actions\ActionGroup;
     use Filament\Schemas\Components\Component;
     use Filament\Support\Enums\Alignment;
-    use Filament\Support\Enums\MaxWidth;
+    use Filament\Support\Enums\Width;
     use Illuminate\Support\Js;
     use Illuminate\View\ComponentAttributeBag;
 
@@ -102,17 +102,17 @@
                             ], escape: false)
                             ->class([
                                 match ($maxWidth = $schemaComponent->getMaxWidth()) {
-                                    MaxWidth::ExtraSmall, 'xs' => 'max-w-xs',
-                                    MaxWidth::Small, 'sm' => 'max-w-sm',
-                                    MaxWidth::Medium, 'md' => 'max-w-md',
-                                    MaxWidth::Large, 'lg' => 'max-w-lg',
-                                    MaxWidth::ExtraLarge, 'xl' => 'max-w-xl',
-                                    MaxWidth::TwoExtraLarge, '2xl' => 'max-w-2xl',
-                                    MaxWidth::ThreeExtraLarge, '3xl' => 'max-w-3xl',
-                                    MaxWidth::FourExtraLarge, '4xl' => 'max-w-4xl',
-                                    MaxWidth::FiveExtraLarge, '5xl' => 'max-w-5xl',
-                                    MaxWidth::SixExtraLarge, '6xl' => 'max-w-6xl',
-                                    MaxWidth::SevenExtraLarge, '7xl' => 'max-w-7xl',
+                                    Width::ExtraSmall, 'xs' => 'max-w-xs',
+                                    Width::Small, 'sm' => 'max-w-sm',
+                                    Width::Medium, 'md' => 'max-w-md',
+                                    Width::Large, 'lg' => 'max-w-lg',
+                                    Width::ExtraLarge, 'xl' => 'max-w-xl',
+                                    Width::TwoExtraLarge, '2xl' => 'max-w-2xl',
+                                    Width::ThreeExtraLarge, '3xl' => 'max-w-3xl',
+                                    Width::FourExtraLarge, '4xl' => 'max-w-4xl',
+                                    Width::FiveExtraLarge, '5xl' => 'max-w-5xl',
+                                    Width::SixExtraLarge, '6xl' => 'max-w-6xl',
+                                    Width::SevenExtraLarge, '7xl' => 'max-w-7xl',
                                     default => $maxWidth,
                                 },
                             ])

@@ -20,7 +20,7 @@ use Filament\Schemas\Components\Text;
 use Filament\Schemas\Components\UnorderedList;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\FontWeight;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
@@ -48,7 +48,7 @@ class SetUpGoogleTwoFactorAuthenticationAction
                     ]),
                 ]);
             })
-            ->modalWidth(MaxWidth::Large)
+            ->modalWidth(Width::Large)
             ->modalIcon('heroicon-o-lock-closed')
             ->modalIconColor('primary')
             ->modalHeading(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.heading'))

@@ -162,7 +162,7 @@ In v4, Filament automatically scopes all queries in a panel to the current tenan
 The `$maxContentWidth` property on page classes has a new type. It is now able to accept `MaxWidth` enum values, as well as strings and null:
 
 ```php
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 
 protected MaxWidth | string | null $maxContentWidth = null;
 ```
