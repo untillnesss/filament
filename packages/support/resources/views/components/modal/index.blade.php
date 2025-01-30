@@ -2,6 +2,7 @@
     use Filament\Support\Enums\Alignment;
     use Filament\Support\Enums\MaxWidth;
     use Filament\Support\Facades\FilamentView;
+    use Filament\Support\View\Components\Modal\Icon;
 @endphp
 
 @props([
@@ -183,18 +184,7 @@
                                         <div
                                             @class([
                                                 'fi-modal-icon-wrp',
-                                                match ($iconColor) {
-                                                    'gray' => null,
-                                                    default => 'fi-color',
-                                                },
-                                                is_string($iconColor) ? "fi-color-{$iconColor}" : null,
-                                            ])
-                                            @style([
-                                                \Filament\Support\get_color_css_variables(
-                                                    $iconColor,
-                                                    shades: [100, 400, 500, 600],
-                                                    alias: 'modal.icon',
-                                                ) => $iconColor !== 'gray',
+                                                ...\Filament\Support\get_component_color_classes(Icon::class, $iconColor),
                                             ])
                                         >
                                             {{ \Filament\Support\generate_icon_html($icon, $iconAlias, (new \Illuminate\View\ComponentAttributeBag)->class(['fi-modal-icon'])) }}

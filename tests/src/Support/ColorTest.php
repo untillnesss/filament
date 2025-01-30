@@ -10,7 +10,10 @@ use Filament\Support\View\Components\Dropdown\Header as DropdownHeader;
 use Filament\Support\View\Components\Dropdown\Item as DropdownItem;
 use Filament\Support\View\Components\Dropdown\Item\Icon as DropdownItemIcon;
 use Filament\Support\View\Components\IconButton;
+use Filament\Support\View\Components\Input\Wrapper\Icon as InputWrapperIcon;
 use Filament\Support\View\Components\Link;
+use Filament\Support\View\Components\Modal\Icon as ModalIcon;
+use Filament\Support\View\Components\Section\Icon as SectionIcon;
 use Filament\Support\View\Components\Toggle;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Str;
@@ -62,7 +65,10 @@ it('generates component classes', function (string | HasColor $component, string
         'dropdown item icon' => DropdownItemIcon::class,
         'dropdown item' => DropdownItem::class,
         'icon button' => IconButton::class,
+        'input wrapper icon' => InputWrapperIcon::class,
         'link' => Link::class,
+        'modal icon' => ModalIcon::class,
+        'section icon' => SectionIcon::class,
         'toggle' => Toggle::class,
     ])
     ->with(fn (): array => array_keys(app(ColorManager::class)->getColors()));
