@@ -1,6 +1,15 @@
 <?php
 
 use Filament\Support\Colors\Color;
+use Filament\Support\Colors\ColorManager;
+use Filament\Support\Facades\FilamentColor;
+use Filament\Support\View\Components\Badge;
+use Filament\Support\View\Components\Button;
+use Filament\Support\View\Components\Contracts\HasColor;
+use Filament\Support\View\Components\Dropdown\Item as DropdownItem;
+use Filament\Support\View\Components\Dropdown\Item\Icon as DropdownItemIcon;
+use Filament\Support\View\Components\IconButton;
+use Filament\Support\View\Components\Link;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Str;
 
@@ -39,3 +48,18 @@ it('returns all colors', function () {
     expect(Color::all())
         ->toBe($colors);
 });
+
+it('generates component classes', function (string | HasColor $component, string $color) {
+    expect(FilamentColor::getComponentClasses($component, $color))
+        ->toMatchSnapshot();
+})
+    ->with([
+        'dropdown item icon' => DropdownItemIcon::class,
+        'dropdown item' => DropdownItem::class,
+        'badge' => Badge::class,
+        'button' => new Button(isOutlined: false),
+        'outlined button' => new Button(isOutlined: true),
+        'icon button' => IconButton::class,
+        'link' => Link::class,
+    ])
+    ->with(fn (): array => array_keys(app(ColorManager::class)->getColors()));

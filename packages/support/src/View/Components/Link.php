@@ -21,8 +21,8 @@ class Link implements HasColor, HasDefaultGrayColor
 
         $darkestLightGrayBg = $gray[50];
 
-        foreach ($color as $shade => $shadeValue) {
-            if (Color::isTextContrastRatioAccessible($darkestLightGrayBg, $shadeValue)) {
+        foreach (array_keys($color) as $shade) {
+            if (Color::isTextContrastRatioAccessible($darkestLightGrayBg, $color[$shade])) {
                 $text = $shade;
 
                 break;
@@ -35,12 +35,12 @@ class Link implements HasColor, HasDefaultGrayColor
 
         $lightestDarkGrayBg = $gray[700];
 
-        foreach ($color as $shade => $shadeValue) {
+        foreach (array_keys($color) as $shade) {
             if ($shade > 400) {
                 continue;
             }
 
-            if (Color::isTextContrastRatioAccessible($lightestDarkGrayBg, $shadeValue)) {
+            if (Color::isTextContrastRatioAccessible($lightestDarkGrayBg, $color[$shade])) {
                 $darkText = $shade;
 
                 break;

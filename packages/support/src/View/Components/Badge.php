@@ -17,8 +17,8 @@ class Badge implements HasColor, HasDefaultGrayColor
     {
         ksort($color);
 
-        foreach ($color as $shade => $shadeValue) {
-            if (Color::isIconContrastRatioAccessible($color[50], $shadeValue)) {
+        foreach (array_keys($color) as $shade) {
+            if (Color::isIconContrastRatioAccessible($color[50], $color[$shade])) {
                 $text = $shade;
 
                 break;
@@ -32,12 +32,12 @@ class Badge implements HasColor, HasDefaultGrayColor
         $gray = FilamentColor::getColor('gray');
         $lightestDarkGrayBg = $gray[500];
 
-        foreach ($color as $shade => $shadeValue) {
+        foreach (array_keys($color) as $shade) {
             if ($shade > 500) {
                 continue;
             }
 
-            if (Color::isIconContrastRatioAccessible($lightestDarkGrayBg, $shadeValue)) {
+            if (Color::isIconContrastRatioAccessible($lightestDarkGrayBg, $color[$shade])) {
                 $darkText = $shade;
 
                 break;

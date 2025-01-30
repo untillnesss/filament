@@ -28,8 +28,8 @@ class IconButton implements HasColor, HasDefaultGrayColor
 
         $darkestLightGrayBg = $gray[50];
 
-        foreach ($color as $shade => $shadeValue) {
-            if (Color::isIconContrastRatioAccessible($darkestLightGrayBg, $shadeValue)) {
+        foreach (array_keys($color) as $shade) {
+            if (Color::isIconContrastRatioAccessible($darkestLightGrayBg, $color[$shade])) {
                 if ($shade > 500) {
                     // Shades above 500 are likely to be quite dark, so instead of lightening the button
                     // when it is hovered, we darken it.
@@ -51,12 +51,12 @@ class IconButton implements HasColor, HasDefaultGrayColor
 
         $lightestDarkGrayBg = $gray[700];
 
-        foreach ($color as $shade => $shadeValue) {
+        foreach (array_keys($color) as $shade) {
             if ($shade > 500) {
                 continue;
             }
 
-            if (Color::isIconContrastRatioAccessible($lightestDarkGrayBg, $shadeValue)) {
+            if (Color::isIconContrastRatioAccessible($lightestDarkGrayBg, $color[$shade])) {
                 $darkText = $shade;
                 $darkHoverText = $shade - 100;
 

@@ -72,7 +72,7 @@
         }
 
         & .fi-dropdown-list-item-label {
-            @apply text-color-600 dark:text-color-400;
+            @apply text-(--text) hover:text-(--hover-text) dark:text-(--dark-text) dark:hover:text-(--dark-hover-text);
         }
     }
 
