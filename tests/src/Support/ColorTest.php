@@ -29,7 +29,6 @@ it('generates colors from a HEX value', function (string $color) {
 it('generates colors from an RGB value', function (string $color) {
     expect(Color::generatePalette($color))
         ->toMatchSnapshot();
-
 })->with([
     'rgb(128, 8, 8)',
     'rgb(93, 255, 2)',
