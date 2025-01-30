@@ -21,7 +21,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Support\Assets\Theme;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
 use Filament\Widgets\Widget;
@@ -277,12 +277,12 @@ class FilamentManager
         return $this->getCurrentOrDefaultPanel()->getLogoutUrl($parameters);
     }
 
-    public function getMaxContentWidth(): MaxWidth | string | null
+    public function getMaxContentWidth(): Width | string | null
     {
         return $this->getCurrentOrDefaultPanel()->getMaxContentWidth();
     }
 
-    public function getSimplePageMaxContentWidth(): MaxWidth | string | null
+    public function getSimplePageMaxContentWidth(): Width | string | null
     {
         return $this->getCurrentOrDefaultPanel()->getSimplePageMaxContentWidth();
     }

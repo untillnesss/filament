@@ -2,7 +2,7 @@
 <?php
 
 use Composer\InstalledVersions;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Illuminate\Support\Str;
 use function Termwind\{ask, render};
 
@@ -93,11 +93,11 @@ foreach ([
     $fileContents = file_get_contents($file);
 
     if (str_contains($fileContents, 'protected ?string $maxContentWidth = ')) {
-        $fileContents = str_replace('protected ?string $maxContentWidth = ', 'protected \Filament\Support\Enums\MaxWidth | string | null $maxContentWidth = ', $fileContents);
+        $fileContents = str_replace('protected ?string $maxContentWidth = ', 'protected \Filament\Support\Enums\Width | string | null $maxContentWidth = ', $fileContents);
 
         render(<<<HTML
             <p>
-                Added <strong>MaxWidth</strong> type to <strong>\$maxContentWidth</strong> <strong>{$file}</strong>.
+                Added <strong>Width</strong> type to <strong>\$maxContentWidth</strong> <strong>{$file}</strong>.
             </p>
         HTML);
     }

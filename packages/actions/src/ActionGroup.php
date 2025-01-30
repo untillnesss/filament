@@ -12,7 +12,7 @@ use Filament\Support\Concerns\HasColor;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Filament\Support\Concerns\HasIcon;
 use Filament\Support\Concerns\HasTooltip;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\View\View;
@@ -377,7 +377,7 @@ class ActionGroup extends ViewComponent implements Arrayable, HasEmbeddedView
         $panelAttributes = (new ComponentAttributeBag)
             ->class([
                 'fi-dropdown-panel',
-                ($width instanceof MaxWidth) ? "fi-width-{$width->value}" : (is_string($width) ? $width : 'fi-width-default'),
+                ($width instanceof Width) ? "fi-width-{$width->value}" : (is_string($width) ? $width : 'fi-width-default'),
                 'fi-scrollable' => $maxHeight,
             ])
             ->style([

@@ -17,7 +17,7 @@ use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Panel;
 use Filament\PanelRegistry;
 use Filament\Support\Assets\Theme;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -68,7 +68,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string | null getHomeUrl()
  * @method static string | null getLoginUrl(array $parameters = [])
  * @method static string getLogoutUrl(array $parameters = [])
- * @method static MaxWidth | string | null getMaxContentWidth()
+ * @method static Width | string | null getMaxContentWidth()
  * @method static string | null getModelResource(string | Model $model)
  * @method static array<string, MultiFactorAuthenticationProvider> getMultiFactorAuthenticationProviders()
  * @method static string getNameForDefaultAvatar(Model | Authenticatable $user)

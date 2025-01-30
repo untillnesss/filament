@@ -6,7 +6,7 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\ActionSize;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentIcon;
 
 trait CanToggleColumns
@@ -18,7 +18,7 @@ trait CanToggleColumns
 
     protected string | Closure | null $columnToggleFormMaxHeight = null;
 
-    protected MaxWidth | string | Closure | null $columnToggleFormWidth = null;
+    protected Width | string | Closure | null $columnToggleFormWidth = null;
 
     protected ?Closure $modifyToggleColumnsTriggerActionUsing = null;
 
@@ -46,7 +46,7 @@ trait CanToggleColumns
         return $this;
     }
 
-    public function columnToggleFormWidth(MaxWidth | string | Closure | null $width): static
+    public function columnToggleFormWidth(Width | string | Closure | null $width): static
     {
         $this->columnToggleFormWidth = $width;
 
@@ -94,12 +94,12 @@ trait CanToggleColumns
         return $this->evaluate($this->columnToggleFormMaxHeight);
     }
 
-    public function getColumnToggleFormWidth(): MaxWidth | string | null
+    public function getColumnToggleFormWidth(): Width | string | null
     {
         return $this->evaluate($this->columnToggleFormWidth) ?? match ($this->getColumnToggleFormColumns()) {
-            2 => MaxWidth::TwoExtraLarge,
-            3 => MaxWidth::FourExtraLarge,
-            4 => MaxWidth::SixExtraLarge,
+            2 => Width::TwoExtraLarge,
+            3 => Width::FourExtraLarge,
+            4 => Width::SixExtraLarge,
             default => null,
         };
     }

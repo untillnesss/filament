@@ -16,7 +16,7 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Text;
 use Filament\Schemas\Components\UnorderedList;
 use Filament\Support\Enums\FontFamily;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Js;
@@ -30,7 +30,7 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
             ->color('gray')
             ->icon('heroicon-m-arrow-path')
             ->link()
-            ->modalWidth(MaxWidth::Large)
+            ->modalWidth(Width::Large)
             ->modalIcon('heroicon-o-arrow-path')
             ->modalIconColor('primary')
             ->modalHeading(__('filament-panels::auth/multi-factor/google-two-factor/actions/regenerate-recovery-codes.modal.heading'))
@@ -122,7 +122,7 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
                         ])
                             ->dense(),
                     ])
-                    ->modalWidth(MaxWidth::Large)
+                    ->modalWidth(Width::Large)
                     ->closeModalByClickingAway(false)
                     ->closeModalByEscaping(false)
                     ->modalCloseButton(false)

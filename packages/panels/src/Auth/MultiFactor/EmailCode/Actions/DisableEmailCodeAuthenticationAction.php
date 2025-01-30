@@ -9,7 +9,7 @@ use Filament\Auth\MultiFactor\EmailCode\EmailCodeAuthentication;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Notifications\Notification;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Illuminate\Support\Facades\DB;
 
 class DisableEmailCodeAuthenticationAction
@@ -27,7 +27,7 @@ class DisableEmailCodeAuthenticationAction
 
                 $emailCodeAuthentication->sendCode($user);
             })
-            ->modalWidth(MaxWidth::Medium)
+            ->modalWidth(Width::Medium)
             ->modalIcon('heroicon-o-lock-open')
             ->modalHeading(__('filament-panels::auth/multi-factor/email-code/actions/disable.modal.heading'))
             ->modalDescription(__('filament-panels::auth/multi-factor/email-code/actions/disable.modal.description'))
