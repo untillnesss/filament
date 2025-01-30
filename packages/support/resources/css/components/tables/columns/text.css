@@ -194,7 +194,7 @@
     }
 
     &.fi-color {
-        @apply text-color-600 dark:text-color-400;
+        @apply text-(--text) dark:text-(--dark-text);
 
         &li::marker {
             @apply text-gray-950 dark:text-white;

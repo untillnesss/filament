@@ -11,8 +11,11 @@ use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\IconPosition;
+use Filament\Support\View\Components\Badge;
 use Filament\Tables\Columns\TextColumn\Enums\TextColumnSize;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\View\Components\Columns\TextColumn\Item;
+use Filament\Tables\View\Components\Columns\TextColumn\Item\Icon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Js;
@@ -20,7 +23,6 @@ use Illuminate\View\ComponentAttributeBag;
 use stdClass;
 
 use function Filament\Support\generate_icon_html;
-use function Filament\Support\get_color_css_variables;
 
 class TextColumn extends Column implements HasEmbeddedView
 {
@@ -261,37 +263,7 @@ class TextColumn extends Column implements HasEmbeddedView
             $iconColor = $this->getIconColor($stateItem);
 
             $iconHtml = generate_icon_html($this->getIcon($stateItem), attributes: (new ComponentAttributeBag)
-                ->class([
-                    match ($iconColor) {
-                        null, 'gray' => null,
-                        default => 'fi-color',
-                    } => filled($iconColor),
-                    is_string($iconColor) ? "fi-color-{$iconColor}" : null,
-                ])
-                ->style([
-                    ...(
-                        $isBadge
-                        ? [
-                            get_color_css_variables(
-                                $color,
-                                shades: [500],
-                                alias: 'badge.icon',
-                            ) => $color !== 'gray',
-                        ]
-                        : []
-                    ),
-                    ...(
-                        ((! $isBadge) && $iconColor)
-                        ? [
-                            get_color_css_variables(
-                                $iconColor,
-                                shades: [400, 500],
-                                alias: 'tables::columns.text-column.item.icon',
-                            ) => ! in_array($iconColor, [null, 'gray']),
-                        ]
-                        : []
-                    ),
-                ]))?->toHtml();
+                ->color(Icon::class, $iconColor))?->toHtml();
 
             $isCopyable = $this->isCopyable($stateItem);
 
@@ -322,50 +294,28 @@ class TextColumn extends Column implements HasEmbeddedView
                     ], escape: false)
                     ->class([
                         'fi-ta-text-item',
-                        ...((! $isBadge) ? [
-                            match ($color) {
-                                null, 'gray' => null,
-                                default => 'fi-color',
-                            },
-                            is_string($color) ? "fi-color-{$color}" : null,
-                            (($size = $this->getSize($stateItem)) instanceof TextColumnSize) ? "fi-size-{$size->value}" : $size,
-                            (($weight = $this->getWeight($stateItem)) instanceof FontWeight) ? "fi-font-{$weight->value}" : (is_string($weight) ? $weight : ''),
-                        ] : []),
                         (($fontFamily = $this->getFontFamily($stateItem)) instanceof FontFamily) ? "fi-font-{$fontFamily->value}" : (is_string($fontFamily) ? $fontFamily : ''),
                         'fi-copyable' => $isCopyable,
                     ])
-                    ->style([
-                        ...((! $isBadge) ? [
-                            get_color_css_variables(
-                                $color,
-                                shades: [400, 600],
-                                alias: 'tables::columns.text-column.item',
-                            ) => ! in_array($color, [null, 'gray']),
-                            "--line-clamp: {$lineClamp}" => $lineClamp,
-                        ] : []),
-                    ]),
+                    ->when(
+                        ! $isBadge,
+                        fn (ComponentAttributeBag $attributes) => $attributes
+                            ->class([
+                                (($size = $this->getSize($stateItem)) instanceof TextColumnSize) ? "fi-size-{$size->value}" : $size,
+                                (($weight = $this->getWeight($stateItem)) instanceof FontWeight) ? "fi-font-{$weight->value}" : (is_string($weight) ? $weight : ''),
+                            ])
+                            ->style([
+                                "--line-clamp: {$lineClamp}" => $lineClamp,
+                            ])
+                            ->color(Item::class, $color)
+                    ),
                 'badgeAttributes' => $isBadge
                     ? (new ComponentAttributeBag)
                         ->class([
                             'fi-badge',
-                            match ($color ?? 'primary') {
-                                'gray' => null,
-                                default => 'fi-color',
-                            },
-                            is_string($color) ? "fi-color-{$color}" : null,
                             (($size = $this->getSize($stateItem)) instanceof TextColumnSize) ? "fi-size-{$size->value}" : $size,
                         ])
-                        ->style([
-                            get_color_css_variables(
-                                $color,
-                                shades: [
-                                    50,
-                                    400,
-                                    600,
-                                ],
-                                alias: 'badge',
-                            ) => $color !== 'gray',
-                        ])
+                        ->color(Badge::class, $color ?? 'primary')
                     : null,
                 'iconAfterHtml' => ($iconPosition === IconPosition::After) ? $iconHtml : '',
                 'iconBeforeHtml' => ($iconPosition === IconPosition::Before) ? $iconHtml : '',
