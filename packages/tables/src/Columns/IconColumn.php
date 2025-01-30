@@ -13,6 +13,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
+
 use function Filament\Support\generate_icon_html;
 
 class IconColumn extends Column implements HasEmbeddedView
