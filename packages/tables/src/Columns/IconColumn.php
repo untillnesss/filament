@@ -7,14 +7,13 @@ use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Columns\IconColumn\Enums\IconColumnSize;
+use Filament\Tables\View\Components\Columns\IconColumn\Icon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
-
 use function Filament\Support\generate_icon_html;
-use function Filament\Support\get_color_css_variables;
 
 class IconColumn extends Column implements HasEmbeddedView
 {
@@ -310,20 +309,9 @@ class IconColumn extends Column implements HasEmbeddedView
                             : null,
                     ], escape: false)
                     ->class([
-                        match ($color) {
-                            null, 'gray' => null,
-                            default => 'fi-color',
-                        } => filled($color),
-                        is_string($color) ? "fi-color-{$color}" : null,
                         (($size = $this->getSize($stateItem)) instanceof IconColumnSize) ? "fi-size-{$size->value}" : $size,
                     ])
-                    ->style([
-                        get_color_css_variables(
-                            $color,
-                            shades: [400, 500],
-                            alias: 'tables::columns.icon-column.item',
-                        ) => $color !== 'gray',
-                    ]))
+                    ->color(Icon::class, $color))
                     ->toHtml() ?>
             <?php } ?>
         </div>
