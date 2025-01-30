@@ -6,6 +6,7 @@ use Filament\Support\Facades\FilamentColor;
 use Filament\Support\View\Components\Badge;
 use Filament\Support\View\Components\Button;
 use Filament\Support\View\Components\Contracts\HasColor;
+use Filament\Support\View\Components\Dropdown\Header as DropdownHeader;
 use Filament\Support\View\Components\Dropdown\Item as DropdownItem;
 use Filament\Support\View\Components\Dropdown\Item\Icon as DropdownItemIcon;
 use Filament\Support\View\Components\IconButton;
@@ -53,11 +54,12 @@ it('generates component classes', function (string | HasColor $component, string
         ->toMatchSnapshot();
 })
     ->with([
-        'dropdown item icon' => DropdownItemIcon::class,
-        'dropdown item' => DropdownItem::class,
         'badge' => Badge::class,
         'button' => new Button(isOutlined: false),
         'outlined button' => new Button(isOutlined: true),
+        'dropdown header' => DropdownHeader::class,
+        'dropdown item icon' => DropdownItemIcon::class,
+        'dropdown item' => DropdownItem::class,
         'icon button' => IconButton::class,
         'link' => Link::class,
     ])
