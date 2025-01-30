@@ -15,6 +15,7 @@ use Filament\Support\View\Components\Link;
 use Filament\Support\View\Components\Modal\Icon as ModalIcon;
 use Filament\Support\View\Components\Section\Icon as SectionIcon;
 use Filament\Support\View\Components\Toggle;
+use Filament\Tables\View\Components\Columns\Summarizers\Count\Icon as TableColumnCountSummarizerIcon;
 use Filament\Tests\TestCase;
 use Filament\Widgets\View\Components\ChartWidget;
 use Filament\Widgets\View\Components\StatsOverviewWidget\Stat\Description as StatsOverviewWidgetStatDescription;
@@ -75,6 +76,7 @@ it('generates component classes', function (string | HasColor $component, string
         'section icon' => SectionIcon::class,
         'stats overview widget stat description' => StatsOverviewWidgetStatDescription::class,
         'stats overview widget stat chart' => StatsOverviewWidgetStatChart::class,
+        'table column count summarizer icon' => TableColumnCountSummarizerIcon::class,
         'toggle' => Toggle::class,
     ])
     ->with(fn (): array => array_keys(app(ColorManager::class)->getColors()));
