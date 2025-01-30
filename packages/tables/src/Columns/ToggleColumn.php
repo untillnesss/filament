@@ -7,6 +7,7 @@ use Filament\Forms\Components\Concerns\HasToggleIcons;
 use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
+use Filament\Support\View\Components\Toggle;
 use Filament\Tables\Columns\Contracts\Editable;
 use Filament\Tables\Table;
 use Illuminate\Support\Arr;
@@ -14,7 +15,7 @@ use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
 
 use function Filament\Support\generate_icon_html;
-use function Filament\Support\get_color_css_variables;
+use function Filament\Support\get_component_color_classes;
 
 class ToggleColumn extends Column implements Editable, HasEmbeddedView
 {
@@ -85,28 +86,11 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
                 x-on:click="if (! $el.hasAttribute('disabled')) state = ! state"
                 x-bind:class="state ? '<?= Arr::toCssClasses([
                     'fi-toggle-on',
-                    match ($onColor) {
-                        'gray' => null,
-                        default => 'fi-color',
-                    },
-                    is_string($onColor) ? "fi-color-{$onColor}" : null,
+                    ...get_component_color_classes(Toggle::class, $onColor),
                 ]) ?>' : '<?= Arr::toCssClasses([
                     'fi-toggle-off',
-                    match ($offColor) {
-                        'gray' => null,
-                        default => 'fi-color bg-custom-600',
-                    },
-                    is_string($offColor) ? "fi-color-{$offColor}" : null,
+                    ...get_component_color_classes(Toggle::class, $offColor),
                 ]) ?>'"
-                x-bind:style="state ? '<?= get_color_css_variables(
-                    $onColor,
-                    shades: [600],
-                    alias: 'toggle.on',
-                ) ?>' : '<?= get_color_css_variables(
-                    $offColor,
-                    shades: [600],
-                    alias: 'toggle.off',
-                ) ?>'"
                 x-tooltip="
                     error === undefined
                         ? false

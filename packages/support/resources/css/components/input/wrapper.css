@@ -80,7 +80,7 @@
         @apply size-5 text-gray-400 dark:text-gray-500;
 
         &.fi-color {
-            @apply text-custom-500;
+            @apply text-color-500;
         }
     }
 }

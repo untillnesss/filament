@@ -5,6 +5,7 @@ namespace Filament\Support;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Support\Facades\FilamentView;
+use Filament\Support\View\Components\Contracts\HasColor;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
@@ -61,9 +62,24 @@ if (! function_exists('Filament\Support\locale_has_pluralization')) {
     }
 }
 
+if (! function_exists('Filament\Support\get_component_color_classes')) {
+    /**
+     * @param  class-string<HasColor>  $component
+     * @return array<string>
+     */
+    function get_component_color_classes(string | HasColor $component, ?string $color): array
+    {
+        if (blank($color)) {
+            return [];
+        }
+
+        return FilamentColor::getComponentClasses($component, $color);
+    }
+}
+
 if (! function_exists('Filament\Support\get_color_css_variables')) {
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null  $color
+     * @param  string | array<int | string, string | int> | null  $color
      * @param  array<int>  $shades
      */
     function get_color_css_variables(string | array | null $color, array $shades, ?string $alias = null): ?string
@@ -90,13 +106,13 @@ if (! function_exists('Filament\Support\get_color_css_variables')) {
 
         if (is_string($color)) {
             foreach ($shades as $shade) {
-                $variables[] = "--c-{$shade}:var(--{$color}-{$shade})";
+                $variables[] = "--color-{$shade}:var(--{$color}-{$shade})";
             }
         }
 
         if (is_array($color)) {
             foreach ($shades as $shade) {
-                $variables[] = "--c-{$shade}:{$color[$shade]}";
+                $variables[] = "--color-{$shade}:{$color[$shade]}";
             }
         }
 

@@ -19,7 +19,7 @@ trait HasHint
     protected array $hintActions = [];
 
     /**
-     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null
+     * @var string | array<int | string, string | int> | Closure | null
      */
     protected string | array | Closure | null $hintColor = null;
 
@@ -61,7 +61,7 @@ trait HasHint
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
     public function hintColor(string | array | Closure | null $color): static
     {
@@ -111,7 +111,7 @@ trait HasHint
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     * @return string | array<int | string, string | int> | null
      */
     public function getHintColor(): string | array | null
     {

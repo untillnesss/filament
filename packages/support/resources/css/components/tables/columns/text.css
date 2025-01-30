@@ -194,7 +194,7 @@
     }
 
     &.fi-color {
-        @apply text-custom-600 dark:text-custom-400;
+        @apply text-(--text) dark:text-(--dark-text);
 
         &li::marker {
             @apply text-gray-950 dark:text-white;
@@ -213,7 +213,7 @@
         @apply size-5 shrink-0 text-gray-400 dark:text-gray-500;
 
         &.fi-color {
-            @apply text-custom-500;
+            @apply text-color-500;
         }
     }
 

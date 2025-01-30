@@ -2,6 +2,8 @@
     use Filament\Support\Enums\ActionSize;
     use Filament\Support\Enums\IconPosition;
     use Filament\Support\Enums\IconSize;
+    use Filament\Support\View\Components\Badge;
+    use Filament\Support\View\Components\Button;
     use Illuminate\View\ComponentAttributeBag;
 @endphp
 
@@ -125,21 +127,10 @@
                 'fi-btn',
                 'fi-disabled' => $disabled,
                 'fi-outlined' => $outlined,
-                match ($color) {
-                    'gray' => '',
-                    default => 'fi-color',
-                },
-                is_string($color) ? "fi-color-{$color}" : null,
                 ($size instanceof ActionSize) ? "fi-size-{$size->value}" : (is_string($size) ? $size : ''),
                 is_string($labeledFrom) ? "fi-labeled-from-{$labeledFrom}" : null,
             ])
-            ->style([
-                \Filament\Support\get_color_css_variables(
-                    $color,
-                    shades: [400, 500, 600],
-                    alias: 'button',
-                ) => $color !== 'gray',
-            ])
+            ->color(app(Button::class, ['isOutlined' => $outlined]), $color)
     }}
 >
     @if ($iconPosition === IconPosition::Before)
@@ -223,23 +214,8 @@
             <span
                 @class([
                     'fi-badge',
-                    match ($badgeColor) {
-                        'gray' => '',
-                        default => 'fi-color',
-                    },
-                    is_string($badgeColor) ? "fi-color-{$badgeColor}" : null,
+                    ...\Filament\Support\get_component_color_classes(Badge::class, $badgeColor),
                     ($badgeSize instanceof ActionSize) ? "fi-size-{$badgeSize->value}" : (is_string($badgeSize) ? $badgeSize : ''),
-                ])
-                @style([
-                    \Filament\Support\get_color_css_variables(
-                        $badgeColor,
-                        shades: [
-                            50,
-                            400,
-                            600,
-                        ],
-                        alias: 'badge',
-                    ) => $badgeColor !== 'gray',
                 ])
             >
                 {{ $badge }}
