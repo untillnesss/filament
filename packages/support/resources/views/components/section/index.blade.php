@@ -72,7 +72,7 @@
                         'fi-section-header-icon',
                         ...\Filament\Support\get_component_color_classes(Icon::class, $iconColor),
                         ($iconSize instanceof IconSize) ? "fi-size-{$iconSize->value}" : (is_string($iconSize) ? $iconSize : null),
-                    ]) }}
+                    ])) }}
 
             @if ($hasHeading || $hasDescription)
                 <div class="fi-section-header-text-ctn">
