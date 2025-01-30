@@ -81,7 +81,7 @@
     }
 
     &.fi-color {
-        @apply text-color-600 dark:text-color-400;
+        @apply text-(--text) dark:text-(--dark-text);
 
         & > .fi-icon {
             @apply text-color-600 dark:text-color-400;
