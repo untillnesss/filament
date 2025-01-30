@@ -7,13 +7,13 @@
 @props([
     'color' => 'gray',
     'icon' => null,
-    'iconSize' => IconSize::Medium,
+    'iconSize' => null,
     'tag' => 'div',
 ])
 
 @php
     if (! ($iconSize instanceof IconSize)) {
-        $iconSize = IconSize::tryFrom($iconSize) ?? $iconSize;
+        $iconSize = filled($iconSize) ? (IconSize::tryFrom($iconSize) ?? $iconSize) : null;
     }
 @endphp
 
@@ -26,12 +26,7 @@
             ->color(Header::class, $color)
     }}
 >
-    {{
-        \Filament\Support\generate_icon_html($icon, attributes: (new ComponentAttributeBag)
-            ->class([
-                ($iconSize instanceof IconSize) ? "fi-size-{$iconSize->value}" : (is_string($iconSize) ? $iconSize : null),
-            ]))
-    }}
+    {{ \Filament\Support\generate_icon_html($icon, size: $iconSize) }}
 
     <span>
         {{ $slot }}

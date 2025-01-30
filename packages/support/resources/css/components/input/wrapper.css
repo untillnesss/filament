@@ -76,8 +76,8 @@
         @apply text-sm whitespace-nowrap text-gray-500 dark:text-gray-400;
     }
 
-    & .fi-input-wrp-icon {
-        @apply size-5 text-gray-400 dark:text-gray-500;
+    & .fi-icon {
+        @apply text-gray-400 dark:text-gray-500;
 
         &.fi-color {
             @apply text-color-500;

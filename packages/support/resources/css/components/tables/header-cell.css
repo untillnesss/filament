@@ -127,7 +127,7 @@
     }
 
     & .fi-icon {
-        @apply size-5 shrink-0 transition duration-75;
+        @apply shrink-0 transition duration-75;
     }
 }
 

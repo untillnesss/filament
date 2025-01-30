@@ -52,7 +52,7 @@
     }}
 >
     @if ($icon && $iconPosition === IconPosition::Before)
-        {{ \Filament\Support\generate_icon_html($icon, attributes: (new \Illuminate\View\ComponentAttributeBag)->class(['fi-tabs-item-icon'])) }}
+        {{ \Filament\Support\generate_icon_html($icon) }}
     @endif
 
     <span class="fi-tabs-item-label">
@@ -60,7 +60,7 @@
     </span>
 
     @if ($icon && $iconPosition === IconPosition::After)
-        {{ \Filament\Support\generate_icon_html($icon, attributes: (new \Illuminate\View\ComponentAttributeBag)->class(['fi-tabs-item-icon'])) }}
+        {{ \Filament\Support\generate_icon_html($icon) }}
     @endif
 
     @if (filled($badge))

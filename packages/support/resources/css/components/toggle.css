@@ -22,7 +22,7 @@
     }
 
     & .fi-icon {
-        @apply size-3 text-gray-400 dark:text-gray-700;
+        @apply text-gray-400 dark:text-gray-700;
     }
 
     &.fi-toggle-on {

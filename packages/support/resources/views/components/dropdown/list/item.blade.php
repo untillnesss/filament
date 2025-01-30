@@ -28,15 +28,13 @@
 ])
 
 @php
-    if (! $iconSize instanceof IconSize) {
-        $iconSize = filled($iconSize) ? (IconSize::tryFrom($iconSize) ?? $iconSize) : null;
+    if (filled($iconSize) && (! $iconSize instanceof IconSize)) {
+        $iconSize = IconSize::tryFrom($iconSize) ?? $iconSize;
     }
 
     $iconColor ??= $color;
 
     $iconClasses = \Illuminate\Support\Arr::toCssClasses([
-        'fi-dropdown-list-item-icon',
-        ($iconSize instanceof IconSize) ? ('fi-size-' . $iconSize->value) : (is_string($iconSize) ? $iconSize : ''),
         ...\Filament\Support\get_component_color_classes(Icon::class, $iconColor),
     ]);
 
@@ -104,7 +102,7 @@
             \Filament\Support\generate_icon_html($icon, $iconAlias, (new ComponentAttributeBag([
                 'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $hasLoadingIndicator,
                 'wire:target' => $hasLoadingIndicator ? $loadingIndicatorTarget : false,
-            ]))->class([$iconClasses]))
+            ]))->class([$iconClasses]), size: $iconSize)
         }}
     @endif
 
@@ -124,7 +122,7 @@
             \Filament\Support\generate_loading_indicator_html((new ComponentAttributeBag([
                 'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
                 'wire:target' => $loadingIndicatorTarget,
-            ]))->class([$iconClasses]))
+            ]))->class([$iconClasses]), size: $iconSize)
         }}
     @endif
 

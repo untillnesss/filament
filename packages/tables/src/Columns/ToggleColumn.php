@@ -111,6 +111,7 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
                         <?= generate_icon_html(
                             $onIcon,
                             attributes: (new ComponentAttributeBag)->merge(['x-cloak' => true], escape: false),
+                            defaultSize: 'fi-size-xs',
                         )?->toHtml() ?>
                     </div>
                 </div>

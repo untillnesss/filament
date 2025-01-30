@@ -2,6 +2,9 @@
 
 namespace Filament\Support;
 
+use BackedEnum;
+use Filament\Support\Contracts\HasIconSize;
+use Filament\Support\Enums\IconSize;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Support\Facades\FilamentView;
@@ -179,7 +182,7 @@ if (! function_exists('Filament\Support\generate_href_html')) {
 }
 
 if (! function_exists('Filament\Support\generate_icon_html')) {
-    function generate_icon_html(string | Htmlable | null $icon, ?string $alias = null, ?ComponentAttributeBag $attributes = null): ?Htmlable
+    function generate_icon_html(string | BackedEnum | Htmlable | null $icon, ?string $alias = null, ?ComponentAttributeBag $attributes = null, IconSize | string | null $size = null, IconSize | string | null $defaultSize = null): ?Htmlable
     {
         if (filled($alias)) {
             $icon = FilamentIcon::resolve($alias) ?: $icon;
@@ -189,7 +192,16 @@ if (! function_exists('Filament\Support\generate_icon_html')) {
             return null;
         }
 
-        $attributes = ($attributes ?? new ComponentAttributeBag)->class(['fi-icon']);
+        if ($icon instanceof HasIconSize) {
+            $size ??= $icon->getIconSize();
+        }
+
+        $size ??= $defaultSize;
+
+        $attributes = ($attributes ?? new ComponentAttributeBag)->class([
+            'fi-icon',
+            $size instanceof IconSize ? "fi-size-{$size?->value}" : $size => $size,
+        ]);
 
         if ($icon instanceof Htmlable) {
             return new HtmlString(<<<HTML
@@ -199,10 +211,14 @@ if (! function_exists('Filament\Support\generate_icon_html')) {
                 HTML);
         }
 
-        if (str_contains($icon, '/')) {
+        if (is_string($icon) && str_contains($icon, '/')) {
             return new HtmlString(<<<HTML
                 <img src="{$icon}" {$attributes->toHtml()} />
                 HTML);
+        }
+
+        if ($icon instanceof BackedEnum) {
+            $icon = $icon->value;
         }
 
         return svg($icon, $attributes->get('class'), array_filter($attributes->except('class')->getAttributes()));
@@ -210,9 +226,14 @@ if (! function_exists('Filament\Support\generate_icon_html')) {
 }
 
 if (! function_exists('Filament\Support\generate_loading_indicator_html')) {
-    function generate_loading_indicator_html(?ComponentAttributeBag $attributes = null): Htmlable
+    function generate_loading_indicator_html(?ComponentAttributeBag $attributes = null, IconSize | string | null $size = null): Htmlable
     {
-        $attributes = ($attributes ?? new ComponentAttributeBag)->class(['fi-icon fi-loading-indicator']);
+        $size ??= IconSize::Medium;
+
+        $attributes = ($attributes ?? new ComponentAttributeBag)->class([
+            'fi-icon fi-loading-indicator',
+            $size instanceof IconSize ? "fi-size-{$size->value}" : $size,
+        ]);
 
         return new HtmlString(<<<HTML
             <svg

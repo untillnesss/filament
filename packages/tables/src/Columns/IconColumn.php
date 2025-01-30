@@ -5,6 +5,7 @@ namespace Filament\Tables\Columns;
 use Closure;
 use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\IconSize;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Columns\IconColumn\Enums\IconColumnSize;
 use Filament\Tables\View\Components\Columns\IconColumn\Icon;
@@ -139,22 +140,22 @@ class IconColumn extends Column implements HasEmbeddedView
         return $this;
     }
 
-    public function getSize(mixed $state): IconColumnSize | string
+    public function getSize(mixed $state): IconColumnSize | string | null
     {
         $size = $this->evaluate($this->size, [
             'state' => $state,
         ]);
 
         if (blank($size)) {
-            return IconColumnSize::Large;
+            return null;
+        }
+
+        if ($size === 'base') {
+            return null;
         }
 
         if (is_string($size)) {
             $size = IconColumnSize::tryFrom($size) ?? $size;
-        }
-
-        if ($size === 'base') {
-            return IconColumnSize::Large;
         }
 
         return $size;
@@ -298,6 +299,13 @@ class IconColumn extends Column implements HasEmbeddedView
             <?php foreach ($state as $stateItem) { ?>
                 <?php
                     $color = $this->getColor($stateItem);
+                $size = $this->getSize($stateItem);
+
+                if ($size instanceof IconSize) {
+                    $iconSize = "fi-size-{$size}";
+                } else {
+                    $iconSize = $size;
+                }
                 ?>
 
                 <?= generate_icon_html($this->getIcon($stateItem), attributes: (new ComponentAttributeBag)
@@ -309,10 +317,7 @@ class IconColumn extends Column implements HasEmbeddedView
                             }'
                             : null,
                     ], escape: false)
-                    ->class([
-                        (($size = $this->getSize($stateItem)) instanceof IconColumnSize) ? "fi-size-{$size->value}" : $size,
-                    ])
-                    ->color(Icon::class, $color))
+                    ->color(Icon::class, $color), size: $iconSize, defaultSize: IconSize::Large)
                     ->toHtml() ?>
             <?php } ?>
         </div>

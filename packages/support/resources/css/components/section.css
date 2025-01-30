@@ -151,21 +151,21 @@
 
     & .fi-section-header {
         @apply flex items-center gap-3;
-    }
 
-    & .fi-section-header-icon {
-        @apply size-6 self-start text-gray-400 dark:text-gray-500;
+        & .fi-icon {
+            @apply self-start text-gray-400 dark:text-gray-500;
 
-        &.fi-color {
-            @apply text-color-500 dark:text-color-400;
-        }
+            &.fi-color {
+                @apply text-color-500 dark:text-color-400;
+            }
 
-        &.fi-size-sm {
-            @apply mt-1 size-4;
-        }
+            &.fi-size-sm {
+                @apply mt-1;
+            }
 
-        &.fi-size-md {
-            @apply mt-0.5 size-5;
+            &.fi-size-md {
+                @apply mt-0.5;
+            }
         }
     }
 

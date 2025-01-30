@@ -38,7 +38,6 @@
     $hasAlpineClasses = $hasAlpineDisabledClasses || $hasAlpineValidClasses;
 
     $getIconClasses = fn (string $color = 'gray'): string => \Illuminate\Support\Arr::toCssClasses([
-        'fi-input-wrp-icon',
         ...\Filament\Support\get_component_color_classes(Icon::class, $color),
     ]);
 

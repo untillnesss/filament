@@ -11,6 +11,7 @@ use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\IconPosition;
+use Filament\Support\Enums\IconSize;
 use Filament\Support\View\Components\Badge;
 use Filament\Tables\Columns\TextColumn\Enums\TextColumnSize;
 use Filament\Tables\Contracts\HasTable;
@@ -262,8 +263,14 @@ class TextColumn extends Column implements HasEmbeddedView
             $color = $this->getColor($stateItem) ?? ($isBadge ? 'primary' : null);
             $iconColor = $this->getIconColor($stateItem);
 
+            $size = $this->getSize($stateItem);
+
             $iconHtml = generate_icon_html($this->getIcon($stateItem), attributes: (new ComponentAttributeBag)
-                ->color(Icon::class, $iconColor))?->toHtml();
+                ->color(Icon::class, $iconColor), defaultSize: match ($size) {
+                    TextColumnSize::Medium => IconSize::Medium,
+                    TextColumnSize::Large => IconSize::Large,
+                    default => IconSize::Small,
+                })?->toHtml();
 
             $isCopyable = $this->isCopyable($stateItem);
 
@@ -301,7 +308,7 @@ class TextColumn extends Column implements HasEmbeddedView
                         ! $isBadge,
                         fn (ComponentAttributeBag $attributes) => $attributes
                             ->class([
-                                (($size = $this->getSize($stateItem)) instanceof TextColumnSize) ? "fi-size-{$size->value}" : $size,
+                                ($size instanceof TextColumnSize) ? "fi-size-{$size->value}" : $size,
                                 (($weight = $this->getWeight($stateItem)) instanceof FontWeight) ? "fi-font-{$weight->value}" : (is_string($weight) ? $weight : ''),
                             ])
                             ->style([
@@ -313,7 +320,7 @@ class TextColumn extends Column implements HasEmbeddedView
                     ? (new ComponentAttributeBag)
                         ->class([
                             'fi-badge',
-                            (($size = $this->getSize($stateItem)) instanceof TextColumnSize) ? "fi-size-{$size->value}" : $size,
+                            ($size instanceof TextColumnSize) ? "fi-size-{$size->value}" : $size,
                         ])
                         ->color(Badge::class, $color ?? 'primary')
                     : null,

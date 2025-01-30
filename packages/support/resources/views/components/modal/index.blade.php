@@ -187,7 +187,7 @@
                                                 ...\Filament\Support\get_component_color_classes(Icon::class, $iconColor),
                                             ])
                                         >
-                                            {{ \Filament\Support\generate_icon_html($icon, $iconAlias, (new \Illuminate\View\ComponentAttributeBag)->class(['fi-modal-icon'])) }}
+                                            {{ \Filament\Support\generate_icon_html($icon, $iconAlias, defaultSize: \Filament\Support\Enums\IconSize::Large) }}
                                         </div>
                                     </div>
                                 @endif
