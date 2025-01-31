@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Commands\Concerns\CanReadModelSchemas;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -127,8 +128,9 @@ class ResourceClassGenerator extends ClassGenerator
     protected function addNavigationIconPropertyToClass(ClassType $class): void
     {
         $this->namespace->addUse(BackedEnum::class);
+        $this->namespace->addUse(Heroicon::class);
 
-        $property = $class->addProperty('navigationIcon', 'heroicon-o-rectangle-stack')
+        $property = $class->addProperty('navigationIcon', new Literal('Heroicon::OutlinedRectangleStack'))
             ->setProtected()
             ->setStatic()
             ->setType('string|BackedEnum|null');

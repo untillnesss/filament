@@ -8,6 +8,7 @@ use BackedEnum;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class ManageUserTeams extends ManageRelatedRecords
@@ -16,7 +17,7 @@ class ManageUserTeams extends ManageRelatedRecords
 
     protected static string $relationship = 'teams';
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     public function form(Schema $schema): Schema
     {
