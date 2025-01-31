@@ -21,6 +21,7 @@ use Filament\Schemas\Components\UnorderedList;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\Width;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
@@ -35,7 +36,7 @@ class SetUpGoogleTwoFactorAuthenticationAction
         return Action::make('setUpGoogleTwoFactorAuthentication')
             ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.label'))
             ->color('primary')
-            ->icon('heroicon-m-lock-closed')
+            ->icon(Heroicon::LockClosed)
             ->link()
             ->mountUsing(function (HasActions $livewire, $action) use ($googleTwoFactorAuthentication) {
                 $livewire->mergeMountedActionArguments([
@@ -49,7 +50,7 @@ class SetUpGoogleTwoFactorAuthenticationAction
                 ]);
             })
             ->modalWidth(Width::Large)
-            ->modalIcon('heroicon-o-lock-closed')
+            ->modalIcon(Heroicon::OutlinedLockClosed)
             ->modalIconColor('primary')
             ->modalHeading(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.heading'))
             ->modalDescription(new HtmlString(Blade::render(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.modal.description'))))
@@ -166,7 +167,7 @@ class SetUpGoogleTwoFactorAuthenticationAction
                 Notification::make()
                     ->title(__('filament-panels::auth/multi-factor/google-two-factor/actions/set-up.notifications.enabled.title'))
                     ->success()
-                    ->icon('heroicon-o-lock-closed')
+                    ->icon(Heroicon::OutlinedLockClosed)
                     ->send();
             })
             ->rateLimit(5);

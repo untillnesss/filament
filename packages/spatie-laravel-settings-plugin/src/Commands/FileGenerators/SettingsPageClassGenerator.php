@@ -13,6 +13,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas\Schema;
 use Filament\Support\Commands\FileGenerators\ClassGenerator;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Str;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
@@ -84,7 +85,7 @@ class SettingsPageClassGenerator extends ClassGenerator
     {
         $this->namespace->addUse(BackedEnum::class);
 
-        $property = $class->addProperty('navigationIcon', 'heroicon-o-cog-6-tooth')
+        $property = $class->addProperty('navigationIcon', Heroicon::OutlinedCog6Tooth)
             ->setProtected()
             ->setStatic()
             ->setType('string|BackedEnum|null');

@@ -8,6 +8,7 @@ use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\IconSize;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn\Enums\IconColumnSize;
 use Filament\Tables\View\Components\Columns\IconColumn\Icon;
 use Illuminate\Contracts\Support\Arrayable;
@@ -211,7 +212,7 @@ class IconColumn extends Column implements HasEmbeddedView
     {
         return $this->evaluate($this->falseIcon)
             ?? FilamentIcon::resolve('tables::columns.icon-column.false')
-            ?? 'heroicon-o-x-circle';
+            ?? Heroicon::OutlinedXCircle;
     }
 
     /**
@@ -226,7 +227,7 @@ class IconColumn extends Column implements HasEmbeddedView
     {
         return $this->evaluate($this->trueIcon)
             ?? FilamentIcon::resolve('tables::columns.icon-column.true')
-            ?? 'heroicon-o-check-circle';
+            ?? Heroicon::OutlinedCheckCircle;
     }
 
     public function isBoolean(): bool

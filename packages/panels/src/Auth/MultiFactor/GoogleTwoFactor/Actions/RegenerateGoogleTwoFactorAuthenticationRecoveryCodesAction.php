@@ -17,6 +17,7 @@ use Filament\Schemas\Components\Text;
 use Filament\Schemas\Components\UnorderedList;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\Width;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Js;
@@ -28,10 +29,10 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
         return Action::make('regenerateGoogleTwoFactorAuthenticationRecoveryCodes')
             ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/regenerate-recovery-codes.label'))
             ->color('gray')
-            ->icon('heroicon-m-arrow-path')
+            ->icon(Heroicon::ArrowPath)
             ->link()
             ->modalWidth(Width::Large)
-            ->modalIcon('heroicon-o-arrow-path')
+            ->modalIcon(Heroicon::OutlinedArrowPath)
             ->modalIconColor('primary')
             ->modalHeading(__('filament-panels::auth/multi-factor/google-two-factor/actions/regenerate-recovery-codes.modal.heading'))
             ->modalDescription(__('filament-panels::auth/multi-factor/google-two-factor/actions/regenerate-recovery-codes.modal.description'))
@@ -75,7 +76,7 @@ class RegenerateGoogleTwoFactorAuthenticationRecoveryCodesAction
                 Notification::make()
                     ->title(__('filament-panels::auth/multi-factor/google-two-factor/actions/regenerate-recovery-codes.notifications.regenerated.title'))
                     ->success()
-                    ->icon('heroicon-o-arrow-path')
+                    ->icon(Heroicon::OutlinedArrowPath)
                     ->send();
             })
             ->registerModalActions([

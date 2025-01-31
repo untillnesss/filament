@@ -14,6 +14,7 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\Width;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\DB;
 
 class DisableGoogleTwoFactorAuthenticationAction
@@ -25,10 +26,10 @@ class DisableGoogleTwoFactorAuthenticationAction
         return Action::make('disableGoogleTwoFactorAuthentication')
             ->label(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.label'))
             ->color('danger')
-            ->icon('heroicon-m-lock-open')
+            ->icon(Heroicon::LockOpen)
             ->link()
             ->modalWidth(Width::Medium)
-            ->modalIcon('heroicon-o-lock-open')
+            ->modalIcon(Heroicon::OutlinedLockOpen)
             ->modalHeading(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.heading'))
             ->modalDescription(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.modal.description'))
             ->form([
@@ -88,7 +89,7 @@ class DisableGoogleTwoFactorAuthenticationAction
                 Notification::make()
                     ->title(__('filament-panels::auth/multi-factor/google-two-factor/actions/disable.notifications.disabled.title'))
                     ->success()
-                    ->icon('heroicon-o-lock-open')
+                    ->icon(Heroicon::OutlinedLockOpen)
                     ->send();
             })
             ->rateLimit(5);

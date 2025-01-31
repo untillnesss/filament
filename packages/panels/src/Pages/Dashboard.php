@@ -8,6 +8,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\NestedSchema;
 use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;
 use Illuminate\Contracts\Support\Htmlable;
@@ -29,7 +30,7 @@ class Dashboard extends Page
     {
         return static::$navigationIcon
             ?? FilamentIcon::resolve('panels::pages.dashboard.navigation-item')
-            ?? (Filament::hasTopNavigation() ? 'heroicon-m-home' : 'heroicon-o-home');
+            ?? (Filament::hasTopNavigation() ? Heroicon::Home : Heroicon::OutlinedHome);
     }
 
     public static function getRoutePath(): string

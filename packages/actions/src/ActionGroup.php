@@ -15,6 +15,7 @@ use Filament\Support\Concerns\HasIcon;
 use Filament\Support\Concerns\HasTooltip;
 use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
@@ -216,7 +217,7 @@ class ActionGroup extends ViewComponent implements Arrayable, HasEmbeddedView
 
     public function getIcon(): string | BackedEnum
     {
-        return $this->getBaseIcon() ?? FilamentIcon::resolve('actions::action-group') ?? 'heroicon-m-ellipsis-vertical';
+        return $this->getBaseIcon() ?? FilamentIcon::resolve('actions::action-group') ?? Heroicon::EllipsisVertical;
     }
 
     public function isHidden(): bool

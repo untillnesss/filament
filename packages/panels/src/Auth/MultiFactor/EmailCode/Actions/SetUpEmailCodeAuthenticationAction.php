@@ -11,6 +11,7 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\Width;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\DB;
 
@@ -21,7 +22,7 @@ class SetUpEmailCodeAuthenticationAction
         return Action::make('setUpEmailCodeAuthentication')
             ->label(__('filament-panels::auth/multi-factor/email-code/actions/set-up.label'))
             ->color('primary')
-            ->icon('heroicon-m-lock-closed')
+            ->icon(Heroicon::LockClosed)
             ->link()
             ->mountUsing(function (HasActions $livewire) use ($emailCodeAuthentication) {
                 $livewire->mergeMountedActionArguments([
@@ -37,7 +38,7 @@ class SetUpEmailCodeAuthenticationAction
                 $emailCodeAuthentication->sendCode($user, $secret);
             })
             ->modalWidth(Width::Large)
-            ->modalIcon('heroicon-o-lock-closed')
+            ->modalIcon(Heroicon::OutlinedLockClosed)
             ->modalIconColor('primary')
             ->modalHeading(__('filament-panels::auth/multi-factor/email-code/actions/set-up.modal.heading'))
             ->modalDescription(__('filament-panels::auth/multi-factor/email-code/actions/set-up.modal.description'))
@@ -91,7 +92,7 @@ class SetUpEmailCodeAuthenticationAction
                 Notification::make()
                     ->title(__('filament-panels::auth/multi-factor/email-code/actions/set-up.notifications.enabled.title'))
                     ->success()
-                    ->icon('heroicon-o-lock-closed')
+                    ->icon(Heroicon::OutlinedLockClosed)
                     ->send();
             })
             ->rateLimit(5);

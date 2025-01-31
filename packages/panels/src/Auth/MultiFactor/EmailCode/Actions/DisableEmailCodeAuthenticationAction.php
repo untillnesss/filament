@@ -10,6 +10,7 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\OneTimeCodeInput;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\Width;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\DB;
 
 class DisableEmailCodeAuthenticationAction
@@ -19,7 +20,7 @@ class DisableEmailCodeAuthenticationAction
         return Action::make('disableEmailCodeAuthentication')
             ->label(__('filament-panels::auth/multi-factor/email-code/actions/disable.label'))
             ->color('danger')
-            ->icon('heroicon-m-lock-open')
+            ->icon(Heroicon::LockOpen)
             ->link()
             ->mountUsing(function () use ($emailCodeAuthentication) {
                 /** @var HasEmailCodeAuthentication $user */
@@ -28,7 +29,7 @@ class DisableEmailCodeAuthenticationAction
                 $emailCodeAuthentication->sendCode($user);
             })
             ->modalWidth(Width::Medium)
-            ->modalIcon('heroicon-o-lock-open')
+            ->modalIcon(Heroicon::OutlinedLockOpen)
             ->modalHeading(__('filament-panels::auth/multi-factor/email-code/actions/disable.modal.heading'))
             ->modalDescription(__('filament-panels::auth/multi-factor/email-code/actions/disable.modal.description'))
             ->form([
@@ -73,7 +74,7 @@ class DisableEmailCodeAuthenticationAction
                 Notification::make()
                     ->title(__('filament-panels::auth/multi-factor/email-code/actions/disable.notifications.disabled.title'))
                     ->success()
-                    ->icon('heroicon-o-lock-open')
+                    ->icon(Heroicon::OutlinedLockOpen)
                     ->send();
             })
             ->rateLimit(5);

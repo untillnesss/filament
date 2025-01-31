@@ -8,6 +8,7 @@ use Filament\Actions\Action;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Filament\Support\View\Components\Modal;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
@@ -685,7 +686,7 @@ trait CanOpenModal
         }
 
         if ($this->isConfirmationRequired()) {
-            return FilamentIcon::resolve('actions::modal.confirmation') ?? 'heroicon-o-exclamation-triangle';
+            return FilamentIcon::resolve('actions::modal.confirmation') ?? Heroicon::OutlinedExclamationTriangle;
         }
 
         return null;

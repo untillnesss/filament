@@ -7,6 +7,7 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
@@ -120,6 +121,6 @@ trait HasEmptyState
     {
         return $this->evaluate($this->emptyStateIcon)
             ?? FilamentIcon::resolve('tables::empty-state')
-            ?? 'heroicon-o-x-mark';
+            ?? Heroicon::OutlinedXMark;
     }
 }

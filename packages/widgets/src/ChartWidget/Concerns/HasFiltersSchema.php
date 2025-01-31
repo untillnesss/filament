@@ -5,6 +5,7 @@ namespace Filament\Widgets\ChartWidget\Concerns;
 use Filament\Actions\Action;
 use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 
 trait HasFiltersSchema
 {
@@ -20,7 +21,7 @@ trait HasFiltersSchema
         return Action::make('filter')
             ->label(__('filament-widgets::chart.actions.filter.label'))
             ->iconButton()
-            ->icon(FilamentIcon::resolve('widgets::chart-widget.filter') ?? 'heroicon-m-funnel')
+            ->icon(FilamentIcon::resolve('widgets::chart-widget.filter') ?? Heroicon::Funnel)
             ->color('gray')
             ->livewireClickHandlerEnabled(false);
     }

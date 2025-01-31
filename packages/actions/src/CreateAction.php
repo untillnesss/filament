@@ -8,6 +8,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -49,7 +50,7 @@ class CreateAction extends Action
 
         $this->successNotificationTitle(__('filament-actions::create.single.notifications.created.title'));
 
-        $this->groupedIcon(FilamentIcon::resolve('actions::create-action.grouped') ?? 'heroicon-m-plus');
+        $this->groupedIcon(FilamentIcon::resolve('actions::create-action.grouped') ?? Heroicon::Plus);
 
         $this->record(null);
 
