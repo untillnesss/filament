@@ -4,6 +4,7 @@ namespace Filament\Tests\Fixtures\Resources\Shop\Products;
 
 use BackedEnum;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tests\Fixtures\Models\Product;
 use Filament\Tests\Fixtures\Resources\Shop\Products\Pages\CreateProduct;
 use Filament\Tests\Fixtures\Resources\Shop\Products\Pages\EditProduct;
@@ -16,7 +17,7 @@ class ProductResource extends Resource
 
     protected static ?string $navigationGroup = 'Shop';
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedShoppingBag;
 
     public static function getPages(): array
     {

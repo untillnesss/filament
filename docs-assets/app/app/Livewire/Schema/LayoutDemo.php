@@ -26,6 +26,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\IconPosition;
 use Filament\Support\Enums\VerticalAlignment;
+use Filament\Support\Icons\Heroicon;
 use Livewire\Component;
 
 class LayoutDemo extends Component implements HasActions, HasForms
@@ -104,7 +105,7 @@ class LayoutDemo extends Component implements HasActions, HasForms
                             ->statePath('tabsIcons')
                             ->schema([
                                 Tab::make('Notifications')
-                                    ->icon('heroicon-m-bell')
+                                    ->icon(Heroicon::Bell)
                                     ->schema([
                                         Checkbox::make('enabled')
                                             ->default(true),
@@ -115,9 +116,9 @@ class LayoutDemo extends Component implements HasActions, HasForms
                                             ]),
                                     ]),
                                 Tab::make('Security')
-                                    ->icon('heroicon-m-lock-closed'),
+                                    ->icon(Heroicon::LockClosed),
                                 Tab::make('Meta')
-                                    ->icon('heroicon-m-bars-3-center-left'),
+                                    ->icon(Heroicon::Bars3CenterLeft),
                             ]),
                     ]),
                 Group::make()
@@ -130,7 +131,7 @@ class LayoutDemo extends Component implements HasActions, HasForms
                             ->statePath('tabsIconsAfter')
                             ->schema([
                                 Tab::make('Notifications')
-                                    ->icon('heroicon-m-bell')
+                                    ->icon(Heroicon::Bell)
                                     ->iconPosition(IconPosition::After)
                                     ->schema([
                                         Checkbox::make('enabled')
@@ -142,10 +143,10 @@ class LayoutDemo extends Component implements HasActions, HasForms
                                             ]),
                                     ]),
                                 Tab::make('Security')
-                                    ->icon('heroicon-m-lock-closed')
+                                    ->icon(Heroicon::LockClosed)
                                     ->iconPosition(IconPosition::After),
                                 Tab::make('Meta')
-                                    ->icon('heroicon-m-bars-3-center-left')
+                                    ->icon(Heroicon::Bars3CenterLeft)
                                     ->iconPosition(IconPosition::After),
                             ]),
                     ]),
@@ -215,7 +216,7 @@ class LayoutDemo extends Component implements HasActions, HasForms
                     ->schema([
                         Wizard::make([
                             Wizard\Step::make('Order')
-                                ->icon('heroicon-m-shopping-bag')
+                                ->icon(Heroicon::ShoppingBag)
                                 ->schema([
                                     Repeater::make('items')
                                         ->hiddenLabel()
@@ -238,9 +239,9 @@ class LayoutDemo extends Component implements HasActions, HasForms
                                     Textarea::make('specialOrderNotes'),
                                 ]),
                             Wizard\Step::make('Delivery')
-                                ->icon('heroicon-m-truck'),
+                                ->icon(Heroicon::Truck),
                             Wizard\Step::make('Billing')
-                                ->icon('heroicon-m-credit-card'),
+                                ->icon(Heroicon::CreditCard),
                         ])
                             ->statePath('wizardIcons'),
                     ]),
@@ -252,14 +253,14 @@ class LayoutDemo extends Component implements HasActions, HasForms
                     ->schema([
                         Wizard::make([
                             Wizard\Step::make('Order')
-                                ->icon('heroicon-m-shopping-bag')
-                                ->completedIcon('heroicon-m-hand-thumb-up'),
+                                ->icon(Heroicon::ShoppingBag)
+                                ->completedIcon(Heroicon::HandThumbUp),
                             Wizard\Step::make('Delivery')
-                                ->icon('heroicon-m-truck')
-                                ->completedIcon('heroicon-m-hand-thumb-up'),
+                                ->icon(Heroicon::Truck)
+                                ->completedIcon(Heroicon::HandThumbUp),
                             Wizard\Step::make('Billing')
-                                ->icon('heroicon-m-credit-card')
-                                ->completedIcon('heroicon-m-hand-thumb-up')
+                                ->icon(Heroicon::CreditCard)
+                                ->completedIcon(Heroicon::HandThumbUp)
                                 ->schema([
                                     Repeater::make('items')
                                         ->hiddenLabel()
@@ -408,7 +409,7 @@ class LayoutDemo extends Component implements HasActions, HasForms
                     ->schema([
                         Section::make('Cart')
                             ->description('The items you have selected for purchase')
-                            ->icon('heroicon-m-shopping-bag')
+                            ->icon(Heroicon::ShoppingBag)
                             ->statePath('sectionIcons')
                             ->schema([
                                 Repeater::make('items')
@@ -542,9 +543,9 @@ class LayoutDemo extends Component implements HasActions, HasForms
                     ->schema([
                         Actions::make([
                             Action::make('star')
-                                ->icon('heroicon-m-star'),
+                                ->icon(Heroicon::Star),
                             Action::make('resetStars')
-                                ->icon('heroicon-m-x-mark')
+                                ->icon(Heroicon::XMark)
                                 ->color('danger'),
                         ]),
                     ]),
@@ -556,9 +557,9 @@ class LayoutDemo extends Component implements HasActions, HasForms
                     ->schema([
                         Actions::make([
                             Action::make('star')
-                                ->icon('heroicon-m-star'),
+                                ->icon(Heroicon::Star),
                             Action::make('resetStars')
-                                ->icon('heroicon-m-x-mark')
+                                ->icon(Heroicon::XMark)
                                 ->color('danger'),
                         ])->fullWidth(),
                     ]),
@@ -570,9 +571,9 @@ class LayoutDemo extends Component implements HasActions, HasForms
                     ->schema([
                         Actions::make([
                             Action::make('star')
-                                ->icon('heroicon-m-star'),
+                                ->icon(Heroicon::Star),
                             Action::make('resetStars')
-                                ->icon('heroicon-m-x-mark')
+                                ->icon(Heroicon::XMark)
                                 ->color('danger'),
                         ])->alignment(Alignment::Center),
                     ]),
@@ -588,9 +589,9 @@ class LayoutDemo extends Component implements HasActions, HasForms
                                     ->default('4572100479'),
                                 Actions::make([
                                     Action::make('star')
-                                        ->icon('heroicon-m-star'),
+                                        ->icon(Heroicon::Star),
                                     Action::make('resetStars')
-                                        ->icon('heroicon-m-x-mark')
+                                        ->icon(Heroicon::XMark)
                                         ->color('danger'),
                                 ])->verticalAlignment(VerticalAlignment::End),
                             ]),

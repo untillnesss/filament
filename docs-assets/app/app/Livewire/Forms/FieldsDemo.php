@@ -28,6 +28,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\HtmlString;
 use Livewire\Component;
 
@@ -110,7 +111,7 @@ class FieldsDemo extends Component implements HasActions, HasForms
                         TextInput::make('textInputSuffixIcon')
                             ->label('Domain')
                             ->default('https://filamentphp.com')
-                            ->suffixIcon('heroicon-m-globe-alt'),
+                            ->suffixIcon(Heroicon::GlobeAlt),
                     ]),
                 Group::make()
                     ->id('textInputRevealablePassword')
@@ -264,7 +265,7 @@ class FieldsDemo extends Component implements HasActions, HasForms
                             ->options([
                                 'filament' => 'filamentphp',
                             ])
-                            ->suffixIcon('heroicon-m-globe-alt'),
+                            ->suffixIcon(Heroicon::GlobeAlt),
                     ]),
                 Group::make()
                     ->id('checkbox')
@@ -312,8 +313,8 @@ class FieldsDemo extends Component implements HasActions, HasForms
                     ->schema([
                         Toggle::make('toggleIcons')
                             ->label('Is admin')
-                            ->onIcon('heroicon-m-bolt')
-                            ->offIcon('heroicon-m-user'),
+                            ->onIcon(Heroicon::Bolt)
+                            ->offIcon(Heroicon::User),
                     ]),
                 Group::make()
                     ->id('toggleOffColor')
@@ -628,7 +629,7 @@ class FieldsDemo extends Component implements HasActions, HasForms
                     ->schema([
                         TimePicker::make('dateTimePickerPrefixIcon')
                             ->label('At')
-                            ->prefixIcon('heroicon-m-play')
+                            ->prefixIcon(Heroicon::Play)
                             ->default('2000-01-01'),
                     ]),
                 Group::make()
@@ -978,9 +979,9 @@ class FieldsDemo extends Component implements HasActions, HasForms
                                             ->label('Paragraph')
                                             ->required(),
                                     ])
-                                    ->icon('heroicon-m-bars-3-bottom-left'),
+                                    ->icon(Heroicon::Bars3BottomLeft),
                                 Builder\Block::make('image')
-                                    ->icon('heroicon-m-photo'),
+                                    ->icon(Heroicon::Photo),
                             ])
                             ->default([
                                 [
@@ -1006,7 +1007,7 @@ class FieldsDemo extends Component implements HasActions, HasForms
                                             ->label('Paragraph')
                                             ->required(),
                                     ])
-                                    ->icon('heroicon-m-bars-3-bottom-left'),
+                                    ->icon(Heroicon::Bars3BottomLeft),
                             ])
                             ->default([
                                 [
@@ -1045,7 +1046,7 @@ class FieldsDemo extends Component implements HasActions, HasForms
                                             ->label('Paragraph')
                                             ->required(),
                                     ])
-                                    ->icon('heroicon-m-bars-3-bottom-left'),
+                                    ->icon(Heroicon::Bars3BottomLeft),
                             ])
                             ->default([
                                 [
@@ -1084,7 +1085,7 @@ class FieldsDemo extends Component implements HasActions, HasForms
                                             ->label('Paragraph')
                                             ->required(),
                                     ])
-                                    ->icon('heroicon-m-bars-3-bottom-left'),
+                                    ->icon(Heroicon::Bars3BottomLeft),
                             ])
                             ->default([
                                 [
@@ -1216,9 +1217,9 @@ class FieldsDemo extends Component implements HasActions, HasForms
                                 'published' => 'Published',
                             ])
                             ->icons([
-                                'draft' => 'heroicon-o-pencil',
-                                'scheduled' => 'heroicon-o-clock',
-                                'published' => 'heroicon-o-check-circle',
+                                'draft' => Heroicon::OutlinedPencil,
+                                'scheduled' => Heroicon::OutlinedClock,
+                                'published' => Heroicon::OutlinedCheckCircle,
                             ])
                             ->default('scheduled'),
                     ]),
@@ -1337,7 +1338,7 @@ class FieldsDemo extends Component implements HasActions, HasForms
                             ->default('22.66')
                             ->suffixAction(
                                 Action::make('copyCostToPrice')
-                                    ->icon('heroicon-m-clipboard'),
+                                    ->icon(Heroicon::Clipboard),
                             ),
                     ]),
             ]);
