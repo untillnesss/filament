@@ -581,7 +581,7 @@
                         wire:target="removeTableFilters,removeTableFilter"
                         class="fi-icon-btn fi-size-sm"
                     >
-                        {{ \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'tables::filters.remove-all-button', defaultSize: \Filament\Support\IconSize::Small) }}
+                        {{ \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'tables::filters.remove-all-button', defaultSize: \FIlament\Support\Enums\IconSize::Small) }}
                     </button>
                 @endif
             </div>
@@ -857,7 +857,7 @@
                                                 type="button"
                                                 class="fi-icon-btn fi-size-sm"
                                             >
-                                                {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-up', alias: 'tables::grouping.collapse-button', defaultSize: \Filament\Support\IconSize::Small) }}
+                                                {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-up', alias: 'tables::grouping.collapse-button', defaultSize: \FIlament\Support\Enums\IconSize::Small) }}
                                             </button>
                                         @endif
                                     </div>
@@ -1507,7 +1507,7 @@
                                                                 type="button"
                                                                 class="fi-icon-btn fi-size-sm"
                                                             >
-                                                                {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-up', alias: 'tables::grouping.collapse-button', defaultSize: \Filament\Support\IconSize::Small) }}
+                                                                {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-up', alias: 'tables::grouping.collapse-button', defaultSize: \FIlament\Support\Enums\IconSize::Small) }}
                                                             </button>
                                                         @endif
                                                     </div>

@@ -303,7 +303,7 @@ class IconColumn extends Column implements HasEmbeddedView
                 $size = $this->getSize($stateItem);
 
                 if ($size instanceof IconColumnSize) {
-                    $iconSize = "fi-size-{$size}";
+                    $iconSize = "fi-size-{$size->value}";
                 } else {
                     $iconSize = $size;
                 }

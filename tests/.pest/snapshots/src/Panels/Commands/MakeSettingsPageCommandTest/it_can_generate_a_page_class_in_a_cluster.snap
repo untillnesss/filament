@@ -3,13 +3,14 @@
 namespace App\Filament\Clusters\Site\Pages;
 
 use App\Filament\Clusters\Site\SiteCluster;
+use BackedEnum;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas\Schema;
 use Filament\Tests\Panels\Commands\Settings;
 
 class ManageSettings extends SettingsPage
 {
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     protected static string $settings = Settings::class;
 
