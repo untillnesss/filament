@@ -87,7 +87,7 @@ class SettingsPageClassGenerator extends ClassGenerator
         $property = $class->addProperty('navigationIcon', 'heroicon-o-cog-6-tooth')
             ->setProtected()
             ->setStatic()
-            ->setType('string | BackedEnum | null');
+            ->setType('string|BackedEnum|null');
         $this->configureNavigationIconProperty($property);
     }
 

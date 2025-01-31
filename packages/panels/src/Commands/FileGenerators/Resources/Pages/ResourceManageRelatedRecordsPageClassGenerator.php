@@ -133,7 +133,7 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
         $property = $class->addProperty('navigationIcon', 'heroicon-o-rectangle-stack')
             ->setProtected()
             ->setStatic()
-            ->setType('string | BackedEnum | null');
+            ->setType('string|BackedEnum|null');
         $this->configureNavigationIconProperty($property);
     }
 

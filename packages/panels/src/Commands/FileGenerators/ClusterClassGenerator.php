@@ -51,7 +51,7 @@ class ClusterClassGenerator extends ClassGenerator
         $property = $class->addProperty('navigationIcon', 'heroicon-o-squares-2x2')
             ->setProtected()
             ->setStatic()
-            ->setType('string | BackedEnum | null');
+            ->setType('string|BackedEnum|null');
         $this->configureNavigationIconProperty($property);
     }
 
