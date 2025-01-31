@@ -13,7 +13,7 @@
     </label>
 
     <x-filament::input.wrapper
-        prefix-icon="heroicon-m-magnifying-glass"
+        :prefix-icon="\Filament\Support\Icons\Heroicon::MagnifyingGlass"
         prefix-icon-alias="panels::global-search.field"
         inline-prefix
         :suffix="$suffix"

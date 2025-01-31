@@ -64,7 +64,7 @@
 
         @if (! $url)
             <x-filament::icon
-                icon="heroicon-m-chevron-down"
+                :icon="\Filament\Support\Icons\Heroicon::ChevronDown"
                 icon-alias="panels::topbar.group.toggle-button"
                 @class([
                     'fi-topbar-group-toggle-icon size-5',

@@ -99,7 +99,7 @@
             @if ($collapsible)
                 <x-filament::icon-button
                     color="gray"
-                    icon="heroicon-m-chevron-down"
+                    :icon="\Filament\Support\Icons\Heroicon::ChevronDown"
                     icon-alias="section.collapse-button"
                     x-on:click.stop="isCollapsed = ! isCollapsed"
                     class="fi-section-collapse-btn"

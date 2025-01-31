@@ -166,7 +166,7 @@
                             @if ($closeButton)
                                 <x-filament::icon-button
                                     color="gray"
-                                    icon="heroicon-o-x-mark"
+                                    :icon="\Filament\Support\Icons\Heroicon::OutlinedXMark"
                                     icon-alias="modal.close-button"
                                     icon-size="lg"
                                     :label="__('filament::components/modal.actions.close.label')"

@@ -142,7 +142,7 @@
             }}
         >
             {{
-                \Filament\Support\generate_icon_html('heroicon-c-x-mark', alias: 'badge.delete-button', attributes: (new \Illuminate\View\ComponentAttributeBag([
+                \Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::XMark, alias: 'badge.delete-button', attributes: (new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $deleteButtonHasLoadingIndicator,
                     'wire:target' => $deleteButtonHasLoadingIndicator ? $deleteButtonLoadingIndicatorTarget : false,
                 ])), size: \Filament\Support\Enums\IconSize::ExtraSmall)
