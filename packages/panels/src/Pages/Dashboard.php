@@ -2,6 +2,7 @@
 
 namespace Filament\Pages;
 
+use BackedEnum;
 use Filament\Facades\Filament;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\NestedSchema;
@@ -24,7 +25,7 @@ class Dashboard extends Page
             __('filament-panels::pages/dashboard.title');
     }
 
-    public static function getNavigationIcon(): string | Htmlable | null
+    public static function getNavigationIcon(): string | BackedEnum | Htmlable | null
     {
         return static::$navigationIcon
             ?? FilamentIcon::resolve('panels::pages.dashboard.navigation-item')

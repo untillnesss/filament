@@ -309,9 +309,10 @@ protected static ?string $navigationIcon = 'heroicon-o-user-group';
 Alternatively, you may set a dynamic navigation icon in the `getNavigationIcon()` method:
 
 ```php
+use BackedEnum;
 use Illuminate\Contracts\Support\Htmlable;
 
-public static function getNavigationIcon(): string | Htmlable | null
+public static function getNavigationIcon(): string | BackedEnum | Htmlable | null
 {
     return 'heroicon-o-user-group';
 }

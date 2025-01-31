@@ -2,6 +2,7 @@
 
 namespace Filament\Resources\RelationManagers;
 
+use BackedEnum;
 use Closure;
 use Filament\Actions;
 use Filament\Actions\Action;
@@ -92,7 +93,7 @@ class RelationManager extends Component implements Actions\Contracts\HasActions,
 
     protected static ?string $title = null;
 
-    protected static ?string $icon = null;
+    protected static string | BackedEnum | null $icon = null;
 
     protected static IconPosition $iconPosition = IconPosition::Before;
 

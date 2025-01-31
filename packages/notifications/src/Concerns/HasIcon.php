@@ -2,6 +2,7 @@
 
 namespace Filament\Notifications\Concerns;
 
+use BackedEnum;
 use Filament\Support\Concerns\HasIcon as BaseTrait;
 use Filament\Support\Facades\FilamentIcon;
 
@@ -11,7 +12,7 @@ trait HasIcon
         getIcon as baseGetIcon;
     }
 
-    public function getIcon(): ?string
+    public function getIcon(): string | BackedEnum | null
     {
         return $this->baseGetIcon() ?? match ($this->getStatus()) {
             'danger' => FilamentIcon::resolve('notifications::notification.danger') ?? 'heroicon-o-x-circle',

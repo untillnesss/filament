@@ -200,7 +200,7 @@ if (! function_exists('Filament\Support\generate_icon_html')) {
 
         $attributes = ($attributes ?? new ComponentAttributeBag)->class([
             'fi-icon',
-            $size instanceof IconSize ? "fi-size-{$size?->value}" : $size => $size,
+            $size instanceof IconSize ? "fi-size-{$size->value}" : $size => $size,
         ]);
 
         if ($icon instanceof Htmlable) {

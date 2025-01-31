@@ -2,6 +2,7 @@
 
 namespace Filament\Actions\Concerns;
 
+use BackedEnum;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Support\Enums\Alignment;
@@ -83,7 +84,7 @@ trait CanOpenModal
 
     protected bool | Closure | null $isModalAutofocused = null;
 
-    protected string | Closure | null $modalIcon = null;
+    protected string | BackedEnum | Closure | null $modalIcon = null;
 
     /**
      * @var string | array<int | string, string | int> | Closure | null
@@ -137,7 +138,7 @@ trait CanOpenModal
         return $this;
     }
 
-    public function modalIcon(string | Closure | null $icon = null): static
+    public function modalIcon(string | BackedEnum | Closure | null $icon = null): static
     {
         $this->modalIcon = $icon;
 
@@ -677,7 +678,7 @@ trait CanOpenModal
             ->button();
     }
 
-    public function getModalIcon(): ?string
+    public function getModalIcon(): string | BackedEnum | null
     {
         if ($icon = $this->evaluate($this->modalIcon)) {
             return $icon;

@@ -2,6 +2,7 @@
 
 namespace Filament\Navigation;
 
+use BackedEnum;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Support\Components\Component;
@@ -18,7 +19,7 @@ class MenuItem extends Component
      */
     protected string | array | Closure | null $color = null;
 
-    protected string | Closure | null $icon = null;
+    protected string | BackedEnum | Closure | null $icon = null;
 
     protected string | Closure | null $label = null;
 
@@ -54,7 +55,7 @@ class MenuItem extends Component
         return $this;
     }
 
-    public function icon(string | Closure | null $icon): static
+    public function icon(string | BackedEnum | Closure | null $icon): static
     {
         $this->icon = $icon;
 
@@ -133,7 +134,7 @@ class MenuItem extends Component
         return $this->evaluate($this->color);
     }
 
-    public function getIcon(): ?string
+    public function getIcon(): string | BackedEnum | null
     {
         return $this->evaluate($this->icon);
     }

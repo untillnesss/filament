@@ -2,6 +2,7 @@
 
 namespace Filament\Actions;
 
+use BackedEnum;
 use Closure;
 use Exception;
 use Filament\Actions\Concerns\InteractsWithRecord;
@@ -213,7 +214,7 @@ class ActionGroup extends ViewComponent implements Arrayable, HasEmbeddedView
         return $this->flatActions;
     }
 
-    public function getIcon(): string
+    public function getIcon(): string | BackedEnum
     {
         return $this->getBaseIcon() ?? FilamentIcon::resolve('actions::action-group') ?? 'heroicon-m-ellipsis-vertical';
     }

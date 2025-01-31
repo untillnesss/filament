@@ -2,6 +2,7 @@
 
 namespace Filament\Actions\Testing;
 
+use BackedEnum;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
@@ -289,7 +290,7 @@ class TestsActions
 
     public function assertActionHasIcon(): Closure
     {
-        return function (string | TestAction | array $actions, string $icon): static {
+        return function (string | TestAction | array $actions, string | BackedEnum $icon): static {
             $this->assertActionExists(
                 $actions,
                 checkActionUsing: fn (Action $action): bool => $action->getIcon() === $icon,
@@ -302,7 +303,7 @@ class TestsActions
 
     public function assertActionDoesNotHaveIcon(): Closure
     {
-        return function (string | TestAction | array $actions, string $icon): static {
+        return function (string | TestAction | array $actions, string | BackedEnum $icon): static {
             $this->assertActionExists(
                 $actions,
                 checkActionUsing: fn (Action $action): bool => $action->getIcon() !== $icon,
