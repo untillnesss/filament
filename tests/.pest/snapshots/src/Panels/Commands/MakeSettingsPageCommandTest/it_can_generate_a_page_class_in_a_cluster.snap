@@ -10,7 +10,7 @@ use Filament\Tests\Panels\Commands\Settings;
 
 class ManageSettings extends SettingsPage
 {
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string|BackedEnum|null $navigationIcon = \Filament\Support\Icons\Heroicon::OutlinedCog6Tooth;
 
     protected static string $settings = Settings::class;
 
