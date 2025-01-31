@@ -2,6 +2,7 @@
 
 namespace Filament\Forms\Testing;
 
+use BackedEnum;
 use Closure;
 use Illuminate\Support\Arr;
 use Livewire\Features\SupportTesting\Testable;
@@ -155,7 +156,7 @@ class TestsFormComponentActions
 
     public function assertFormComponentActionHasIcon(): Closure
     {
-        return function (string | array $components, string | array $actions, string $icon, array $arguments = [], string $formName = 'form'): static {
+        return function (string | array $components, string | array $actions, string | BackedEnum $icon, array $arguments = [], string $formName = 'form'): static {
             /** @var array<array<string, mixed>> $actions */
             /** @phpstan-ignore-next-line */
             $actions = $this->parseNestedFormComponentActions($components, $actions, $formName, $arguments);
@@ -168,7 +169,7 @@ class TestsFormComponentActions
 
     public function assertFormComponentActionDoesNotHaveIcon(): Closure
     {
-        return function (string | array $components, string | array $actions, string $icon, array $arguments = [], string $formName = 'form'): static {
+        return function (string | array $components, string | array $actions, string | BackedEnum $icon, array $arguments = [], string $formName = 'form'): static {
             /** @var array<array<string, mixed>> $actions */
             /** @phpstan-ignore-next-line */
             $actions = $this->parseNestedFormComponentActions($components, $actions, $formName, $arguments);
