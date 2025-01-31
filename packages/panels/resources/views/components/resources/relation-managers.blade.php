@@ -71,7 +71,6 @@
         <div
             @if (count($managers) > 1)
                 role="tabpanel"
-                tabindex="0"
             @endif
             wire:key="{{ $this->getId() }}.relation-managers.active"
             class="flex flex-col gap-y-4"
