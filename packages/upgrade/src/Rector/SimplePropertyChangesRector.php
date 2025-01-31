@@ -25,6 +25,9 @@ class SimplePropertyChangesRector extends AbstractRector
         return [
             [
                 'changes' => [
+                    'navigationIcon' => function (Property $node) {
+                        $node->type = new Name('string | \BackedEnum | null');
+                    },
                     'subNavigationPosition' => function (Property $node) {
                         $node->type = new Name('?\Filament\Pages\Enums\SubNavigationPosition');
                     },
