@@ -4,7 +4,7 @@ namespace Filament\Support\Contracts;
 
 use Filament\Support\Enums\IconSize;
 
-interface HasIconSize
+interface ScalableIcon
 {
-    public function getIconSize(): ?IconSize;
+    public function getIconForSize(IconSize $size): string;
 }

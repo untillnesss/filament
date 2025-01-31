@@ -318,7 +318,7 @@ class IconColumn extends Column implements HasEmbeddedView
                             }'
                             : null,
                     ], escape: false)
-                    ->color(Icon::class, $color), size: $iconSize, defaultSize: IconSize::Large)
+                    ->color(Icon::class, $color), size: $iconSize ?? IconSize::Large)
                     ->toHtml() ?>
             <?php } ?>
         </div>

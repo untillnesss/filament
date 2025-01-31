@@ -100,7 +100,7 @@
                 \Filament\Support\generate_icon_html($icon, $iconAlias, (new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $hasLoadingIndicator,
                     'wire:target' => $hasLoadingIndicator ? $loadingIndicatorTarget : false,
-                ]))->class([$iconClasses]), size: $iconSize, defaultSize: \Filament\Support\Enums\IconSize::Small)
+                ]))->class([$iconClasses]), size: $iconSize ?? \Filament\Support\Enums\IconSize::Small)
             }}
         @endif
 
@@ -142,10 +142,10 @@
             }}
         >
             {{
-                \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'badge.delete-button', attributes: (new \Illuminate\View\ComponentAttributeBag([
+                \Filament\Support\generate_icon_html('heroicon-c-x-mark', alias: 'badge.delete-button', attributes: (new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $deleteButtonHasLoadingIndicator,
                     'wire:target' => $deleteButtonHasLoadingIndicator ? $deleteButtonLoadingIndicatorTarget : false,
-                ])), defaultSize: 'fi-size-xs-sm')
+                ])), size: \Filament\Support\Enums\IconSize::ExtraSmall)
             }}
 
             @if ($deleteButtonHasLoadingIndicator)
@@ -153,7 +153,7 @@
                     \Filament\Support\generate_loading_indicator_html((new \Illuminate\View\ComponentAttributeBag([
                         'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
                         'wire:target' => $deleteButtonLoadingIndicatorTarget,
-                    ])), size: 'fi-size-xs-sm')
+                    ])), size: \Filament\Support\Enums\IconSize::ExtraSmall)
                 }}
             @endif
 
@@ -169,7 +169,7 @@
                 \Filament\Support\generate_icon_html($icon, $iconAlias, (new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $hasLoadingIndicator,
                     'wire:target' => $hasLoadingIndicator ? $loadingIndicatorTarget : false,
-                ]))->class([$iconClasses]), size: $iconSize, defaultSize: \Filament\Support\Enums\IconSize::Small)
+                ]))->class([$iconClasses]), size: $iconSize ?? \Filament\Support\Enums\IconSize::Small)
             }}
         @endif
 

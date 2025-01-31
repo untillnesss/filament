@@ -75,7 +75,7 @@
                 \Filament\Support\generate_icon_html($icon, attributes: (new \Illuminate\View\ComponentAttributeBag)
                     ->class([
                         ...\Filament\Support\get_component_color_classes(Icon::class, $iconColor),
-                    ]), size: $iconSize, defaultSize: IconSize::Large)
+                    ]), size: $iconSize ?? IconSize::Large)
             }}
 
             @if ($hasHeading || $hasDescription)

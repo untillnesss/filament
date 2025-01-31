@@ -138,7 +138,7 @@ class Count extends Summarizer
                                     <?= generate_icon_html(
                                         $icon,
                                         attributes: (new ComponentAttributeBag)->color(Icon::class, $color),
-                                        defaultSize: IconSize::Large,
+                                        size: IconSize::Large,
                                     )->toHtml() ?>
                                 </li>
                             <?php } ?>

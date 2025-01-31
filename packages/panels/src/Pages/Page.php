@@ -48,7 +48,7 @@ abstract class Page extends BasePage
 
     protected static string | BackedEnum | null $navigationIcon = null;
 
-    protected static string | BackedEnum|null $activeNavigationIcon = null;
+    protected static string | BackedEnum | null $activeNavigationIcon = null;
 
     protected static ?string $navigationLabel = null;
 

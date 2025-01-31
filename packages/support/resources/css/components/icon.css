@@ -5,10 +5,6 @@
         @apply size-3;
     }
 
-    &.fi-size-xs-sm {
-        @apply size-3.5;
-    }
-
     &.fi-size-sm {
         @apply size-4;
     }

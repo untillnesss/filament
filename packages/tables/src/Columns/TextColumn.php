@@ -266,7 +266,7 @@ class TextColumn extends Column implements HasEmbeddedView
             $size = $this->getSize($stateItem);
 
             $iconHtml = generate_icon_html($this->getIcon($stateItem), attributes: (new ComponentAttributeBag)
-                ->color(Icon::class, $iconColor), defaultSize: match ($size) {
+                ->color(Icon::class, $iconColor), size: match ($size) {
                     TextColumnSize::Medium => IconSize::Medium,
                     TextColumnSize::Large => IconSize::Large,
                     default => IconSize::Small,

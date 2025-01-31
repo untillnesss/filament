@@ -78,7 +78,7 @@
                 }
 
                 & > .fi-icon {
-                    @apply text-white;
+                    @apply text-(--text) dark:text-(--dark-text);
                 }
             }
 
@@ -108,7 +108,7 @@
         @apply cursor-pointer;
 
         & > .fi-icon:is(:checked + label > .fi-icon) {
-            @apply text-white;
+            @apply text-(--text) dark:text-(--dark-text);
         }
     }
 
