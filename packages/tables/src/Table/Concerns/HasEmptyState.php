@@ -2,6 +2,7 @@
 
 namespace Filament\Tables\Table\Concerns;
 
+use BackedEnum;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -19,7 +20,7 @@ trait HasEmptyState
 
     protected string | Htmlable | Closure | null $emptyStateHeading = null;
 
-    protected string | Closure | null $emptyStateIcon = null;
+    protected string | BackedEnum | Closure | null $emptyStateIcon = null;
 
     /**
      * @var array<Action | ActionGroup>
@@ -83,7 +84,7 @@ trait HasEmptyState
         return $this;
     }
 
-    public function emptyStateIcon(string | Closure | null $icon): static
+    public function emptyStateIcon(string | BackedEnum | Closure | null $icon): static
     {
         $this->emptyStateIcon = $icon;
 
@@ -115,7 +116,7 @@ trait HasEmptyState
         ]);
     }
 
-    public function getEmptyStateIcon(): string
+    public function getEmptyStateIcon(): string | BackedEnum
     {
         return $this->evaluate($this->emptyStateIcon)
             ?? FilamentIcon::resolve('tables::empty-state')

@@ -2,6 +2,7 @@
 
 namespace Filament\Resources\Pages\Concerns;
 
+use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\Enums\ContentTabPosition;
@@ -84,7 +85,7 @@ trait HasRelationManagers
         return null;
     }
 
-    public function getContentTabIcon(): ?string
+    public function getContentTabIcon(): string | BackedEnum | null
     {
         return null;
     }

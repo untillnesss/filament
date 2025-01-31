@@ -3,6 +3,7 @@
 namespace Filament\Tables\Columns\Summarizers;
 
 use Exception;
+use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\View\Components\Columns\Summarizers\Count\Icon;
 use Illuminate\Database\Query\Builder;
@@ -136,7 +137,8 @@ class Count extends Summarizer
 
                                     <?= generate_icon_html(
                                         $icon,
-                                        attributes: (new ComponentAttributeBag)->color(Icon::class, $color)
+                                        attributes: (new ComponentAttributeBag)->color(Icon::class, $color),
+                                        size: IconSize::Large,
                                     )->toHtml() ?>
                                 </li>
                             <?php } ?>

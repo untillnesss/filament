@@ -46,16 +46,14 @@
         $size = filled($size) ? (ActionSize::tryFrom($size) ?? $size) : null;
     }
 
-    $iconSize ??= match ($size) {
-        ActionSize::ExtraSmall, ActionSize::Small => IconSize::Small,
-        default => IconSize::Medium,
-    };
-
-    if (! $iconSize instanceof IconSize) {
-        $iconSize = filled($iconSize) ? (IconSize::tryFrom($iconSize) ?? $iconSize) : null;
+    if (filled($iconSize) && (! $iconSize instanceof IconSize)) {
+        $iconSize = IconSize::tryFrom($iconSize) ?? $iconSize;
     }
 
-    $iconClasses = ($iconSize instanceof IconSize) ? ('fi-size-' . $iconSize->value) : (is_string($iconSize) ? $iconSize : '');
+    $iconSize ??= match ($size) {
+        ActionSize::ExtraSmall, ActionSize::Small => IconSize::Small,
+        default => null,
+    };
 
     $wireTarget = $loadingIndicator ? $attributes->whereStartsWith(['wire:target', 'wire:click'])->filter(fn ($value): bool => filled($value))->first() : null;
 
@@ -116,7 +114,7 @@
                 \Filament\Support\generate_icon_html($icon, $iconAlias, (new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $hasLoadingIndicator,
                     'wire:target' => $hasLoadingIndicator ? $loadingIndicatorTarget : false,
-                ]))->class([$iconClasses]))
+                ])), size: $iconSize)
             }}
         @endif
 
@@ -125,7 +123,7 @@
                 \Filament\Support\generate_loading_indicator_html((new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
                     'wire:target' => $loadingIndicatorTarget,
-                ]))->class([$iconClasses]))
+                ])), size: $iconSize)
             }}
         @endif
     @endif
@@ -140,7 +138,7 @@
                 \Filament\Support\generate_icon_html($icon, $iconAlias, (new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $hasLoadingIndicator,
                     'wire:target' => $hasLoadingIndicator ? $loadingIndicatorTarget : false,
-                ]))->class([$iconClasses]))
+                ])), size: $iconSize)
             }}
         @endif
 
@@ -149,7 +147,7 @@
                 \Filament\Support\generate_loading_indicator_html((new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
                     'wire:target' => $loadingIndicatorTarget,
-                ]))->class([$iconClasses]))
+                ])), size: $iconSize)
             }}
         @endif
     @endif

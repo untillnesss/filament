@@ -2,6 +2,7 @@
 
 namespace Filament\Tests\Fixtures\Resources\PostCategories;
 
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Tests\Fixtures\Models\PostCategory;
 use Filament\Tests\Fixtures\Resources\PostCategories\Pages\CreatePostCategory;
@@ -15,7 +16,7 @@ class PostCategoryResource extends Resource
 
     protected static ?string $navigationGroup = 'Blog';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getPages(): array
     {

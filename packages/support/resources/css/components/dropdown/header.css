@@ -2,15 +2,7 @@
     @apply flex w-full gap-2 p-3 text-sm font-medium;
 
     & .fi-icon {
-        @apply size-5 text-gray-400 dark:text-gray-500;
-
-        &.fi-size-sm {
-            @apply size-4;
-        }
-
-        &.fi-size-lg {
-            @apply size-6;
-        }
+        @apply text-gray-400 dark:text-gray-500;
     }
 
     & span {

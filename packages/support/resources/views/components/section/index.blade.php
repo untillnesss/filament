@@ -22,12 +22,16 @@
     'headingTag' => 'h2',
     'icon' => null,
     'iconColor' => 'gray',
-    'iconSize' => IconSize::Large,
+    'iconSize' => null,
     'persistCollapsed' => false,
     'secondary' => false,
 ])
 
 @php
+    if (filled($iconSize) && (! $iconSize instanceof IconSize)) {
+        $iconSize = IconSize::tryFrom($iconSize) ?? $iconSize;
+    }
+
     $hasDescription = filled((string) $description);
     $hasHeading = filled($heading);
     $hasIcon = filled($icon);
@@ -70,10 +74,8 @@
             {{
                 \Filament\Support\generate_icon_html($icon, attributes: (new \Illuminate\View\ComponentAttributeBag)
                     ->class([
-                        'fi-section-header-icon',
                         ...\Filament\Support\get_component_color_classes(Icon::class, $iconColor),
-                        ($iconSize instanceof IconSize) ? "fi-size-{$iconSize->value}" : (is_string($iconSize) ? $iconSize : null),
-                    ]))
+                    ]), size: $iconSize ?? IconSize::Large)
             }}
 
             @if ($hasHeading || $hasDescription)

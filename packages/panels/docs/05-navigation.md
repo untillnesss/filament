@@ -31,7 +31,9 @@ public static function getNavigationLabel(): string
 To customize a navigation item's [icon](../styling/icons), you may override the `$navigationIcon` property on the [resource](resources) or [page](pages) class:
 
 ```php
-protected static ?string $navigationIcon = 'heroicon-o-document-text';
+use BackedEnum;
+
+protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 ```
 
 If you set `$navigationIcon = null` on all items within the same navigation group, those items will be joined with a vertical bar below the group label.

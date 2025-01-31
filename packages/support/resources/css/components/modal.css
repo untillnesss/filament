@@ -359,7 +359,7 @@
         @apply rounded-full bg-gray-100 dark:bg-gray-500/20;
 
         & > .fi-icon {
-            @apply size-6 text-gray-500 dark:text-gray-400;
+            @apply text-gray-500 dark:text-gray-400;
         }
 
         &.fi-color {

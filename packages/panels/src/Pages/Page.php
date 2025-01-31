@@ -2,6 +2,7 @@
 
 namespace Filament\Pages;
 
+use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Clusters\Cluster;
@@ -45,9 +46,9 @@ abstract class Page extends BasePage
 
     protected static ?string $navigationParentItem = null;
 
-    protected static ?string $navigationIcon = null;
+    protected static string | BackedEnum | null $navigationIcon = null;
 
-    protected static ?string $activeNavigationIcon = null;
+    protected static string | BackedEnum | null $activeNavigationIcon = null;
 
     protected static ?string $navigationLabel = null;
 
@@ -161,12 +162,12 @@ abstract class Page extends BasePage
         return static::$navigationParentItem;
     }
 
-    public static function getActiveNavigationIcon(): string | Htmlable | null
+    public static function getActiveNavigationIcon(): string | BackedEnum | Htmlable | null
     {
         return static::$activeNavigationIcon ?? static::getNavigationIcon();
     }
 
-    public static function getNavigationIcon(): string | Htmlable | null
+    public static function getNavigationIcon(): string | BackedEnum | Htmlable | null
     {
         return static::$navigationIcon;
     }

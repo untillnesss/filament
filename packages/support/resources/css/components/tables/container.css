@@ -104,7 +104,7 @@
             }
 
             & .fi-loading-indicator {
-                @apply size-5 text-gray-400 dark:text-gray-500;
+                @apply text-gray-400 dark:text-gray-500;
             }
         }
     }
@@ -133,7 +133,7 @@
         @apply flex gap-x-3 bg-gray-50 px-3 py-1.5 text-sm leading-6 font-medium text-gray-700 sm:px-6 dark:bg-white/5 dark:text-gray-200;
 
         & .fi-loading-indicator {
-            @apply size-5 text-gray-400 dark:text-gray-500;
+            @apply text-gray-400 dark:text-gray-500;
         }
     }
 
@@ -141,7 +141,7 @@
         @apply flex flex-col justify-between gap-y-1 bg-gray-50 px-3 py-2 sm:flex-row sm:items-center sm:px-6 sm:py-1.5 dark:bg-white/5;
 
         & .fi-loading-indicator {
-            @apply size-5 text-gray-400 dark:text-gray-500;
+            @apply text-gray-400 dark:text-gray-500;
         }
 
         & .fi-ta-selection-indicator-actions-ctn {

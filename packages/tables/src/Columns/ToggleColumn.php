@@ -104,13 +104,14 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
             >
                 <div>
                     <div aria-hidden="true">
-                        <?= generate_icon_html($offIcon)?->toHtml() ?>
+                        <?= generate_icon_html($offIcon, size: \Filament\Support\Enums\IconSize::ExtraSmall)?->toHtml() ?>
                     </div>
 
                     <div aria-hidden="true">
                         <?= generate_icon_html(
                             $onIcon,
                             attributes: (new ComponentAttributeBag)->merge(['x-cloak' => true], escape: false),
+                            size: \Filament\Support\Enums\IconSize::ExtraSmall,
                         )?->toHtml() ?>
                     </div>
                 </div>

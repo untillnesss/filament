@@ -26,7 +26,7 @@
 >
     <div class="fi-wi-stats-overview-stat-content">
         <div class="fi-wi-stats-overview-stat-label-ctn">
-            {{ \Filament\Support\generate_icon_html($getIcon(), attributes: (new \Illuminate\View\ComponentAttributeBag)->class(['fi-wi-stats-overview-stat-icon'])) }}
+            {{ \Filament\Support\generate_icon_html($getIcon()) }}
 
             <span class="fi-wi-stats-overview-stat-label">
                 {{ $getLabel() }}

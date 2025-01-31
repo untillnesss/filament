@@ -16,7 +16,7 @@
     'icon' => null,
     'iconAlias' => null,
     'iconPosition' => IconPosition::Before,
-    'iconSize' => IconSize::Small,
+    'iconSize' => null,
     'keyBindings' => null,
     'loadingIndicator' => true,
     'size' => ActionSize::Medium,
@@ -36,11 +36,9 @@
         $size = filled($size) ? (ActionSize::tryFrom($size) ?? $size) : null;
     }
 
-    if (! $iconSize instanceof IconSize) {
-        $iconSize = filled($iconSize) ? (IconSize::tryFrom($iconSize) ?? $iconSize) : null;
+    if (filled($iconSize) && (! $iconSize instanceof IconSize)) {
+        $iconSize = IconSize::tryFrom($iconSize) ?? $iconSize;
     }
-
-    $iconClasses = ($iconSize instanceof IconSize) ? ('fi-size-' . $iconSize->value) : (is_string($iconSize) ? $iconSize : '');
 
     $isDeletable = count($deleteButton?->attributes->getAttributes() ?? []) > 0;
 
@@ -102,7 +100,7 @@
                 \Filament\Support\generate_icon_html($icon, $iconAlias, (new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $hasLoadingIndicator,
                     'wire:target' => $hasLoadingIndicator ? $loadingIndicatorTarget : false,
-                ]))->class([$iconClasses]))
+                ]))->class([$iconClasses]), size: $iconSize ?? \Filament\Support\Enums\IconSize::Small)
             }}
         @endif
 
@@ -111,7 +109,7 @@
                 \Filament\Support\generate_loading_indicator_html((new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
                     'wire:target' => $loadingIndicatorTarget,
-                ]))->class([$iconClasses]))
+                ]))->class([$iconClasses]), size: $iconSize ?? \Filament\Support\Enums\IconSize::Small)
             }}
         @endif
     @endif
@@ -144,10 +142,10 @@
             }}
         >
             {{
-                \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'badge.delete-button', attributes: (new \Illuminate\View\ComponentAttributeBag([
+                \Filament\Support\generate_icon_html('heroicon-c-x-mark', alias: 'badge.delete-button', attributes: (new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $deleteButtonHasLoadingIndicator,
                     'wire:target' => $deleteButtonHasLoadingIndicator ? $deleteButtonLoadingIndicatorTarget : false,
-                ])))
+                ])), size: \Filament\Support\Enums\IconSize::ExtraSmall)
             }}
 
             @if ($deleteButtonHasLoadingIndicator)
@@ -155,7 +153,7 @@
                     \Filament\Support\generate_loading_indicator_html((new \Illuminate\View\ComponentAttributeBag([
                         'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
                         'wire:target' => $deleteButtonLoadingIndicatorTarget,
-                    ])))
+                    ])), size: \Filament\Support\Enums\IconSize::ExtraSmall)
                 }}
             @endif
 
@@ -171,7 +169,7 @@
                 \Filament\Support\generate_icon_html($icon, $iconAlias, (new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $hasLoadingIndicator,
                     'wire:target' => $hasLoadingIndicator ? $loadingIndicatorTarget : false,
-                ]))->class([$iconClasses]))
+                ]))->class([$iconClasses]), size: $iconSize ?? \Filament\Support\Enums\IconSize::Small)
             }}
         @endif
 
@@ -180,7 +178,7 @@
                 \Filament\Support\generate_loading_indicator_html((new \Illuminate\View\ComponentAttributeBag([
                     'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
                     'wire:target' => $loadingIndicatorTarget,
-                ]))->class([$iconClasses]))
+                ]))->class([$iconClasses]), size: $iconSize ?? \Filament\Support\Enums\IconSize::Small)
             }}
         @endif
     @endif

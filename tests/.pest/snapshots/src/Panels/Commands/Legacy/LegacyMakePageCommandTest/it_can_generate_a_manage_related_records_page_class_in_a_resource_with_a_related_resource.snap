@@ -4,6 +4,7 @@ namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\TeamResource;
 use App\Filament\Resources\UserResource;
+use BackedEnum;
 use Filament\Resources\Pages\ManageRelatedRecords;
 
 class ManageUserTeams extends ManageRelatedRecords
@@ -12,7 +13,7 @@ class ManageUserTeams extends ManageRelatedRecords
 
     protected static string $relationship = 'teams';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $relatedResource = TeamResource::class;
 }

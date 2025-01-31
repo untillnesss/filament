@@ -2,6 +2,7 @@
 
 namespace Filament\Tests\Fixtures\Pages;
 
+use BackedEnum;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -11,7 +12,7 @@ class Settings extends Page
 {
     protected static string $view = 'pages.settings';
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     protected static ?int $navigationSort = 2;
 

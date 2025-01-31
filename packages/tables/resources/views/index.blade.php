@@ -581,7 +581,7 @@
                         wire:target="removeTableFilters,removeTableFilter"
                         class="fi-icon-btn fi-size-sm"
                     >
-                        {{ \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'tables::filters.remove-all-button') }}
+                        {{ \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'tables::filters.remove-all-button', size: \FIlament\Support\Enums\IconSize::Small) }}
                     </button>
                 @endif
             </div>
@@ -857,7 +857,7 @@
                                                 type="button"
                                                 class="fi-icon-btn fi-size-sm"
                                             >
-                                                {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-up', alias: 'tables::grouping.collapse-button') }}
+                                                {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-up', alias: 'tables::grouping.collapse-button', size: \FIlament\Support\Enums\IconSize::Small) }}
                                             </button>
                                         @endif
                                     </div>
@@ -1507,7 +1507,7 @@
                                                                 type="button"
                                                                 class="fi-icon-btn fi-size-sm"
                                                             >
-                                                                {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-up', alias: 'tables::grouping.collapse-button') }}
+                                                                {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-up', alias: 'tables::grouping.collapse-button', size: \FIlament\Support\Enums\IconSize::Small) }}
                                                             </button>
                                                         @endif
                                                     </div>
@@ -1824,7 +1824,7 @@
                 <div class="fi-ta-empty-state">
                     <div class="fi-ta-empty-state-content">
                         <div class="fi-ta-empty-state-icon-ctn">
-                            {{ \Filament\Support\generate_icon_html($getEmptyStateIcon()) }}
+                            {{ \Filament\Support\generate_icon_html($getEmptyStateIcon(), size: \Filament\Support\Enums\IconSize::Large) }}
                         </div>
 
                         <{{ $secondLevelHeadingTag }}

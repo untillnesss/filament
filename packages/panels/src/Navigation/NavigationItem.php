@@ -2,6 +2,7 @@
 
 namespace Filament\Navigation;
 
+use BackedEnum;
 use Closure;
 use Exception;
 use Filament\Support\Components\Component;
@@ -16,9 +17,9 @@ class NavigationItem extends Component
 
     protected bool | Closure | null $isActive = null;
 
-    protected string | Htmlable | Closure | null $icon = null;
+    protected string | BackedEnum | Htmlable | Closure | null $icon = null;
 
-    protected string | Htmlable | Closure | null $activeIcon = null;
+    protected string | BackedEnum | Htmlable | Closure | null $activeIcon = null;
 
     protected string | Closure $label;
 
@@ -86,7 +87,7 @@ class NavigationItem extends Component
         return $this;
     }
 
-    public function icon(string | Htmlable | Closure | null $icon): static
+    public function icon(string | BackedEnum | Htmlable | Closure | null $icon): static
     {
         $this->icon = $icon;
 
@@ -114,7 +115,7 @@ class NavigationItem extends Component
         return $this;
     }
 
-    public function activeIcon(string | Htmlable | Closure | null $activeIcon): static
+    public function activeIcon(string | BackedEnum | Htmlable | Closure | null $activeIcon): static
     {
         $this->activeIcon = $activeIcon;
 
@@ -185,7 +186,7 @@ class NavigationItem extends Component
         return $this->evaluate($this->parentItem);
     }
 
-    public function getIcon(): string | Htmlable | null
+    public function getIcon(): string | BackedEnum | Htmlable | null
     {
         $icon = $this->evaluate($this->icon);
 
@@ -210,7 +211,7 @@ class NavigationItem extends Component
         return ! $this->evaluate($this->isVisible);
     }
 
-    public function getActiveIcon(): string | Htmlable | null
+    public function getActiveIcon(): string | BackedEnum | Htmlable | null
     {
         return $this->evaluate($this->activeIcon);
     }

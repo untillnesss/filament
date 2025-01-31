@@ -2,6 +2,7 @@
 
 namespace Filament\Commands\FileGenerators;
 
+use BackedEnum;
 use DateTimeInterface;
 use Filament\Clusters\Cluster;
 use Filament\Forms\Components\DateTimePicker;
@@ -81,10 +82,12 @@ class SettingsPageClassGenerator extends ClassGenerator
 
     protected function addNavigationIconPropertyToClass(ClassType $class): void
     {
+        $this->namespace->addUse(BackedEnum::class);
+
         $property = $class->addProperty('navigationIcon', 'heroicon-o-cog-6-tooth')
             ->setProtected()
             ->setStatic()
-            ->setType('?string');
+            ->setType('string|BackedEnum|null');
         $this->configureNavigationIconProperty($property);
     }
 

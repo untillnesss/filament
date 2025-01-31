@@ -2,6 +2,7 @@
 
 namespace Filament\Support\Concerns;
 
+use BackedEnum;
 use Closure;
 use Filament\Support\Enums\IconPosition;
 
@@ -14,7 +15,7 @@ trait HasBadge
      */
     protected string | array | Closure | null $badgeColor = null;
 
-    protected string | Closure | null $badgeIcon = null;
+    protected string | BackedEnum | Closure | null $badgeIcon = null;
 
     protected string | Closure | null $badgeTooltip = null;
 
@@ -45,7 +46,7 @@ trait HasBadge
         return $this;
     }
 
-    public function badgeIcon(string | Closure | null $icon): static
+    public function badgeIcon(string | BackedEnum | Closure | null $icon): static
     {
         $this->badgeIcon = $icon;
 
@@ -89,7 +90,7 @@ trait HasBadge
         return $this->evaluate($this->badgeColor);
     }
 
-    public function getBadgeIcon(): ?string
+    public function getBadgeIcon(): string | BackedEnum | null
     {
         return $this->evaluate($this->badgeIcon);
     }

@@ -2,6 +2,7 @@
 
 namespace Filament\Commands\FileGenerators\Resources\Pages;
 
+use BackedEnum;
 use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceForms;
 use Filament\Commands\FileGenerators\Resources\Concerns\CanGenerateResourceTables;
 use Filament\Commands\FileGenerators\Resources\Pages\Concerns\CanGenerateResourceProperty;
@@ -127,10 +128,12 @@ class ResourceManageRelatedRecordsPageClassGenerator extends ClassGenerator
 
     protected function addNavigationIconPropertyToClass(ClassType $class): void
     {
+        $this->namespace->addUse(BackedEnum::class);
+
         $property = $class->addProperty('navigationIcon', 'heroicon-o-rectangle-stack')
             ->setProtected()
             ->setStatic()
-            ->setType('?string');
+            ->setType('string|BackedEnum|null');
         $this->configureNavigationIconProperty($property);
     }
 

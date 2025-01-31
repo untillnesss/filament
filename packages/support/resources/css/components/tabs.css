@@ -20,7 +20,7 @@
             @apply text-primary-600 dark:text-primary-400;
         }
 
-        & .fi-tabs-item-icon {
+        & .fi-icon {
             @apply text-primary-600 dark:text-primary-400;
         }
     }
@@ -43,8 +43,8 @@
         @apply text-gray-500 transition duration-75 dark:text-gray-400;
     }
 
-    & .fi-tabs-item-icon {
-        @apply size-5 shrink-0 text-gray-400 transition duration-75 dark:text-gray-500;
+    & .fi-icon {
+        @apply shrink-0 text-gray-400 transition duration-75 dark:text-gray-500;
     }
 
     & .fi-badge {

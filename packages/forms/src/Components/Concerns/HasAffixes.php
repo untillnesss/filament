@@ -2,6 +2,7 @@
 
 namespace Filament\Forms\Components\Concerns;
 
+use BackedEnum;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Support\Enums\ActionSize;
@@ -34,14 +35,14 @@ trait HasAffixes
 
     protected string | Htmlable | Closure | null $prefixLabel = null;
 
-    protected string | Closure | null $prefixIcon = null;
+    protected string | BackedEnum | Closure | null $prefixIcon = null;
 
     /**
      * @var string | array<int | string, string | int> | Closure | null
      */
     protected string | array | Closure | null $prefixIconColor = null;
 
-    protected string | Closure | null $suffixIcon = null;
+    protected string | BackedEnum | Closure | null $suffixIcon = null;
 
     /**
      * @var string | array<int | string, string | int> | Closure | null
@@ -129,7 +130,7 @@ trait HasAffixes
         return $this;
     }
 
-    public function prefixIcon(string | Closure | null $icon, bool | Closure $isInline = false): static
+    public function prefixIcon(string | BackedEnum | Closure | null $icon, bool | Closure $isInline = false): static
     {
         $this->prefixIcon = $icon;
         $this->inlinePrefix($isInline);
@@ -147,7 +148,7 @@ trait HasAffixes
         return $this;
     }
 
-    public function suffixIcon(string | Closure | null $icon, bool | Closure $isInline = false): static
+    public function suffixIcon(string | BackedEnum | Closure | null $icon, bool | Closure $isInline = false): static
     {
         $this->suffixIcon = $icon;
         $this->inlineSuffix($isInline);
@@ -231,12 +232,12 @@ trait HasAffixes
         return $this->evaluate($this->suffixLabel);
     }
 
-    public function getPrefixIcon(): ?string
+    public function getPrefixIcon(): string | BackedEnum | null
     {
         return $this->evaluate($this->prefixIcon);
     }
 
-    public function getSuffixIcon(): ?string
+    public function getSuffixIcon(): string | BackedEnum | null
     {
         return $this->evaluate($this->suffixIcon);
     }

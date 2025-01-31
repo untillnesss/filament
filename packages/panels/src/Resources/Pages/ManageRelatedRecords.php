@@ -2,6 +2,7 @@
 
 namespace Filament\Resources\Pages;
 
+use BackedEnum;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
@@ -71,7 +72,7 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
     #[Url]
     public ?string $activeTab = null;
 
-    public static function getNavigationIcon(): string | Htmlable | null
+    public static function getNavigationIcon(): string | BackedEnum | Htmlable | null
     {
         return static::$navigationIcon
             ?? FilamentIcon::resolve('panels::resources.pages.manage-related-records.navigation-item')

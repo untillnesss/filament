@@ -2,6 +2,7 @@
 
 namespace Filament\Forms\Components;
 
+use BackedEnum;
 use Carbon\CarbonInterface;
 use Carbon\Exceptions\InvalidFormatException;
 use Closure;
@@ -186,7 +187,7 @@ class DateTimePicker extends Field implements HasAffixActions
     /**
      * @deprecated Use `suffixIcon('heroicon-m-calendar')` instead.
      */
-    public function icon(string | bool | null $icon = null): static
+    public function icon(string | BackedEnum | bool | null $icon = null): static
     {
         if ($icon === false) {
             return $this;
