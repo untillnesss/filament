@@ -84,8 +84,9 @@ class SettingsPageClassGenerator extends ClassGenerator
     protected function addNavigationIconPropertyToClass(ClassType $class): void
     {
         $this->namespace->addUse(BackedEnum::class);
+        $this->namespace->addUse(Heroicon::class);
 
-        $property = $class->addProperty('navigationIcon', Heroicon::OutlinedCog6Tooth)
+        $property = $class->addProperty('navigationIcon', new Literal('Heroicon::OutlinedCog6Tooth'))
             ->setProtected()
             ->setStatic()
             ->setType('string|BackedEnum|null');
