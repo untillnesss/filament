@@ -29,6 +29,9 @@
     $contentGrid = $getContentGrid();
     $contentFooter = $getContentFooter();
     $filterIndicators = $getFilterIndicators();
+    $filtersApplyAction = $getFiltersApplyAction();
+    $filtersForm = $getFiltersForm();
+    $filtersFormWidth = $getFiltersFormWidth();
     $hasColumnGroups = $hasColumnGroups();
     $hasColumnsLayout = $hasColumnsLayout();
     $hasSummary = $hasSummary();
@@ -173,8 +176,8 @@
                     ])
                 >
                     <x-filament-tables::filters
-                        :apply-action="$getFiltersApplyAction()"
-                        :form="$getFiltersForm()"
+                        :apply-action="$filtersApplyAction"
+                        :form="$filtersForm"
                         :heading-tag="$secondLevelHeadingTag"
                         x-cloak
                         x-show="areFiltersOpen"
@@ -374,10 +377,14 @@
                         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\Tables\View\TablesRenderHook::TOOLBAR_SEARCH_BEFORE, scopes: static::class) }}
 
                         @if ($isGlobalSearchVisible)
+                            @php
+                                $searchPlaceholder = $getSearchPlaceholder();
+                            @endphp
+
                             <x-filament-tables::search-field
                                 :debounce="$searchDebounce"
                                 :on-blur="$isSearchOnBlur"
-                                :placeholder="$getSearchPlaceholder()"
+                                :placeholder="$searchPlaceholder"
                             />
                         @endif
 
@@ -386,23 +393,40 @@
                         @if ($hasFiltersDialog || $hasColumnToggleDropdown)
                             @if ($hasFiltersDialog)
                                 @if (($filtersLayout === FiltersLayout::Modal) || $filtersTriggerAction->isModalSlideOver())
+                                    @php
+                                        $filtersTriggerActionModalAlignment = $filtersTriggerAction->getModalAlignment();
+                                        $filtersTriggerActionIsModalAutofocused = $filtersTriggerAction->isModalAutofocused();
+                                        $filtersTriggerActionHasModalCloseButton = $filtersTriggerAction->hasModalCloseButton();
+                                        $filtersTriggerActionIsModalClosedByClickingAway = $filtersTriggerAction->isModalClosedByClickingAway();
+                                        $filtersTriggerActionIsModalClosedByEscaping = $filtersTriggerAction->isModalClosedByEscaping();
+                                        $filtersTriggerActionModalDescription = $filtersTriggerAction->getModalDescription();
+                                        $filtersTriggerActionVisibleModalFooterActions = $filtersTriggerAction->getVisibleModalFooterActions();
+                                        $filtersTriggerActionModalFooterActionsAlignment = $filtersTriggerAction->getModalFooterActionsAlignment();
+                                        $filtersTriggerActionModalHeading = $filtersTriggerAction->getCustomModalHeading() ?? __('filament-tables::table.filters.heading');
+                                        $filtersTriggerActionModalIcon = $filtersTriggerAction->getModalIcon();
+                                        $filtersTriggerActionModalIconColor = $filtersTriggerAction->getModalIconColor();
+                                        $filtersTriggerActionIsModalSlideOver = $filtersTriggerAction->isModalSlideOver();
+                                        $filtersTriggerActionIsModalFooterSticky = $filtersTriggerAction->isModalFooterSticky();
+                                        $filtersTriggerActionIsModalHeaderSticky = $filtersTriggerAction->isModalHeaderSticky();
+                                    @endphp
+
                                     <x-filament::modal
-                                        :alignment="$filtersTriggerAction->getModalAlignment()"
-                                        :autofocus="$filtersTriggerAction->isModalAutofocused()"
-                                        :close-button="$filtersTriggerAction->hasModalCloseButton()"
-                                        :close-by-clicking-away="$filtersTriggerAction->isModalClosedByClickingAway()"
-                                        :close-by-escaping="$filtersTriggerAction?->isModalClosedByEscaping()"
-                                        :description="$filtersTriggerAction->getModalDescription()"
-                                        :footer-actions="$filtersTriggerAction->getVisibleModalFooterActions()"
-                                        :footer-actions-alignment="$filtersTriggerAction->getModalFooterActionsAlignment()"
-                                        :heading="$filtersTriggerAction->getCustomModalHeading() ?? __('filament-tables::table.filters.heading')"
-                                        :icon="$filtersTriggerAction->getModalIcon()"
-                                        :icon-color="$filtersTriggerAction->getModalIconColor()"
-                                        :slide-over="$filtersTriggerAction->isModalSlideOver()"
-                                        :sticky-footer="$filtersTriggerAction->isModalFooterSticky()"
-                                        :sticky-header="$filtersTriggerAction->isModalHeaderSticky()"
-                                        :width="$getFiltersFormWidth()"
-                                        wire:key="{{ $this->getId() }}.table.filters"
+                                        :alignment="$filtersTriggerActionModalAlignment"
+                                        :autofocus="$filtersTriggerActionIsModalAutofocused"
+                                        :close-button="$filtersTriggerActionHasModalCloseButton"
+                                        :close-by-clicking-away="$filtersTriggerActionIsModalClosedByClickingAway"
+                                        :close-by-escaping="$filtersTriggerActionIsModalClosedByEscaping"
+                                        :description="$filtersTriggerActionModalDescription"
+                                        :footer-actions="$filtersTriggerActionVisibleModalFooterActions"
+                                        :footer-actions-alignment="$filtersTriggerActionModalFooterActionsAlignment"
+                                        :heading="$filtersTriggerActionModalHeading"
+                                        :icon="$filtersTriggerActionModalIcon"
+                                        :icon-color="$filtersTriggerActionModalIconColor"
+                                        :slide-over="$filtersTriggerActionModalSlideOver"
+                                        :sticky-footer="$filtersTriggerActionModalFooterSticky"
+                                        :sticky-header="$filtersTriggerActionModalHeaderSticky"
+                                        :width="$filtersFormWidth"
+                                        :wire:key="$this->getId() . '.table.filters'"
                                         class="fi-ta-filters-modal"
                                     >
                                         <x-slot name="trigger">
@@ -411,17 +435,21 @@
 
                                         {{ $filtersTriggerAction->getModalContent() }}
 
-                                        {{ $getFiltersForm() }}
+                                        {{ $filtersForm }}
 
                                         {{ $filtersTriggerAction->getModalContentFooter() }}
                                     </x-filament::modal>
                                 @else
+                                    @php
+                                        $filtersFormMaxHeight = $getFiltersFormMaxHeight();
+                                    @endphp
+
                                     <x-filament::dropdown
-                                        :max-height="$getFiltersFormMaxHeight()"
+                                        :max-height="$filtersFormMaxHeight"
                                         placement="bottom-end"
                                         shift
-                                        :width="$getFiltersFormWidth()"
-                                        wire:key="{{ $this->getId() }}.table.filters"
+                                        :width="$filtersFormWidth"
+                                        :wire:key="$this->getId() . '.table.filters'"
                                         class="fi-ta-filters-dropdown"
                                     >
                                         <x-slot name="trigger">
@@ -429,8 +457,8 @@
                                         </x-slot>
 
                                         <x-filament-tables::filters
-                                            :apply-action="$getFiltersApplyAction()"
-                                            :form="$getFiltersForm()"
+                                            :apply-action="$filtersApplyAction"
+                                            :form="$filtersForm"
                                             :heading-tag="$secondLevelHeadingTag"
                                         />
                                     </x-filament::dropdown>
@@ -440,12 +468,17 @@
                             {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\Tables\View\TablesRenderHook::TOOLBAR_TOGGLE_COLUMN_TRIGGER_BEFORE, scopes: static::class) }}
 
                             @if ($hasColumnToggleDropdown)
+                                @php
+                                    $columnToggleFormMaxHeight = $getColumnToggleFormMaxHeight();
+                                    $columnToggleFormWidth = $getColumnToggleFormWidth();
+                                @endphp
+
                                 <x-filament::dropdown
-                                    :max-height="$getColumnToggleFormMaxHeight()"
+                                    :max-height="$columnToggleFormMaxHeight"
                                     placement="bottom-end"
                                     shift
-                                    :width="$getColumnToggleFormWidth()"
-                                    wire:key="{{ $this->getId() }}.table.column-toggle"
+                                    :width="$columnToggleFormWidth"
+                                    :wire:key="$this->getId() . '.table.column-toggle'"
                                     class="fi-ta-col-toggle"
                                 >
                                     <x-slot name="trigger">
@@ -552,14 +585,22 @@
 
                     <div class="fi-ta-filter-indicators-badges-ctn">
                         @foreach ($filterIndicators as $indicator)
-                            <x-filament::badge :color="$indicator->getColor()">
+                            @php
+                                $indicatorColor = $indicator->getColor();
+                            @endphp
+
+                            <x-filament::badge :color="$indicatorColor">
                                 {{ $indicator->getLabel() }}
 
                                 @if ($indicator->isRemovable())
+                                    @php
+                                        $indicatorRemoveLivewireClickHandler = $indicator->getRemoveLivewireClickHandler();
+                                    @endphp
+
                                     <x-slot
                                         name="deleteButton"
                                         :label="__('filament-tables::table.filters.actions.remove.label')"
-                                        wire:click="{{ $indicator->getRemoveLivewireClickHandler() }}"
+                                        :wire:click="$indicatorRemoveLivewireClickHandler"
                                         wire:loading.attr="disabled"
                                         wire:target="removeTableFilter"
                                     ></x-slot>
@@ -776,6 +817,10 @@
                                             ])
                                         >
                                             <tbody>
+                                                @php
+                                                    $groupScopedAllTableSummaryQuery = $group->scopeQuery($this->getAllTableSummaryQuery(), $previousRecord);
+                                                @endphp
+
                                                 <x-filament-tables::summary.row
                                                     :columns="$columns"
                                                     extra-heading-column
@@ -786,7 +831,7 @@
                                                         ])
                                                     "
                                                     :placeholder-columns="false"
-                                                    :query="$group->scopeQuery($this->getAllTableSummaryQuery(), $previousRecord)"
+                                                    :query="$groupScopedAllTableSummaryQuery"
                                                     :selected-state="$groupedSummarySelectedState[$previousRecordGroupKey] ?? []"
                                                 />
                                             </tbody>
@@ -1018,12 +1063,16 @@
                             @if ($hasSummary && (! $isReordering) && filled($previousRecordGroupTitle) && ((! $records instanceof \Illuminate\Contracts\Pagination\Paginator) || (! $records->hasMorePages())))
                                 <table class="fi-ta-table">
                                     <tbody>
+                                        @php
+                                            $groupScopedAllTableSummaryQuery = $group->scopeQuery($this->getAllTableSummaryQuery(), $previousRecord);
+                                        @endphp
+
                                         <x-filament-tables::summary.row
                                             :columns="$columns"
                                             extra-heading-column
                                             :heading="__('filament-tables::table.summary.subheadings.group', ['group' => $previousRecordGroupTitle, 'label' => $pluralModelLabel])"
                                             :placeholder-columns="false"
-                                            :query="$group->scopeQuery($this->getAllTableSummaryQuery(), $previousRecord)"
+                                            :query="$groupScopedAllTableSummaryQuery"
                                             :selected-state="$groupedSummarySelectedState[$previousRecordGroupKey] ?? []"
                                         />
                                     </tbody>
@@ -1327,18 +1376,22 @@
                                     @endif
 
                                     @foreach ($columns as $column)
+                                        @php
+                                            $columnName = $column->getName();
+                                        @endphp
+
                                         <td
                                             @class([
                                                 'fi-ta-cell',
                                                 'fi-ta-individual-search-cell' => $isIndividuallySearchable = $column->isIndividuallySearchable(),
-                                                'fi-ta-individual-search-cell-' . str($column->getName())->camel()->kebab() => $isIndividuallySearchable,
+                                                'fi-ta-individual-search-cell-' . str($columnName)->camel()->kebab() => $isIndividuallySearchable,
                                             ])
                                         >
                                             @if ($isIndividuallySearchable)
                                                 <x-filament-tables::search-field
                                                     :debounce="$searchDebounce"
                                                     :on-blur="$isSearchOnBlur"
-                                                    wire-model="tableColumnSearches.{{ $column->getName() }}"
+                                                    :wire-model="'tableColumnSearches.' . $columnName"
                                                 />
                                             @endif
                                         </td>
@@ -1398,14 +1451,19 @@
 
                                     @if ($recordGroupTitle !== $previousRecordGroupTitle)
                                         @if ($hasSummary && (! $isReordering) && filled($previousRecordGroupTitle))
+                                            @php
+                                                $groupColumn = $group->getColumn();
+                                                $groupScopedAllTableSummaryQuery = $group->scopeQuery($this->getAllTableSummaryQuery(), $previousRecord);
+                                            @endphp
+
                                             <x-filament-tables::summary.row
                                                 :actions="count($actions)"
                                                 :actions-position="$actionsPosition"
                                                 :columns="$columns"
-                                                :group-column="$group?->getColumn()"
+                                                :group-column="$groupColumn"
                                                 :groups-only="$isGroupsOnly"
                                                 :heading="$isGroupsOnly ? $previousRecordGroupTitle : __('filament-tables::table.summary.subheadings.group', ['group' => $previousRecordGroupTitle, 'label' => $pluralModelLabel])"
-                                                :query="$group->scopeQuery($this->getAllTableSummaryQuery(), $previousRecord)"
+                                                :query="$groupScopedAllTableSummaryQuery"
                                                 :record-checkbox-position="$recordCheckboxPosition"
                                                 :selected-state="$groupedSummarySelectedState[$previousRecordGroupKey] ?? []"
                                                 :selection-enabled="$isSelectionEnabled"
@@ -1768,14 +1826,19 @@
                                 @endforeach
 
                                 @if ($hasSummary && (! $isReordering) && filled($previousRecordGroupTitle) && ((! $records instanceof \Illuminate\Contracts\Pagination\Paginator) || (! $records->hasMorePages())))
+                                    @php
+                                        $groupColumn = $group->getColumn();
+                                        $groupScopedAllTableSummaryQuery = $group->scopeQuery($this->getAllTableSummaryQuery(), $previousRecord);
+                                    @endphp
+
                                     <x-filament-tables::summary.row
                                         :actions="count($actions)"
                                         :actions-position="$actionsPosition"
                                         :columns="$columns"
-                                        :group-column="$group?->getColumn()"
+                                        :group-column="$groupColumn"
                                         :groups-only="$isGroupsOnly"
                                         :heading="$isGroupsOnly ? $previousRecordGroupTitle : __('filament-tables::table.summary.subheadings.group', ['group' => $previousRecordGroupTitle, 'label' => $pluralModelLabel])"
-                                        :query="$group->scopeQuery($this->getAllTableSummaryQuery(), $previousRecord)"
+                                        :query="$groupScopedAllTableSummaryQuery"
                                         :record-checkbox-position="$recordCheckboxPosition"
                                         :selected-state="$groupedSummarySelectedState[$previousRecordGroupKey] ?? []"
                                         :selection-enabled="$isSelectionEnabled"
@@ -1783,11 +1846,15 @@
                                 @endif
 
                                 @if ($hasSummary && (! $isReordering))
+                                    @php
+                                        $groupColumn = $group?->getColumn();
+                                    @endphp
+
                                     <x-filament-tables::summary
                                         :actions="count($actions)"
                                         :actions-position="$actionsPosition"
                                         :columns="$columns"
-                                        :group-column="$group?->getColumn()"
+                                        :group-column="$groupColumn"
                                         :groups-only="$isGroupsOnly"
                                         :plural-model-label="$pluralModelLabel"
                                         :record-checkbox-position="$recordCheckboxPosition"
@@ -1858,17 +1925,22 @@
 
         @if ((($records instanceof \Illuminate\Contracts\Pagination\Paginator) || ($records instanceof \Illuminate\Contracts\Pagination\CursorPaginator)) &&
              ((! ($records instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)) || $records->total()))
+            @php
+                $hasExtremePaginationLinks = $hasExtremePaginationLinks();
+                $paginationPageOptions = $getPaginationPageOptions();
+            @endphp
+
             <x-filament::pagination
-                :extreme-links="$hasExtremePaginationLinks()"
-                :page-options="$getPaginationPageOptions()"
+                :extreme-links="$hasExtremePaginationLinks"
+                :page-options="$paginationPageOptions"
                 :paginator="$records"
             />
         @endif
 
         @if ($hasFiltersBelowContent)
             <x-filament-tables::filters
-                :apply-action="$getFiltersApplyAction()"
-                :form="$getFiltersForm()"
+                :apply-action="$filtersApplyAction"
+                :form="$filtersForm"
                 :heading-tag="$secondLevelHeadingTag"
                 class="fi-ta-filters-below-content"
             />
