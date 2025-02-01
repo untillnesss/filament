@@ -199,7 +199,7 @@ class EntriesDemo extends Component implements HasInfolists
                     ->schema([
                         IconEntry::make('status')
                             ->state('reviewing')
-                            ->icon(fn (string $state): string => match ($state) {
+                            ->icon(fn (string $state): Heroicon => match ($state) {
                                 'draft' => Heroicon::OutlinedPencil,
                                 'reviewing' => Heroicon::OutlinedClock,
                                 'published' => Heroicon::OutlinedCheckCircle,
