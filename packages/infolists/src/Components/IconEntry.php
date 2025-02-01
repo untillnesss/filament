@@ -6,6 +6,7 @@ use BackedEnum;
 use Closure;
 use Filament\Infolists\Components\IconEntry\Enums\IconEntrySize;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 
 class IconEntry extends Entry
 {
@@ -169,7 +170,7 @@ class IconEntry extends Entry
     {
         return $this->evaluate($this->falseIcon)
             ?? FilamentIcon::resolve('infolists::components.icon-entry.false')
-            ?? 'heroicon-o-x-circle';
+            ?? Heroicon::OutlinedXCircle;
     }
 
     /**
@@ -184,7 +185,7 @@ class IconEntry extends Entry
     {
         return $this->evaluate($this->trueIcon)
             ?? FilamentIcon::resolve('infolists::components.icon-entry.true')
-            ?? 'heroicon-o-check-circle';
+            ?? Heroicon::OutlinedCheckCircle;
     }
 
     public function isBoolean(): bool

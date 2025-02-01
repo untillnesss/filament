@@ -8,6 +8,7 @@ use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Repeater;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Filters\QueryBuilder\Concerns\HasConstraints;
 use Filament\Tables\Filters\QueryBuilder\Constraints\Constraint;
 use Illuminate\Support\Str;
@@ -57,7 +58,7 @@ class RuleBuilder extends Builder
 
                             return '(' . $itemLabels->implode(') ' . __('filament-tables::filters/query-builder.form.or_groups.block.or') . ' (') . ')';
                         })
-                        ->icon('heroicon-m-bars-4')
+                        ->icon(Heroicon::Bars4)
                         ->schema(fn (): array => [
                             Repeater::make(static::OR_BLOCK_GROUPS_REPEATER_NAME)
                                 ->label(__('filament-tables::filters/query-builder.form.or_groups.label'))
@@ -69,7 +70,7 @@ class RuleBuilder extends Builder
                                 ])
                                 ->addAction(fn (Action $action) => $action
                                     ->label(__('filament-tables::filters/query-builder.actions.add_rule_group.label'))
-                                    ->icon('heroicon-m-plus'))
+                                    ->icon(Heroicon::Plus))
                                 ->labelBetweenItems(__('filament-tables::filters/query-builder.item_separators.or'))
                                 ->collapsible()
                                 ->expandAllAction(fn (Action $action) => $action->hidden())
@@ -112,7 +113,7 @@ class RuleBuilder extends Builder
             })
             ->addAction(fn (Action $action) => $action
                 ->label(__('filament-tables::filters/query-builder.actions.add_rule.label'))
-                ->icon('heroicon-m-plus'))
+                ->icon(Heroicon::Plus))
             ->addBetweenAction(fn (Action $action) => $action->hidden())
             ->label(__('filament-tables::filters/query-builder.form.rules.label'))
             ->hiddenLabel()

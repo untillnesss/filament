@@ -102,7 +102,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-bold"
+                                            :icon="\Filament\Support\Icons\Heroicon::Bold"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -116,7 +116,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-italic"
+                                            :icon="\Filament\Support\Icons\Heroicon::Italic"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -130,7 +130,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-underline"
+                                            :icon="\Filament\Support\Icons\Heroicon::Underline"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -144,7 +144,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-strikethrough"
+                                            :icon="\Filament\Support\Icons\Heroicon::Strikethrough"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -159,7 +159,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-link"
+                                            :icon="\Filament\Support\Icons\Heroicon::Link"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -178,7 +178,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-h1"
+                                            :icon="\Filament\Support\Icons\Heroicon::H1"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -191,7 +191,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-h2"
+                                            :icon="\Filament\Support\Icons\Heroicon::H2"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -204,7 +204,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-h3"
+                                            :icon="\Filament\Support\Icons\Heroicon::H3"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -223,7 +223,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-chat-bubble-bottom-center-text"
+                                            :icon="\Filament\Support\Icons\Heroicon::ChatBubbleBottomCenterText"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -236,7 +236,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-code-bracket"
+                                            :icon="\Filament\Support\Icons\Heroicon::CodeBracket"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -249,7 +249,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-list-bullet"
+                                            :icon="\Filament\Support\Icons\Heroicon::ListBullet"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -262,7 +262,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-numbered-list"
+                                            :icon="\Filament\Support\Icons\Heroicon::NumberedList"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -280,7 +280,7 @@
                                     tabindex="-1"
                                 >
                                     <x-filament::icon
-                                        icon="heroicon-m-photo"
+                                        :icon="\Filament\Support\Icons\Heroicon::Photo"
                                         class="h-5 w-5"
                                     />
                                 </x-filament-forms::rich-editor.toolbar.button>
@@ -299,7 +299,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-arrow-uturn-left"
+                                            :icon="\Filament\Support\Icons\Heroicon::ArrowUturnLeft"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>
@@ -313,7 +313,7 @@
                                         tabindex="-1"
                                     >
                                         <x-filament::icon
-                                            icon="heroicon-m-arrow-uturn-right"
+                                            :icon="\Filament\Support\Icons\Heroicon::ArrowUturnRight"
                                             class="h-5 w-5"
                                         />
                                     </x-filament-forms::rich-editor.toolbar.button>

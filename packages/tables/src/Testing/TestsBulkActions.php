@@ -2,6 +2,7 @@
 
 namespace Filament\Tables\Testing;
 
+use BackedEnum;
 use Closure;
 use Filament\Actions\BulkAction;
 use Filament\Tables\Contracts\HasTable;
@@ -188,7 +189,7 @@ class TestsBulkActions
 
     public function assertTableBulkActionHasIcon(): Closure
     {
-        return function (string | array $actions, string $icon): static {
+        return function (string | array $actions, string | BackedEnum $icon): static {
             /** @var array<array<string, mixed>> $actions */
             /** @phpstan-ignore-next-line */
             $actions = $this->parseNestedTableBulkActions($actions);
@@ -201,7 +202,7 @@ class TestsBulkActions
 
     public function assertTableBulkActionDoesNotHaveIcon(): Closure
     {
-        return function (string | array $actions, string $icon): static {
+        return function (string | array $actions, string | BackedEnum $icon): static {
             /** @var array<array<string, mixed>> $actions */
             /** @phpstan-ignore-next-line */
             $actions = $this->parseNestedTableBulkActions($actions);

@@ -5,6 +5,7 @@ namespace Filament\Tables\Columns;
 use Filament\Forms\Components\Concerns\HasToggleColors;
 use Filament\Forms\Components\Concerns\HasToggleIcons;
 use Filament\Support\Components\Contracts\HasEmbeddedView;
+use Filament\Support\Enums\IconSize;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
 use Filament\Support\View\Components\Toggle;
@@ -104,14 +105,14 @@ class ToggleColumn extends Column implements Editable, HasEmbeddedView
             >
                 <div>
                     <div aria-hidden="true">
-                        <?= generate_icon_html($offIcon, size: \Filament\Support\Enums\IconSize::ExtraSmall)?->toHtml() ?>
+                        <?= generate_icon_html($offIcon, size: IconSize::ExtraSmall)?->toHtml() ?>
                     </div>
 
                     <div aria-hidden="true">
                         <?= generate_icon_html(
                             $onIcon,
                             attributes: (new ComponentAttributeBag)->merge(['x-cloak' => true], escape: false),
-                            size: \Filament\Support\Enums\IconSize::ExtraSmall,
+                            size: IconSize::ExtraSmall,
                         )?->toHtml() ?>
                     </div>
                 </div>

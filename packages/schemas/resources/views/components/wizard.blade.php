@@ -174,7 +174,7 @@
 
                         <x-filament::icon
                             :alias="filled($completedIcon) ? null : 'schema::components.wizard.completed-step'"
-                            :icon="$completedIcon ?? 'heroicon-o-check'"
+                            :icon="$completedIcon ?? \Filament\Support\Icons\Heroicon::OutlinedCheck"
                             x-cloak="x-cloak"
                             x-show="getStepIndex(step) > {{ $loop->index }}"
                             class="fi-fo-wizard-header-step-icon size-6 text-white"

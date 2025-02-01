@@ -581,7 +581,7 @@
                         wire:target="removeTableFilters,removeTableFilter"
                         class="fi-icon-btn fi-size-sm"
                     >
-                        {{ \Filament\Support\generate_icon_html('heroicon-m-x-mark', alias: 'tables::filters.remove-all-button', size: \FIlament\Support\Enums\IconSize::Small) }}
+                        {{ \Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::XMark, alias: 'tables::filters.remove-all-button', size: \FIlament\Support\Enums\IconSize::Small) }}
                     </button>
                 @endif
             </div>
@@ -857,7 +857,7 @@
                                                 type="button"
                                                 class="fi-icon-btn fi-size-sm"
                                             >
-                                                {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-up', alias: 'tables::grouping.collapse-button', size: \FIlament\Support\Enums\IconSize::Small) }}
+                                                {{ \Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::ChevronUp, alias: 'tables::grouping.collapse-button', size: \FIlament\Support\Enums\IconSize::Small) }}
                                             </button>
                                         @endif
                                     </div>
@@ -898,7 +898,7 @@
                                             class="fi-ta-reorder-handle fi-icon-btn"
                                             type="button"
                                         >
-                                            {{ \Filament\Support\generate_icon_html('heroicon-m-bars-2', alias: 'tables::reorder.handle') }}
+                                            {{ \Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::Bars2, alias: 'tables::reorder.handle') }}
                                         </button>
                                     @elseif ($isSelectionEnabled && $isRecordSelectable($record))
                                         <input
@@ -1003,7 +1003,7 @@
                                             x-on:click="isCollapsed = ! isCollapsed"
                                             class="fi-ta-record-collapse-btn fi-icon-btn"
                                         >
-                                            {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-down', alias: 'tables::columns.collapse-button') }}
+                                            {{ \Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::ChevronDown, alias: 'tables::columns.collapse-button') }}
                                         </button>
                                     @endif
                                 </div>
@@ -1232,7 +1232,7 @@
                                                 {{ $columnLabel }}
 
                                                 {{
-                                                    \Filament\Support\generate_icon_html(($isColumnActivelySorted && $sortDirection === 'asc') ? 'heroicon-m-chevron-up' : 'heroicon-m-chevron-down', alias: match (true) {
+                                                    \Filament\Support\generate_icon_html(($isColumnActivelySorted && $sortDirection === 'asc') ? \Filament\Support\Icons\Heroicon::ChevronUp : \Filament\Support\Icons\Heroicon::ChevronDown, alias: match (true) {
                                                         $isColumnActivelySorted && ($sortDirection === 'asc') => 'tables::header-cell.sort-asc-button',
                                                         $isColumnActivelySorted && ($sortDirection === 'desc') => 'tables::header-cell.sort-desc-button',
                                                         default => 'tables::header-cell.sort-button',
@@ -1507,7 +1507,7 @@
                                                                 type="button"
                                                                 class="fi-icon-btn fi-size-sm"
                                                             >
-                                                                {{ \Filament\Support\generate_icon_html('heroicon-m-chevron-up', alias: 'tables::grouping.collapse-button', size: \FIlament\Support\Enums\IconSize::Small) }}
+                                                                {{ \Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::ChevronUp, alias: 'tables::grouping.collapse-button', size: \FIlament\Support\Enums\IconSize::Small) }}
                                                             </button>
                                                         @endif
                                                     </div>
@@ -1571,7 +1571,7 @@
                                                         class="fi-ta-reorder-handle fi-icon-btn"
                                                         type="button"
                                                     >
-                                                        {{ \Filament\Support\generate_icon_html('heroicon-m-bars-2', alias: 'tables::reorder.handle') }}
+                                                        {{ \Filament\Support\generate_icon_html(\Filament\Support\Icons\Heroicon::Bars2, alias: 'tables::reorder.handle') }}
                                                     </button>
                                                 </td>
                                             @endif

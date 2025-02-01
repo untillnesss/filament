@@ -28,7 +28,7 @@
 
                 <x-filament::button
                     color="gray"
-                    icon="heroicon-m-arrow-left-on-rectangle"
+                    :icon="\Filament\Support\Icons\Heroicon::ArrowLeftOnRectangle"
                     icon-alias="panels::widgets.account.logout-button"
                     labeled-from="sm"
                     tag="button"

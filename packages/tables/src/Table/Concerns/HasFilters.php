@@ -9,6 +9,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\BaseFilter;
 
@@ -199,7 +200,7 @@ trait HasFilters
         $action = Action::make('openFilters')
             ->label(__('filament-tables::table.actions.filter.label'))
             ->iconButton()
-            ->icon(FilamentIcon::resolve('tables::actions.filter') ?? 'heroicon-m-funnel')
+            ->icon(FilamentIcon::resolve('tables::actions.filter') ?? Heroicon::Funnel)
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->modalSubmitAction(false)

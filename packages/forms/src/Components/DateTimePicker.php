@@ -9,6 +9,7 @@ use Closure;
 use DateTime;
 use Filament\Schemas\Components\Contracts\HasAffixActions;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Carbon;
 use Illuminate\View\ComponentAttributeBag;
 
@@ -185,7 +186,7 @@ class DateTimePicker extends Field implements HasAffixActions
     }
 
     /**
-     * @deprecated Use `suffixIcon('heroicon-m-calendar')` instead.
+     * @deprecated Use `suffixIcon(Heroicon::Calendar)` instead.
      */
     public function icon(string | BackedEnum | bool | null $icon = null): static
     {
@@ -193,7 +194,7 @@ class DateTimePicker extends Field implements HasAffixActions
             return $this;
         }
 
-        return $this->suffixIcon($icon ?? 'heroicon-m-calendar', isInline: true);
+        return $this->suffixIcon($icon ?? Heroicon::Calendar, isInline: true);
     }
 
     public function maxDate(CarbonInterface | string | Closure | null $date): static

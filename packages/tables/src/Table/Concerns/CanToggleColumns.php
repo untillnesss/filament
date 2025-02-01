@@ -8,6 +8,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 
 trait CanToggleColumns
 {
@@ -58,7 +59,7 @@ trait CanToggleColumns
         $action = Action::make('toggleColumns')
             ->label(__('filament-tables::table.actions.toggle_columns.label'))
             ->iconButton()
-            ->icon(FilamentIcon::resolve('tables::actions.toggle-columns') ?? 'heroicon-m-view-columns')
+            ->icon(FilamentIcon::resolve('tables::actions.toggle-columns') ?? Heroicon::ViewColumns)
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->table($this);

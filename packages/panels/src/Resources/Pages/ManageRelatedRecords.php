@@ -24,6 +24,7 @@ use Filament\Schemas\Components\RenderHook;
 use Filament\Schemas\Components\TableBuilder;
 use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -76,7 +77,7 @@ class ManageRelatedRecords extends Page implements Tables\Contracts\HasTable
     {
         return static::$navigationIcon
             ?? FilamentIcon::resolve('panels::resources.pages.manage-related-records.navigation-item')
-            ?? 'heroicon-o-rectangle-stack';
+            ?? Heroicon::OutlinedRectangleStack;
     }
 
     public function mount(int | string $record): void

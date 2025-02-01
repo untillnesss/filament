@@ -18,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tests\Fixtures\Models\Post;
@@ -158,7 +159,7 @@ class PostsTable extends Component implements HasActions, HasForms, Tables\Contr
                     Action::make('groupedWithHiddenGroupCondition'),
                 ])->hidden(fn (?Model $record): bool => $record !== null),
                 Action::make('hasIcon')
-                    ->icon('heroicon-m-pencil-square'),
+                    ->icon(Heroicon::PencilSquare),
                 Action::make('hasLabel')
                     ->label('My Action'),
                 Action::make('hasColor')
@@ -303,7 +304,7 @@ class PostsTable extends Component implements HasActions, HasForms, Tables\Contr
                 BulkAction::make('disabled')
                     ->disabled(),
                 BulkAction::make('hasIcon')
-                    ->icon('heroicon-m-pencil-square'),
+                    ->icon(Heroicon::PencilSquare),
                 BulkAction::make('hasLabel')
                     ->label('My Action'),
                 BulkAction::make('hasColor')

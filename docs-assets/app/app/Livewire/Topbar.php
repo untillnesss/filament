@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Filament\Navigation\MenuItem;
 use Filament\Pages\Page;
+use Filament\Support\Icons\Heroicon;
 
 class Topbar extends Page
 {
@@ -17,7 +18,7 @@ class Topbar extends Page
                 MenuItem::make()
                     ->label('Settings')
                     ->url(fn (): string => '#')
-                    ->icon('heroicon-o-cog-6-tooth'),
+                    ->icon(Heroicon::OutlinedCog6Tooth),
             ]);
     }
 }
