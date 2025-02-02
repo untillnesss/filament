@@ -619,12 +619,6 @@ class FilamentManager
     {
         return $this->getCurrentOrDefaultPanel()->getWidgets();
     }
-
-    public function getDatabaseNotificationsMarkAllAsReadAction(): Action
-    {
-        return $this->currentPanel->getDatabaseNotificationsMarkAllAsReadAction();
-    }
-
     public function hasBreadcrumbs(): bool
     {
         return $this->getCurrentOrDefaultPanel()->hasBreadcrumbs();

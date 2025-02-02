@@ -112,7 +112,6 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getVerifyEmailChangeUrl(MustVerifyEmail | Model | Authenticatable $user, string $newEmail, array $parameters = [])
  * @method static string getBlockEmailChangeVerificationUrl(MustVerifyEmail | Model | Authenticatable $user, string $newEmail, string $verificationSignature, array $parameters = [])
  * @method static array getWidgets()
- * @method static Action getDatabaseNotificationsMarkAllAsReadAction()
  * @method static bool hasBreadcrumbs()
  * @method static bool hasCollapsibleNavigationGroups()
  * @method static bool hasDarkMode()
