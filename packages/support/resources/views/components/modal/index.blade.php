@@ -90,14 +90,16 @@
     x-bind:class="{
         'fi-modal-open': isOpen,
     }"
-    @class([
-        'fi-modal',
-        'fi-modal-slide-over' => $slideOver,
-        'fi-width-screen' => $width === Width::Screen,
-    ])
     x-cloak
     x-show="isOpen"
     x-trap.noscroll{{ $autofocus ? '' : '.noautofocus' }}="isOpen"
+    {{
+        $attributes->class([
+            'fi-modal',
+            'fi-modal-slide-over' => $slideOver,
+            'fi-width-screen' => $width === Width::Screen,
+        ])
+    }}
 >
     <div
         aria-hidden="true"
@@ -107,7 +109,6 @@
     ></div>
 
     <div
-        x-ref="windowContainer"
         @if ($closeByClickingAway)
             {{-- Ensure that the click element is not triggered from a user selecting text inside an input. --}}
             x-on:click.self="
@@ -116,12 +117,10 @@
                     {{ $closeEventHandler }}
             "
         @endif
-        {{
-            $attributes->class([
-                'fi-modal-window-ctn',
-                'fi-clickable' => $closeByClickingAway,
-            ])
-        }}
+        @class([
+            'fi-modal-window-ctn',
+            'fi-clickable' => $closeByClickingAway,
+        ])
     >
         <div
             @if ($closeByEscaping)

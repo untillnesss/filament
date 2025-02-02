@@ -16,9 +16,7 @@ export default ({ id }) => ({
     close: function () {
         this.closeQuietly()
 
-        this.$refs.windowContainer.dispatchEvent(
-            new CustomEvent('modal-closed', { id }),
-        )
+        this.$root.dispatchEvent(new CustomEvent('modal-closed', { id }))
     },
 
     closeQuietly: function () {
