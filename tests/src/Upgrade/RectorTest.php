@@ -1,13 +1,13 @@
 <?php
 
 //
-//namespace Filament\Tests\Upgrade;
+// namespace Filament\Tests\Upgrade;
 //
-//use Iterator;
-//use Rector\Testing\PHPUnit\AbstractRectorTestCase;
+// use Iterator;
+// use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 //
-//class RectorTest extends AbstractRectorTestCase
-//{
+// class RectorTest extends AbstractRectorTestCase
+// {
 //    /** @dataProvider provideData */
 //    public function test(string $filePath): void
 //    {
@@ -23,4 +23,4 @@
 //    {
 //        return __DIR__ . '/../../../packages/upgrade/src/rector.php';
 //    }
-//}
+// }

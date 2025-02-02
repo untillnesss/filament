@@ -5,14 +5,16 @@ namespace Filament\Forms\Components;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Builder\Block;
-use Filament\Schema\Components\Concerns\CanBeCollapsed;
-use Filament\Schema\Components\Contracts\CanConcealComponents;
-use Filament\Schema\Components\Contracts\HasExtraItemActions;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Concerns\CanBeCollapsed;
+use Filament\Schemas\Components\Contracts\CanConcealComponents;
+use Filament\Schemas\Components\Contracts\HasExtraItemActions;
+use Filament\Schemas\Schema;
 use Filament\Support\Concerns\HasReorderAnimationDuration;
 use Filament\Support\Enums\ActionSize;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -57,6 +59,8 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
 
     protected bool | Closure $hasInteractiveBlockPreviews = false;
 
+    protected Alignment | string | Closure | null $addActionAlignment = null;
+
     protected ?Closure $modifyAddActionUsing = null;
 
     protected ?Closure $modifyAddBetweenActionUsing = null;
@@ -86,11 +90,11 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     protected bool | Closure $isBlockLabelTruncated = true;
 
     /**
-     * @var array<string, int | string | null> | null
+     * @var array<string, ?int> | null
      */
     protected ?array $blockPickerColumns = [];
 
-    protected MaxWidth | string | Closure | null $blockPickerWidth = null;
+    protected Width | string | Closure | null $blockPickerWidth = null;
 
     protected function setUp(): void
     {
@@ -137,7 +141,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
      */
     public function blocks(array | Closure $blocks): static
     {
-        $this->childComponents($blocks);
+        $this->components($blocks);
 
         return $this;
     }
@@ -184,7 +188,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
                 ]))
                 ->modalSubmitActionLabel(__('filament-forms::components.builder.actions.add.modal.actions.add.label'))
                 ->form(function (array $arguments, Builder $component): array {
-                    return $component->getBlock($arguments['block'])->getChildComponents();
+                    return $component->getBlock($arguments['block'])->getDefaultChildComponents();
                 });
         }
 
@@ -195,6 +199,24 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
         }
 
         return $action;
+    }
+
+    public function addActionAlignment(Alignment | string | Closure | null $addActionAlignment): static
+    {
+        $this->addActionAlignment = $addActionAlignment;
+
+        return $this;
+    }
+
+    public function getAddActionAlignment(): Alignment | string | null
+    {
+        $alignment = $this->evaluate($this->addActionAlignment);
+
+        if (is_string($alignment)) {
+            $alignment = Alignment::tryFrom($alignment) ?? $alignment;
+        }
+
+        return $alignment;
     }
 
     public function addAction(?Closure $callback): static
@@ -261,7 +283,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
                 ]))
                 ->modalSubmitActionLabel(__('filament-forms::components.builder.actions.add_between.modal.actions.add.label'))
                 ->form(function (array $arguments, Builder $component): array {
-                    return $component->getBlock($arguments['block'])->getChildComponents();
+                    return $component->getBlock($arguments['block'])->getDefaultChildComponents();
                 });
         }
 
@@ -290,7 +312,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     {
         $action = Action::make($this->getCloneActionName())
             ->label(__('filament-forms::components.builder.actions.clone.label'))
-            ->icon(FilamentIcon::resolve('forms::components.builder.actions.clone') ?? 'heroicon-m-square-2-stack')
+            ->icon(FilamentIcon::resolve('forms::components.builder.actions.clone') ?? Heroicon::Square2Stack)
             ->color('gray')
             ->action(function (array $arguments, Builder $component): void {
                 $newUuid = $component->generateUuid();
@@ -340,7 +362,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     {
         $action = Action::make($this->getDeleteActionName())
             ->label(__('filament-forms::components.builder.actions.delete.label'))
-            ->icon(FilamentIcon::resolve('forms::components.builder.actions.delete') ?? 'heroicon-m-trash')
+            ->icon(FilamentIcon::resolve('forms::components.builder.actions.delete') ?? Heroicon::Trash)
             ->color('danger')
             ->action(function (array $arguments, Builder $component): void {
                 $items = $component->getState();
@@ -381,7 +403,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     {
         $action = Action::make($this->getMoveDownActionName())
             ->label(__('filament-forms::components.builder.actions.move_down.label'))
-            ->icon(FilamentIcon::resolve('forms::components.builder.actions.move-down') ?? 'heroicon-m-arrow-down')
+            ->icon(FilamentIcon::resolve('forms::components.builder.actions.move-down') ?? Heroicon::ArrowDown)
             ->color('gray')
             ->action(function (array $arguments, Builder $component): void {
                 $items = array_move_after($component->getState(), $arguments['item']);
@@ -421,7 +443,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     {
         $action = Action::make($this->getMoveUpActionName())
             ->label(__('filament-forms::components.builder.actions.move_up.label'))
-            ->icon(FilamentIcon::resolve('forms::components.builder.actions.move-up') ?? 'heroicon-m-arrow-up')
+            ->icon(FilamentIcon::resolve('forms::components.builder.actions.move-up') ?? Heroicon::ArrowUp)
             ->color('gray')
             ->action(function (array $arguments, Builder $component): void {
                 $items = array_move_before($component->getState(), $arguments['item']);
@@ -468,7 +490,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     {
         $action = Action::make($this->getReorderActionName())
             ->label(__('filament-forms::components.builder.actions.reorder.label'))
-            ->icon(FilamentIcon::resolve('forms::components.builder.actions.reorder') ?? 'heroicon-m-arrows-up-down')
+            ->icon(FilamentIcon::resolve('forms::components.builder.actions.reorder') ?? Heroicon::ArrowsUpDown)
             ->color('gray')
             ->action(function (array $arguments, Builder $component): void {
                 $items = [
@@ -512,7 +534,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     {
         $action = Action::make($this->getCollapseActionName())
             ->label(__('filament-forms::components.builder.actions.collapse.label'))
-            ->icon(FilamentIcon::resolve('forms::components.builder.actions.collapse') ?? 'heroicon-m-chevron-up')
+            ->icon(FilamentIcon::resolve('forms::components.builder.actions.collapse') ?? Heroicon::ChevronUp)
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
@@ -543,7 +565,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     {
         $action = Action::make($this->getExpandActionName())
             ->label(__('filament-forms::components.builder.actions.expand.label'))
-            ->icon(FilamentIcon::resolve('forms::components.builder.actions.expand') ?? 'heroicon-m-chevron-down')
+            ->icon(FilamentIcon::resolve('forms::components.builder.actions.expand') ?? Heroicon::ChevronDown)
             ->color('gray')
             ->livewireClickHandlerEnabled(false)
             ->iconButton()
@@ -660,7 +682,7 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
                 $component->partiallyRender();
             })
             ->iconButton()
-            ->icon('heroicon-s-cog-6-tooth')
+            ->icon(Heroicon::Cog6Tooth)
             ->size(ActionSize::Small)
             ->visible(fn (Builder $component): bool => (! $component->isDisabled()) && $component->hasBlockPreviews());
 
@@ -877,12 +899,11 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
         return $blocks;
     }
 
-    public function getChildComponentContainers(bool $withHidden = false): array
+    /**
+     * @return array<Schema>
+     */
+    public function getItems(): array
     {
-        if ((! $withHidden) && $this->isHidden()) {
-            return [];
-        }
-
         return collect($this->getState())
             ->filter(fn (array $itemData): bool => filled($itemData['type'] ?? null) && $this->hasBlock($itemData['type']))
             ->map(
@@ -894,6 +915,14 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
                     ->getClone(),
             )
             ->all();
+    }
+
+    /**
+     * @return array<Schema>
+     */
+    public function getDefaultChildComponentContainers(): array
+    {
+        return $this->getItems();
     }
 
     public function getAddBetweenActionLabel(): string
@@ -1021,9 +1050,9 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     }
 
     /**
-     * @param  array<string, int | string | null> | int | string | null  $columns
+     * @param  array<string, ?int> | int | null  $columns
      */
-    public function blockPickerColumns(array | int | string | null $columns = 2): static
+    public function blockPickerColumns(array | int | null $columns = 2): static
     {
         if (! is_array($columns)) {
             $columns = [
@@ -1040,9 +1069,9 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     }
 
     /**
-     * @return array<string, int | string | null> | int | string | null
+     * @return array<string, ?int> | int | null
      */
-    public function getBlockPickerColumns(?string $breakpoint = null): array | int | string | null
+    public function getBlockPickerColumns(?string $breakpoint = null): array | int | null
     {
         $columns = $this->blockPickerColumns ?? [
             'default' => 1,
@@ -1060,14 +1089,14 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
         return $columns;
     }
 
-    public function blockPickerWidth(MaxWidth | string | Closure | null $width): static
+    public function blockPickerWidth(Width | string | Closure | null $width): static
     {
         $this->blockPickerWidth = $width;
 
         return $this;
     }
 
-    public function getBlockPickerWidth(): MaxWidth | string | null
+    public function getBlockPickerWidth(): Width | string | null
     {
         $width = $this->evaluate($this->blockPickerWidth);
 
@@ -1105,5 +1134,14 @@ class Builder extends Field implements CanConcealComponents, HasExtraItemActions
     public function getRawItemState(string $uuid): array
     {
         return $this->getChildComponentContainer($uuid)->getRawState();
+    }
+
+    public function getHeadingsCount(): int
+    {
+        if (! $this->hasBlockLabels()) {
+            return 0;
+        }
+
+        return 1;
     }
 }

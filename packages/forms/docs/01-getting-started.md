@@ -11,11 +11,11 @@ This guide will walk you through the basics of building forms with Filament's fo
 
 ## Form schemas
 
-All Filament forms have a "schema". This is an array, which contains [fields](fields#available-fields) and [layout components](../schema/layout#available-layout-components).
+All Filament forms have a "schema". This is an array, which contains [fields](fields#available-fields) and [layout components](../schemas/layout#available-layout-components).
 
 Fields are the inputs that your user will fill their data into. For example, HTML's `<input>` or `<select>` elements. Each field has its own PHP class. For example, the [`TextInput`](fields/text-input) class is used to render a text input field, and the [`Select`](fields/select) class is used to render a select field. You can see a full [list of available fields here](fields#available-fields).
 
-Layout components are used to group fields together, and to control how they are displayed. For example, you can use a [`Grid`](../schema/layout/grid#grid-component) component to display multiple fields side-by-side, or a [`Wizard`](layout/wizard) to separate fields into a multistep form. You can deeply nest layout components within each other to create very complex responsive UIs. You can see a full [list of available layout components here](layout#available-layout-components).
+Layout components are used to group fields together, and to control how they are displayed. For example, you can use a [`Grid`](../schemas/layout/grid#grid-component) component to display multiple fields side-by-side, or a [`Wizard`](layout/wizard) to separate fields into a multistep form. You can deeply nest layout components within each other to create very complex responsive UIs. You can see a full [list of available layout components here](layout#available-layout-components).
 
 ### Adding fields to a form schema
 
@@ -24,7 +24,7 @@ Initialise a field or layout component with the `make()` method, and build a sch
 ```php
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {
@@ -67,16 +67,16 @@ use Filament\Forms\Components\TextInput;
 
 <AutoScreenshot name="forms/getting-started/column-span" alt="Form fields in 2 columns, but with the rich editor spanning the full width of the form" version="4.x" />
 
-You can learn more about columns and spans in the [layout documentation](../schema/layout/grid). You can even make them responsive!
+You can learn more about columns and spans in the [layout documentation](../schemas/layout/grid). You can even make them responsive!
 
 ### Adding layout components to a form schema
 
-Let's add a new [`Section`](../schema/layout/section) to our form. `Section` is a layout component, and it allows you to add a heading and description to a set of fields. It can also allow fields inside it to collapse, which saves space in long forms.
+Let's add a new [`Section`](../schemas/layout/section) to our form. `Section` is a layout component, and it allows you to add a heading and description to a set of fields. It can also allow fields inside it to collapse, which saves space in long forms.
 
 ```php
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Section;
+use Filament\Schemas\Components\Section;
 
 [
     TextInput::make('title'),
@@ -96,7 +96,7 @@ In this example, you can see how the `Section` component has its own `schema()` 
 ```php
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Schema\Components\Section;
+use Filament\Schemas\Components\Section;
 
 Section::make('Publishing')
     ->description('Settings for publishing this post.')
@@ -126,7 +126,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Section;
+use Filament\Schemas\Components\Section;
 
 [
     TextInput::make('title')
@@ -162,7 +162,7 @@ Since all Filament forms are built on top of Livewire, form schemas are complete
 Fields can hide or show based on another field's values. In our form, we can hide the `published_at` timestamp field until the `status` field is set to `published`. This is done by passing a closure to the `hidden()` method, which allows you to dynamically hide or show a field while the form is being used. Closures have access to many useful arguments like `$get`, and you can find a [full list here](advanced#form-component-utility-injection). The field that you depend on (the `status` in this case) needs to be set to `live()`, which tells the form to reload the schema each time it gets changed.
 
 ```php
-use Filament\Schema\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 
@@ -185,7 +185,7 @@ It's not just `hidden()` - all Filament form methods support closures like this.
 Fields can also write data to other fields. For example, we can set the title to automatically generate a slug when the title is changed. This is done by passing a closure to the `afterStateUpdated()` method, which gets run each time the title is changed. This closure has access to the title (`$state`) and a function (`$set`) to set the slug field's state. You can find a [full list of closure arguments here](advanced#form-component-utility-injection). The field that you depend on (the `title` in this case) needs to be set to `live()`, which tells the form to reload and set the slug each time it gets changed.
 
 ```php
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Str;
 

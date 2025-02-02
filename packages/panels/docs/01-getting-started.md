@@ -158,7 +158,7 @@ Filament bundles a large selection of [form fields](../forms/fields#available-fi
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public static function form(Schema $form): Schema
 {
@@ -189,7 +189,7 @@ Let's add a second field for the type of patient: a choice between a cat, dog, o
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public static function form(Schema $form): Schema
 {
@@ -230,7 +230,7 @@ Let's add a [date picker field](../forms/fields/date-time-picker) for the `date_
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public static function form(Schema $form): Schema
 {
@@ -259,7 +259,7 @@ We should also add an owner when creating a new patient. Since we added a `Belon
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public static function form(Schema $form): Schema
 {
@@ -465,7 +465,7 @@ php artisan make:filament-relation-manager PatientResource treatments descriptio
 This will create a `PatientResource/RelationManagers/TreatmentsRelationManager.php` file. You must register the new relation manager in the `getRelations()` method of the `PatientResource`:
 
 ```php
-use App\Filament\Resources\PatientResource\RelationManagers;
+use App\Filament\Resources\Patients\RelationManagers;
 
 public static function getRelations(): array
 {
@@ -479,7 +479,7 @@ The `TreatmentsRelationManager.php` file contains a class that is prepopulated w
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -521,7 +521,7 @@ Let's add the `notes` field, which can be used to add more details about the tre
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {
@@ -544,7 +544,7 @@ Let's add a `price` field for the treatment. We can use a text input with some c
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {
@@ -749,7 +749,7 @@ Congratulations! Now that you know how to build a basic Filament application, he
 - [Create custom pages in the panel that don't belong to resources.](pages)
 - [Learn more about adding action buttons to pages and resources, with modals to collect user input or for confirmation.](../actions/overview)
 - [Explore the available fields to collect input from your users.](../forms/fields#available-fields)
-- [Check out the list of form layout components.](../schema/layout)
+- [Check out the list of form layout components.](../schemas/layout)
 - [Discover how to build complex, responsive table layouts without touching CSS.](../tables/layout)
 - [Add summaries to your tables](../tables/summaries)
 - [Write automated tests for your panel using our suite of helper methods.](testing)

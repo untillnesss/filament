@@ -2,6 +2,7 @@
 
 namespace Filament\Tables\Testing;
 
+use BackedEnum;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\Testing\TestsActions as BaseTestsActions;
@@ -50,7 +51,7 @@ class TestsActions
 
     public function assertTableActionDataSet(): Closure
     {
-        return function (array $data): static {
+        return function (array | Closure $data): static {
             $this->assertActionDataSet($data);
 
             return $this;
@@ -201,7 +202,7 @@ class TestsActions
 
     public function assertTableActionHasIcon(): Closure
     {
-        return function (string | array $actions, string $icon, $record = null): static {
+        return function (string | array $actions, string | BackedEnum $icon, $record = null): static {
             /** @var array<array<string, mixed>> $actions */
             /** @phpstan-ignore-next-line */
             $actions = $this->parseNestedTableActions($actions, $record);
@@ -214,7 +215,7 @@ class TestsActions
 
     public function assertTableActionDoesNotHaveIcon(): Closure
     {
-        return function (string | array $actions, string $icon, $record = null): static {
+        return function (string | array $actions, string | BackedEnum $icon, $record = null): static {
             /** @var array<array<string, mixed>> $actions */
             /** @phpstan-ignore-next-line */
             $actions = $this->parseNestedTableActions($actions, $record);

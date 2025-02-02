@@ -1,7 +1,9 @@
 @php
     use Filament\Actions\Action;
+    use Filament\Support\Enums\Alignment;
+    use Illuminate\View\ComponentAttributeBag;
 
-    $containers = $getChildComponentContainers();
+    $items = $getItems();
 
     $addAction = $getAction($getAddActionName());
     $addBetweenAction = $getAction($getAddBetweenActionName());
@@ -26,6 +28,8 @@
 
     $key = $getKey();
     $statePath = $getStatePath();
+
+    $itemLabelHeadingTag = $getHeadingTag();
 @endphp
 
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
@@ -40,7 +44,7 @@
             <div
                 @class([
                     'flex gap-x-3',
-                    'hidden' => count($containers) < 2,
+                    'hidden' => count($items) < 2,
                 ])
             >
                 @if ($collapseAllActionIsVisible)
@@ -61,21 +65,21 @@
             </div>
         @endif
 
-        @if (count($containers))
+        @if (count($items))
             <ul>
-                <x-filament::grid
-                    :default="$getGridColumns('default')"
-                    :sm="$getGridColumns('sm')"
-                    :md="$getGridColumns('md')"
-                    :lg="$getGridColumns('lg')"
-                    :xl="$getGridColumns('xl')"
-                    :two-xl="$getGridColumns('2xl')"
-                    :wire:end.stop="'mountAction(\'reorder\', { items: $event.target.sortable.toArray() }, { schemaComponent: \'' . $key . '\' })'"
+                <div
                     x-sortable
-                    :data-sortable-animation-duration="$getReorderAnimationDuration()"
-                    class="items-start gap-4"
+                    {{
+                        (new ComponentAttributeBag)
+                            ->grid($getGridColumns())
+                            ->merge([
+                                'data-sortable-animation-duration' => $getReorderAnimationDuration(),
+                                'wire:end.stop' => 'mountAction(\'reorder\', { items: $event.target.sortable.toArray() }, { schemaComponent: \'' . $key . '\' })',
+                            ], escape: false)
+                            ->class(['items-start gap-4'])
+                    }}
                 >
-                    @foreach ($containers as $uuid => $item)
+                    @foreach ($items as $uuid => $item)
                         @php
                             $itemLabel = $getItemLabel($uuid);
                             $visibleExtraItemActions = array_filter(
@@ -102,7 +106,7 @@
                             x-on:repeater-expand.window="$event.detail === '{{ $statePath }}' && (isCollapsed = false)"
                             x-on:repeater-collapse.window="$event.detail === '{{ $statePath }}' && (isCollapsed = true)"
                             x-sortable-item="{{ $uuid }}"
-                            class="fi-fo-repeater-item divide-y divide-gray-100 rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:divide-white/10 dark:bg-white/5 dark:ring-white/10"
+                            class="fi-fo-repeater-item divide-y divide-gray-100 rounded-xl bg-white ring-1 shadow-xs ring-gray-950/5 dark:divide-white/10 dark:bg-white/5 dark:ring-white/10"
                             x-bind:class="{ 'fi-collapsed overflow-hidden': isCollapsed }"
                         >
                             @if ($reorderActionIsVisible || $moveUpActionIsVisible || $moveDownActionIsVisible || filled($itemLabel) || $cloneActionIsVisible || $deleteActionIsVisible || $isCollapsible || $visibleExtraItemActions)
@@ -145,14 +149,14 @@
                                     @endif
 
                                     @if (filled($itemLabel))
-                                        <h4
+                                        <{{ $itemLabelHeadingTag }}
                                             @class([
                                                 'text-sm font-medium text-gray-950 dark:text-white',
                                                 'truncate' => $isItemLabelTruncated(),
                                             ])
                                         >
                                             {{ $itemLabel }}
-                                        </h4>
+                                        </{{ $itemLabelHeadingTag }}>
                                     @endif
 
                                     @if ($cloneActionIsVisible || $deleteActionIsVisible || $isCollapsible || $visibleExtraItemActions)
@@ -233,12 +237,22 @@
                             @endif
                         @endif
                     @endforeach
-                </x-filament::grid>
+                </div>
             </ul>
         @endif
 
         @if ($isAddable && $addAction->isVisible())
-            <div class="flex justify-center">
+            <div
+                @class([
+                    'flex',
+                    match ($getAddActionAlignment()) {
+                        Alignment::Start, Alignment::Left => 'justify-start',
+                        Alignment::Center, null => 'justify-center',
+                        Alignment::End, Alignment::Right => 'justify-end',
+                        default => $alignment,
+                    },
+                ])
+            >
                 {{ $addAction }}
             </div>
         @endif

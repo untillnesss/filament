@@ -1,14 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss' source(none);
+@import '../../../support/resources/css/tailwind.css';
 
-@layer base {
-    :root.dark {
-        color-scheme: dark;
-    }
+@import './base.css' layer(base);
 
-    /* When scrolling to validation error, do not hide element behind the top bar */
-    [data-field-wrapper] {
-        scroll-margin-top: 8rem;
-    }
+@theme inline {
+    --font-mono: var(--mono-font-family), ui-monospace, SFMono-Regular, Menlo,
+        Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --font-sans: var(--font-family), ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+    --font-serif: var(--serif-font-family), ui-serif, Georgia, Cambria,
+        'Times New Roman', Times, serif;
 }

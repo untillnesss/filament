@@ -1,6 +1,9 @@
 @php
     use Filament\Support\Enums\ActionSize;
     use Filament\Support\Enums\IconSize;
+    use Filament\Support\View\Components\Badge;
+    use Filament\Support\View\Components\IconButton;
+    use Illuminate\View\ComponentAttributeBag;
 @endphp
 
 @props([
@@ -31,86 +34,19 @@
         $size = filled($size) ? (ActionSize::tryFrom($size) ?? $size) : null;
     }
 
-    $iconSize ??= match ($size) {
-        ActionSize::ExtraSmall => IconSize::Small,
-        ActionSize::Small, ActionSize::Medium => IconSize::Medium,
-        ActionSize::Large, ActionSize::ExtraLarge => IconSize::Large,
-        default => IconSize::Medium,
-    };
-
-    if (! $iconSize instanceof IconSize) {
-        $iconSize = filled($iconSize) ? (IconSize::tryFrom($iconSize) ?? $iconSize) : null;
+    if (filled($iconSize) && (! $iconSize instanceof IconSize)) {
+        $iconSize = IconSize::tryFrom($iconSize) ?? $iconSize;
     }
 
-    $buttonClasses = \Illuminate\Support\Arr::toCssClasses([
-        'fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2',
-        'pointer-events-none opacity-70' => $disabled,
-        ...match ($size) {
-            ActionSize::ExtraSmall => [
-                match ($iconSize) {
-                    IconSize::Small => '-m-1.5',
-                    IconSize::Medium => '-m-1',
-                    IconSize::Large => '-m-0.5',
-                },
-                'size-7',
-            ],
-            ActionSize::Small => [
-                match ($iconSize) {
-                    IconSize::Small => '-m-2',
-                    IconSize::Medium => '-m-1.5',
-                    IconSize::Large => '-m-1',
-                },
-                'size-8',
-            ],
-            ActionSize::Medium => [
-                match ($iconSize) {
-                    IconSize::Small => '-m-2.5',
-                    IconSize::Medium => '-m-2',
-                    IconSize::Large => '-m-1.5',
-                },
-                'size-9',
-            ],
-            ActionSize::Large => [
-                match ($iconSize) {
-                    IconSize::Small => '-m-3',
-                    IconSize::Medium => '-m-2.5',
-                    IconSize::Large => '-m-2',
-                },
-                'size-10',
-            ],
-            ActionSize::ExtraLarge => [
-                match ($iconSize) {
-                    IconSize::Small => '-m-3.5',
-                    IconSize::Medium => '-m-3',
-                    IconSize::Large => '-m-2.5',
-                },
-                'size-11',
-            ],
-        },
-        match ($color) {
-            'gray' => 'text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500',
-            default => 'fi-color-custom text-custom-500 hover:text-custom-600 focus-visible:ring-custom-600 dark:text-custom-400 dark:hover:text-custom-300 dark:focus-visible:ring-custom-500',
-        },
-        is_string($color) ? "fi-color-{$color}" : null,
-    ]);
+    $iconSize ??= match ($size) {
+        ActionSize::ExtraSmall => IconSize::Small,
+        ActionSize::Large, ActionSize::ExtraLarge => IconSize::Large,
+        default => null,
+    };
 
-    $buttonStyles = \Filament\Support\get_color_css_variables(
-        $color,
-        shades: [300, 400, 500, 600],
-        alias: 'icon-button',
-    );
-
-    $iconClasses = \Illuminate\Support\Arr::toCssClasses([
-        'fi-icon-btn-icon',
-        match ($iconSize) {
-            IconSize::Small => 'size-4',
-            IconSize::Medium => 'size-5',
-            IconSize::Large => 'size-6',
-            default => $iconSize,
-        },
-    ]);
-
-    $badgeContainerClasses = 'fi-icon-btn-badge-ctn absolute start-full top-1 z-[1] w-max -translate-x-1/2 -translate-y-1/2 rounded-md bg-white dark:bg-gray-900 rtl:translate-x-1/2';
+    if (! $badgeSize instanceof ActionSize) {
+        $badgeSize = filled($badgeSize) ? (ActionSize::tryFrom($badgeSize) ?? $badgeSize) : null;
+    }
 
     $wireTarget = $loadingIndicator ? $attributes->whereStartsWith(['wire:target', 'wire:click'])->filter(fn ($value): bool => filled($value))->first() : null;
 
@@ -123,118 +59,82 @@
     $hasTooltip = filled($tooltip);
 @endphp
 
-@if ($tag === 'button')
-    <button
-        @if ($keyBindings || $hasTooltip)
-            x-data="{}"
-        @endif
-        @if ($keyBindings)
-            x-bind:id="$id('key-bindings')"
-            x-mousetrap.global.{{ collect($keyBindings)->map(fn (string $keyBinding): string => str_replace('+', '-', $keyBinding))->implode('.') }}="document.getElementById($el.id).click()"
-        @endif
-        @if ($hasTooltip)
-            x-tooltip="{
-                content: @js($tooltip),
-                theme: $store.theme,
-            }"
-        @endif
-        {{
-            $attributes
-                ->merge([
-                    'disabled' => $disabled,
-                    'form' => $formId,
-                    'type' => $type,
-                ], escape: false)
-                ->merge([
-                    'title' => $label,
-                ], escape: true)
-                ->class([$buttonClasses])
-                ->style([$buttonStyles])
-        }}
-    >
-        @if ($label)
-            <span class="sr-only">
-                {{ $label }}
-            </span>
-        @endif
-
-        <x-filament::icon
-            :attributes="
-                \Filament\Support\prepare_inherited_attributes(
-                    new \Illuminate\View\ComponentAttributeBag([
-                        'alias' => $iconAlias,
-                        'icon' => $icon,
-                        'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $hasLoadingIndicator,
-                        'wire:target' => $hasLoadingIndicator ? $loadingIndicatorTarget : null,
-                    ])
-                )->class([$iconClasses])
-            "
-        />
-
-        @if ($hasLoadingIndicator)
-            <x-filament::loading-indicator
-                :attributes="
-                    \Filament\Support\prepare_inherited_attributes(
-                        new \Illuminate\View\ComponentAttributeBag([
-                            'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
-                            'wire:target' => $loadingIndicatorTarget,
-                        ])
-                    )->class([$iconClasses])
-                "
-            />
-        @endif
-
-        @if (filled($badge))
-            <div class="{{ $badgeContainerClasses }}">
-                <x-filament::badge :color="$badgeColor" :size="$badgeSize">
-                    {{ $badge }}
-                </x-filament::badge>
-            </div>
-        @endif
-    </button>
-@elseif ($tag === 'a')
-    <a
+<{{ $tag }}
+    @if (($tag === 'a') && (! ($disabled && filled($tooltip))))
         {{ \Filament\Support\generate_href_html($href, $target === '_blank', $spaMode) }}
-        @if ($keyBindings || $hasTooltip)
-            x-data="{}"
-        @endif
-        @if ($keyBindings)
-            x-bind:id="$id('key-bindings')"
-            x-mousetrap.global.{{ collect($keyBindings)->map(fn (string $keyBinding): string => str_replace('+', '-', $keyBinding))->implode('.') }}="document.getElementById($el.id).click()"
-        @endif
-        @if ($hasTooltip)
-            x-tooltip="{
-                content: @js($tooltip),
-                theme: $store.theme,
-            }"
-        @endif
+    @endif
+    @if ($keyBindings || $hasTooltip)
+        x-data="{}"
+    @endif
+    @if ($keyBindings)
+        x-bind:id="$id('key-bindings')"
+        x-mousetrap.global.{{ collect($keyBindings)->map(fn (string $keyBinding): string => str_replace('+', '-', $keyBinding))->implode('.') }}="document.getElementById($el.id).click()"
+    @endif
+    @if ($hasTooltip)
+        x-tooltip="{
+            content: @js($tooltip),
+            theme: $store.theme,
+        }"
+    @endif
+    {{
+        $attributes
+            ->merge([
+                'aria-disabled' => $disabled ? 'true' : null,
+                'aria-label' => $label,
+                'disabled' => $disabled && blank($tooltip),
+                'form' => $formId,
+                'type' => $tag === 'button' ? $type : null,
+                'wire:loading.attr' => $tag === 'button' ? 'disabled' : null,
+                'wire:target' => ($hasLoadingIndicator && $loadingIndicatorTarget) ? $loadingIndicatorTarget : null,
+            ], escape: false)
+            ->merge([
+                'title' => $label,
+            ], escape: true)
+            ->when(
+                $disabled && filled($tooltip),
+                fn (ComponentAttributeBag $attributes) => $attributes->filter(
+                    fn (mixed $value, string $key): bool => ! str($key)->startsWith(['href', 'x-on:', 'wire:click']),
+                ),
+            )
+            ->class([
+                'fi-icon-btn',
+                'fi-disabled' => $disabled,
+                ($size instanceof ActionSize) ? "fi-size-{$size->value}" : (is_string($size) ? $size : ''),
+            ])
+            ->color(IconButton::class, $color)
+    }}
+>
+    {{
+        \Filament\Support\generate_icon_html($icon, $iconAlias, (new \Illuminate\View\ComponentAttributeBag([
+            'wire:loading.remove.delay.' . config('filament.livewire_loading_delay', 'default') => $hasLoadingIndicator,
+            'wire:target' => $hasLoadingIndicator ? $loadingIndicatorTarget : false,
+        ])), size: $iconSize)
+    }}
+
+    @if ($hasLoadingIndicator)
         {{
-            $attributes
-                ->merge([
-                    'title' => $label,
-                ], escape: true)
-                ->class([$buttonClasses])
-                ->style([$buttonStyles])
+            \Filament\Support\generate_loading_indicator_html((new \Illuminate\View\ComponentAttributeBag([
+                'wire:loading.delay.' . config('filament.livewire_loading_delay', 'default') => '',
+                'wire:target' => $loadingIndicatorTarget,
+            ])), size: $iconSize)
         }}
-    >
-        @if ($label)
-            <span class="sr-only">
-                {{ $label }}
-            </span>
-        @endif
+    @endif
 
-        <x-filament::icon
-            :alias="$iconAlias"
-            :icon="$icon"
-            :class="$iconClasses"
-        />
-
-        @if (filled($badge))
-            <div class="{{ $badgeContainerClasses }}">
-                <x-filament::badge :color="$badgeColor" size="xs">
+    @if (filled($badge))
+        <div class="fi-icon-btn-badge-ctn">
+            @if ($badge instanceof \Illuminate\View\ComponentSlot)
+                {{ $badge }}
+            @else
+                <span
+                    @class([
+                        'fi-badge',
+                        ...\Filament\Support\get_component_color_classes(Badge::class, $badgeColor),
+                        ($badgeSize instanceof ActionSize) ? "fi-size-{$badgeSize->value}" : (is_string($badgeSize) ? $badgeSize : ''),
+                    ])
+                >
                     {{ $badge }}
-                </x-filament::badge>
-            </div>
-        @endif
-    </a>
-@endif
+                </span>
+            @endif
+        </div>
+    @endif
+</{{ $tag }}>

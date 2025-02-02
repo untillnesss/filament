@@ -134,7 +134,7 @@
                                     'fi-in-text-item-icon size-5 shrink-0',
                                     match ($iconColor) {
                                         'gray', null => 'text-gray-400 dark:text-gray-500',
-                                        default => 'text-custom-500',
+                                        default => 'text-color-500',
                                     },
                                 ]);
 
@@ -170,7 +170,7 @@
                                     match ($color) {
                                         null => 'text-gray-950 dark:text-white',
                                         'gray' => 'text-gray-500 dark:text-gray-400',
-                                        default => 'text-custom-600 dark:text-custom-400',
+                                        default => 'text-color-600 dark:text-color-400',
                                     } => $isBulleted,
                                 ])
                                 @style([
@@ -196,7 +196,7 @@
                                             'group/item' => $url,
                                             match ($color) {
                                                 null, 'gray' => null,
-                                                default => 'fi-color-custom',
+                                                default => 'fi-color',
                                             },
                                             is_string($color) ? "fi-color-{$color}" : null,
                                         ])
@@ -213,7 +213,7 @@
                                             @class([
                                                 'group-hover/item:underline group-focus-visible/item:underline' => $url,
                                                 $proseClasses => $isProse || $isMarkdown,
-                                                'line-clamp-[--line-clamp]' => $lineClamp,
+                                                'line-clamp-(--line-clamp)' => $lineClamp,
                                                 match ($size) {
                                                     TextEntrySize::ExtraSmall, 'xs' => 'text-xs',
                                                     TextEntrySize::Small, 'sm', null => 'text-sm leading-6',
@@ -224,7 +224,7 @@
                                                 match ($color) {
                                                     null => 'text-gray-950 dark:text-white',
                                                     'gray' => 'text-gray-500 dark:text-gray-400',
-                                                    default => 'text-custom-600 dark:text-custom-400',
+                                                    default => 'text-color-600 dark:text-color-400',
                                                 },
                                                 match ($weight) {
                                                     FontWeight::Thin, 'thin' => 'font-thin',

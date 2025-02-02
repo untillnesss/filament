@@ -19,7 +19,7 @@ class Authenticate extends Middleware
         if (! $guard->check()) {
             $this->unauthenticated($request, $guards);
 
-            return;
+            return; /** @phpstan-ignore-line */
         }
 
         $this->auth->shouldUse(Filament::getAuthGuard());
@@ -27,7 +27,7 @@ class Authenticate extends Middleware
         /** @var Model $user */
         $user = $guard->user();
 
-        $panel = Filament::getCurrentPanel();
+        $panel = Filament::getCurrentOrDefaultPanel();
 
         abort_if(
             $user instanceof FilamentUser ?

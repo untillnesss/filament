@@ -1,10 +1,10 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Section;
-use Filament\Schema\Components\Utilities\Set;
-use Filament\Schema\Schema;
-use Filament\Tests\Forms\Fixtures\Livewire;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tests\Fixtures\Livewire\Livewire;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Str;
 

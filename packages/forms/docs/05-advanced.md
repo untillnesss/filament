@@ -52,7 +52,7 @@ In this example, `500` is the number of milliseconds to wait before sending a ne
 
 ## Form component utility injection
 
-The vast majority of methods used to configure [fields](fields) and [layout components](../schema/layout) accept functions as parameters instead of hardcoded values:
+The vast majority of methods used to configure [fields](fields) and [layout components](../schemas/layout) accept functions as parameters instead of hardcoded values:
 
 ```php
 use App\Models\User;
@@ -99,7 +99,7 @@ function ($state) {
 If you wish to access the current component instance, define a `$component` parameter:
 
 ```php
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Component;
 
 function (Component $component) {
     // ...
@@ -135,7 +135,7 @@ function (?Model $record) {
 You may also retrieve the state (value) of another field from within a callback, using a `$get` parameter:
 
 ```php
-use Filament\Schema\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Get;
 
 function (Get $get) {
     $email = $get('email'); // Store the value of the `email` field in the `$email` variable.
@@ -148,7 +148,7 @@ function (Get $get) {
 In a similar way to `$get`, you may also set the value of another field from within a callback, using a `$set` parameter:
 
 ```php
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Set;
 
 function (Set $set) {
     $set('title', 'Blog Post'); // Set the `title` field to `Blog Post`.
@@ -161,7 +161,7 @@ When this function is run, the state of the `title` field will be updated, and t
 By default, the [`afterStateUpdated()`](#field-updates) method of the field you set is not called when you use `$set()`. If you wish to call it, you can pass `shouldCallUpdatedHooks: true` as an argument:
 
 ```php
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Set;
 
 function (Set $set) {
     $set('title', 'Blog Post', shouldCallUpdatedHooks: true);
@@ -186,8 +186,8 @@ function (string $operation) {
 The parameters are injected dynamically using reflection, so you are able to combine multiple parameters in any order:
 
 ```php
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Livewire\Component as Livewire;
 
 function (Livewire $livewire, Get $get, Set $set) {
@@ -200,7 +200,7 @@ function (Livewire $livewire, Get $get, Set $set) {
 You may inject anything from Laravel's container like normal, alongside utilities:
 
 ```php
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Http\Request;
 
 function (Request $request, Set $set) {
@@ -293,7 +293,7 @@ This section contains a collection of recipes for common tasks you may need to p
 To conditionally hide or show a field, you can pass a function to the `hidden()` method, and return `true` or `false` depending on whether you want the field to be hidden or not. The function can [inject utilities](#form-component-utility-injection) as parameters, so you can do things like check the value of another field:
 
 ```php
-use Filament\Schema\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
 
@@ -309,7 +309,7 @@ In this example, the `is_company` checkbox is [`live()`](#the-basics-of-reactivi
 Alternatively, you can use the `visible()` method to show a field conditionally. It does the exact inverse of `hidden()`, and could be used if you prefer the clarity of the code when written this way:
 
 ```php
-use Filament\Schema\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
 
@@ -325,7 +325,7 @@ TextInput::make('company_name')
 To conditionally make a field required, you can pass a function to the `required()` method, and return `true` or `false` depending on whether you want the field to be required or not. The function can [inject utilities](#form-component-utility-injection) as parameters, so you can do things like check the value of another field:
 
 ```php
-use Filament\Schema\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Forms\Components\TextInput;
 
 TextInput::make('company_name')
@@ -344,7 +344,7 @@ Using a function is able to make any other [validation rule](validation) dynamic
 To generate a slug from a title while the user is typing, you can use the [`afterStateUpdated()` method](#field-updates) on the title field to [`$set()`](#injecting-a-function-to-set-the-state-of-another-field) the value of the slug field:
 
 ```php
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Str;
 
@@ -360,8 +360,8 @@ In this example, the `title` field is [`live(onBlur: true)`](#reactive-fields-on
 One thing to note is that the user may customize the slug manually, and we don't want to overwrite their changes if the title changes. To prevent this, we can use the old version of the title to work out if the user has modified it themselves. To access the old version of the title, you can inject `$old`, and to get the current value of the slug before it gets changed, we can use the [`$get()` utility](#injecting-the-state-of-another-field):
 
 ```php
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Str;
 
@@ -383,7 +383,7 @@ TextInput::make('slug')
 To dynamically update the options of a [select field](fields/select) based on the value of another field, you can pass a function to the `options()` method of the select field. The function can [inject utilities](#form-component-utility-injection) as parameters, so you can do things like check the value of another field using the [`$get()` utility](#injecting-the-current-state-of-a-field):
 
 ```php
-use Filament\Schema\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Forms\Components\Select;
 
 Select::make('category')
@@ -417,7 +417,7 @@ In this example, the `category` field is [`live()`](#the-basics-of-reactivity). 
 You could adapt this example to use options loaded from an Eloquent model or other data source, by querying within the function:
 
 ```php
-use Filament\Schema\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Collection;
 
@@ -433,14 +433,14 @@ Select::make('sub_category')
 
 ### Dynamic fields based on a select option
 
-You may wish to render a different set of fields based on the value of a field, like a select. To do this, you can pass a function to the `schema()` method of any [layout component](../schema/layout), which checks the value of the field and returns a different schema based on that value. Also, you will need a way to initialise the new fields in the dynamic schema when they are first loaded.
+You may wish to render a different set of fields based on the value of a field, like a select. To do this, you can pass a function to the `schema()` method of any [layout component](../schemas/layout), which checks the value of the field and returns a different schema based on that value. Also, you will need a way to initialise the new fields in the dynamic schema when they are first loaded.
 
 ```php
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Grid;
-use Filament\Schema\Components\Utilities\Get;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Utilities\Get;
 
 Select::make('type')
     ->options([
@@ -529,13 +529,13 @@ TextInput::make('password')
 
 > If you're building a form inside your Livewire component, make sure you have set up the [form's model](adding-a-form-to-a-livewire-component#setting-a-form-model). Otherwise, Filament doesn't know which model to use to retrieve the relationship from.
 
-As well as being able to give structure to fields, [layout components](../schema/layout) are also able to "teleport" their nested fields into a relationship. Filament will handle loading data from a `HasOne`, `BelongsTo` or `MorphOne` Eloquent relationship, and then it will save the data back to the same relationship. To set this behavior up, you can use the `relationship()` method on any layout component:
+As well as being able to give structure to fields, [layout components](../schemas/layout) are also able to "teleport" their nested fields into a relationship. Filament will handle loading data from a `HasOne`, `BelongsTo` or `MorphOne` Eloquent relationship, and then it will save the data back to the same relationship. To set this behavior up, you can use the `relationship()` method on any layout component:
 
 ```php
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Fieldset;
+use Filament\Schemas\Components\Fieldset;
 
 Fieldset::make('Metadata')
     ->relationship('metadata')
@@ -552,7 +552,7 @@ This functionality is not just limited to fieldsets - you can use it with any la
 
 ```php
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Group;
+use Filament\Schemas\Components\Group;
 
 Group::make()
     ->relationship('customer')
@@ -579,7 +579,7 @@ Sometimes, saving the related record may be optional. If the user fills out the 
 
 ```php
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Group;
+use Filament\Schemas\Components\Group;
 
 Group::make()
     ->relationship(
@@ -604,7 +604,7 @@ You may insert a Livewire component directly into a form:
 
 ```php
 use App\Livewire\Foo;
-use Filament\Schema\Components\Livewire;
+use Filament\Schemas\Components\Livewire;
 
 Livewire::make(Foo::class)
 ```
@@ -613,7 +613,7 @@ If you are rendering multiple of the same Livewire component, please make sure t
 
 ```php
 use App\Livewire\Foo;
-use Filament\Schema\Components\Livewire;
+use Filament\Schemas\Components\Livewire;
 
 Livewire::make(Foo::class)
     ->key('foo-first')
@@ -631,7 +631,7 @@ You can pass an array of parameters to a Livewire component:
 
 ```php
 use App\Livewire\Foo;
-use Filament\Schema\Components\Livewire;
+use Filament\Schemas\Components\Livewire;
 
 Livewire::make(Foo::class, ['bar' => 'baz'])
 ```
@@ -680,7 +680,7 @@ class Foo extends Component
 Please be aware that when the record has not yet been created, it will be `null`. If you'd like to hide the Livewire component when the record is `null`, you can use the `hidden()` method:
 
 ```php
-use Filament\Schema\Components\Livewire;
+use Filament\Schemas\Components\Livewire;
 use Illuminate\Database\Eloquent\Model;
 
 Livewire::make(Foo::class)
@@ -693,7 +693,7 @@ You may allow the component to [lazily load](https://livewire.laravel.com/docs/l
 
 ```php
 use App\Livewire\Foo;
-use Filament\Schema\Components\Livewire;
+use Filament\Schemas\Components\Livewire;
 
 Livewire::make(Foo::class)->lazy()       
 ```

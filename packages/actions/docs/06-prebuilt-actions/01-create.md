@@ -208,7 +208,7 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schema\Components\Wizard\Step;
+use Filament\Schemas\Components\Wizard\Step;
 
 CreateAction::make()
     ->steps([

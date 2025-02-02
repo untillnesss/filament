@@ -3,8 +3,10 @@
 namespace Filament\Actions\Imports;
 
 use Carbon\CarbonInterface;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\Imports\Models\Import;
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Component;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Support\Facades\Validator;
@@ -182,7 +184,7 @@ abstract class Importer
             $rules[$columnName] = $column->getDataValidationRules();
 
             if (
-                $column->isArray() &&
+                $column->isMultiple() &&
                 count($nestedRecursiveRules = $column->getNestedRecursiveDataValidationRules())
             ) {
                 $rules["{$columnName}.*"] = $nestedRecursiveRules;
@@ -252,6 +254,26 @@ abstract class Importer
     public function saveRecord(): void
     {
         $this->record->save();
+
+        foreach ($this->getCachedColumns() as $column) {
+            $columnName = $column->getName();
+
+            if (blank($this->columnMap[$columnName] ?? null)) {
+                continue;
+            }
+
+            if (! array_key_exists($columnName, $this->data)) {
+                continue;
+            }
+
+            $state = $this->data[$columnName];
+
+            if (blank($state) && $column->isBlankStateIgnored()) {
+                continue;
+            }
+
+            $column->saveRelationships($state);
+        }
     }
 
     /**
@@ -260,7 +282,7 @@ abstract class Importer
     abstract public static function getColumns(): array;
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action | ActionGroup>
      */
     public static function getOptionsFormComponents(): array
     {

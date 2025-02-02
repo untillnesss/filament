@@ -71,6 +71,16 @@ use Filament\View\PanelsRenderHook;
 - `PanelsRenderHook::PAGE_HEADER_WIDGETS_AFTER` - After the page header widgets, also [can be scoped](#scoping-render-hooks) to the page or resource class
 - `PanelsRenderHook::PAGE_HEADER_WIDGETS_BEFORE` - Before the page header widgets, also [can be scoped](#scoping-render-hooks) to the page or resource class
 - `PanelsRenderHook::PAGE_START` - Start of the page content container, also [can be scoped](#scoping-render-hooks) to the page or resource class
+- `PanelsRenderHook::PAGE_SUB_NAVIGATION_END_AFTER` - After the page sub navigation "end" sidebar position, also [can be scoped](#scoping-render-hooks) to the page or resource class
+- `PanelsRenderHook::PAGE_SUB_NAVIGATION_END_BEFORE` - Before the page sub navigation "end" sidebar position, also [can be scoped](#scoping-render-hooks) to the page or resource class
+- `PanelsRenderHook::PAGE_SUB_NAVIGATION_SELECT_AFTER` - After the page sub navigation select (for mobile), also [can be scoped](#scoping-render-hooks) to the page or resource class
+- `PanelsRenderHook::PAGE_SUB_NAVIGATION_SELECT_BEFORE` - Before the page sub navigation select (for mobile), also [can be scoped](#scoping-render-hooks) to the page or resource class
+- `PanelsRenderHook::PAGE_SUB_NAVIGATION_SIDEBAR_AFTER` - After the page sub navigation sidebar, also [can be scoped](#scoping-render-hooks) to the page or resource class
+- `PanelsRenderHook::PAGE_SUB_NAVIGATION_SIDEBAR_BEFORE` - Before the page sub navigation sidebar, also [can be scoped](#scoping-render-hooks) to the page or resource class
+- `PanelsRenderHook::PAGE_SUB_NAVIGATION_START_AFTER` - After the page sub navigation "start" sidebar position, also [can be scoped](#scoping-render-hooks) to the page or resource class
+- `PanelsRenderHook::PAGE_SUB_NAVIGATION_START_BEFORE` - Before the page sub navigation "start" sidebar position, also [can be scoped](#scoping-render-hooks) to the page or resource class
+- `PanelsRenderHook::PAGE_SUB_NAVIGATION_TOP_AFTER` - After the page sub navigation "top" tabs position, also [can be scoped](#scoping-render-hooks) to the page or resource class
+- `PanelsRenderHook::PAGE_SUB_NAVIGATION_TOP_BEFORE` - Before the page sub navigation "top" tabs position, also [can be scoped](#scoping-render-hooks) to the page or resource class
 - `PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABLE_AFTER` - After the resource table, also [can be scoped](#scoping-render-hooks) to the page or resource class
 - `PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABLE_BEFORE` - Before the resource table, also [can be scoped](#scoping-render-hooks) to the page or resource class
 - `PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABS_END` - The end of the filter tabs (after the last tab), also [can be scoped](#scoping-render-hooks) to the page or resource class
@@ -152,7 +162,7 @@ use Illuminate\Support\Facades\Blade;
 FilamentView::registerRenderHook(
     PanelsRenderHook::PAGE_START,
     fn (): View => view('warning-banner'),
-    scopes: \App\Filament\Resources\UserResource\Pages\EditUser::class,
+    scopes: \App\Filament\Resources\Users\Pages\EditUser::class,
 );
 ```
 
@@ -166,8 +176,8 @@ FilamentView::registerRenderHook(
     PanelsRenderHook::PAGE_START,
     fn (): View => view('warning-banner'),
     scopes: [
-        \App\Filament\Resources\UserResource\Pages\CreateUser::class,
-        \App\Filament\Resources\UserResource\Pages\EditUser::class,
+        \App\Filament\Resources\Users\Pages\CreateUser::class,
+        \App\Filament\Resources\Users\Pages\EditUser::class,
     ],
 );
 ```
@@ -181,7 +191,7 @@ use Filament\View\PanelsRenderHook;
 FilamentView::registerRenderHook(
     PanelsRenderHook::PAGE_START,
     fn (): View => view('warning-banner'),
-    scopes: \App\Filament\Resources\UserResource::class,
+    scopes: \App\Filament\Resources\Users\UserResource::class,
 );
 ```
 
@@ -196,7 +206,7 @@ use Filament\View\PanelsRenderHook;
 FilamentView::registerRenderHook(
     PanelsRenderHook::PAGE_START,
     fn (array $scopes): View => view('warning-banner', ['scopes' => $scopes]),
-    scopes: \App\Filament\Resources\UserResource::class,
+    scopes: \App\Filament\Resources\Users\UserResource::class,
 );
 ```
 
@@ -217,5 +227,5 @@ To provide scope your render hook, you can pass it as the second argument to `re
 You can even pass multiple scopes as an array, and all render hooks that match any of the scopes will be rendered:
 
 ```blade
-{{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::PAGE_START, scopes: [static::class, \App\Filament\Resources\UserResource::class]) }}
+{{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::PAGE_START, scopes: [static::class, \App\Filament\Resources\Users\UserResource::class]) }}
 ```

@@ -22,6 +22,7 @@ use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\IconPosition;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ColumnGroup;
@@ -323,10 +324,10 @@ class TablesDemo extends Component implements HasForms, HasTable
                 ColumnGroup::make('Visibility', [
                     TextColumn::make('status')
                         ->badge()
-                        ->icon(fn (string $state): string => match ($state) {
-                            'draft' => 'heroicon-o-pencil',
-                            'reviewing' => 'heroicon-o-clock',
-                            'published' => 'heroicon-o-check-circle',
+                        ->icon(fn (string $state): Heroicon => match ($state) {
+                            'draft' => Heroicon::OutlinedPencil,
+                            'reviewing' => Heroicon::OutlinedClock,
+                            'published' => Heroicon::OutlinedCheckCircle,
                         })
                         ->color(fn (string $state): string => match ($state) {
                             'draft' => 'gray',
@@ -398,7 +399,7 @@ class TablesDemo extends Component implements HasForms, HasTable
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('email')
-                    ->icon('heroicon-m-envelope'),
+                    ->icon(Heroicon::Envelope),
             ]);
     }
 
@@ -408,7 +409,7 @@ class TablesDemo extends Component implements HasForms, HasTable
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('email')
-                    ->icon('heroicon-m-envelope')
+                    ->icon(Heroicon::Envelope)
                     ->iconPosition(IconPosition::After),
             ]);
     }
@@ -419,7 +420,7 @@ class TablesDemo extends Component implements HasForms, HasTable
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('email')
-                    ->icon('heroicon-m-envelope')
+                    ->icon(Heroicon::Envelope)
                     ->iconColor('primary'),
             ]);
     }
@@ -470,10 +471,10 @@ class TablesDemo extends Component implements HasForms, HasTable
             ->columns([
                 TextColumn::make('title'),
                 IconColumn::make('status')
-                    ->icon(fn (string $state): string => match ($state) {
-                        'draft' => 'heroicon-o-pencil',
-                        'reviewing' => 'heroicon-o-clock',
-                        'published' => 'heroicon-o-check-circle',
+                    ->icon(fn (string $state): Heroicon => match ($state) {
+                        'draft' => Heroicon::OutlinedPencil,
+                        'reviewing' => Heroicon::OutlinedClock,
+                        'published' => Heroicon::OutlinedCheckCircle,
                     }),
             ]);
     }
@@ -484,10 +485,10 @@ class TablesDemo extends Component implements HasForms, HasTable
             ->columns([
                 TextColumn::make('title'),
                 IconColumn::make('status')
-                    ->icon(fn (string $state): string => match ($state) {
-                        'draft' => 'heroicon-o-pencil',
-                        'reviewing' => 'heroicon-o-clock',
-                        'published' => 'heroicon-o-check-circle',
+                    ->icon(fn (string $state): Heroicon => match ($state) {
+                        'draft' => Heroicon::OutlinedPencil,
+                        'reviewing' => Heroicon::OutlinedClock,
+                        'published' => Heroicon::OutlinedCheckCircle,
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'draft' => 'info',
@@ -504,10 +505,10 @@ class TablesDemo extends Component implements HasForms, HasTable
             ->columns([
                 TextColumn::make('title'),
                 IconColumn::make('status')
-                    ->icon(fn (string $state): string => match ($state) {
-                        'draft' => 'heroicon-o-pencil',
-                        'reviewing' => 'heroicon-o-clock',
-                        'published' => 'heroicon-o-check-circle',
+                    ->icon(fn (string $state): Heroicon => match ($state) {
+                        'draft' => Heroicon::OutlinedPencil,
+                        'reviewing' => Heroicon::OutlinedClock,
+                        'published' => Heroicon::OutlinedCheckCircle,
                     })
                     ->size(IconColumn\Enums\IconColumnSize::Medium),
             ]);
@@ -530,8 +531,8 @@ class TablesDemo extends Component implements HasForms, HasTable
                 TextColumn::make('title'),
                 IconColumn::make('is_featured')
                     ->boolean()
-                    ->trueIcon('heroicon-o-check-badge')
-                    ->falseIcon('heroicon-o-x-mark'),
+                    ->trueIcon(Heroicon::OutlinedCheckBadge)
+                    ->falseIcon(Heroicon::OutlinedXMark),
             ]);
     }
 
@@ -713,10 +714,10 @@ class TablesDemo extends Component implements HasForms, HasTable
                 TextColumn::make('slug'),
                 TextColumn::make('status')
                     ->badge()
-                    ->icon(fn (string $state): string => match ($state) {
-                        'draft' => 'heroicon-o-pencil',
-                        'reviewing' => 'heroicon-o-clock',
-                        'published' => 'heroicon-o-check-circle',
+                    ->icon(fn (string $state): Heroicon => match ($state) {
+                        'draft' => Heroicon::OutlinedPencil,
+                        'reviewing' => Heroicon::OutlinedClock,
+                        'published' => Heroicon::OutlinedCheckCircle,
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'draft' => 'gray',
@@ -835,10 +836,10 @@ class TablesDemo extends Component implements HasForms, HasTable
                 TextColumn::make('slug'),
                 TextColumn::make('status')
                     ->badge()
-                    ->icon(fn (string $state): string => match ($state) {
-                        'draft' => 'heroicon-o-pencil',
-                        'reviewing' => 'heroicon-o-clock',
-                        'published' => 'heroicon-o-check-circle',
+                    ->icon(fn (string $state): Heroicon => match ($state) {
+                        'draft' => Heroicon::OutlinedPencil,
+                        'reviewing' => Heroicon::OutlinedClock,
+                        'published' => Heroicon::OutlinedCheckCircle,
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'draft' => 'gray',
@@ -972,7 +973,7 @@ class TablesDemo extends Component implements HasForms, HasTable
                     ViewAction::make(),
                     EditAction::make(),
                     DeleteAction::make(),
-                ])->icon('heroicon-m-ellipsis-horizontal'),
+                ])->icon(Heroicon::EllipsisHorizontal),
             ]);
     }
 
@@ -1042,17 +1043,17 @@ class TablesDemo extends Component implements HasForms, HasTable
                     ]),
                     Stack::make([
                         TextColumn::make('phone')
-                            ->icon('heroicon-m-phone'),
+                            ->icon(Heroicon::Phone),
                         TextColumn::make('email')
-                            ->icon('heroicon-m-envelope'),
+                            ->icon(Heroicon::Envelope),
                     ])
                         ->visibleFrom('md'),
                 ]),
                 Panel::make([
                     TextColumn::make('email')
-                        ->icon('heroicon-m-envelope'),
+                        ->icon(Heroicon::Envelope),
                     TextColumn::make('phone')
-                        ->icon('heroicon-m-phone'),
+                        ->icon(Heroicon::Phone),
                 ])->collapsible(),
             ]);
     }
@@ -1120,9 +1121,9 @@ class TablesDemo extends Component implements HasForms, HasTable
                         ->sortable(),
                     Stack::make([
                         TextColumn::make('phone')
-                            ->icon('heroicon-m-phone'),
+                            ->icon(Heroicon::Phone),
                         TextColumn::make('email')
-                            ->icon('heroicon-m-envelope'),
+                            ->icon(Heroicon::Envelope),
                     ]),
                 ])->from('md'),
             ]);
@@ -1142,9 +1143,9 @@ class TablesDemo extends Component implements HasForms, HasTable
                         ->sortable(),
                     Stack::make([
                         TextColumn::make('phone')
-                            ->icon('heroicon-m-phone'),
+                            ->icon(Heroicon::Phone),
                         TextColumn::make('email')
-                            ->icon('heroicon-m-envelope'),
+                            ->icon(Heroicon::Envelope),
                     ])->visibleFrom('md'),
                 ])->from('md'),
             ]);
@@ -1164,10 +1165,10 @@ class TablesDemo extends Component implements HasForms, HasTable
                         ->sortable(),
                     Stack::make([
                         TextColumn::make('phone')
-                            ->icon('heroicon-m-phone')
+                            ->icon(Heroicon::Phone)
                             ->grow(false),
                         TextColumn::make('email')
-                            ->icon('heroicon-m-envelope')
+                            ->icon(Heroicon::Envelope)
                             ->grow(false),
                     ])
                         ->alignment(Alignment::End)
@@ -1192,9 +1193,9 @@ class TablesDemo extends Component implements HasForms, HasTable
                 Panel::make([
                     Split::make([
                         TextColumn::make('phone')
-                            ->icon('heroicon-m-phone'),
+                            ->icon(Heroicon::Phone),
                         TextColumn::make('email')
-                            ->icon('heroicon-m-envelope'),
+                            ->icon(Heroicon::Envelope),
                     ])->from('md'),
                 ])->collapsible(),
             ]);
@@ -1240,10 +1241,10 @@ class TablesDemo extends Component implements HasForms, HasTable
                     ]),
                 TextColumn::make('status')
                     ->badge()
-                    ->icon(fn (string $state): string => match ($state) {
-                        'draft' => 'heroicon-o-pencil',
-                        'reviewing' => 'heroicon-o-clock',
-                        'published' => 'heroicon-o-check-circle',
+                    ->icon(fn (string $state): Heroicon => match ($state) {
+                        'draft' => Heroicon::OutlinedPencil,
+                        'reviewing' => Heroicon::OutlinedClock,
+                        'published' => Heroicon::OutlinedCheckCircle,
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'draft' => 'gray',
@@ -1271,10 +1272,10 @@ class TablesDemo extends Component implements HasForms, HasTable
                     ->numeric(),
                 TextColumn::make('status')
                     ->badge()
-                    ->icon(fn (string $state): string => match ($state) {
-                        'draft' => 'heroicon-o-pencil',
-                        'reviewing' => 'heroicon-o-clock',
-                        'published' => 'heroicon-o-check-circle',
+                    ->icon(fn (string $state): Heroicon => match ($state) {
+                        'draft' => Heroicon::OutlinedPencil,
+                        'reviewing' => Heroicon::OutlinedClock,
+                        'published' => Heroicon::OutlinedCheckCircle,
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'draft' => 'gray',
@@ -1297,10 +1298,10 @@ class TablesDemo extends Component implements HasForms, HasTable
                     ->numeric(),
                 TextColumn::make('status')
                     ->badge()
-                    ->icon(fn (string $state): string => match ($state) {
-                        'draft' => 'heroicon-o-pencil',
-                        'reviewing' => 'heroicon-o-clock',
-                        'published' => 'heroicon-o-check-circle',
+                    ->icon(fn (string $state): Heroicon => match ($state) {
+                        'draft' => Heroicon::OutlinedPencil,
+                        'reviewing' => Heroicon::OutlinedClock,
+                        'published' => Heroicon::OutlinedCheckCircle,
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'draft' => 'gray',
@@ -1338,7 +1339,7 @@ class TablesDemo extends Component implements HasForms, HasTable
     public function emptyStateIcon(Table $table): Table
     {
         return $this->emptyStateDescription($table)
-            ->emptyStateIcon('heroicon-o-bookmark');
+            ->emptyStateIcon(Heroicon::OutlinedBookmark);
     }
 
     public function emptyStateActions(Table $table): Table
@@ -1347,7 +1348,7 @@ class TablesDemo extends Component implements HasForms, HasTable
             ->emptyStateActions([
                 Action::make('create')
                     ->label('Create post')
-                    ->icon('heroicon-m-plus')
+                    ->icon(Heroicon::Plus)
                     ->button(),
             ]);
     }
@@ -1366,10 +1367,10 @@ class TablesDemo extends Component implements HasForms, HasTable
                     ->numeric(),
                 TextColumn::make('status')
                     ->badge()
-                    ->icon(fn (string $state): string => match ($state) {
-                        'draft' => 'heroicon-o-pencil',
-                        'reviewing' => 'heroicon-o-clock',
-                        'published' => 'heroicon-o-check-circle',
+                    ->icon(fn (string $state): Heroicon => match ($state) {
+                        'draft' => Heroicon::OutlinedPencil,
+                        'reviewing' => Heroicon::OutlinedClock,
+                        'published' => Heroicon::OutlinedCheckCircle,
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'draft' => 'gray',

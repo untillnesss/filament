@@ -1,6 +1,7 @@
 ---
 title: Navigation
 ---
+import AutoScreenshot from "@components/AutoScreenshot.astro"
 
 ## Overview
 
@@ -30,7 +31,9 @@ public static function getNavigationLabel(): string
 To customize a navigation item's [icon](../styling/icons), you may override the `$navigationIcon` property on the [resource](resources) or [page](pages) class:
 
 ```php
-protected static ?string $navigationIcon = 'heroicon-o-document-text';
+use BackedEnum;
+
+protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 ```
 
 If you set `$navigationIcon = null` on all items within the same navigation group, those items will be joined with a vertical bar below the group label.
@@ -354,7 +357,7 @@ To register navigation items, call the `items()` method:
 
 ```php
 use App\Filament\Pages\Settings;
-use App\Filament\Resources\UserResource;
+use App\Filament\Resources\Users\UserResource;
 use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages\Dashboard;
@@ -384,8 +387,8 @@ If you want to register groups, you can call the `groups()` method:
 
 ```php
 use App\Filament\Pages\HomePageSettings;
-use App\Filament\Resources\CategoryResource;
-use App\Filament\Resources\PageResource;
+use App\Filament\Resources\Categories\CategoryResource;
+use App\Filament\Resources\Pages\PageResource;
 use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
@@ -461,6 +464,8 @@ public function panel(Panel $panel): Panel
         ]);
 }
 ```
+
+<AutoScreenshot name="panels/navigation/user-menu" alt="User menu with custom menu item" version="3.x" />
 
 ### Customizing the profile link
 

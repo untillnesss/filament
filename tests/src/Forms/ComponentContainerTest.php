@@ -2,11 +2,11 @@
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Fieldset;
-use Filament\Schema\Components\Section;
-use Filament\Schema\Schema;
-use Filament\Tests\Forms\Fixtures\Livewire;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tests\Fixtures\Livewire\Livewire;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Str;
 

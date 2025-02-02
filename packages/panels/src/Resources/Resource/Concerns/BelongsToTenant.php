@@ -97,4 +97,86 @@ trait BelongsToTenant
 
         return $tenant->{$relationshipName}();
     }
+
+    public static function registerTenancyModelGlobalScope(Panel $panel): void
+    {
+        if (! static::isScopedToTenant()) {
+            return;
+        }
+
+        $model = static::getModel();
+
+        if (! class_exists($model)) {
+            return;
+        }
+
+        if ($model::hasGlobalScope($panel->getTenancyScopeName())) {
+            return;
+        }
+
+        $model::addGlobalScope($panel->getTenancyScopeName(), function (Builder $query) use ($panel) {
+            if (Filament::getCurrentOrDefaultPanel() !== $panel) {
+                return;
+            }
+
+            $tenant = Filament::getTenant();
+
+            if (! $tenant) {
+                return;
+            }
+
+            static::scopeEloquentQueryToTenant($query, $tenant);
+        });
+    }
+
+    public static function observeTenancyModelCreation(Panel $panel): void
+    {
+        if (! static::isScopedToTenant()) {
+            return;
+        }
+
+        $model = static::getModel();
+
+        if (! class_exists($model)) {
+            return;
+        }
+
+        $model::creating(function (Model $record) use ($panel) {
+            if (Filament::getCurrentOrDefaultPanel() !== $panel) {
+                return;
+            }
+
+            $tenant = Filament::getTenant();
+
+            if (! $tenant) {
+                return;
+            }
+
+            $relationship = static::getTenantOwnershipRelationship($record);
+
+            if ($relationship instanceof BelongsTo) {
+                $relationship->associate($tenant);
+            }
+        });
+
+        $model::created(function (Model $record) use ($panel) {
+            if (Filament::getCurrentOrDefaultPanel() !== $panel) {
+                return;
+            }
+
+            $tenant = Filament::getTenant();
+
+            if (! $tenant) {
+                return;
+            }
+
+            $relationship = static::getTenantOwnershipRelationship($record);
+
+            if ($relationship instanceof BelongsTo) {
+                return;
+            }
+
+            $relationship->save($tenant); /** @phpstan-ignore-line */
+        });
+    }
 }

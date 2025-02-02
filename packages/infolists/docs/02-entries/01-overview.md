@@ -8,7 +8,7 @@ import AutoScreenshot from "@components/AutoScreenshot.astro"
 Entry classes can be found in the `Filament\Infolists\Components` namespace. You can put them inside the `$infolist->schema()` method:
 
 ```php
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function infolist(Schema $infolist): Schema
 {

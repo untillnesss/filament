@@ -1,10 +1,15 @@
 <?php
 
-use Filament\Tests\Models\Post;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource\Pages\CreateAnotherPreservingDataPost;
-use Filament\Tests\Panels\Fixtures\Resources\PostResource\Pages\CreatePost;
+use Filament\Facades\Filament;
+use Filament\Tests\Fixtures\Models\Post;
+use Filament\Tests\Fixtures\Policies\TicketPolicy;
+use Filament\Tests\Fixtures\Resources\Posts\Pages\CreateAnotherPreservingDataPost;
+use Filament\Tests\Fixtures\Resources\Posts\Pages\CreatePost;
+use Filament\Tests\Fixtures\Resources\Posts\PostResource;
+use Filament\Tests\Fixtures\Resources\TicketMessages\TicketMessageResource;
+use Filament\Tests\Fixtures\Resources\Tickets\TicketResource;
 use Filament\Tests\Panels\Resources\TestCase;
+use Illuminate\Auth\Access\Response;
 
 use function Filament\Tests\livewire;
 
@@ -146,4 +151,86 @@ it('can validate input', function () {
         ])
         ->call('create')
         ->assertHasFormErrors(['title' => 'required']);
+});
+
+it('can render page without a policy', function () {
+    $this->get(TicketMessageResource::getUrl('create'))
+        ->assertSuccessful();
+});
+
+it('can render page if the policy viewAny returns true', function () {
+    app()->bind(TicketPolicy::class . '::viewAny', fn (): bool => true);
+
+    $this->get(TicketResource::getUrl('create'))
+        ->assertSuccessful();
+});
+
+it('can render page if the policy viewAny returns an allowed response', function () {
+    app()->bind(TicketPolicy::class . '::viewAny', fn (): Response => Response::allow());
+
+    $this->get(TicketResource::getUrl('create'))
+        ->assertSuccessful();
+
+    app()->bind(TicketPolicy::class . '::viewAny', fn (): bool => true);
+});
+
+it('does not render page without a policy if authorization is strict', function () {
+    Filament::getCurrentOrDefaultPanel()->strictAuthorization();
+
+    $this->get(TicketMessageResource::getUrl('create'))
+        ->assertServerError();
+
+    Filament::getCurrentOrDefaultPanel()->strictAuthorization(false);
+});
+
+it('does not render page if the policy viewAny returns false', function () {
+    app()->bind(TicketPolicy::class . '::viewAny', fn (): bool => false);
+
+    $this->get(TicketResource::getUrl('create'))
+        ->assertForbidden();
+
+    app()->bind(TicketPolicy::class . '::viewAny', fn (): bool => true);
+});
+
+it('does not render page if the policy viewAny returns a denied response', function () {
+    app()->bind(TicketPolicy::class . '::viewAny', fn (): Response => Response::deny());
+
+    $this->get(TicketResource::getUrl('create'))
+        ->assertForbidden();
+
+    app()->bind(TicketPolicy::class . '::viewAny', fn (): bool => true);
+});
+
+it('can render page if the policy create returns true', function () {
+    app()->bind(TicketPolicy::class . '::create', fn (): bool => true);
+
+    $this->get(TicketResource::getUrl('create'))
+        ->assertSuccessful();
+});
+
+it('can render page if the policy create returns an allowed response', function () {
+    app()->bind(TicketPolicy::class . '::create', fn (): Response => Response::allow());
+
+    $this->get(TicketResource::getUrl('create'))
+        ->assertSuccessful();
+
+    app()->bind(TicketPolicy::class . '::create', fn (): bool => true);
+});
+
+it('does not render page if the policy create returns false', function () {
+    app()->bind(TicketPolicy::class . '::create', fn (): bool => false);
+
+    $this->get(TicketResource::getUrl('create'))
+        ->assertForbidden();
+
+    app()->bind(TicketPolicy::class . '::create', fn (): bool => true);
+});
+
+it('does not render page if the policy create returns a denied response', function () {
+    app()->bind(TicketPolicy::class . '::create', fn (): Response => Response::deny());
+
+    $this->get(TicketResource::getUrl('create'))
+        ->assertForbidden();
+
+    app()->bind(TicketPolicy::class . '::create', fn (): bool => true);
 });

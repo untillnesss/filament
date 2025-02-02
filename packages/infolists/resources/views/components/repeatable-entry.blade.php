@@ -16,28 +16,22 @@
                 ])
         }}
     >
-        @if (count($childComponentContainers = $getChildComponentContainers()))
+        @if (count($items = $getItems()))
             <ul>
-                <x-filament::grid
-                    :default="$getGridColumns('default')"
-                    :sm="$getGridColumns('sm')"
-                    :md="$getGridColumns('md')"
-                    :lg="$getGridColumns('lg')"
-                    :xl="$getGridColumns('xl')"
-                    :two-xl="$getGridColumns('2xl')"
-                    class="gap-4"
+                <div
+                    {{ (new \Illuminate\View\ComponentAttributeBag)->grid($getGridColumns())->class(['gap-4']) }}
                 >
-                    @foreach ($childComponentContainers as $container)
+                    @foreach ($items as $item)
                         <li
                             @class([
                                 'fi-in-repeatable-item block',
-                                'rounded-xl bg-white p-4 shadow-sm ring-1 ring-gray-950/5 dark:bg-white/5 dark:ring-white/10' => $isContained,
+                                'rounded-xl bg-white p-4 ring-1 shadow-xs ring-gray-950/5 dark:bg-white/5 dark:ring-white/10' => $isContained,
                             ])
                         >
-                            {{ $container }}
+                            {{ $item }}
                         </li>
                     @endforeach
-                </x-filament::grid>
+                </div>
             </ul>
         @elseif (($placeholder = $getPlaceholder()) !== null)
             <x-filament-infolists::entries.placeholder>

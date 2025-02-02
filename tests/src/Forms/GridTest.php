@@ -1,8 +1,8 @@
 <?php
 
-use Filament\Schema\Components\Component;
-use Filament\Schema\Schema;
-use Filament\Tests\Forms\Fixtures\Livewire;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Schema;
+use Filament\Tests\Fixtures\Livewire\Livewire;
 use Filament\Tests\TestCase;
 
 uses(TestCase::class);

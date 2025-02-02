@@ -125,7 +125,7 @@ Resource classes contain a `form()` method that is used to build the forms on th
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public static function form(Schema $form): Schema
 {
@@ -138,7 +138,7 @@ public static function form(Schema $form): Schema
 }
 ```
 
-The `schema()` method is used to define the structure of your form. It is an array of [fields](../../forms/fields#available-fields) and [layout components](../../schema/layout#available-layout-components), in the order they should appear in your form.
+The `schema()` method is used to define the structure of your form. It is an array of [fields](../../forms/fields#available-fields) and [layout components](../../schemas/layout#available-layout-components), in the order they should appear in your form.
 
 Check out the Forms docs for a [guide](../../forms/getting-started) on how to build forms with Filament.
 
@@ -303,15 +303,18 @@ public static function getNavigationLabel(): string
 The `$navigationIcon` property supports the name of any Blade component. By default, [Heroicons](https://heroicons.com) are installed. However, you may create your own custom icon components or install an alternative library if you wish.
 
 ```php
-protected static ?string $navigationIcon = 'heroicon-o-user-group';
+use BackedEnum;
+
+protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
 ```
 
 Alternatively, you may set a dynamic navigation icon in the `getNavigationIcon()` method:
 
 ```php
+use BackedEnum;
 use Illuminate\Contracts\Support\Htmlable;
 
-public static function getNavigationIcon(): string | Htmlable | null
+public static function getNavigationIcon(): string | BackedEnum | Htmlable | null
 {
     return 'heroicon-o-user-group';
 }
@@ -381,7 +384,7 @@ Filament provides `getUrl()` static method on resource classes to generate URLs 
 The `getUrl()` method, without any arguments, will generate a URL to the resource's [List page](listing-records):
 
 ```php
-use App\Filament\Resources\CustomerResource;
+use App\Filament\Resources\Customers\CustomerResource;
 
 CustomerResource::getUrl(); // /admin/customers
 ```
@@ -389,7 +392,7 @@ CustomerResource::getUrl(); // /admin/customers
 You may also generate URLs to specific pages within the resource. The name of each page is the array key in the `getPages()` array of the resource. For example, to generate a URL to the [Create page](creating-records):
 
 ```php
-use App\Filament\Resources\CustomerResource;
+use App\Filament\Resources\Customers\CustomerResource;
 
 CustomerResource::getUrl('create'); // /admin/customers/create
 ```
@@ -397,7 +400,7 @@ CustomerResource::getUrl('create'); // /admin/customers/create
 Some pages in the `getPages()` method use URL parameters like `record`. To generate a URL to these pages and pass in a record, you should use the second argument:
 
 ```php
-use App\Filament\Resources\CustomerResource;
+use App\Filament\Resources\Customers\CustomerResource;
 
 CustomerResource::getUrl('edit', ['record' => $customer]); // /admin/customers/edit/1
 ```
@@ -411,7 +414,7 @@ This can be especially useful if you are using [simple resources](#simple-modal-
 To generate a URL for an action in the resource's table, you should pass the `tableAction` and `tableActionRecord` as URL parameters:
 
 ```php
-use App\Filament\Resources\CustomerResource;
+use App\Filament\Resources\Customers\CustomerResource;
 use Filament\Actions\EditAction;
 
 CustomerResource::getUrl(parameters: [
@@ -423,7 +426,7 @@ CustomerResource::getUrl(parameters: [
 Or if you want to generate a URL for an action on the page like a `CreateAction` in the header, you can pass it in to the `action` parameter:
 
 ```php
-use App\Filament\Resources\CustomerResource;
+use App\Filament\Resources\Customers\CustomerResource;
 use Filament\Actions\CreateAction;
 
 CustomerResource::getUrl(parameters: [
@@ -436,7 +439,7 @@ CustomerResource::getUrl(parameters: [
 If you have multiple panels in your app, `getUrl()` will generate a URL within the current panel. You can also indicate which panel the resource is associated with, by passing the panel ID to the `panel` argument:
 
 ```php
-use App\Filament\Resources\CustomerResource;
+use App\Filament\Resources\Customers\CustomerResource;
 
 CustomerResource::getUrl(panel: 'marketing');
 ```
@@ -499,7 +502,7 @@ Sub-navigation allows the user to navigate between different pages within a reso
 To add a sub-navigation to each "singular record" page in the resource, you can add the `getRecordSubNavigation()` method to the resource class:
 
 ```php
-use App\Filament\Resources\CustomerResource\Pages;
+use App\Filament\Resources\Customers\Pages;
 use Filament\Resources\Pages\Page;
 
 public static function getRecordSubNavigation(Page $page): array
@@ -544,4 +547,4 @@ public static function getPages(): array
 }
 ```
 
-Deleting a page will not delete any actions that link to that page. Any actions will open a modal instead of sending the user to the non-existant page. For instance, the `CreateAction` on the List page, the `EditAction` on the table or View page, or the `ViewAction` on the table or Edit page. If you want to remove those buttons, you must delete the actions as well.
+Deleting a page will not delete any actions that link to that page. Any actions will open a modal instead of sending the user to the non-existent page. For instance, the `CreateAction` on the List page, the `EditAction` on the table or View page, or the `ViewAction` on the table or Edit page. If you want to remove those buttons, you must delete the actions as well.

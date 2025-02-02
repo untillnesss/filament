@@ -13,12 +13,14 @@ use Filament\Actions\Exports\Jobs\CreateXlsxFile;
 use Filament\Actions\Exports\Jobs\ExportCompletion;
 use Filament\Actions\Exports\Jobs\PrepareCsvExport;
 use Filament\Actions\Exports\Models\Export;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Notifications\Notification;
-use Filament\Schema\Components\Fieldset;
-use Filament\Schema\Components\Split;
-use Filament\Schema\Components\Utilities\Get;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Split;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Bus\PendingBatch;
 use Illuminate\Foundation\Bus\PendingChain;
@@ -62,17 +64,19 @@ trait CanExportRecords
 
     protected bool | Closure $hasColumnMapping = true;
 
+    protected string | Closure | null $authGuard = null;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->label(fn (ExportAction | ExportBulkAction $action): string => __('filament-actions::export.label', ['label' => $action->getPluralModelLabel()]));
 
-        $this->modalHeading(fn (ExportAction | ExportBulkAction $action): string => __('filament-actions::export.modal.heading', ['label' => $action->getPluralModelLabel()]));
+        $this->modalHeading(fn (ExportAction | ExportBulkAction $action): string => __('filament-actions::export.modal.heading', ['label' => $action->getTitleCasePluralModelLabel()]));
 
         $this->modalSubmitActionLabel(__('filament-actions::export.modal.actions.export.label'));
 
-        $this->groupedIcon(FilamentIcon::resolve('actions::export-action.grouped') ?? 'heroicon-m-arrow-down-tray');
+        $this->groupedIcon(FilamentIcon::resolve('actions::export-action.grouped') ?? Heroicon::ArrowDownTray);
 
         $this->form(fn (ExportAction | ExportBulkAction $action): array => [
             ...($action->hasColumnMapping() ? [Fieldset::make(__('filament-actions::export.modal.form.columns.label'))
@@ -115,9 +119,15 @@ trait CanExportRecords
 
             $query = $exporter::modifyQuery($query);
 
+            $options = array_merge(
+                $action->getOptions(),
+                Arr::except($data, ['columnMap']),
+            );
+
             if ($this->modifyQueryUsing) {
                 $query = $this->evaluate($this->modifyQueryUsing, [
                     'query' => $query,
+                    'options' => $options,
                 ]) ?? $query;
             }
 
@@ -138,12 +148,9 @@ trait CanExportRecords
                 return;
             }
 
-            $user = auth()->user();
+            $authGuard = $action->getAuthGuard();
 
-            $options = array_merge(
-                $action->getOptions(),
-                Arr::except($data, ['columnMap']),
-            );
+            $user = auth($authGuard)->user();
 
             if ($action->hasColumnMapping()) {
                 $columnMap = collect($data['columnMap'])
@@ -171,6 +178,7 @@ trait CanExportRecords
             );
 
             $export->file_disk = $action->getFileDisk() ?? $exporter->getFileDisk();
+            // Temporary save to obtain the sequence number of the export file.
             $export->save();
 
             $export->file_name = $action->getFileName($export) ?? $exporter->getFileName($export);
@@ -221,6 +229,7 @@ trait CanExportRecords
                     ),
                 ...(($hasXlsx && (! $hasCsv)) ? [$makeCreateXlsxFileJob()] : []),
                 app(ExportCompletion::class, [
+                    'authGuard' => $authGuard,
                     'export' => $export,
                     'columnMap' => $columnMap,
                     'formats' => $formats,
@@ -238,13 +247,18 @@ trait CanExportRecords
                 )
                 ->dispatch();
 
-            Notification::make()
-                ->title($action->getSuccessNotificationTitle())
-                ->body(trans_choice('filament-actions::export.notifications.started.body', $export->total_rows, [
-                    'count' => Number::format($export->total_rows),
-                ]))
-                ->success()
-                ->send();
+            if (
+                (filled($jobConnection) && ($jobConnection !== 'sync')) ||
+                (blank($jobConnection) && (config('queue.default') !== 'sync'))
+            ) {
+                Notification::make()
+                    ->title($action->getSuccessNotificationTitle())
+                    ->body(trans_choice('filament-actions::export.notifications.started.body', $export->total_rows, [
+                        'count' => Number::format($export->total_rows),
+                    ]))
+                    ->success()
+                    ->send();
+            }
         });
 
         $this->color('gray');
@@ -409,5 +423,33 @@ trait CanExportRecords
     public function hasColumnMapping(): bool
     {
         return (bool) $this->evaluate($this->hasColumnMapping);
+    }
+
+    public function authGuard(string | Closure | null $authGuard): static
+    {
+        $this->authGuard = $authGuard;
+
+        return $this;
+    }
+
+    public function getAuthGuard(): string
+    {
+        $guard = $this->evaluate($this->authGuard);
+
+        if (filled($guard)) {
+            return $guard;
+        }
+
+        if (class_exists(Filament::class) && Filament::isServing()) {
+            return Filament::getAuthGuard();
+        }
+
+        $authGuard = auth();
+
+        if (! property_exists($authGuard, 'name')) {
+            return config('auth.defaults.guard') ?? 'web';
+        }
+
+        return $authGuard->name;
     }
 }

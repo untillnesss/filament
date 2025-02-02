@@ -2,14 +2,15 @@
 
 namespace Filament\Infolists\Components;
 
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Concerns\HasContainerGridLayout;
+use Filament\Schemas\Schema;
 use Filament\Support\Concerns\CanBeContained;
 use Illuminate\Database\Eloquent\Model;
 
 class RepeatableEntry extends Entry
 {
     use CanBeContained;
-    use Concerns\HasContainerGridLayout;
+    use HasContainerGridLayout;
 
     /**
      * @var view-string
@@ -19,12 +20,8 @@ class RepeatableEntry extends Entry
     /**
      * @return array<Schema>
      */
-    public function getChildComponentContainers(bool $withHidden = false): array
+    public function getItems(): array
     {
-        if ((! $withHidden) && $this->isHidden()) {
-            return [];
-        }
-
         $containers = [];
 
         foreach ($this->getState() ?? [] as $itemKey => $itemData) {
@@ -42,5 +39,13 @@ class RepeatableEntry extends Entry
         }
 
         return $containers;
+    }
+
+    /**
+     * @return array<Schema>
+     */
+    public function getDefaultChildComponentContainers(): array
+    {
+        return $this->getItems();
     }
 }
