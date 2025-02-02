@@ -1,7 +1,17 @@
 export default ({ id }) => ({
     isOpen: false,
 
+    isWindowVisible: false,
+
     livewire: null,
+
+    init: function () {
+        this.$nextTick(() => {
+            this.isWindowVisible = this.isOpen
+
+            this.$watch('isOpen', () => (this.isWindowVisible = this.isOpen))
+        })
+    },
 
     close: function () {
         this.closeQuietly()

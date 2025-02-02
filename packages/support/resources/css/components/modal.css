@@ -1,6 +1,4 @@
 .fi-modal {
-    @apply inline-block;
-
     &.fi-modal-slide-over,
     &.fi-width-screen {
         & .fi-modal-window {
@@ -34,7 +32,7 @@
 
     &:not(.fi-modal-slide-over) {
         &:not(.fi-width-screen) {
-            & .fi-modal-overlay {
+            & .fi-modal-window-ctn {
                 @apply overflow-y-auto;
             }
 
@@ -85,20 +83,8 @@
         }
     }
 
-    & .fi-modal-trigger {
-        @apply flex cursor-pointer;
-    }
-
     & .fi-modal-close-overlay {
         @apply fixed inset-0 z-40 bg-gray-950/50 dark:bg-gray-950/75;
-    }
-
-    & .fi-modal-overlay {
-        @apply fixed inset-0 z-40;
-
-        &.fi-clickable {
-            @apply cursor-pointer;
-        }
     }
 
     & .fi-modal-header {
@@ -122,7 +108,11 @@
     }
 
     & .fi-modal-window-ctn {
-        @apply relative grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center sm:grid-rows-[1fr_auto_3fr];
+        @apply fixed inset-0 z-40 grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center sm:grid-rows-[1fr_auto_3fr];
+
+        &.fi-clickable {
+            @apply cursor-pointer;
+        }
     }
 
     & .fi-modal-content {
@@ -370,4 +360,8 @@
             }
         }
     }
+}
+
+& .fi-modal-trigger {
+    @apply flex;
 }
