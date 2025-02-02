@@ -29,6 +29,12 @@ class SimplePropertyChangesRector extends AbstractRector
                     'activeNavigationIcon' => function (Property $node) {
                         $node->type = new Name('string | \BackedEnum | null');
                     },
+                    'maxContentWidth' => function (Property $node) {
+                        $node->type = new Name('\Filament\Support\Enums\Width | string | null');
+                    },
+                    'maxWidth' => function (Property $node) {
+                        $node->type = new Name('\Filament\Support\Enums\Width | string | null');
+                    },
                     'navigationIcon' => function (Property $node) {
                         $node->type = new Name('string | \BackedEnum | null');
                     },

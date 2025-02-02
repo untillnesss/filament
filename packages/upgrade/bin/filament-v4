@@ -82,29 +82,6 @@ render(<<<HTML
     </p>
 HTML);
 
-foreach ([
-    ...glob('*.php'),
-    ...glob('**/*.php'),
-] as $file) {
-    if (str_starts_with($file, 'vendor' . DIRECTORY_SEPARATOR)) {
-        continue;
-    }
-
-    $fileContents = file_get_contents($file);
-
-    if (str_contains($fileContents, 'protected ?string $maxContentWidth = ')) {
-        $fileContents = str_replace('protected ?string $maxContentWidth = ', 'protected \Filament\Support\Enums\Width | string | null $maxContentWidth = ', $fileContents);
-
-        render(<<<HTML
-            <p>
-                Added <strong>Width</strong> type to <strong>\$maxContentWidth</strong> <strong>{$file}</strong>.
-            </p>
-        HTML);
-    }
-
-    file_put_contents($file, $fileContents);
-}
-
 $appDirectory = $argv[1] ?? 'app';
 
 render(<<<HTML
