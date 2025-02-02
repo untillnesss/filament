@@ -619,6 +619,7 @@ class FilamentManager
     {
         return $this->getCurrentOrDefaultPanel()->getWidgets();
     }
+
     public function hasBreadcrumbs(): bool
     {
         return $this->getCurrentOrDefaultPanel()->hasBreadcrumbs();
