@@ -107,7 +107,7 @@
     ></div>
 
     <div
-        x-ref="modalContainer"
+        x-ref="windowContainer"
         @if ($closeByClickingAway)
             {{-- Ensure that the click element is not triggered from a user selecting text inside an input. --}}
             x-on:click.self="
