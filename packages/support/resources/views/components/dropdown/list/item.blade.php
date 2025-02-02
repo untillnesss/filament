@@ -131,20 +131,24 @@
     </span>
 
     @if (filled($badge))
-        <span
-            @if ($badgeTooltip)
-                x-tooltip="{
-                    content: @js($badgeTooltip),
-                    theme: $store.theme,
-                }"
-            @endif
-            @class([
-                'fi-badge',
-                ...\Filament\Support\get_component_color_classes(Badge::class, $badgeColor),
-            ])
-        >
+        @if ($badge instanceof \Illuminate\View\ComponentSlot)
             {{ $badge }}
-        </span>
+        @else
+            <span
+                @if ($badgeTooltip)
+                    x-tooltip="{
+                        content: @js($badgeTooltip),
+                        theme: $store.theme,
+                    }"
+                @endif
+                @class([
+                    'fi-badge',
+                    ...\Filament\Support\get_component_color_classes(Badge::class, $badgeColor),
+                ])
+            >
+                {{ $badge }}
+            </span>
+        @endif
     @endif
 </{{ ($tag === 'form') ? 'button' : $tag }}>
 

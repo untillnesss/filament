@@ -154,15 +154,19 @@
 
     @if (filled($badge))
         <div class="fi-link-badge-ctn">
-            <span
-                @class([
-                    'fi-badge',
-                    ...\Filament\Support\get_component_color_classes(Badge::class, $badgeColor),
-                    ($badgeSize instanceof ActionSize) ? "fi-size-{$badgeSize->value}" : (is_string($badgeSize) ? $badgeSize : ''),
-                ])
-            >
+            @if ($badge instanceof \Illuminate\View\ComponentSlot)
                 {{ $badge }}
-            </span>
+            @else
+                <span
+                    @class([
+                        'fi-badge',
+                        ...\Filament\Support\get_component_color_classes(Badge::class, $badgeColor),
+                        ($badgeSize instanceof ActionSize) ? "fi-size-{$badgeSize->value}" : (is_string($badgeSize) ? $badgeSize : ''),
+                    ])
+                >
+                    {{ $badge }}
+                </span>
+            @endif
         </div>
     @endif
 </{{ $tag }}>
