@@ -46,14 +46,9 @@ class TestsActions
                 return $this;
             }
 
-            $this->assertDispatched('sync-action-modals', id: $this->instance()->getId(), newActionNestingIndex: array_key_last($this->instance()->mountedActions));
-
             if (count($this->instance()->mountedActions) !== ($initialMountedActionsCount + count($actions))) {
                 return $this;
             }
-
-            /** @phpstan-ignore-next-line */
-            $this->assertActionMounted($actions);
 
             return $this;
         };
@@ -145,10 +140,6 @@ class TestsActions
 
             if (store($this->instance())->has('redirect')) {
                 return $this;
-            }
-
-            if (blank($this->instance()->mountedActions)) {
-                $this->assertDispatched('sync-action-modals', id: $this->instance()->getId(), newActionNestingIndex: null);
             }
 
             return $this;

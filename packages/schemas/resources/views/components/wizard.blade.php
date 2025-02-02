@@ -291,12 +291,14 @@
                     })
                 "
             @endif
-            x-bind:class="{ 'hidden': isLastStep(), 'block': !isLastStep() }"
+            x-bind:class="{ 'hidden': isLastStep(), 'block': ! isLastStep() }"
         >
             {{ $nextAction }}
         </span>
 
-        <span x-bind:class="{ 'hidden': !isLastStep(), 'block': isLastStep() }">
+        <span
+            x-bind:class="{ 'hidden': ! isLastStep(), 'block': isLastStep() }"
+        >
             {{ $getSubmitAction() }}
         </span>
     </div>
