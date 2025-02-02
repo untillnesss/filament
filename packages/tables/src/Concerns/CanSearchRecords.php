@@ -69,12 +69,15 @@ trait CanSearchRecords
 
     protected function applyColumnSearchesToTableQuery(Builder $query): Builder
     {
+        $table = $this->getTable();
+        $shouldSplitSearchTerms = $table->shouldSplitSearchTerms();
+
         foreach ($this->getTableColumnSearches() as $column => $search) {
             if (blank($search)) {
                 continue;
             }
 
-            $column = $this->getTable()->getColumn($column);
+            $column = $table->getColumn($column);
 
             if (! $column) {
                 continue;
@@ -85,6 +88,18 @@ trait CanSearchRecords
             }
 
             if (! $column->isIndividuallySearchable()) {
+                continue;
+            }
+
+            if (! $shouldSplitSearchTerms) {
+                $isFirst = true;
+
+                $column->applySearchConstraint(
+                    $query,
+                    $search,
+                    $isFirst,
+                );
+
                 continue;
             }
 
@@ -110,7 +125,7 @@ trait CanSearchRecords
     protected function extractTableSearchWords(string $search): array
     {
         return array_filter(
-            str_getcsv(preg_replace('/\s+/', ' ', $search), ' '),
+            str_getcsv(preg_replace('/\s+/', ' ', $search), separator: ' ', escape: '\\'),
             fn ($word): bool => filled($word),
         );
     }
@@ -120,6 +135,32 @@ trait CanSearchRecords
         $search = $this->getTableSearch();
 
         if (blank($search)) {
+            return $query;
+        }
+
+        if (! $this->getTable()->shouldSplitSearchTerms()) {
+            $query->where(function (Builder $query) use ($search) {
+                $isFirst = true;
+
+                foreach ($this->getTable()->getColumns() as $column) {
+                    if ($column->isHidden()) {
+                        continue;
+                    }
+
+                    if (! $column->isGloballySearchable()) {
+                        continue;
+                    }
+
+                    $column->applySearchConstraint(
+                        $query,
+                        $search,
+                        $isFirst,
+                    );
+                }
+
+                $this->getTable()->applyExtraSearchConstraints($query, $search, $isFirst);
+            });
+
             return $query;
         }
 
@@ -142,6 +183,8 @@ trait CanSearchRecords
                         $isFirst,
                     );
                 }
+
+                $this->getTable()->applyExtraSearchConstraints($query, $searchWord, $isFirst);
             });
         }
 

@@ -3,7 +3,7 @@
 namespace Filament\Actions\Concerns;
 
 use Closure;
-use Filament\Schema\Components\Wizard\Step;
+use Filament\Schemas\Components\Wizard\Step;
 
 trait HasWizard
 {

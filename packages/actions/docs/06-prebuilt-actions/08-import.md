@@ -205,7 +205,7 @@ ImportColumn::make('is_visible')
 
 #### Mutating the state after it has been cast
 
-If you're using a [built-in casting method](#casting-state) or [array cast](#handling-multiple-values-in-a-single-column-as-an-array), you can mutate the state after it has been cast by passing a function to the `castStateUsing()` method:
+If you're using a [built-in casting method](#casting-state) or [array cast](#handling-multiple-values-in-a-single-column), you can mutate the state after it has been cast by passing a function to the `castStateUsing()` method:
 
 ```php
 use Filament\Actions\Imports\ImportColumn;
@@ -233,9 +233,48 @@ ImportColumn::make('price')
     })
 ```
 
+### Handling multiple values in a single column
+
+You may use the `multiple()` method to cast the values in a column to an array. It accepts a delimiter as its first argument, which is used to split the values in the column into an array. For example, if you have a `documentation_urls` column in your CSV, you may want to cast it to an array of URLs:
+
+```php
+use Filament\Actions\Imports\ImportColumn;
+
+ImportColumn::make('documentation_urls')
+    ->multiple(',')
+```
+
+In this example, we pass in a comma as the delimiter, so the values in the column will be split by commas, and cast to an array.
+
+#### Casting each item in an array
+
+If you want to cast each item in the array to a different data type, you can chain the [built-in casting methods](#casting-state):
+
+```php
+use Filament\Actions\Imports\ImportColumn;
+
+ImportColumn::make('customer_ratings')
+    ->multiple(',')
+    ->integer() // Casts each item in the array to an integer.
+```
+
+#### Validating each item in an array
+
+If you want to validate each item in the array, you can chain the `nestedRecursiveRules()` method:
+
+```php
+use Filament\Actions\Imports\ImportColumn;
+
+ImportColumn::make('customer_ratings')
+    ->multiple(',')
+    ->integer()
+    ->rules(['array'])
+    ->nestedRecursiveRules(['integer', 'min:1', 'max:5'])
+```
+
 ### Importing relationships
 
-You may use the `relationship()` method to import a relationship. At the moment, only `BelongsTo` relationships are supported. For example, if you have a `category` column in your CSV, you may want to import the category relationship:
+You may use the `relationship()` method to import a relationship. At the moment, `BelongsTo` and `BelongsToMany` relationships are supported. For example, if you have a `category` column in your CSV, you may want to import the category `BelongsTo` relationship:
 
 ```php
 use Filament\Actions\Imports\ImportColumn;
@@ -247,6 +286,16 @@ ImportColumn::make('author')
 In this example, the `author` column in the CSV will be mapped to the `author_id` column in the database. The CSV should contain the primary keys of authors, usually `id`.
 
 If the column has a value, but the author cannot be found, the import will fail validation. Filament automatically adds validation to all relationship columns, to ensure that the relationship is not empty when it is required.
+
+If you want to import a `BelongsToMany` relationship, make sure that the column is set to [`multiple()`](#handling-multiple-values-in-a-single-column), with the correct separator between values:
+
+```php
+use Filament\Actions\Imports\ImportColumn;
+
+ImportColumn::make('authors')
+    ->relationship()
+    ->multiple(',')
+```
 
 #### Customizing the relationship import resolution
 
@@ -283,6 +332,22 @@ ImportColumn::make('author')
     })
 ```
 
+If you are using a `BelongsToMany` relationship, the `$state` will be an array, and you should return a collection of records that you have resolved:
+
+```php
+use App\Models\Author;
+use Filament\Actions\Imports\ImportColumn;
+use Illuminate\Database\Eloquent\Collection;
+
+ImportColumn::make('authors')
+    ->relationship(resolveUsing: function (array $states): Collection {
+        return Author::query()
+            ->whereIn('email', $states)
+            ->orWhereIn('username', $states)
+            ->get();
+    })
+```
+
 You could even use this function to dynamically determine which columns to use to resolve the record:
 
 ```php
@@ -297,45 +362,6 @@ ImportColumn::make('author')
     
         return 'username';
     })
-```
-
-### Handling multiple values in a single column as an array
-
-You may use the `array()` method to cast the values in a column to an array. It accepts a delimiter as its first argument, which is used to split the values in the column into an array. For example, if you have a `documentation_urls` column in your CSV, you may want to cast it to an array of URLs:
-
-```php
-use Filament\Actions\Imports\ImportColumn;
-
-ImportColumn::make('documentation_urls')
-    ->array(',')
-```
-
-In this example, we pass in a comma as the delimiter, so the values in the column will be split by commas, and cast to an array.
-
-#### Casting each item in an array
-
-If you want to cast each item in the array to a different data type, you can chain the [built-in casting methods](#casting-state):
-
-```php
-use Filament\Actions\Imports\ImportColumn;
-
-ImportColumn::make('customer_ratings')
-    ->array(',')
-    ->integer() // Casts each item in the array to an integer.
-```
-
-#### Validating each item in an array
-
-If you want to validate each item in the array, you can chain the `nestedRecursiveRules()` method:
-
-```php
-use Filament\Actions\Imports\ImportColumn;
-
-ImportColumn::make('customer_ratings')
-    ->array(',')
-    ->integer()
-    ->rules(['array'])
-    ->nestedRecursiveRules(['integer', 'min:1', 'max:5'])
 ```
 
 ### Marking column data as sensitive
@@ -372,7 +398,7 @@ Sometimes, you may wish to provide extra information for the user before validat
 use Filament\Forms\Components\TextInput;
 
 ImportColumn::make('skus')
-    ->array(',')
+    ->multiple(',')
     ->helperText('A comma-separated list of SKUs.')
 ```
 
@@ -876,7 +902,7 @@ The current record (if it exists yet) is accessible in `$this->record`, and the 
 
 ## Authorization
 
-By default, only the user who started the import may access the failure CSV file that gets generated if part of an import fails. If you'd like to customize the authorization logic, you may create an `ImportPolicy` class, and [register it in your `AuthServiceProvider`](https://laravel.com/docs/10.x/authorization#registering-policies):
+By default, only the user who started the import may access the failure CSV file that gets generated if part of an import fails. If you'd like to customize the authorization logic, you may create an `ImportPolicy` class, and [register it in your `AuthServiceProvider`](https://laravel.com/docs/authorization#registering-policies):
 
 ```php
 use App\Policies\ImportPolicy;

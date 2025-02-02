@@ -15,7 +15,7 @@ trait CanReadModelSchemas
     /**
      * @return class-string<Model>|null
      */
-    protected function getModel(string $model): ?string
+    protected function parseModel(string $model): ?string
     {
         if (! class_exists($model)) {
             return null;
@@ -147,7 +147,7 @@ trait CanReadModelSchemas
         };
 
         $values = str_contains($column['type'], '(')
-            ? str_getcsv(Str::between($column['type'], '(', ')'), ',', "'")
+            ? str_getcsv(Str::between($column['type'], '(', ')'), enclosure: "'", escape: '\\')
             : null;
 
         $values = is_null($values) ? [] : match ($type) {
@@ -222,5 +222,10 @@ trait CanReadModelSchemas
         }
 
         return $default;
+    }
+
+    public function getRecordTitleAttribute(): ?string
+    {
+        return null;
     }
 }

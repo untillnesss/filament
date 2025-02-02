@@ -3,7 +3,7 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use Filament\Schema\Components\Contracts\HasAffixActions;
+use Filament\Schemas\Components\Contracts\HasAffixActions;
 use Filament\Support\Concerns\HasColor;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Filament\Support\Concerns\HasReorderAnimationDuration;

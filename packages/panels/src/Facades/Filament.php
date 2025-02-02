@@ -4,11 +4,12 @@ namespace Filament\Facades;
 
 use Closure;
 use Filament\Actions\Action;
-use Filament\Billing\Providers\Contracts\Provider as BillingProvider;
+use Filament\Auth\MultiFactor\Contracts\MultiFactorAuthenticationProvider;
+use Filament\Billing\Providers\Contracts\BillingProvider;
 use Filament\Contracts\Plugin;
 use Filament\Enums\ThemeMode;
 use Filament\FilamentManager;
-use Filament\GlobalSearch\Contracts\GlobalSearchProvider;
+use Filament\GlobalSearch\Providers\Contracts\GlobalSearchProvider;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
@@ -16,7 +17,7 @@ use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Panel;
 use Filament\PanelRegistry;
 use Filament\Support\Assets\Theme;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -40,11 +41,13 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getCollapsedSidebarWidth()
  * @method static string getCurrentDomain(?string $testingDomain = null)
  * @method static Panel | null getCurrentPanel()
+ * @method static Panel | null getCurrentOrDefaultPanel()
  * @method static string | Htmlable | null getDarkModeBrandLogo()
  * @method static string | null getDatabaseNotificationsPollingInterval()
  * @method static string getDefaultAvatarProvider()
  * @method static Panel getDefaultPanel()
  * @method static string | null getEmailVerificationPromptUrl(array $parameters = [])
+ * @method static string | null getSetUpRequiredMultiFactorAuthenticationUrl(array $parameters = [])
  * @method static string getEmailVerifiedMiddleware()
  * @method static string | null getFavicon()
  * @method static string getFontFamily()
@@ -65,8 +68,9 @@ use Illuminate\Support\Facades\Facade;
  * @method static string | null getHomeUrl()
  * @method static string | null getLoginUrl(array $parameters = [])
  * @method static string getLogoutUrl(array $parameters = [])
- * @method static MaxWidth | string | null getMaxContentWidth()
+ * @method static Width | string | null getMaxContentWidth()
  * @method static string | null getModelResource(string | Model $model)
+ * @method static array<string, MultiFactorAuthenticationProvider> getMultiFactorAuthenticationProviders()
  * @method static string getNameForDefaultAvatar(Model | Authenticatable $user)
  * @method static array<NavigationGroup> getNavigation()
  * @method static array<string | int, NavigationGroup | string> getNavigationGroups()
@@ -83,6 +87,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array getResourceUrl(string | Model $model, string $name = 'index', array $parameters = [], bool $isAbsolute = false, ?Model $tenant = null)
  * @method static string getSidebarWidth()
  * @method static SubNavigationPosition getSubNavigationPosition()
+ * @method static string getTenancyScopeName()
  * @method static Model | null getTenant()
  * @method static string | null getTenantAvatarUrl(Model $tenant)
  * @method static BillingProvider | null getTenantBillingProvider()
@@ -104,14 +109,19 @@ use Illuminate\Support\Facades\Facade;
  * @method static array<Model> getUserTenants(HasTenants | Model | Authenticatable $user)
  * @method static string | null getUrl(Model | null $tenant = null)
  * @method static string getVerifyEmailUrl(MustVerifyEmail | Model | Authenticatable $user, array $parameters = [])
+ * @method static string getVerifyEmailChangeUrl(MustVerifyEmail | Model | Authenticatable $user, string $newEmail, array $parameters = [])
+ * @method static string getBlockEmailChangeVerificationUrl(MustVerifyEmail | Model | Authenticatable $user, string $newEmail, string $verificationSignature, array $parameters = [])
  * @method static array getWidgets()
  * @method static bool hasBreadcrumbs()
  * @method static bool hasCollapsibleNavigationGroups()
  * @method static bool hasDarkMode()
  * @method static bool hasDarkModeForced()
  * @method static bool hasDatabaseNotifications()
+ * @method static bool hasLazyLoadedDatabaseNotifications()
+ * @method static bool hasEmailChangeVerification()
  * @method static bool hasEmailVerification()
  * @method static bool hasLogin()
+ * @method static bool hasMultiFactorAuthentication()
  * @method static bool hasNavigation()
  * @method static bool hasPasswordReset()
  * @method static bool hasPlugin(string $id)
@@ -124,12 +134,13 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool hasTenantRegistration()
  * @method static bool hasTopNavigation()
  * @method static bool hasUnsavedChangesAlerts()
+ * @method static bool isAuthorizationStrict()
  * @method static bool isProfilePageSimple()
  * @method static bool isServing()
  * @method static bool isSidebarCollapsibleOnDesktop()
  * @method static bool isSidebarFullyCollapsibleOnDesktop()
  * @method static void serving(Closure $callback)
- * @method static void setCurrentPanel(Panel | null $panel = null)
+ * @method static void setCurrentPanel(Panel | string | null $panel = null)
  * @method static void setServingStatus(bool $condition = true)
  * @method static void setTenant(Model | null $tenant = null, bool $isQuiet = false)
  *

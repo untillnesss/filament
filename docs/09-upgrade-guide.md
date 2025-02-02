@@ -10,7 +10,10 @@ import Disclosure from "@components/Disclosure.astro"
 
 ## New requirements
 
+- PHP 8.2+
+- Laravel v11.15+
 - Tailwind CSS v4.0+, if you are currently using Tailwind CSS v3.0 with Filament. This does not apply if you are just using a Filament panel without a custom theme CSS file.
+- Filament no longer requires `doctrine/dbal`, but if your application still does, and you do not have it installed directly, you should add it to your `composer.json` file.
 
 ## Upgrading automatically
 
@@ -146,12 +149,20 @@ Table::configureUsing(function (Table $table): void {
 ### Medium-impact changes
 
 <Disclosure x-show="packages.includes('panels')">
+<span slot="summary">Automatic tenancy global scoping and association</span>
+
+When using tenancy in v3, Filament only scoped resource queries to the current tenant: to render the resource table, resolve URL parameters, and fetch global search results. There were many situations where other queries in the panel were not scoped by default, and the developer had to manually scope them. While this was a documented feature, it created a lot of additional work for developers.
+
+In v4, Filament automatically scopes all queries in a panel to the current tenant, and automatically associates new records with the current tenant using model events. This means that you no longer need to manually scope queries or associate new Eloquent records in most cases. There are still some important points to consider, so the [documentation](panels/tenancy#tenancy-security) has been updated to reflect this.
+</Disclosure>
+
+<Disclosure x-show="packages.includes('panels')">
 <span slot="summary">The `$maxContentWidth` property on page classes</span>
 
 The `$maxContentWidth` property on page classes has a new type. It is now able to accept `MaxWidth` enum values, as well as strings and null:
 
 ```php
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 
 protected MaxWidth | string | null $maxContentWidth = null;
 ```
@@ -200,6 +211,12 @@ public function getStats(): array
 </Disclosure>
 
 ### Low-impact changes
+
+<Disclosure x-show="packages.includes('tables') || packages.includes('infolists')">
+<span slot="summary">The `isSeparate` parameter of `ImageColumn::limitedRemainingText()` and `ImageEntry::limitedRemainingText()` has been removed</span>
+
+Previously, users were able to display the number of limited images separately to an image stack using the `isSeparate` parameter. Now the parameter has been removed, and if a stack exists, the text will always be stacked on top and not separate. If the images are not stacked, the text will be separate.
+</Disclosure>
 
 <Disclosure x-show="packages.includes('forms')">
 <span slot="summary">Overriding the `Field::make()`, `MorphToSelect::make()`, `Placeholder::make()`, or `Builder\Block::make()` methods</span>
@@ -345,6 +362,34 @@ The European Portuguese translations have been moved from `pt_PT` to `pt`, which
 <span slot="summary">Nepalese translations</span>
 
 The Nepalese translations have been moved from `np` to `ne`, which appears to be the more commonly used language code for the language within the Laravel community.
+</Disclosure>
+
+<Disclosure>
+<span slot="summary">Norwegian translations</span>
+
+The Norwegian translations have been moved from `no` to `nb`, which appears to be the more commonly used language code for the language within the Laravel community.
+</Disclosure>
+
+<Disclosure x-show="packages.includes('panels')">
+<span slot="summary">`getCurrentPanel()` no longer returns the default panel as a fallback</span>
+
+In v4, the `getCurrentPanel()` method returned the default panel if no panel was set. While this was useful behaviour internally in Filament core, it was unexpected for developers. In v4, `getCurrentPanel()` will return `null` if no panel is set, and you should handle this case in your code.
+
+```php
+use Filament\Facades\Filament;
+
+Filament::getCurrentPanel();
+filament()->getCurrentPanel();
+```
+
+If you are a plugin author and would like to get the default panel if no panel is set, you can use the `getCurrentOrDefaultPanel()` method instead:
+
+```php
+use Filament\Facades\Filament;
+
+Filament::getCurrentOrDefaultPanel();
+filament()->getCurrentOrDefaultPanel();
+```
 </Disclosure>
 
 </div>

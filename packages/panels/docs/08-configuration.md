@@ -105,13 +105,27 @@ By default, Filament will restrict the width of the content on the page, so it d
 
 ```php
 use Filament\Panel;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 
 public function panel(Panel $panel): Panel
 {
     return $panel
         // ...
-        ->maxContentWidth(MaxWidth::Full);
+        ->maxContentWidth(Width::Full);
+}
+```
+
+If you'd like to set the max content width for pages of the type `SimplePage`, like login and registration pages, you may do so using the `simplePageMaxContentWidth()` method. The default is `Large`:
+
+```php
+use Filament\Panel;
+use Filament\Support\Enums\Width;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->simplePageMaxContentWidth(Width::Small);
 }
 ```
 
@@ -168,7 +182,7 @@ public function panel(Panel $panel): Panel
 By default, when enabling SPA mode, any URL that lives on the same domain as the current request will be navigated to using Livewire's [`wire:navigate`](https://livewire.laravel.com/docs/navigate) feature. If you want to disable this for specific URLs, you can use the `spaUrlExceptions()` method:
 
 ```php
-use App\Filament\Resources\PostResource;
+use App\Filament\Resources\Posts\PostResource;
 use Filament\Panel;
 
 public function panel(Panel $panel): Panel
@@ -246,7 +260,7 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePost extends CreateRecord
 {
     protected ?bool $hasDatabaseTransactions = false;
-    
+
     // ...
 }
 ```
@@ -270,7 +284,7 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePost extends CreateRecord
 {
     protected ?bool $hasDatabaseTransactions = true;
-    
+
     // ...
 }
 ```
@@ -294,6 +308,8 @@ public function panel(Panel $panel): Panel
         ]);
 }
 ```
+
+Before these [assets](../support/assets) can be used, you'll need to run `php artisan filament:assets`.
 
 ## Applying middleware
 
@@ -371,5 +387,22 @@ public function panel(Panel $panel): Panel
     return $panel
         // ...
         ->broadcasting(false);
+}
+```
+
+## Strict authorization mode
+
+By default, when Filament authorizes the user access to a resource, it will first check if the policy exists for that model, and if it does, it will check if a method exists on the policy to perform the action. If the policy or policy method does not exist, it will grant the user access to the resource, as it assumes you have not set up authorization yet, or you do not require it.
+
+If you would prefer Filament to throw an exception if the policy or policy method does not exist, you can enable strict authorization mode using the `strictAuthorization()` method:
+
+```php
+use Filament\Panel;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->strictAuthorization();
 }
 ```

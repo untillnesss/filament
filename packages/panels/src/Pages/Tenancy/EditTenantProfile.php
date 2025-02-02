@@ -9,7 +9,11 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Concerns;
 use Filament\Pages\Page;
 use Filament\Panel;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Form;
+use Filament\Schemas\Components\NestedSchema;
+use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -22,18 +26,12 @@ use function Filament\authorize;
 use function Filament\Support\is_app_url;
 
 /**
- * @property Schema $form
+ * @property-read Schema $form
  */
 abstract class EditTenantProfile extends Page
 {
     use Concerns\CanUseDatabaseTransactions;
     use Concerns\HasRoutes;
-    use Concerns\InteractsWithFormActions;
-
-    /**
-     * @var view-string
-     */
-    protected static string $view = 'filament-panels::pages.tenancy.edit-tenant-profile';
 
     /**
      * @var array<string, mixed> | null
@@ -57,7 +55,7 @@ abstract class EditTenantProfile extends Page
 
     public static function getRouteName(?string $panel = null): string
     {
-        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentPanel();
+        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentOrDefaultPanel();
 
         return $panel->generateRouteName('tenant.' . static::getRelativeRouteName());
     }
@@ -234,5 +232,31 @@ abstract class EditTenantProfile extends Page
         } catch (AuthorizationException $exception) {
             return $exception->toResponse()->allowed();
         }
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getFormContentComponent(),
+            ]);
+    }
+
+    public function getFormContentComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('save')
+            ->footer([
+                Actions::make($this->getFormActions())
+                    ->alignment($this->getFormActionsAlignment())
+                    ->fullWidth($this->hasFullWidthFormActions())
+                    ->sticky($this->areFormActionsSticky()),
+            ]);
+    }
+
+    protected function hasFullWidthFormActions(): bool
+    {
+        return false;
     }
 }

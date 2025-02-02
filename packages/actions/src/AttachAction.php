@@ -5,8 +5,8 @@ namespace Filament\Actions;
 use Closure;
 use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Forms\Components\Select;
-use Filament\Schema\Schema;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\Width;
 use Filament\Support\Services\RelationshipJoiner;
 use Filament\Tables\Table;
 use Illuminate\Database\Connection;
@@ -51,11 +51,11 @@ class AttachAction extends Action
 
         $this->label(__('filament-actions::attach.single.label'));
 
-        $this->modalHeading(fn (): string => __('filament-actions::attach.single.modal.heading', ['label' => $this->getModelLabel()]));
+        $this->modalHeading(fn (): string => __('filament-actions::attach.single.modal.heading', ['label' => $this->getTitleCaseModelLabel()]));
 
         $this->modalSubmitActionLabel(__('filament-actions::attach.single.modal.actions.attach.label'));
 
-        $this->modalWidth(MaxWidth::Large);
+        $this->modalWidth(Width::Large);
 
         $this->extraModalFooterActions(function (): array {
             return $this->canAttachAnother() ? [

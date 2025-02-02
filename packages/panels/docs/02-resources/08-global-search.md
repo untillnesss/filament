@@ -205,3 +205,11 @@ public function panel(Panel $panel): Panel
         });
 }
 ```
+
+## Disabling search term splitting
+
+By default, the global search will split the search term into individual words and search for each word separately. This allows for more flexible search queries. However, it can have a negative impact on performance when large datasets are involved. You can disable this behavior by setting the `$shouldSplitGlobalSearchTerms` property to `false` on the resource:
+
+```php
+protected static ?bool $shouldSplitGlobalSearchTerms = false;
+```

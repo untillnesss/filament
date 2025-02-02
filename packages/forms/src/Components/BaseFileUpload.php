@@ -3,10 +3,8 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use Filament\Schema\Components\Attributes\Exposed;
-use Filament\Schema\Components\StateCasts\FileUploadStateCast;
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\StateCasts\FileUploadStateCast;
+use Filament\Support\Components\Attributes\ExposedLivewireMethod;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -48,6 +46,8 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
     protected int | Closure | null $maxSize = null;
 
     protected int | Closure | null $minSize = null;
+
+    protected int | Closure | null $maxParallelUploads = null;
 
     protected int | Closure | null $maxFiles = null;
 
@@ -347,6 +347,13 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return $this;
     }
 
+    public function maxParallelUploads(int | Closure | null $count): static
+    {
+        $this->maxParallelUploads = $count;
+
+        return $this;
+    }
+
     public function maxFiles(int | Closure | null $count): static
     {
         $this->maxFiles = $count;
@@ -494,6 +501,11 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return $this->evaluate($this->minSize);
     }
 
+    public function getMaxParallelUploads(): ?int
+    {
+        return $this->evaluate($this->maxParallelUploads);
+    }
+
     public function getVisibility(): string
     {
         return $this->evaluate($this->visibility);
@@ -570,7 +582,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return $rules;
     }
 
-    #[Exposed]
+    #[ExposedLivewireMethod]
     #[Renderless]
     public function deleteUploadedFile(string $fileKey): static
     {
@@ -593,7 +605,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return $this;
     }
 
-    #[Exposed]
+    #[ExposedLivewireMethod]
     #[Renderless]
     public function removeUploadedFile(string $fileKey): string | TemporaryUploadedFile | null
     {
@@ -625,27 +637,29 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
             return;
         }
 
-        $this->evaluate(function (BaseFileUpload $component, Get $get, Set $set) use ($file, $statePath) {
-            if (! $component->isMultiple()) {
-                $set($statePath, null);
+        $set = $this->makeSetUtility();
 
-                return;
-            }
+        if (! $this->isMultiple()) {
+            $set($statePath, null);
 
-            $fileNames = $get($statePath) ?? [];
+            return;
+        }
 
-            if (array_key_exists($file, $fileNames)) {
-                unset($fileNames[$file]);
-            }
+        $get = $this->makeGetUtility();
 
-            $set($statePath, $fileNames);
-        });
+        $fileNames = $get($statePath) ?? [];
+
+        if (array_key_exists($file, $fileNames)) {
+            unset($fileNames[$file]);
+        }
+
+        $set($statePath, $fileNames);
     }
 
     /**
      * @param  array<array-key>  $fileKeys
      */
-    #[Exposed]
+    #[ExposedLivewireMethod]
     #[Renderless]
     public function reorderUploadedFiles(array $fileKeys): void
     {
@@ -665,7 +679,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
     /**
      * @return array<array{name: string, size: int, type: string, url: string} | null> | null
      */
-    #[Exposed]
+    #[ExposedLivewireMethod]
     #[Renderless]
     public function getUploadedFiles(): ?array
     {
@@ -750,18 +764,20 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
             return;
         }
 
-        $this->evaluate(function (BaseFileUpload $component, Get $get, Set $set) use ($file, $fileName, $statePath) {
-            if (! $component->isMultiple()) {
-                $set($statePath, $fileName);
+        $set = $this->makeSetUtility();
 
-                return;
-            }
+        if (! $this->isMultiple()) {
+            $set($statePath, $fileName);
 
-            $fileNames = $get($statePath) ?? [];
-            $fileNames[$file] = $fileName;
+            return;
+        }
 
-            $set($statePath, $fileNames);
-        });
+        $get = $this->makeGetUtility();
+
+        $fileNames = $get($statePath) ?? [];
+        $fileNames[$file] = $fileName;
+
+        $set($statePath, $fileNames);
     }
 
     /**

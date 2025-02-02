@@ -34,16 +34,15 @@
     >
         <div
             @if (FilamentView::hasSpaMode())
-                {{-- format-ignore-start --}}ax-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
+                {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
             @else
-                ax-load
+                x-load
             @endif
-            ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('key-value', 'filament/forms') }}"
+            x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('key-value', 'filament/forms') }}"
             wire:ignore
             x-data="keyValueFormComponent({
                         state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                     })"
-            x-ignore
             {{
                 $attributes
                     ->merge($getExtraAlpineAttributes(), escape: false)
@@ -103,7 +102,7 @@
                             @if ($isReorderable)
                                 x-bind:x-sortable-item="row.key"
                             @endif
-                            class="divide-x divide-gray-200 dark:divide-white/5 rtl:divide-x-reverse"
+                            class="divide-x divide-gray-200 rtl:divide-x-reverse dark:divide-white/5"
                         >
                             @if ($isReorderable && (! $isDisabled))
                                 <td class="p-0.5">

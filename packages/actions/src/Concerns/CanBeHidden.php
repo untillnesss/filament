@@ -3,65 +3,12 @@
 namespace Filament\Actions\Concerns;
 
 use Closure;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Gate;
 
 trait CanBeHidden
 {
-    protected mixed $authorization = null;
-
     protected bool | Closure $isHidden = false;
 
     protected bool | Closure $isVisible = true;
-
-    /**
-     * @param  Model | class-string | array<mixed> | null  $arguments
-     */
-    public function authorize(mixed $abilities, Model | string | array | null $arguments = null): static
-    {
-        if (is_string($abilities) || is_array($abilities)) {
-            $this->authorization = [
-                'type' => 'all',
-                'abilities' => Arr::wrap($abilities),
-                'arguments' => Arr::wrap($arguments),
-            ];
-        } else {
-            $this->authorization = $abilities;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  string | array<string>  $abilities
-     * @param  Model | array<mixed> | null  $arguments
-     */
-    public function authorizeAny(string | array $abilities, Model | array | null $arguments = null): static
-    {
-        $this->authorization = [
-            'type' => 'any',
-            'abilities' => Arr::wrap($abilities),
-            'arguments' => Arr::wrap($arguments),
-        ];
-
-        return $this;
-    }
-
-    /**
-     * @param  array<mixed>  $arguments
-     * @return array<mixed>
-     */
-    protected function parseAuthorizationArguments(array $arguments): array
-    {
-        if ($record = $this->getRecord()) {
-            array_unshift($arguments, $record);
-        } elseif ($model = $this->getModel()) {
-            array_unshift($arguments, $model);
-        }
-
-        return $arguments;
-    }
 
     public function hidden(bool | Closure $condition = true): static
     {
@@ -75,27 +22,6 @@ trait CanBeHidden
         $this->isVisible = $condition;
 
         return $this;
-    }
-
-    public function isAuthorized(): bool
-    {
-        if ($this->authorization === null) {
-            return true;
-        }
-
-        if (! is_array($this->authorization)) {
-            return (bool) $this->evaluate($this->authorization);
-        }
-
-        $abilities = $this->authorization['abilities'] ?? [];
-        $arguments = $this->parseAuthorizationArguments($this->authorization['arguments'] ?? []);
-        $type = $this->authorization['type'] ?? null;
-
-        return match ($type) {
-            'all' => Gate::check($abilities, $arguments),
-            'any' => Gate::any($abilities, $arguments),
-            default => false,
-        };
     }
 
     public function isHidden(): bool
@@ -117,7 +43,11 @@ trait CanBeHidden
             return true;
         }
 
-        return ! $this->isAuthorized();
+        if (! method_exists($this, 'isAuthorizedOrNotHiddenWhenUnauthorized')) {
+            return false;
+        }
+
+        return ! $this->isAuthorizedOrNotHiddenWhenUnauthorized();
     }
 
     public function isVisible(): bool

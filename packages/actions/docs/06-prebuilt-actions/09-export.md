@@ -354,6 +354,17 @@ ExportAction::make()
     ->modifyQueryUsing(fn (Builder $query) => $query->where('is_active', true))
 ```
 
+You may inject the `$options` argument into the function, which is an array of [options](#using-export-options) for that export:
+
+```php
+use App\Filament\Exports\ProductExporter;
+use Illuminate\Database\Eloquent\Builder;
+
+ExportAction::make()
+    ->exporter(ProductExporter::class)
+    ->modifyQueryUsing(fn (Builder $query, array $options) => $query->where('is_active', $options['isActive'] ?? true))
+```
+
 Alternatively, you can override the `modifyQuery()` method on the exporter class, which will modify the query for all actions that use that exporter:
 
 ```php
@@ -376,7 +387,11 @@ public static function modifyQuery(Builder $query): Builder
 
 ### Customizing the storage disk
 
-By default, exported files will be uploaded to the storage disk defined in the [configuration file](../installation#publishing-configuration). You can also set the `FILESYSTEM_DISK` environment variable to change this.
+By default, exported files will be uploaded to the storage disk defined in the [configuration file](../../installation#publishing-configuration), which is `public` by default. You can set the `FILAMENT_FILESYSTEM_DISK` environment variable to change this.
+
+While using the `public` disk a good default for many parts of Filament, using it for exports would result in exported files being stored in a public location. As such, if the default filesystem disk is `public` and a `local` disk exists in your `config/filesystems.php`, Filament will use the `local` disk for exports instead. If you override the disk to be `public` for an `ExportAction` or inside an exporter class, Filament will use that.
+
+In production, you should use a disk such as `s3` with a private access policy, to prevent unauthorized access to the exported files.
 
 If you want to use a different disk for a specific export, you can pass the disk name to the `disk()` method on the action:
 
@@ -388,6 +403,14 @@ ExportAction::make()
     ->fileDisk('s3')
 ```
 
+You may set the disk for all export actions at once in the `boot()` method of a service provider such as `AppServiceProvider`:
+
+```php
+use Filament\Actions\ExportAction;
+
+ExportAction::configureUsing(fn (ExportAction $action) => $action->fileDisk('s3'));
+```
+
 Alternatively, you can override the `getFileDisk()` method on the exporter class, returning the name of the disk:
 
 ```php
@@ -396,6 +419,8 @@ public function getFileDisk(): string
     return 's3';
 }
 ```
+
+Export files that are created are the developer's responsibility to delete if they wish. Filament does not delete these files in case the exports need to be downloaded again at a later date.
 
 ### Configuring the export file names
 
@@ -551,7 +576,7 @@ public static function getCsvDelimiter(): string
 
 You can only specify a single character, otherwise an exception will be thrown.
 
-## Styling XLSX cells
+## Customizing XLSX files
 
 If you want to style the cells of the XLSX file, you may override the `getXlsxCellStyle()` method on the exporter class, returning an [OpenSpout `Style` object](https://github.com/openspout/openspout/blob/4.x/docs/documentation.md#styling):
 
@@ -585,6 +610,21 @@ public function getXlsxHeaderCellStyle(): ?Style
         ->setBackgroundColor(Color::rgb(0, 0, 0))
         ->setCellAlignment(CellAlignment::CENTER)
         ->setCellVerticalAlignment(CellVerticalAlignment::CENTER);
+}
+```
+
+Alternatively, if you want to pass "options" to the [OpenSpout XLSX `Writer`](https://github.com/openspout/openspout/blob/4.x/docs/documentation.md#column-widths), you can return an `OpenSpout\Writer\XLSX\Options` instance from the `getXlsxWriterOptions()` method of the exporter class:
+
+```php
+use OpenSpout\Writer\XLSX\Options;
+
+public function getXlsxWriterOptions(): ?Options
+{
+    $options = new Options();
+    $options->setColumnWidth(10, 1);
+    $options->setColumnWidthForRange(12, 2, 3);
+    
+    return $options;
 }
 ```
 
@@ -703,7 +743,7 @@ public function getJobBatchName(): ?string
 
 ## Authorization
 
-By default, only the user who started the export may download files that get generated. If you'd like to customize the authorization logic, you may create an `ExportPolicy` class, and [register it in your `AuthServiceProvider`](https://laravel.com/docs/10.x/authorization#registering-policies):
+By default, only the user who started the export may download files that get generated. If you'd like to customize the authorization logic, you may create an `ExportPolicy` class, and [register it in your `AuthServiceProvider`](https://laravel.com/docs/authorization#registering-policies):
 
 ```php
 use App\Policies\ExportPolicy;

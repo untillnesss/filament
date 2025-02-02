@@ -21,6 +21,7 @@ class FormsServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 Commands\MakeFieldCommand::class,
                 Commands\MakeFormCommand::class,
+                Commands\MakeLivewireFormCommand::class,
             ])
             ->hasTranslations()
             ->hasViews();

@@ -3,22 +3,30 @@
 namespace Filament\Tables\Columns;
 
 use Exception;
+use Filament\Actions\Action;
 use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\CanAggregateRelatedModels;
 use Filament\Support\Concerns\CanGrow;
+use Filament\Support\Concerns\CanSpanColumns;
 use Filament\Support\Concerns\HasAlignment;
 use Filament\Support\Concerns\HasCellState;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Filament\Support\Concerns\HasPlaceholder;
-use Filament\Support\Concerns\HasTooltip;
 use Filament\Support\Concerns\HasVerticalAlignment;
+use Filament\Support\Enums\Alignment;
+use Filament\Tables\Columns\Concerns\HasTooltip;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
+use Illuminate\View\ComponentAttributeBag;
+
+use function Filament\Support\generate_href_html;
 
 class Column extends ViewComponent
 {
     use CanAggregateRelatedModels;
     use CanGrow;
+    use CanSpanColumns;
     use Concerns\BelongsToGroup;
     use Concerns\BelongsToLayout;
     use Concerns\BelongsToTable;
@@ -31,7 +39,6 @@ class Column extends ViewComponent
     use Concerns\CanBeToggled;
     use Concerns\CanCallAction;
     use Concerns\CanOpenUrl;
-    use Concerns\CanSpanColumns;
     use Concerns\CanWrapHeader;
     use Concerns\HasExtraCellAttributes;
     use Concerns\HasExtraHeaderAttributes;
@@ -117,5 +124,66 @@ class Column extends ViewComponent
             Model::class, $record::class => [$record],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
+    }
+
+    public function renderInLayout(): ?HtmlString
+    {
+        if ($this->isHidden()) {
+            return null;
+        }
+
+        $attributes = (new ComponentAttributeBag)
+            ->gridColumn(
+                $this->getColumnSpan(),
+                $this->getColumnStart(),
+            )
+            ->class([
+                'fi-growable' => $this->canGrow(),
+                (filled($hiddenFrom = $this->getHiddenFrom()) ? "{$hiddenFrom}:fi-hidden" : ''),
+                (filled($visibleFrom = $this->getVisibleFrom()) ? "{$visibleFrom}:fi-visible" : ''),
+            ]);
+
+        $this->inline();
+
+        $action = $this->getAction();
+        $url = $this->getUrl();
+        $isClickDisabled = $this->isClickDisabled();
+
+        $wrapperTag = match (true) {
+            $url && (! $isClickDisabled) => 'a',
+            $action && (! $isClickDisabled) => 'button',
+            default => 'div',
+        };
+
+        $attributes = $attributes
+            ->merge([
+                'type' => ($wrapperTag === 'button') ? 'button' : null,
+                'wire:click' => $wireClickAction = match (true) {
+                    ($wrapperTag !== 'button') => null,
+                    $action instanceof Action => "mountTableAction('{$action->getName()}', '{$this->getRecordKey()}')",
+                    filled($action) => "callTableColumnAction('{$this->getName()}', '{$this->getRecordKey()}')",
+                    default => null,
+                },
+                'wire:loading.attr' => ($wrapperTag === 'button') ? 'disabled' : null,
+                'wire:target' => $wireClickAction,
+            ], escape: false)
+            ->class([
+                'fi-ta-col-wrp',
+                ((($alignment = $this->getAlignment()) instanceof Alignment) ? "fi-align-{$alignment->value}" : (is_string($alignment) ? $alignment : '')),
+                'fi-ta-col-wrap-has-column-url' => ($wrapperTag === 'a') && filled($url),
+            ]);
+
+        ob_start(); ?>
+
+        <<?= $wrapperTag ?>
+            <?php if ($wrapperTag === 'a') {
+                echo generate_href_html($url, $this->shouldOpenUrlInNewTab())->toHtml();
+            } ?>
+            <?= $attributes->toHtml() ?>
+        >
+            <?= $this->toHtml() ?>
+        </<?= $wrapperTag ?>>
+
+        <?php return new HtmlString(ob_get_clean());
     }
 }

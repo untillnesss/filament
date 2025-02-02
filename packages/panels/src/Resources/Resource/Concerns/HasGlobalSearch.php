@@ -20,6 +20,8 @@ trait HasGlobalSearch
 
     protected static ?bool $isGlobalSearchForcedCaseInsensitive = null;
 
+    protected static ?bool $shouldSplitGlobalSearchTerms = null;
+
     protected static bool $isGloballySearchable = true;
 
     public static function canGloballySearch(): bool
@@ -133,6 +135,11 @@ trait HasGlobalSearch
         return static::$isGlobalSearchForcedCaseInsensitive;
     }
 
+    public static function shouldSplitGlobalSearchTerms(): bool
+    {
+        return static::$shouldSplitGlobalSearchTerms ?? true;
+    }
+
     protected static function applyGlobalSearchAttributeConstraints(Builder $query, string $search): void
     {
         /** @var Connection $databaseConnection */
@@ -140,7 +147,27 @@ trait HasGlobalSearch
 
         $search = generate_search_term_expression($search, static::isGlobalSearchForcedCaseInsensitive(), $databaseConnection);
 
-        foreach (explode(' ', $search) as $searchWord) {
+        if (! static::shouldSplitGlobalSearchTerms()) {
+            $isFirst = true;
+
+            foreach (static::getGloballySearchableAttributes() as $attributes) {
+                static::applyGlobalSearchAttributeConstraint(
+                    query: $query,
+                    search: $search,
+                    searchAttributes: Arr::wrap($attributes),
+                    isFirst: $isFirst,
+                );
+            }
+
+            return;
+        }
+
+        $searchWords = array_filter(
+            str_getcsv(preg_replace('/\s+/', ' ', $search), separator: ' ', escape: '\\'),
+            fn ($word): bool => filled($word),
+        );
+
+        foreach ($searchWords as $searchWord) {
             $query->where(function (Builder $query) use ($searchWord) {
                 $isFirst = true;
 

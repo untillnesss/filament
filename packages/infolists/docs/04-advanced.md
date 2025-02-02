@@ -8,7 +8,7 @@ You may insert a Livewire component directly into an infolist:
 
 ```php
 use App\Livewire\Foo;
-use Filament\Schema\Components\Livewire;
+use Filament\Schemas\Components\Livewire;
 
 Livewire::make(Foo::class)
 ```
@@ -17,7 +17,7 @@ If you are rendering multiple of the same Livewire component, please make sure t
 
 ```php
 use App\Livewire\Foo;
-use Filament\Schema\Components\Livewire;
+use Filament\Schemas\Components\Livewire;
 
 Livewire::make(Foo::class)
     ->key('foo-first')
@@ -35,7 +35,7 @@ You can pass an array of parameters to a Livewire component:
 
 ```php
 use App\Livewire\Foo;
-use Filament\Schema\Components\Livewire;
+use Filament\Schemas\Components\Livewire;
 
 Livewire::make(Foo::class, ['bar' => 'baz'])
 ```
@@ -87,7 +87,7 @@ You may allow the component to [lazily load](https://livewire.laravel.com/docs/l
 
 ```php
 use App\Livewire\Foo;
-use Filament\Schema\Components\Livewire;
+use Filament\Schemas\Components\Livewire;
 
 Livewire::make(Foo::class)->lazy()       
 ```

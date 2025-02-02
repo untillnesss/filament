@@ -3,13 +3,16 @@
 namespace Filament\Actions\Exports;
 
 use Carbon\CarbonInterface;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\Exports\Models\Export;
-use Filament\Schema\Components\Component;
+use Filament\Schemas\Components\Component;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
 use OpenSpout\Common\Entity\Style\Style;
+use OpenSpout\Writer\XLSX\Options;
 
 abstract class Exporter
 {
@@ -57,7 +60,7 @@ abstract class Exporter
     abstract public static function getColumns(): array;
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action | ActionGroup>
      */
     public static function getOptionsFormComponents(): array
     {
@@ -154,7 +157,13 @@ abstract class Exporter
 
     public function getFileDisk(): string
     {
-        return config('filament.default_filesystem_disk');
+        $disk = config('filament.default_filesystem_disk');
+
+        if (($disk === 'public') && array_key_exists('local', config('filesystems.disks'))) {
+            return 'local';
+        }
+
+        return $disk;
     }
 
     public function getFileName(Export $export): string
@@ -190,6 +199,11 @@ abstract class Exporter
     }
 
     public function getXlsxHeaderCellStyle(): ?Style
+    {
+        return null;
+    }
+
+    public function getXlsxWriterOptions(): ?Options
     {
         return null;
     }

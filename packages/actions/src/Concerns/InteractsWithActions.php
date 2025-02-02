@@ -3,16 +3,20 @@
 namespace Filament\Actions\Concerns;
 
 use Closure;
+use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
+use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Filament\Actions\Action;
 use Filament\Actions\Exceptions\ActionNotResolvableException;
-use Filament\Schema\Components\Contracts\ExposesStateToActionData;
-use Filament\Schema\Concerns\InteractsWithSchemas;
-use Filament\Schema\Contracts\HasSchemas;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Contracts\ExposesStateToActionData;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Cancel;
 use Filament\Support\Exceptions\Halt;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Url;
@@ -22,6 +26,8 @@ use function Livewire\store;
 
 trait InteractsWithActions
 {
+    use WithRateLimiting;
+
     /**
      * @var array<array<string, mixed>> | null
      */
@@ -97,8 +103,6 @@ trait InteractsWithActions
             return null;
         }
 
-        $this->syncActionModals();
-
         if (($actionComponent = $action->getSchemaComponent()) instanceof ExposesStateToActionData) {
             foreach ($actionComponent->getChildComponentContainers() as $actionComponentChildComponentContainer) {
                 $actionComponentChildComponentContainer->validate();
@@ -106,6 +110,15 @@ trait InteractsWithActions
         }
 
         try {
+            if (
+                $action->hasAuthorizationNotification() &&
+                ($response = $action->getAuthorizationResponseWithMessage())->denied()
+            ) {
+                $action->sendUnauthorizedNotification($response);
+
+                throw new Cancel;
+            }
+
             $hasSchema = $this->mountedActionHasSchema(mountedAction: $action);
 
             if ($hasSchema) {
@@ -134,6 +147,8 @@ trait InteractsWithActions
             return $this->callMountedAction();
         }
 
+        $this->syncActionModals();
+
         $this->resetErrorBag();
 
         return null;
@@ -150,11 +165,28 @@ trait InteractsWithActions
             return null;
         }
 
+        $action->mergeArguments($arguments);
+
         if ($action->isDisabled()) {
             return null;
         }
 
-        $action->mergeArguments($arguments);
+        if (
+            $action->hasAuthorizationNotification() &&
+            (! $action->isAuthorized())
+        ) {
+            return null;
+        }
+
+        if ($rateLimit = $action->getRateLimit()) {
+            try {
+                $this->rateLimit($rateLimit, method: json_encode(array_map(fn (array $action): array => Arr::except($action, ['data']), $this->mountedActions)));
+            } catch (TooManyRequestsException $exception) {
+                $action->sendRateLimitedNotification($exception);
+
+                return null;
+            }
+        }
 
         $schema = $this->getMountedActionSchema(mountedAction: $action);
 
@@ -239,9 +271,13 @@ trait InteractsWithActions
         $action->resetArguments();
         $action->resetFormData();
 
+        $onlyActionNamesAndContexts = fn (array $actions): array => collect($actions)
+            ->map(fn (array $action): array => Arr::only($action, ['name', 'context']))
+            ->all();
+
         // If the action was replaced while it was being called,
         // we don't want to unmount it.
-        if ($originallyMountedActions !== $this->mountedActions) {
+        if ($onlyActionNamesAndContexts($originallyMountedActions) !== $onlyActionNamesAndContexts($this->mountedActions)) {
             $action->clearRecordAfter();
 
             return null;
@@ -403,7 +439,7 @@ trait InteractsWithActions
     {
         if (count($parentActions)) {
             $parentAction = Arr::last($parentActions);
-            $resolvedAction = $parentAction->getMountableModalAction($action['name']);
+            $resolvedAction = $parentAction->getModalAction($action['name']);
 
             if (! $resolvedAction) {
                 throw new ActionNotResolvableException("Action [{$action['name']}] was not found for action [{$parentAction->getName()}].");
@@ -422,10 +458,7 @@ trait InteractsWithActions
                 throw new ActionNotResolvableException("Action was not resolvable from methods [{$action['name']}Action] or [{$action['name']}]");
             }
 
-            $resolvedAction = Action::configureUsing(
-                Closure::fromCallable([$this, 'configureAction']),
-                fn () => $this->{$methodName}(),
-            );
+            $resolvedAction = $this->{$methodName}();
 
             if (! $resolvedAction instanceof Action) {
                 throw new ActionNotResolvableException('Actions must be an instance of ' . Action::class . ". The [{$methodName}] method on the Livewire component returned an instance of [" . get_class($resolvedAction) . '].');
@@ -444,7 +477,7 @@ trait InteractsWithActions
     protected function resolveTableAction(array $action, array $parentActions): Action
     {
         if (! ($this instanceof HasTable)) {
-            throw new ActionNotResolvableException('Failed to resolve table action for Livewire component without the ' . HasTable::class . ' trait.');
+            throw new ActionNotResolvableException('Failed to resolve table action for Livewire component without the [' . HasTable::class . '] trait.');
         }
 
         $resolvedAction = null;
@@ -472,22 +505,29 @@ trait InteractsWithActions
     protected function resolveSchemaComponentAction(array $action, array $parentActions): Action
     {
         if (! $this instanceof HasSchemas) {
-            throw new ActionNotResolvableException('Failed to resolve action schema component for Livewire component without the ' . InteractsWithSchemas::class . ' trait.');
+            throw new ActionNotResolvableException('Failed to resolve action schema for Livewire component without the [' . InteractsWithSchemas::class . '] trait.');
         }
 
-        $component = $this->getSchemaComponent($action['context']['schemaComponent']);
+        $key = $action['context']['schemaComponent'];
 
-        if (! $component) {
-            throw new ActionNotResolvableException("Schema component [{$action['context']['schemaComponent']}] not found.");
+        $schemaName = (string) str($key)->before('.');
+
+        $schema = $this->getSchema($schemaName);
+
+        if (! $schema) {
+            throw new ActionNotResolvableException("Schema [{$schemaName}] not found.");
         }
 
-        $componentAction = $component->getAction($action['name']);
+        $resolvedAction = $schema->getAction(
+            $action['name'],
+            str($key)->contains('.') ? (string) str($key)->after('.') : null,
+        );
 
-        if (! $componentAction) {
-            throw new ActionNotResolvableException("Action [{$action['name']}] not found on schema component [{$action['context']['schemaComponent']}].");
+        if (! $resolvedAction) {
+            throw new ActionNotResolvableException("Action [{$action['name']}] not found in schema at [{$action['context']['schemaComponent']}].");
         }
 
-        return $componentAction;
+        return $resolvedAction;
     }
 
     /**
@@ -501,28 +541,6 @@ trait InteractsWithActions
         );
 
         return Arr::last($this->resolveActions($actions));
-    }
-
-    /**
-     * @param  array<string>  $modalActionNames
-     */
-    protected function getMountableModalActionFromAction(Action $action, array $modalActionNames): ?Action
-    {
-        $mountedActions = $this->mountedActions;
-
-        foreach ($modalActionNames as $modalActionName) {
-            $action = $action->getMountableModalAction($modalActionName);
-
-            if (! $action) {
-                return null;
-            }
-        }
-
-        if (! $action instanceof Action) {
-            return null;
-        }
-
-        return $action;
     }
 
     protected function getMountedActionSchema(?int $actionNestingIndex = null, ?Action $mountedAction = null): ?Schema
@@ -549,7 +567,8 @@ trait InteractsWithActions
                         ->take($actionNestingIndex + 1)
                         ->pluck('name')
                         ->implode('.'),
-                ),
+                )
+                ->rootHeadingLevel(3),
         );
     }
 
@@ -568,8 +587,6 @@ trait InteractsWithActions
     {
         return null;
     }
-
-    protected function configureAction(Action $action): void {}
 
     public function unmountAction(bool $canCancelParentActions = true): void
     {
@@ -626,5 +643,76 @@ trait InteractsWithActions
     public function getOriginallyMountedActionIndex(): ?int
     {
         return $this->originallyMountedActionIndex;
+    }
+
+    /**
+     * @param  array<string, mixed>  $arguments
+     */
+    public function mergeMountedActionArguments(array $arguments): void
+    {
+        $this->mountedActions[array_key_last($this->mountedActions)]['arguments'] = array_merge(
+            $this->mountedActions[array_key_last($this->mountedActions)]['arguments'],
+            $arguments,
+        );
+
+        $this->getMountedAction()->mergeArguments($arguments);
+    }
+
+    public function getDefaultActionRecord(Action $action): ?Model
+    {
+        return null;
+    }
+
+    public function getDefaultActionRecordTitle(Action $action): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @return ?class-string<Model>
+     */
+    public function getDefaultActionModel(Action $action): ?string
+    {
+        return null;
+    }
+
+    public function getDefaultActionModelLabel(Action $action): ?string
+    {
+        return null;
+    }
+
+    public function getDefaultActionUrl(Action $action): ?string
+    {
+        return null;
+    }
+
+    public function getDefaultActionSuccessRedirectUrl(Action $action): ?string
+    {
+        return null;
+    }
+
+    public function getDefaultActionFailureRedirectUrl(Action $action): ?string
+    {
+        return null;
+    }
+
+    public function getDefaultActionRelationship(Action $action): ?Relation
+    {
+        return null;
+    }
+
+    public function getDefaultActionSchemaResolver(Action $action): ?Closure
+    {
+        return null;
+    }
+
+    public function getDefaultActionAuthorizationResponse(Action $action): ?Response
+    {
+        return null;
+    }
+
+    public function getDefaultActionIndividualRecordAuthorizationResponseResolver(Action $action): ?Closure
+    {
+        return null;
     }
 }

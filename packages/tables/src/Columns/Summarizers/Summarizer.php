@@ -3,14 +3,14 @@
 namespace Filament\Tables\Columns\Summarizers;
 
 use Closure;
+use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\DB;
 
-class Summarizer extends ViewComponent
+class Summarizer extends ViewComponent implements HasEmbeddedView
 {
     use Concerns\BelongsToColumn;
     use Concerns\CanBeHidden;
@@ -22,11 +22,6 @@ class Summarizer extends ViewComponent
     protected string $evaluationIdentifier = 'summarizer';
 
     protected string $viewIdentifier = 'summarizer';
-
-    /**
-     * @var view-string
-     */
-    protected string $view = 'filament-tables::columns.summaries.text';
 
     protected ?string $id = null;
 
@@ -131,7 +126,7 @@ class Summarizer extends ViewComponent
 
         $asName = (string) str($query->getModel()->getTable())->afterLast('.');
 
-        $query = DB::connection($query->getModel()->getConnectionName())
+        $query = $query->getModel()->resolveConnection($query->getModel()->getConnectionName())
             ->table($query->toBase(), $asName);
 
         if ($this->hasQueryModification()) {
@@ -185,5 +180,27 @@ class Summarizer extends ViewComponent
             'query' => [$this->getQuery()],
             default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
         };
+    }
+
+    public function toEmbeddedHtml(): string
+    {
+        $attributes = $this->getExtraAttributeBag()
+            ->class(['fi-ta-text-summary']);
+
+        ob_start(); ?>
+
+        <div <?= $attributes->toHtml() ?>>
+            <?php if (filled($label = $this->getLabel())) { ?>
+                <span class="fi-ta-text-summary-label">
+                    <?= $label ?>
+                </span>
+            <?php } ?>
+
+            <span>
+                <?= $this->formatState($this->getState()) ?>
+            </span>
+        </div>
+
+        <?php return ob_get_clean();
     }
 }

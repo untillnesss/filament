@@ -7,7 +7,11 @@ use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\CanUseDatabaseTransactions;
 use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Form;
+use Filament\Schemas\Components\NestedSchema;
+use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
 use Throwable;
@@ -15,17 +19,14 @@ use Throwable;
 use function Filament\Support\is_app_url;
 
 /**
- * @property Schema $form
+ * @property-read Schema $form
  */
 class SettingsPage extends Page
 {
     use CanUseDatabaseTransactions;
-    use Concerns\InteractsWithFormActions;
     use HasUnsavedDataChangesAlert;
 
     protected static string $settings;
-
-    protected static string $view = 'filament-spatie-laravel-settings-plugin::pages.settings-page';
 
     /**
      * @var array<string, mixed> | null
@@ -61,6 +62,10 @@ class SettingsPage extends Page
 
     public function save(): void
     {
+        if (! $this->canEdit()) {
+            return;
+        }
+
         try {
             $this->beginDatabaseTransaction();
 
@@ -161,7 +166,8 @@ class SettingsPage extends Page
         return Action::make('save')
             ->label(__('filament-spatie-laravel-settings-plugin::pages/settings-page.form.actions.save.label'))
             ->submit('save')
-            ->keyBindings(['mod+s']);
+            ->keyBindings(['mod+s'])
+            ->visible($this->canEdit());
     }
 
     public function getSubmitFormAction(): Action
@@ -185,13 +191,45 @@ class SettingsPage extends Page
                     ->schema($this->getFormSchema())
                     ->statePath('data')
                     ->columns(2)
-                    ->inlineLabel($this->hasInlineLabels()),
+                    ->inlineLabel($this->hasInlineLabels())
+                    ->disabled(! $this->canEdit()),
             ),
         ];
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getFormContentComponent(),
+            ]);
+    }
+
+    public function getFormContentComponent(): Component
+    {
+        return Form::make([NestedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('save')
+            ->footer([
+                Actions::make($this->getFormActions())
+                    ->alignment($this->getFormActionsAlignment())
+                    ->fullWidth($this->hasFullWidthFormActions())
+                    ->sticky($this->areFormActionsSticky()),
+            ]);
+    }
+
+    protected function hasFullWidthFormActions(): bool
+    {
+        return false;
     }
 
     public function getRedirectUrl(): ?string
     {
         return null;
+    }
+
+    public function canEdit(): bool
+    {
+        return true;
     }
 }

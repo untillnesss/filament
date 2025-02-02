@@ -25,7 +25,7 @@ class NavigationManager
 
     public function __construct()
     {
-        $this->panel = Filament::getCurrentPanel();
+        $this->panel = Filament::getCurrentOrDefaultPanel();
 
         $this->navigationGroups = array_map(
             fn (NavigationGroup | string $group): NavigationGroup | string => $group instanceof NavigationGroup ? (clone $group) : $group,
@@ -55,9 +55,9 @@ class NavigationManager
         return collect($this->getNavigationItems())
             ->filter(fn (NavigationItem $item): bool => $item->isVisible())
             ->sortBy(fn (NavigationItem $item): int => $item->getSort())
-            ->groupBy(fn (NavigationItem $item): ?string => $item->getGroup())
-            ->map(function (Collection $items, ?string $groupIndex) use ($groups): NavigationGroup {
-                $parentItems = $items->groupBy(fn (NavigationItem $item): ?string => $item->getParentItem());
+            ->groupBy(fn (NavigationItem $item): string => $item->getGroup() ?? '')
+            ->map(function (Collection $items, string $groupIndex) use ($groups): NavigationGroup {
+                $parentItems = $items->groupBy(fn (NavigationItem $item): string => $item->getParentItem() ?? '');
 
                 $items = $parentItems->get('')
                     ->keyBy(fn (NavigationItem $item): string => $item->getLabel());

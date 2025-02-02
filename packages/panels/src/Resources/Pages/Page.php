@@ -2,7 +2,19 @@
 
 namespace Filament\Resources\Pages;
 
+use Closure;
 use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Clusters\Cluster;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages\Enums\SubNavigationPosition;
@@ -10,7 +22,9 @@ use Filament\Pages\Page as BasePage;
 use Filament\Panel;
 use Filament\Resources\Pages\Concerns\CanAuthorizeResourceAccess;
 use Filament\Resources\Pages\Concerns\InteractsWithParentRecord;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route as RouteFacade;
 
@@ -30,17 +44,13 @@ abstract class Page extends BasePage
     /**
      * @param  array<string, mixed>  $parameters
      */
-    public function getResourceUrl(?string $name = null, array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null): string
+    public function getResourceUrl(?string $name = null, array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = true): string
     {
         if (method_exists($this, 'getRecord')) {
             $parameters['record'] ??= $this->getRecord();
         }
 
-        if ($parentResourceRegistration = static::getResource()::getParentResourceRegistration()) {
-            $parameters[$parentResourceRegistration->getParentRouteParameterName()] ??= $this->getParentRecord();
-        }
-
-        return static::getResource()::getUrl($name, $parameters, $isAbsolute, $panel, $tenant);
+        return static::getResource()::getUrl($name, $parameters, $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
     }
 
     public static function getRouteName(?string $panel = null): string
@@ -73,15 +83,15 @@ abstract class Page extends BasePage
      */
     public static function getNavigationUrl(array $parameters = []): string
     {
-        return static::getUrl($parameters);
+        return static::getUrl($parameters, shouldGuessMissingParameters: true);
     }
 
     /**
      * @param  array<string, mixed>  $parameters
      */
-    public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null): string
+    public static function getUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = false): string
     {
-        return static::getResource()::getUrl(static::getResourcePageName(), $parameters, $isAbsolute, $panel, $tenant);
+        return static::getResource()::getUrl(static::getResourcePageName(), $parameters, $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
     }
 
     public static function getResourcePageName(): string
@@ -160,12 +170,12 @@ abstract class Page extends BasePage
 
                 if ($parentResource::hasPage('view') && $parentResource::canView($parentRecord)) {
                     $breadcrumbs = [
-                        $parentResource::getUrl('view', ['record' => $parentRecord]) => $parentRecordTitle,
+                        $parentResource::getUrl('view', ['record' => $parentRecord], shouldGuessMissingParameters: true) => $parentRecordTitle,
                         ...$breadcrumbs,
                     ];
                 } elseif ($parentResource::hasPage('edit') && $parentResource::canEdit($parentRecord)) {
                     $breadcrumbs = [
-                        $parentResource::getUrl('edit', ['record' => $parentRecord]) => $parentRecordTitle,
+                        $parentResource::getUrl('edit', ['record' => $parentRecord], shouldGuessMissingParameters: true) => $parentRecordTitle,
                         ...$breadcrumbs,
                     ];
                 } else {
@@ -178,7 +188,7 @@ abstract class Page extends BasePage
                 $breadcrumbs = [
                     $parentResource::getUrl(null, [
                         'record' => $parentRecord,
-                    ]) => $parentResource::getBreadcrumb(),
+                    ], shouldGuessMissingParameters: true) => $parentResource::getBreadcrumb(),
                     ...$breadcrumbs,
                 ];
 
@@ -257,5 +267,91 @@ abstract class Page extends BasePage
     public function getSubNavigation(): array
     {
         return [];
+    }
+
+    public function getDefaultActionAuthorizationResponse(Action $action): ?Response
+    {
+        return match (true) {
+            $action instanceof CreateAction => static::getResource()::getCreateAuthorizationResponse(),
+            $action instanceof DeleteAction => static::getResource()::getDeleteAuthorizationResponse($action->getRecord()),
+            $action instanceof EditAction => static::getResource()::getEditAuthorizationResponse($action->getRecord()),
+            $action instanceof ForceDeleteAction => static::getResource()::getForceDeleteAuthorizationResponse($action->getRecord()),
+            $action instanceof ReplicateAction => static::getResource()::getReplicateAuthorizationResponse($action->getRecord()),
+            $action instanceof RestoreAction => static::getResource()::getRestoreAuthorizationResponse($action->getRecord()),
+            $action instanceof ViewAction => static::getResource()::getViewAuthorizationResponse($action->getRecord()),
+            $action instanceof DeleteBulkAction => static::getResource()::getDeleteAnyAuthorizationResponse(),
+            $action instanceof ForceDeleteBulkAction => static::getResource()::getForceDeleteAnyAuthorizationResponse(),
+            $action instanceof RestoreBulkAction => static::getResource()::getRestoreAnyAuthorizationResponse(),
+            default => null,
+        };
+    }
+
+    public function getDefaultActionIndividualRecordAuthorizationResponseResolver(Action $action): ?Closure
+    {
+        return match (true) {
+            $action instanceof DeleteBulkAction => fn (Model $record): Response => static::getResource()::getDeleteAuthorizationResponse($record),
+            $action instanceof ForceDeleteBulkAction => fn (Model $record): Response => static::getResource()::getForceDeleteAuthorizationResponse($record),
+            $action instanceof RestoreBulkAction => fn (Model $record): Response => static::getResource()::getRestoreAuthorizationResponse($record),
+            default => null,
+        };
+    }
+
+    /**
+     * @return ?class-string<Model>
+     */
+    public function getDefaultActionModel(Action $action): ?string
+    {
+        return $this->getModel();
+    }
+
+    public function getDefaultActionModelLabel(Action $action): ?string
+    {
+        return $this->getModelLabel() ?? static::getResource()::getModelLabel();
+    }
+
+    public function getDefaultActionRelationship(Action $action): ?Relation
+    {
+        if (
+            ($action instanceof CreateAction) &&
+            ($parentRecord = $this->getParentRecord())
+        ) {
+            return static::getResource()::getParentResourceRegistration()->getRelationship($parentRecord);
+        }
+
+        return null;
+    }
+
+    public function getDefaultActionUrl(Action $action): ?string
+    {
+        if (
+            ($action instanceof CreateAction) &&
+            (static::getResource()::hasPage('create'))
+        ) {
+            return $this->getResourceUrl('create');
+        }
+
+        if (
+            ($action instanceof EditAction) &&
+            (static::getResource()::hasPage('edit'))
+        ) {
+            return $this->getResourceUrl('edit', ['record' => $action->getRecord()]);
+        }
+
+        if (
+            ($action instanceof ViewAction) &&
+            (static::getResource()::hasPage('view'))
+        ) {
+            return $this->getResourceUrl('view', ['record' => $action->getRecord()]);
+        }
+
+        return null;
+    }
+
+    /**
+     * @deprecated Override the resource's `getModelLabel()` method to configure the model label.
+     */
+    public function getModelLabel(): ?string
+    {
+        return null;
     }
 }

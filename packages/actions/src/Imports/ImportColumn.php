@@ -6,9 +6,12 @@ use Closure;
 use Exception;
 use Filament\Forms\Components\Select;
 use Filament\Support\Components\Component;
+use Filament\Support\Services\RelationshipJoiner;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -40,6 +43,8 @@ class ImportColumn extends Component
 
     protected ?Closure $fillRecordUsing = null;
 
+    protected ?Closure $saveRelationshipsUsing = null;
+
     protected ?Closure $castStateUsing = null;
 
     /**
@@ -69,7 +74,7 @@ class ImportColumn extends Component
     protected string | array | Closure | null $resolveRelationshipUsing = null;
 
     /**
-     * @var array<Model>
+     * @var array<Model | Collection>
      */
     protected array $resolvedRelatedRecords = [];
 
@@ -113,7 +118,7 @@ class ImportColumn extends Component
             ->label($this->getLabel())
             ->placeholder(__('filament-actions::import.modal.form.columns.placeholder'))
             ->required($this->isMappingRequired())
-            ->helperText($this->helperText);
+            ->belowContent($this->helperText);
     }
 
     public function name(string $name): static
@@ -230,6 +235,13 @@ class ImportColumn extends Component
 
     public function array(string | Closure | null $separator = ','): static
     {
+        $this->multiple($separator);
+
+        return $this;
+    }
+
+    public function multiple(string | Closure | null $separator = ','): static
+    {
         $this->arraySeparator = $separator;
 
         return $this;
@@ -297,6 +309,13 @@ class ImportColumn extends Component
         return $this;
     }
 
+    public function saveRelationshipsUsing(?Closure $callback): static
+    {
+        $this->saveRelationshipsUsing = $callback;
+
+        return $this;
+    }
+
     /**
      * @param  array<string, mixed>  $options
      */
@@ -336,13 +355,36 @@ class ImportColumn extends Component
 
         $relationship = $this->getRelationship();
 
-        if ($relationship) {
+        if ($relationship instanceof BelongsTo) {
             $relationship->associate($this->resolveRelatedRecord($state));
 
             return;
         }
 
+        if ($relationship) {
+            return;
+        }
+
         $this->getRecord()->{$this->getName()} = $state;
+    }
+
+    public function saveRelationships(mixed $state): void
+    {
+        if ($this->saveRelationshipsUsing) {
+            $this->evaluate($this->saveRelationshipsUsing, [
+                'state' => $state,
+            ]);
+
+            return;
+        }
+
+        $relationship = $this->getRelationship();
+
+        if (! $relationship instanceof BelongsToMany) {
+            return;
+        }
+
+        $relationship->attach($this->resolveRelatedRecords($state));
     }
 
     public function getName(): string
@@ -368,6 +410,18 @@ class ImportColumn extends Component
                     return;
                 }
 
+                if ($this->isMultiple()) {
+                    $records = $this->resolveRelatedRecords($state);
+
+                    if ($records?->count() >= count(array_filter($state, filled(...)))) {
+                        return;
+                    }
+
+                    $fail('validation.exists')->translate();
+
+                    return;
+                }
+
                 $record = $this->resolveRelatedRecord($state);
 
                 if ($record) {
@@ -389,7 +443,7 @@ class ImportColumn extends Component
 
         /** @var BelongsTo $relationship */
         $relationship = Relation::noConstraints(fn () => $this->getRelationship());
-        $relationshipQuery = $relationship->getQuery();
+        $relationshipQuery = app(RelationshipJoiner::class)->prepareQueryForNoConstraints($relationship);
 
         if (blank($this->resolveRelationshipUsing)) {
             return $this->resolvedRelatedRecords[$state] = $relationshipQuery
@@ -432,6 +486,61 @@ class ImportColumn extends Component
     }
 
     /**
+     * @param  array<mixed>  $state
+     */
+    public function resolveRelatedRecords(array $state): ?Collection
+    {
+        $encodedState = json_encode($state);
+
+        if (array_key_exists($encodedState, $this->resolvedRelatedRecords)) {
+            return $this->resolvedRelatedRecords[$encodedState];
+        }
+
+        /** @var BelongsToMany $relationship */
+        $relationship = Relation::noConstraints(fn () => $this->getRelationship());
+        $relationshipQuery = app(RelationshipJoiner::class)->prepareQueryForNoConstraints($relationship);
+
+        if (blank($this->resolveRelationshipUsing)) {
+            return $this->resolvedRelatedRecords[$encodedState] = $relationshipQuery
+                ->whereIn($relationship->getQualifiedRelatedKeyName(), $state)
+                ->get();
+        }
+
+        $resolveUsing = $this->evaluate($this->resolveRelationshipUsing, [
+            'state' => $state,
+        ]);
+
+        if (blank($resolveUsing)) {
+            return $this->resolvedRelatedRecords[$encodedState] = null;
+        }
+
+        if ($resolveUsing instanceof Collection) {
+            return $this->resolvedRelatedRecords[$encodedState] = $resolveUsing;
+        }
+
+        if (! (is_array($resolveUsing) || is_string($resolveUsing))) {
+            return null;
+        }
+
+        $resolveUsing = Arr::wrap($resolveUsing);
+
+        $isFirst = true;
+
+        foreach ($resolveUsing as $columnToResolve) {
+            $whereClause = $isFirst ? 'whereIn' : 'orWhereIn';
+
+            $relationshipQuery->{$whereClause}(
+                $columnToResolve,
+                $state,
+            );
+
+            $isFirst = false;
+        }
+
+        return $this->resolvedRelatedRecords[$encodedState] = $relationshipQuery->get();
+    }
+
+    /**
      * @return array<mixed>
      */
     public function getNestedRecursiveDataValidationRules(): array
@@ -464,7 +573,7 @@ class ImportColumn extends Component
         return $this->evaluate($this->arraySeparator);
     }
 
-    public function isArray(): bool
+    public function isMultiple(): bool
     {
         return filled($this->getArraySeparator());
     }
@@ -501,7 +610,7 @@ class ImportColumn extends Component
         return $this;
     }
 
-    public function getRelationship(): ?BelongsTo
+    public function getRelationship(): BelongsTo | BelongsToMany | null
     {
         $name = $this->getRelationshipName();
 

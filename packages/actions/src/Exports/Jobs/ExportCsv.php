@@ -11,6 +11,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -92,22 +93,32 @@ class ExportCsv implements ShouldQueue
             $processedRows++;
         }
 
-        $this->export->refresh();
-
-        $exportProcessedRows = $this->export->processed_rows + $processedRows;
-        $this->export->processed_rows = ($exportProcessedRows < $this->export->total_rows) ?
-            $exportProcessedRows :
-            $this->export->total_rows;
-
-        $exportSuccessfulRows = $this->export->successful_rows + $successfulRows;
-        $this->export->successful_rows = ($exportSuccessfulRows < $this->export->total_rows) ?
-            $exportSuccessfulRows :
-            $this->export->total_rows;
-
         $filePath = $this->export->getFileDirectory() . DIRECTORY_SEPARATOR . str_pad(strval($this->page), 16, '0', STR_PAD_LEFT) . '.csv';
 
-        DB::transaction(function () use ($csv, $filePath) {
-            $this->export->save();
+        DB::transaction(function () use ($csv, $filePath, $processedRows, $successfulRows) {
+            $this->export::query()
+                ->whereKey($this->export->getKey())
+                ->lockForUpdate()
+                ->update([
+                    'processed_rows' => new Expression('processed_rows + ' . $processedRows),
+                    'successful_rows' => new Expression('successful_rows + ' . $successfulRows),
+                ]);
+
+            $this->export::query()
+                ->whereKey($this->export->getKey())
+                ->whereColumn('processed_rows', '>', 'total_rows')
+                ->lockForUpdate()
+                ->update([
+                    'processed_rows' => new Expression('total_rows'),
+                ]);
+
+            $this->export::query()
+                ->whereKey($this->export->getKey())
+                ->whereColumn('successful_rows', '>', 'total_rows')
+                ->lockForUpdate()
+                ->update([
+                    'successful_rows' => new Expression('total_rows'),
+                ]);
 
             $this->export->getFileDisk()->put($filePath, $csv->toString(), Filesystem::VISIBILITY_PRIVATE);
         });

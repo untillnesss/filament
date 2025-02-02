@@ -1,5 +1,8 @@
 @php
-    $gridDirection = $getGridDirection() ?? 'column';
+    use Filament\Support\Enums\GridDirection;
+    use Illuminate\View\ComponentAttributeBag;
+
+    $gridDirection = $getGridDirection() ?? GridDirection::Column;
     $hasInlineLabel = $hasInlineLabel();
     $id = $getId();
     $isDisabled = $isDisabled();
@@ -22,24 +25,16 @@
         {{ $getLabel() }}
     </x-slot>
 
-    <x-filament::grid
-        :default="$getColumns('default')"
-        :sm="$getColumns('sm')"
-        :md="$getColumns('md')"
-        :lg="$getColumns('lg')"
-        :xl="$getColumns('xl')"
-        :two-xl="$getColumns('2xl')"
-        :is-grid="! $isInline"
-        :direction="$gridDirection"
-        :attributes="
-            \Filament\Support\prepare_inherited_attributes($attributes)
-                ->merge($getExtraAttributes(), escape: false)
+    <div
+        {{
+            $getExtraAttributeBag()
+                ->when(! $isInline, fn (ComponentAttributeBag $attributes) => $attributes->grid($getColumns(), $gridDirection))
                 ->class([
-                    'fi-fo-radio gap-3',
-                    '-mt-3' => (! $isInline) && ($gridDirection === 'column'),
+                    'fi-fo-toggle-buttons gap-3',
+                    '-mt-3' => (! $isInline) && ($gridDirection === GridDirection::Column),
                     'flex flex-wrap' => $isInline,
                 ])
-        "
+        }}
     >
         @foreach ($getOptions() as $value => $label)
             @php
@@ -49,7 +44,7 @@
 
             <div
                 @class([
-                    'break-inside-avoid pt-3' => (! $isInline) && ($gridDirection === 'column'),
+                    'break-inside-avoid pt-3' => (! $isInline) && ($gridDirection === GridDirection::Column),
                 ])
             >
                 <input
@@ -76,5 +71,5 @@
                 </x-filament::button>
             </div>
         @endforeach
-    </x-filament::grid>
+    </div>
 </x-dynamic-component>

@@ -33,13 +33,13 @@ From a UX perspective, this solution is only suitable if your related model only
 
 > These are compatible with `BelongsTo`, `HasOne` and `MorphOne` relationships.
 
-All layout form components ([Grid](../../schema/layout/grid#grid-component), [Section](../../schema/layout/section), [Fieldset](../../schema/layout/fieldset), etc.) have a [`relationship()` method](../../forms/advanced#saving-data-to-relationships). When you use this, all fields within that layout are saved to the related model instead of the owner's model:
+All layout form components ([Grid](../../schemas/layout/grid#grid-component), [Section](../../schemas/layout/section), [Fieldset](../../schemas/layout/fieldset), etc.) have a [`relationship()` method](../../forms/advanced#saving-data-to-relationships). When you use this, all fields within that layout are saved to the related model instead of the owner's model:
 
 ```php
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Schema\Components\Fieldset;
+use Filament\Schemas\Components\Fieldset;
 
 Fieldset::make('Metadata')
     ->relationship('metadata')
@@ -77,7 +77,7 @@ This will create a `CategoryResource/RelationManagers/PostsRelationManager.php` 
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -199,7 +199,7 @@ For `BelongsToMany` and `MorphToMany` relationships, you may also add pivot tabl
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {
@@ -226,7 +226,7 @@ For `BelongsToMany` and `MorphToMany` relationships, you may also edit pivot tab
 
 ```php
 use Filament\Forms;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {
@@ -597,7 +597,7 @@ However, if you're inside a `static` method like `form()` or `table()`, `$this` 
 ```php
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 
 public function form(Schema $form): Schema
 {
@@ -662,14 +662,17 @@ public function hasCombinedRelationManagerTabsWithContent(): bool
 }
 ```
 
-### Setting an icon for the form tab
+### Customizing the content tab
 
-On the Edit or View page class, override the `getContentTabIcon()` method:
+On the Edit or View page class, override the `getContentTabComponent()` method, and use any [Tab](../../schemas/layout/tabs) customization methods:
 
 ```php
-public function getContentTabIcon(): ?string
+use Filament\Schemas\Components\Tabs\Tab;
+
+public function getContentTabComponent(): Tab
 {
-    return 'heroicon-m-cog';
+    return Tab::make('Settings')
+        ->icon('heroicon-m-cog');
 }
 ```
 
@@ -686,91 +689,39 @@ public function getContentTabPosition(): ?ContentTabPosition
 }
 ```
 
-## Adding badges to relation manager tabs
+## Customizing relation manager tabs
 
-You can add a badge to a relation manager tab by setting the `$badge` property:
-
-```php
-protected static ?string $badge = 'new';
-```
-
-Alternatively, you can override the `getBadge()` method:
+To customize the tab for a relation manager, override the `getTabComponent()` method, and use any [Tab](../../schemas/layout/tabs) customization methods:
 
 ```php
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Model;
 
-public static function getBadge(Model $ownerRecord, string $pageClass): ?string
+public static function getTabComponent(Model $ownerRecord, string $pageClass): Tab
 {
-    return static::$badge;
+    return Tab::make('Blog posts')
+        ->badge($ownerRecord->posts()->count())
+        ->badgeColor('info')
+        ->badgeTooltip('The number of posts in this category')
+        ->icon('heroicon-m-document-text');
 }
 ```
 
-Or, if you are using a [relation group](#grouping-relation-managers), you can use the `badge()` method:
+If you are using a [relation group](#grouping-relation-managers), you can use the `tab()` method:
 
 ```php
 use Filament\Resources\RelationManagers\RelationGroup;
-
-RelationGroup::make('Contacts', [
-    // ...
-])->badge('new');
-```
-
-### Changing the color of relation manager tab badges
-
-If a badge value is defined, it will display using the primary color by default. To style the badge contextually, set the `$badgeColor` to be a [registered color](../../styling/colors):
-
-```php
-protected static ?string $badgeColor = 'danger';
-```
-
-Alternatively, you can override the `getBadgeColor()` method:
-
-```php
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Model;
 
-public static function getBadgeColor(Model $ownerRecord, string $pageClass): ?string
-{
-    return 'danger';
-}
-```
-
-Or, if you are using a [relation group](#grouping-relation-managers), you can use the `badgeColor()` method:
-
-```php
-use Filament\Resources\RelationManagers\RelationGroup;
-
 RelationGroup::make('Contacts', [
     // ...
-])->badgeColor('danger');
-```
-
-### Adding a tooltip to relation manager tab badges
-
-If a badge value is defined, you can add a tooltip to it by setting the `$badgeTooltip` property:
-
-```php
-protected static ?string $badgeTooltip = 'There are new posts';
-```
-
-Alternatively, you can override the `getBadgeTooltip()` method:
-
-```php
-use Illuminate\Database\Eloquent\Model;
-
-public static function getBadgeTooltip(Model $ownerRecord, string $pageClass): ?string
-{
-    return 'There are new posts';
-}
-```
-
-Or, if you are using a [relation group](#grouping-relation-managers), you can use the `badgeTooltip()` method:
-
-```php
-use Filament\Resources\RelationManagers\RelationGroup;
-
-RelationGroup::make('Contacts', [
-    // ...
-])->badgeTooltip('There are new posts');
+])
+    ->tab(fn (Model $ownerRecord): Tab => Tab::make('Blog posts')
+        ->badge($ownerRecord->posts()->count())
+        ->badgeColor('info')
+        ->badgeTooltip('The number of posts in this category')
+        ->icon('heroicon-m-document-text'));
 ```
 
 ## Sharing a resource's form and table with a relation manager
@@ -779,7 +730,7 @@ You may decide that you want a resource's form and table to be identical to a re
 
 ```php
 use App\Filament\Resources\Blog\PostResource;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
 public function form(Schema $form): Schema
@@ -993,7 +944,7 @@ Now, you can customize the page in exactly the same way as a relation manager, w
 If you're using [resource sub-navigation](overview#resource-sub-navigation), you can register this page as normal in `getRecordSubNavigation()` of the resource:
 
 ```php
-use App\Filament\Resources\CustomerResource\Pages;
+use App\Filament\Resources\Customers\Pages;
 use Filament\Resources\Pages\Page;
 
 public static function getRecordSubNavigation(Page $page): array

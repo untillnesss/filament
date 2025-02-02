@@ -79,6 +79,21 @@ Repeater::make('members')
     ->addActionLabel('Add member')
 ```
 
+### Aligning the add action button
+
+By default, the add action is aligned in the center. You may adjust this using the `addActionAlignment()` method, passing an `Alignment` option of `Alignment::Start` or `Alignment::End`:
+
+```php
+use Filament\Forms\Components\Repeater;
+use Filament\Support\Enums\Alignment;
+
+Repeater::make('members')
+    ->schema([
+        // ...
+    ])
+    ->addActionAlignment(Alignment::Start)
+```
+
 ### Preventing the user from adding items
 
 You may prevent the user from adding items to the repeater using the `addable(false)` method:
@@ -386,7 +401,7 @@ Repeater::make('qualifications')
 
 <AutoScreenshot name="forms/fields/repeater/grid" alt="Repeater with a 2 column grid of items" version="4.x" />
 
-This method accepts the same options as the `columns()` method of the [grid](../../schema/layout/grid). This allows you to responsively customize the number of grid columns at various breakpoints.
+This method accepts the same options as the `columns()` method of the [grid](../../schemas/layout/grid). This allows you to responsively customize the number of grid columns at various breakpoints.
 
 ## Adding a label to repeater items based on their content
 
@@ -565,6 +580,23 @@ Repeater::make('members')
 
 This method will automatically enable the `distinct()` and `live()` methods on the field.
 
+In case you want to add another condition to [disable options](../select#disabling-specific-options) with, you can chain `disableOptionWhen()` with the `merge: true` argument:
+
+```php
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+
+Repeater::make('members')
+    ->schema([
+        Select::make('role')
+            ->options([
+                // ...
+            ])
+            ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+            ->disableOptionWhen(fn (string $value): bool => $value === 'super_admin', merge: true),
+    ])
+```
+
 ## Customizing the repeater item actions
 
 This field uses action objects for easy customization of buttons within it. You can customize these buttons by passing a function to an action registration method. The function has access to the `$action` object, which you can use to [customize it](../../actions/trigger-button). The following methods are available to customize the actions:
@@ -616,7 +648,7 @@ Repeater::make('members')
 
 ### Adding extra item actions to a repeater
 
-You may add new [action buttons](../../schema/actions) to the header of each repeater item by passing `Action` objects into `extraItemActions()`:
+You may add new [action buttons](../../schemas/actions) to the header of each repeater item by passing `Action` objects into `extraItemActions()`:
 
 ```php
 use Filament\Actions\Action;
@@ -694,7 +726,7 @@ livewire(EditPost::class, ['record' => $post])
 $undoRepeaterFake();
 ```
 
-You may also find it useful to access test the number of items in a repeater by passing a function to the `assertFormSet()` method:
+You may also find it useful to test the number of items in a repeater by passing a function to the `assertFormSet()` method:
 
 ```php
 use Filament\Forms\Components\Repeater;

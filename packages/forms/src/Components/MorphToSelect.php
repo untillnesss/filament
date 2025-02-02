@@ -4,10 +4,11 @@ namespace Filament\Forms\Components;
 
 use Closure;
 use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\MorphToSelect\Type;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Components\Utilities\Get;
-use Filament\Schema\Components\Utilities\Set;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class MorphToSelect extends Component
@@ -60,9 +61,9 @@ class MorphToSelect extends Component
     }
 
     /**
-     * @return array<Component>
+     * @return array<Component | Action | ActionGroup>
      */
-    public function getChildComponents(): array
+    public function getDefaultChildComponents(): array
     {
         $relationship = $this->getRelationship();
         $typeColumn = $relationship->getMorphType();
@@ -71,8 +72,10 @@ class MorphToSelect extends Component
         $types = $this->getTypes();
         $isRequired = $this->isRequired();
 
+        $get = $this->makeGetUtility();
+
         /** @var ?Type $selectedType */
-        $selectedType = $types[$this->evaluate(fn (Get $get): ?string => $get($typeColumn))] ?? null;
+        $selectedType = $types[$get($typeColumn)] ?? null;
 
         return [
             Select::make($typeColumn)

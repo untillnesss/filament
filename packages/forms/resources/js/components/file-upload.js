@@ -57,6 +57,7 @@ export default function fileUploadFormComponent({
     maxFiles,
     maxSize,
     minSize,
+    maxParallelUploads,
     panelAspectRatio,
     panelLayout,
     placeholder,
@@ -116,11 +117,13 @@ export default function fileUploadFormComponent({
                 imageResizeTargetWidth,
                 imageResizeMode,
                 imageResizeUpscale,
+                imageTransformOutputStripImageHead: false,
                 itemInsertLocation: shouldAppendFiles ? 'after' : 'before',
                 ...(placeholder && { labelIdle: placeholder }),
                 maxFiles,
                 maxFileSize: maxSize,
                 minFileSize: minSize,
+                ...(maxParallelUploads && { maxParallelUploads }),
                 styleButtonProcessItemPosition: uploadButtonPosition,
                 styleButtonRemoveItemPosition: removeUploadedFileButtonPosition,
                 styleItemPanelAspectRatio: itemPanelAspectRatio,
@@ -247,7 +250,7 @@ export default function fileUploadFormComponent({
                     .map((file) =>
                         file.source instanceof File
                             ? file.serverId
-                            : this.uploadedFileIndex[file.source] ?? null,
+                            : (this.uploadedFileIndex[file.source] ?? null),
                     ) // file.serverId is null for a file that is not yet uploaded
                     .filter((fileKey) => fileKey)
 
@@ -744,6 +747,7 @@ export default function fileUploadFormComponent({
     }
 }
 
+import am from 'filepond/locale/am-et'
 import ar from 'filepond/locale/ar-ar'
 import ca from 'filepond/locale/ca-ca'
 import ckb from 'filepond/locale/ku-ckb'
@@ -759,8 +763,8 @@ import hu from 'filepond/locale/hu-hu'
 import id from 'filepond/locale/id-id'
 import it from 'filepond/locale/it-it'
 import km from 'filepond/locale/km-km'
+import nb from 'filepond/locale/no_nb'
 import nl from 'filepond/locale/nl-nl'
-import no from 'filepond/locale/no_nb'
 import pl from 'filepond/locale/pl-pl'
 import pt from 'filepond/locale/pt-pt'
 import pt_BR from 'filepond/locale/pt-br'
@@ -774,6 +778,7 @@ import zh_CN from 'filepond/locale/zh-cn'
 import zh_TW from 'filepond/locale/zh-tw'
 
 const locales = {
+    am,
     ar,
     ca,
     ckb,
@@ -789,8 +794,8 @@ const locales = {
     id,
     it,
     km,
+    nb,
     nl,
-    no,
     pl,
     pt,
     pt_BR,

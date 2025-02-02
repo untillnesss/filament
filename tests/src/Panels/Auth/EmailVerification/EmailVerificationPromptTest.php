@@ -1,9 +1,9 @@
 <?php
 
+use Filament\Auth\Notifications\VerifyEmail;
+use Filament\Auth\Pages\EmailVerification\EmailVerificationPrompt;
 use Filament\Facades\Filament;
-use Filament\Notifications\Auth\VerifyEmail;
-use Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
-use Filament\Tests\Models\User;
+use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Facades\Notification;
 
@@ -25,7 +25,7 @@ it('can render page', function () {
 });
 
 it('can render page with a custom slug', function () {
-    Filament::setCurrentPanel(Filament::getPanel('slugs'));
+    Filament::setCurrentPanel('slugs');
 
     expect(Filament::getEmailVerificationPromptUrl())->toEndWith('/email-verification-test/prompt-test');
 

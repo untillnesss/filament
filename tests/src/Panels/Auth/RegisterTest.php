@@ -1,10 +1,10 @@
 <?php
 
-use Filament\Events\Auth\Registered;
+use Filament\Auth\Events\Registered;
+use Filament\Auth\Notifications\VerifyEmail;
+use Filament\Auth\Pages\Register;
 use Filament\Facades\Filament;
-use Filament\Notifications\Auth\VerifyEmail;
-use Filament\Pages\Auth\Register;
-use Filament\Tests\Models\User;
+use Filament\Tests\Fixtures\Models\User;
 use Filament\Tests\TestCase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
@@ -22,7 +22,7 @@ it('can render page', function () {
 });
 
 it('can render page with a custom slug', function () {
-    Filament::setCurrentPanel(Filament::getPanel('slugs'));
+    Filament::setCurrentPanel('slugs');
 
     expect(Filament::getRegistrationUrl())->toEndWith('/register-test');
 
@@ -36,7 +36,7 @@ it('can register', function () {
 
     $this->assertGuest();
 
-    Filament::getCurrentPanel()->requiresEmailVerification(false);
+    Filament::getCurrentOrDefaultPanel()->requiresEmailVerification(false);
 
     $userToRegister = User::factory()->make();
 
@@ -67,7 +67,7 @@ it('can register and redirect user to their intended URL', function () {
 
     session()->put('url.intended', $intendedUrl = Str::random());
 
-    Filament::getCurrentPanel()->requiresEmailVerification(false);
+    Filament::getCurrentOrDefaultPanel()->requiresEmailVerification(false);
 
     $userToRegister = User::factory()->make();
 

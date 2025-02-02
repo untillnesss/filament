@@ -12,6 +12,7 @@ use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -93,29 +94,42 @@ class ImportCsv implements ShouldQueue
                 $processedRows++;
             }
 
-            $this->import->refresh();
+            $this->import::query()
+                ->whereKey($this->import)
+                ->lockForUpdate()
+                ->update([
+                    'processed_rows' => new Expression('processed_rows + ' . $processedRows),
+                    'successful_rows' => new Expression('successful_rows + ' . $successfulRows),
+                ]);
 
-            $importProcessedRows = $this->import->processed_rows + $processedRows;
-            $this->import->processed_rows = ($importProcessedRows < $this->import->total_rows) ?
-                $importProcessedRows :
-                $this->import->total_rows;
+            $this->import::query()
+                ->whereKey($this->import)
+                ->whereColumn('processed_rows', '>', 'total_rows')
+                ->lockForUpdate()
+                ->update([
+                    'processed_rows' => new Expression('total_rows'),
+                ]);
 
-            $importSuccessfulRows = $this->import->successful_rows + $successfulRows;
-            $this->import->successful_rows = ($importSuccessfulRows < $this->import->total_rows) ?
-                $importSuccessfulRows :
-                $this->import->total_rows;
+            $this->import::query()
+                ->whereKey($this->import)
+                ->whereColumn('successful_rows', '>', 'total_rows')
+                ->lockForUpdate()
+                ->update([
+                    'successful_rows' => new Expression('total_rows'),
+                ]);
 
-            $this->import->save();
             $this->import->failedRows()->createMany($this->failedRows);
-
-            event(new ImportChunkProcessed(
-                $this->import,
-                $this->columnMap,
-                $this->options,
-                $processedRows,
-                $successfulRows,
-            ));
         });
+
+        $this->import->refresh();
+
+        event(new ImportChunkProcessed(
+            $this->import,
+            $this->columnMap,
+            $this->options,
+            $processedRows,
+            $successfulRows,
+        ));
     }
 
     public function retryUntil(): ?CarbonInterface

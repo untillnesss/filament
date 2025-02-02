@@ -23,6 +23,7 @@ class TablesServiceProvider extends PackageServiceProvider
             ->name('filament-tables')
             ->hasCommands([
                 Commands\MakeColumnCommand::class,
+                Commands\MakeLivewireTableCommand::class,
                 Commands\MakeTableCommand::class,
             ])
             ->hasTranslations()
@@ -32,6 +33,10 @@ class TablesServiceProvider extends PackageServiceProvider
     public function packageBooted(): void
     {
         FilamentAsset::register([
+            AlpineComponent::make('columns/checkbox', __DIR__ . '/../dist/components/columns/checkbox.js'),
+            AlpineComponent::make('columns/select', __DIR__ . '/../dist/components/columns/select.js'),
+            AlpineComponent::make('columns/text-input', __DIR__ . '/../dist/components/columns/text-input.js'),
+            AlpineComponent::make('columns/toggle', __DIR__ . '/../dist/components/columns/toggle.js'),
             AlpineComponent::make('table', __DIR__ . '/../dist/components/table.js'),
         ], 'filament/tables');
 

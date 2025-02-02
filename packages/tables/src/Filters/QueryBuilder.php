@@ -5,8 +5,8 @@ namespace Filament\Tables\Filters;
 use Closure;
 use Exception;
 use Filament\Forms\Components\Repeater;
-use Filament\Schema\Components\Component;
-use Filament\Schema\Schema;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Schema;
 use Filament\Tables\Filters\QueryBuilder\Concerns\HasConstraints;
 use Filament\Tables\Filters\QueryBuilder\Forms\Components\RuleBuilder;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,7 +17,7 @@ class QueryBuilder extends BaseFilter
     use HasConstraints;
 
     /**
-     * @var array<string, int | string | null> | null
+     * @var array<string, ?int> | null
      */
     protected ?array $constraintPickerColumns = [];
 
@@ -161,9 +161,9 @@ class QueryBuilder extends BaseFilter
     }
 
     /**
-     * @param  array<string, int | string | null> | int | string | null  $columns
+     * @param  array<string, ?int> | int | null  $columns
      */
-    public function constraintPickerColumns(array | int | string | null $columns = 2): static
+    public function constraintPickerColumns(array | int | null $columns = 2): static
     {
         if (! is_array($columns)) {
             $columns = [
@@ -180,9 +180,9 @@ class QueryBuilder extends BaseFilter
     }
 
     /**
-     * @return array<string, int | string | null> | int | string | null
+     * @return array<string, ?int> | int | null
      */
-    public function getConstraintPickerColumns(?string $breakpoint = null): array | int | string | null
+    public function getConstraintPickerColumns(?string $breakpoint = null): array | int | null
     {
         $columns = $this->constraintPickerColumns ?? [
             'default' => 1,

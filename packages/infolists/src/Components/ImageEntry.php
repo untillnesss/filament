@@ -19,7 +19,9 @@ class ImageEntry extends Entry
 
     protected string | Closure | null $disk = null;
 
-    protected int | string | Closure | null $height = null;
+    protected int | string | Closure | null $imageHeight = null;
+
+    protected int | string | Closure | null $imageWidth = null;
 
     protected bool | Closure $isCircular = false;
 
@@ -59,9 +61,37 @@ class ImageEntry extends Entry
         return $this;
     }
 
+    public function imageHeight(int | string | Closure | null $height): static
+    {
+        $this->imageHeight = $height;
+
+        return $this;
+    }
+
+    /**
+     * @deprecated Use `imageHeight()` instead.
+     */
     public function height(int | string | Closure | null $height): static
     {
-        $this->height = $height;
+        $this->imageHeight($height);
+
+        return $this;
+    }
+
+    public function imageSize(int | string | Closure $size): static
+    {
+        $this->imageWidth($size);
+        $this->imageHeight($size);
+
+        return $this;
+    }
+
+    /**
+     * @deprecated Use `imageSize()` instead.
+     */
+    public function size(int | string | Closure $size): static
+    {
+        $this->imageSize($size);
 
         return $this;
     }
@@ -80,14 +110,6 @@ class ImageEntry extends Entry
         return $this;
     }
 
-    public function size(int | string | Closure $size): static
-    {
-        $this->width($size);
-        $this->height($size);
-
-        return $this;
-    }
-
     public function visibility(string | Closure $visibility): static
     {
         $this->visibility = $visibility;
@@ -95,9 +117,19 @@ class ImageEntry extends Entry
         return $this;
     }
 
+    public function imageWidth(int | string | Closure | null $width): static
+    {
+        $this->imageWidth = $width;
+
+        return $this;
+    }
+
+    /**
+     * @deprecated Use `imageWidth()` instead.
+     */
     public function width(int | string | Closure | null $width): static
     {
-        $this->width = $width;
+        $this->imageWidth($width);
 
         return $this;
     }
@@ -112,9 +144,9 @@ class ImageEntry extends Entry
         return $this->evaluate($this->disk) ?? config('filament.default_filesystem_disk');
     }
 
-    public function getHeight(): ?string
+    public function getImageHeight(): ?string
     {
-        $height = $this->evaluate($this->height);
+        $height = $this->evaluate($this->imageHeight);
 
         if ($height === null) {
             return null;
@@ -125,6 +157,14 @@ class ImageEntry extends Entry
         }
 
         return $height;
+    }
+
+    /**
+     * @deprecated Use `getImageHeight()` instead.
+     */
+    public function getHeight(): ?string
+    {
+        return $this->getImageHeight();
     }
 
     public function defaultImageUrl(string | Closure | null $url): static
@@ -177,9 +217,9 @@ class ImageEntry extends Entry
         return $this->evaluate($this->visibility);
     }
 
-    public function getWidth(): ?string
+    public function getImageWidth(): ?string
     {
-        $width = $this->evaluate($this->width);
+        $width = $this->evaluate($this->imageWidth);
 
         if ($width === null) {
             return null;
@@ -190,6 +230,14 @@ class ImageEntry extends Entry
         }
 
         return $width;
+    }
+
+    /**
+     * @deprecated Use `getImageWidth()` instead.
+     */
+    public function getWidth(): ?string
+    {
+        return $this->getImageWidth();
     }
 
     public function isCircular(): bool

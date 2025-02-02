@@ -6,16 +6,18 @@ use Closure;
 use Exception;
 use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\CanGrow;
+use Filament\Support\Concerns\CanSpanColumns;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Columns\Concerns\BelongsToLayout;
 use Filament\Tables\Columns\Concerns\BelongsToTable;
 use Filament\Tables\Columns\Concerns\CanBeHidden;
-use Filament\Tables\Columns\Concerns\CanSpanColumns;
 use Filament\Tables\Columns\Concerns\HasRecord;
 use Filament\Tables\Columns\Concerns\HasRowLoopObject;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
+use Illuminate\View\ComponentAttributeBag;
 
 class Component extends ViewComponent
 {
@@ -157,5 +159,31 @@ class Component extends ViewComponent
             Model::class, $record::class => [$record],
             default => parent::resolveDefaultClosureDependencyForEvaluationByType($parameterType),
         };
+    }
+
+    public function renderInLayout(): ?HtmlString
+    {
+        if ($this->isHidden()) {
+            return null;
+        }
+
+        $attributes = (new ComponentAttributeBag)
+            ->gridColumn(
+                $this->getColumnSpan(),
+                $this->getColumnStart(),
+            )
+            ->class([
+                'fi-growable' => $this->canGrow(),
+                (filled($hiddenFrom = $this->getHiddenFrom()) ? "{$hiddenFrom}:fi-hidden" : ''),
+                (filled($visibleFrom = $this->getVisibleFrom()) ? "{$visibleFrom}:fi-visible" : ''),
+            ]);
+
+        ob_start(); ?>
+
+        <div <?= $attributes->toHtml() ?>>
+            <?= $this->toHtml() ?>
+        </div>
+
+        <?php return new HtmlString(ob_get_clean());
     }
 }

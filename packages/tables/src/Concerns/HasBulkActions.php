@@ -5,7 +5,7 @@ namespace Filament\Tables\Concerns;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
-use Filament\Schema\Schema;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -20,8 +20,6 @@ trait HasBulkActions
     public array $selectedTableRecords = [];
 
     protected Collection $cachedSelectedTableRecords;
-
-    protected function configureTableBulkAction(BulkAction $action): void {}
 
     /**
      * @deprecated Use the `callMountedAction()` method instead.
@@ -198,7 +196,7 @@ trait HasBulkActions
         $table = $this->getTable();
 
         if (
-            $shouldFetchSelectedRecords ||
+            (! $shouldFetchSelectedRecords) ||
             (! ($table->getRelationship() instanceof BelongsToMany && $table->allowsDuplicates()))
         ) {
             if (! $table->hasQuery()) {

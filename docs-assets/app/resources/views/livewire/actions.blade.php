@@ -84,7 +84,7 @@
                     \Filament\Actions\Action::make('delete'),
                 ]"
                 label="More actions"
-                icon="heroicon-m-ellipsis-vertical"
+                :icon="\Filament\Support\Icons\Heroicon::EllipsisVertical"
                 size="sm"
                 color="primary"
                 button
