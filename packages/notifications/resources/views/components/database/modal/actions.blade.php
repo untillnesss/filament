@@ -1,12 +1,17 @@
 @props([
     'notifications',
     'unreadNotificationsCount',
+    'clearNotificationsAction',
     'markAllNotificationsAsReadAction',
 ])
 
 <div {{ $attributes->class('mt-2 flex gap-x-3') }}>
-    @if ($unreadNotificationsCount && $markAllNotificationsAsReadAction)
-        {{ ($markAllNotificationsAsReadAction)->isVisible() ? $markAllNotificationsAsReadAction : '' }}
+    @if ($unreadNotificationsCount && $markAllNotificationsAsReadAction?->isVisible())
+        {{ $markAllNotificationsAsReadAction }}
+    @endif
+
+    @if ($clearNotificationsAction?->isVisible())
+        {{ $clearNotificationsAction }}
     @endif
 
     <x-filament::link

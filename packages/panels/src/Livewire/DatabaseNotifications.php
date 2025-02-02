@@ -2,7 +2,6 @@
 
 namespace Filament\Livewire;
 
-use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Notifications\Livewire\DatabaseNotifications as BaseComponent;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -24,10 +23,5 @@ class DatabaseNotifications extends BaseComponent
     public function getTrigger(): View
     {
         return view('filament-panels::components.topbar.database-notifications-trigger');
-    }
-
-    public function markAllNotificationsAsReadAction(): Action
-    {
-        return Filament::getDatabaseNotificationsMarkAllAsReadAction();
     }
 }

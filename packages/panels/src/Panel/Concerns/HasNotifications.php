@@ -3,7 +3,7 @@
 namespace Filament\Panel\Concerns;
 
 use Closure;
-use Filament\Actions\Action;
+use Filament\Livewire\DatabaseNotifications;
 
 trait HasNotifications
 {
@@ -11,13 +11,22 @@ trait HasNotifications
 
     protected bool | Closure $hasLazyLoadedDatabaseNotifications = true;
 
+    protected string | Closure | null $databaseNotificationsLivewireComponent = null;
+
     protected string | Closure | null $databaseNotificationsPolling = '30s';
 
-    protected ?Closure $modifyDatabaseNotificationsMarkAllAsReadUsing = null;
-    public function databaseNotifications(bool | Closure $condition = true, bool | Closure $isLazy = true): static
+    public function databaseNotifications(bool | Closure $condition = true, string | Closure | null $livewireComponent = null, bool | Closure $isLazy = true): static
     {
         $this->hasDatabaseNotifications = $condition;
+        $this->databaseNotificationsLivewireComponent($livewireComponent);
         $this->lazyLoadedDatabaseNotifications($isLazy);
+
+        return $this;
+    }
+
+    public function databaseNotificationsLivewireComponent(string | Closure | null $livewireComponent): static
+    {
+        $this->databaseNotificationsLivewireComponent = $livewireComponent;
 
         return $this;
     }
@@ -36,13 +45,6 @@ trait HasNotifications
         return $this;
     }
 
-    public function databaseNotificationsMarkAllAsReadAction(?Closure $callback): static
-    {
-        $this->modifyDatabaseNotificationsMarkAllAsReadUsing = $callback;
-
-        return $this;
-    }
-
     public function hasDatabaseNotifications(): bool
     {
         return (bool) $this->evaluate($this->hasDatabaseNotifications);
@@ -53,25 +55,13 @@ trait HasNotifications
         return (bool) $this->evaluate($this->hasLazyLoadedDatabaseNotifications);
     }
 
+    public function getDatabaseNotificationsLivewireComponent(): string
+    {
+        return $this->evaluate($this->databaseNotificationsLivewireComponent) ?? DatabaseNotifications::class;
+    }
+
     public function getDatabaseNotificationsPollingInterval(): ?string
     {
         return $this->evaluate($this->databaseNotificationsPolling);
-    }
-
-    public function getDatabaseNotificationsMarkAllAsReadAction(): Action
-    {
-        $action = Action::make('markAllNotificationsAsRead')
-            ->link()
-            ->label(__('filament-notifications::database.modal.actions.mark_all_as_read.label'))
-            ->extraAttributes(['tabindex' => '-1'])
-            ->action('markAllNotificationsAsRead');
-
-        if ($this->modifyDatabaseNotificationsMarkAllAsReadUsing) {
-            $action = $this->evaluate($this->modifyDatabaseNotificationsMarkAllAsReadUsing, [
-                'action' => $action,
-            ]) ?? $action;
-        }
-
-        return $action;
     }
 }

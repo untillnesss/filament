@@ -35,8 +35,6 @@ class DatabaseNotifications extends Component implements HasActions, HasForms
 
     public static ?string $authGuard = null;
 
-    public static ?Action $markAllNotificationsAsReadAction = null;
-
     #[On('databaseNotificationsSent')]
     public function refresh(): void {}
 
@@ -124,15 +122,22 @@ class DatabaseNotifications extends Component implements HasActions, HasForms
 
     public function markAllNotificationsAsReadAction(): Action
     {
-        if ($action = static::$markAllNotificationsAsReadAction) {
-            return $action;
-        }
-
         return Action::make('markAllNotificationsAsRead')
             ->link()
             ->label(__('filament-notifications::database.modal.actions.mark_all_as_read.label'))
             ->extraAttributes(['tabindex' => '-1'])
             ->action('markAllNotificationsAsRead');
+    }
+
+    public function clearNotificationsAction(): Action
+    {
+        return Action::make('clearNotifications')
+            ->link()
+            ->color('danger')
+            ->label(__('filament-notifications::database.modal.actions.clear.label'))
+            ->extraAttributes(['tabindex' => '-1'])
+            ->action('clearNotifications')
+            ->close();
     }
 
     public function getUser(): Model | Authenticatable | null
