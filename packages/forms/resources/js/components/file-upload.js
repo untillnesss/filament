@@ -57,6 +57,7 @@ export default function fileUploadFormComponent({
     maxFiles,
     maxSize,
     minSize,
+    maxParallelUploads,
     panelAspectRatio,
     panelLayout,
     placeholder,
@@ -122,6 +123,7 @@ export default function fileUploadFormComponent({
                 maxFiles,
                 maxFileSize: maxSize,
                 minFileSize: minSize,
+                ...(maxParallelUploads && { maxParallelUploads }),
                 styleButtonProcessItemPosition: uploadButtonPosition,
                 styleButtonRemoveItemPosition: removeUploadedFileButtonPosition,
                 styleItemPanelAspectRatio: itemPanelAspectRatio,
@@ -761,8 +763,8 @@ import hu from 'filepond/locale/hu-hu'
 import id from 'filepond/locale/id-id'
 import it from 'filepond/locale/it-it'
 import km from 'filepond/locale/km-km'
+import nb from 'filepond/locale/no_nb'
 import nl from 'filepond/locale/nl-nl'
-import no from 'filepond/locale/no_nb'
 import pl from 'filepond/locale/pl-pl'
 import pt from 'filepond/locale/pt-pt'
 import pt_BR from 'filepond/locale/pt-br'
@@ -792,8 +794,8 @@ const locales = {
     id,
     it,
     km,
+    nb,
     nl,
-    no,
     pl,
     pt,
     pt_BR,

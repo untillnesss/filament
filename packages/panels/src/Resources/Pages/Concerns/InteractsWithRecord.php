@@ -3,6 +3,8 @@
 namespace Filament\Resources\Pages\Concerns;
 
 use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -132,10 +134,21 @@ trait InteractsWithRecord
         return $this->getRecord();
     }
 
-    protected function configureAction(Action $action): void
+    public function getDefaultActionRecord(Action $action): ?Model
     {
-        $action
-            ->record($this->getRecord())
-            ->recordTitle($this->getRecordTitle());
+        return $this->getRecord();
+    }
+
+    public function getDefaultActionRecordTitle(Action $action): ?string
+    {
+        return $this->getRecordTitle();
+    }
+
+    public function getDefaultActionSuccessRedirectUrl(Action $action): ?string
+    {
+        return match (true) {
+            $action instanceof DeleteAction, $action instanceof ForceDeleteAction => $this->getResourceUrl(),
+            default => null,
+        };
     }
 }

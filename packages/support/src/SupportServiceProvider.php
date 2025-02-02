@@ -20,9 +20,11 @@ use Filament\Support\Components\ComponentManager;
 use Filament\Support\Components\Contracts\ScopedComponentManager;
 use Filament\Support\Enums\GridDirection;
 use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Icons\IconManager;
 use Filament\Support\Overrides\DataStoreOverride;
 use Filament\Support\Partials\SupportPartials;
+use Filament\Support\View\Components\Contracts\HasColor;
 use Filament\Support\View\ViewManager;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\Facades\Blade;
@@ -136,7 +138,6 @@ class SupportServiceProvider extends PackageServiceProvider
         app('livewire')->componentHook(new SupportPartials);
 
         FilamentAsset::register([
-            Js::make('async-alpine', __DIR__ . '/../dist/async-alpine.js'),
             Css::make('support', __DIR__ . '/../dist/index.css'),
             Js::make('support', __DIR__ . '/../dist/index.js'),
         ], 'filament/support');
@@ -155,6 +156,10 @@ class SupportServiceProvider extends PackageServiceProvider
 
         Blade::extend(function ($view) {
             return preg_replace('/\s*@trim\s*/m', '', $view);
+        });
+
+        ComponentAttributeBag::macro('color', function (string | HasColor $component, ?string $color): ComponentAttributeBag {
+            return $this->class(FilamentColor::getComponentClasses($component, $color));
         });
 
         ComponentAttributeBag::macro('grid', function (array | int | null $columns = [], GridDirection $direction = GridDirection::Row): ComponentAttributeBag {
@@ -309,6 +314,7 @@ class SupportServiceProvider extends PackageServiceProvider
                 $this->optimizes(
                     optimize: 'filament:optimize', /** @phpstan-ignore-line */
                     clear: 'filament:optimize-clear', /** @phpstan-ignore-line */
+                    key: 'filament', /** @phpstan-ignore-line */
                 );
             }
         }

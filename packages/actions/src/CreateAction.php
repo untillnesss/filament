@@ -8,11 +8,11 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Tables\Table;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 
@@ -37,7 +37,7 @@ class CreateAction extends Action
 
         $this->label(fn (): string => __('filament-actions::create.single.label', ['label' => $this->getModelLabel()]));
 
-        $this->modalHeading(fn (): string => __('filament-actions::create.single.modal.heading', ['label' => $this->getModelLabel()]));
+        $this->modalHeading(fn (): string => __('filament-actions::create.single.modal.heading', ['label' => $this->getTitleCaseModelLabel()]));
 
         $this->modalSubmitActionLabel(__('filament-actions::create.single.modal.actions.create.label'));
 
@@ -50,7 +50,7 @@ class CreateAction extends Action
 
         $this->successNotificationTitle(__('filament-actions::create.single.notifications.created.title'));
 
-        $this->groupedIcon(FilamentIcon::resolve('actions::create-action.grouped') ?? 'heroicon-m-plus');
+        $this->groupedIcon(FilamentIcon::resolve('actions::create-action.grouped') ?? Heroicon::Plus);
 
         $this->record(null);
 
@@ -63,8 +63,8 @@ class CreateAction extends Action
 
             $model = $this->getModel();
 
-            $record = $this->process(function (array $data, HasActions & HasSchemas $livewire, ?Table $table) use ($model): Model {
-                $relationship = $table?->getRelationship() ?? $this->getRelationship();
+            $record = $this->process(function (array $data, HasActions & HasSchemas $livewire) use ($model): Model {
+                $relationship = $this->getRelationship();
 
                 $pivotData = [];
 
@@ -84,7 +84,7 @@ class CreateAction extends Action
 
                 if (
                     (! $relationship) ||
-                    $relationship instanceof HasManyThrough
+                    ($relationship instanceof HasOneOrManyThrough)
                 ) {
                     $record->save();
 
@@ -179,6 +179,6 @@ class CreateAction extends Action
 
     public function getRelationship(): Relation | Builder | null
     {
-        return $this->evaluate($this->getRelationshipUsing);
+        return $this->evaluate($this->getRelationshipUsing) ?? $this->getTable()?->getRelationship() ?? $this->getHasActionsLivewire()?->getDefaultActionRelationship($this);
     }
 }

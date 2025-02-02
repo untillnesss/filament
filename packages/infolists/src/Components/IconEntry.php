@@ -2,9 +2,11 @@
 
 namespace Filament\Infolists\Components;
 
+use BackedEnum;
 use Closure;
 use Filament\Infolists\Components\IconEntry\Enums\IconEntrySize;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 
 class IconEntry extends Entry
 {
@@ -23,18 +25,18 @@ class IconEntry extends Entry
     protected bool | Closure | null $isBoolean = null;
 
     /**
-     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null
+     * @var string | array<int | string, string | int> | Closure | null
      */
     protected string | array | Closure | null $falseColor = null;
 
-    protected string | Closure | null $falseIcon = null;
+    protected string | BackedEnum | Closure | null $falseIcon = null;
 
     /**
-     * @var string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null
+     * @var string | array<int | string, string | int> | Closure | null
      */
     protected string | array | Closure | null $trueColor = null;
 
-    protected string | Closure | null $trueIcon = null;
+    protected string | BackedEnum | Closure | null $trueIcon = null;
 
     protected IconEntrySize | string | Closure | null $size = null;
 
@@ -46,9 +48,9 @@ class IconEntry extends Entry
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
-    public function false(string | Closure | null $icon = null, string | array | Closure | null $color = null): static
+    public function false(string | BackedEnum | Closure | null $icon = null, string | array | Closure | null $color = null): static
     {
         $this->falseIcon($icon);
         $this->falseColor($color);
@@ -57,7 +59,7 @@ class IconEntry extends Entry
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
     public function falseColor(string | array | Closure | null $color): static
     {
@@ -67,7 +69,7 @@ class IconEntry extends Entry
         return $this;
     }
 
-    public function falseIcon(string | Closure | null $icon): static
+    public function falseIcon(string | BackedEnum | Closure | null $icon): static
     {
         $this->boolean();
         $this->falseIcon = $icon;
@@ -76,9 +78,9 @@ class IconEntry extends Entry
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
-    public function true(string | Closure | null $icon = null, string | array | Closure | null $color = null): static
+    public function true(string | BackedEnum | Closure | null $icon = null, string | array | Closure | null $color = null): static
     {
         $this->trueIcon($icon);
         $this->trueColor($color);
@@ -87,7 +89,7 @@ class IconEntry extends Entry
     }
 
     /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | Closure | null  $color
+     * @param  string | array<int | string, string | int> | Closure | null  $color
      */
     public function trueColor(string | array | Closure | null $color): static
     {
@@ -97,7 +99,7 @@ class IconEntry extends Entry
         return $this;
     }
 
-    public function trueIcon(string | Closure | null $icon): static
+    public function trueIcon(string | BackedEnum | Closure | null $icon): static
     {
         $this->boolean();
         $this->trueIcon = $icon;
@@ -119,7 +121,7 @@ class IconEntry extends Entry
         ]);
     }
 
-    public function getIcon(mixed $state): ?string
+    public function getIcon(mixed $state): string | BackedEnum | null
     {
         if (filled($icon = $this->getBaseIcon($state))) {
             return $icon;
@@ -137,7 +139,7 @@ class IconEntry extends Entry
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null
+     * @return string | array<int | string, string | int> | null
      */
     public function getColor(mixed $state): string | array | null
     {
@@ -157,33 +159,33 @@ class IconEntry extends Entry
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
+     * @return string | array<int | string, string | int>
      */
     public function getFalseColor(): string | array
     {
         return $this->evaluate($this->falseColor) ?? 'danger';
     }
 
-    public function getFalseIcon(): string
+    public function getFalseIcon(): string | BackedEnum
     {
         return $this->evaluate($this->falseIcon)
             ?? FilamentIcon::resolve('infolists::components.icon-entry.false')
-            ?? 'heroicon-o-x-circle';
+            ?? Heroicon::OutlinedXCircle;
     }
 
     /**
-     * @return string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string}
+     * @return string | array<int | string, string | int>
      */
     public function getTrueColor(): string | array
     {
         return $this->evaluate($this->trueColor) ?? 'success';
     }
 
-    public function getTrueIcon(): string
+    public function getTrueIcon(): string | BackedEnum
     {
         return $this->evaluate($this->trueIcon)
             ?? FilamentIcon::resolve('infolists::components.icon-entry.true')
-            ?? 'heroicon-o-check-circle';
+            ?? Heroicon::OutlinedCheckCircle;
     }
 
     public function isBoolean(): bool

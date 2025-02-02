@@ -52,16 +52,15 @@
     >
         <div
             @if (FilamentView::hasSpaMode())
-                {{-- format-ignore-start --}}ax-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
+                {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
             @else
-                ax-load
+                x-load
             @endif
-            ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('tags-input', 'filament/forms') }}"
+            x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('tags-input', 'filament/forms') }}"
             x-data="tagsInputFormComponent({
                         state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
                         splitKeys: @js($getSplitKeys()),
                     })"
-            x-ignore
             {{ $getExtraAlpineAttributeBag() }}
         >
             <x-filament::input
@@ -121,14 +120,14 @@
 
                                     <span
                                         x-text="tag"
-                                        class="select-none text-start"
+                                        class="text-start select-none"
                                     ></span>
 
                                     {{ $getTagSuffix() }}
 
                                     <x-slot
                                         name="deleteButton"
-                                        x-on:click="deleteTag(tag)"
+                                        x-on:click.stop="deleteTag(tag)"
                                     ></x-slot>
                                 </x-filament::badge>
                             </template>

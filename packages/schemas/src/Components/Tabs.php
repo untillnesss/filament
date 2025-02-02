@@ -18,7 +18,7 @@ class Tabs extends Component
     /**
      * @var view-string
      */
-    protected string $view = 'filament-schema::components.tabs';
+    protected string $view = 'filament-schemas::components.tabs';
 
     protected int | Closure $activeTab = 1;
 
@@ -60,7 +60,7 @@ class Tabs extends Component
                 return null;
             }
 
-            return Str::slug($label);
+            return Str::slug(Str::transliterate($label, strict: true));
         });
     }
 
@@ -69,7 +69,7 @@ class Tabs extends Component
      */
     public function tabs(array | Closure $tabs): static
     {
-        $this->childComponents($tabs);
+        $this->components($tabs);
 
         return $this;
     }

@@ -134,8 +134,8 @@ it('can generate a page class in a resource', function () {
     require_once app_path('Filament/Resources/Users/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/Users/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanel())->resources = [
-        ...invade(Filament::getCurrentPanel())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\Users\\UserResource',
     ];
 
@@ -166,8 +166,8 @@ it('can generate a page view in a resource', function () {
     require_once app_path('Filament/Resources/Users/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/Users/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanel())->resources = [
-        ...invade(Filament::getCurrentPanel())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\Users\\UserResource',
     ];
 
@@ -198,8 +198,8 @@ it('can generate a create page class in a resource', function () {
     require_once app_path('Filament/Resources/Users/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/Users/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanel())->resources = [
-        ...invade(Filament::getCurrentPanel())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\Users\\UserResource',
     ];
 
@@ -232,8 +232,8 @@ it('can generate an edit page class in a resource', function () {
     require_once app_path('Filament/Resources/Users/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/Users/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanel())->resources = [
-        ...invade(Filament::getCurrentPanel())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\Users\\UserResource',
     ];
 
@@ -266,8 +266,8 @@ it('can generate a view page class in a resource', function () {
     require_once app_path('Filament/Resources/Users/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/Users/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanel())->resources = [
-        ...invade(Filament::getCurrentPanel())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\Users\\UserResource',
     ];
 
@@ -305,7 +305,7 @@ $runGenerateManageRelatedRecordsPageCommand = function (TestCase $testCase): Pen
         ->expectsQuestion('Would you like to generate the form schema and table columns based on the attributes of the model?', false)
         ->expectsQuestion('Does the model use soft deletes?', false);
 
-    require_once __DIR__ . '/../../Models/Team.php';
+    require_once __DIR__ . '/../../Fixtures/Models/Team.php';
     require_once app_path('Filament/Resources/Teams/TeamResource.php');
     require_once app_path('Filament/Resources/Teams/Pages/ListTeams.php');
     require_once app_path('Filament/Resources/Teams/Pages/CreateTeam.php');
@@ -316,8 +316,8 @@ $runGenerateManageRelatedRecordsPageCommand = function (TestCase $testCase): Pen
     require_once app_path('Filament/Resources/Users/Pages/CreateUser.php');
     require_once app_path('Filament/Resources/Users/Pages/EditUser.php');
 
-    invade(Filament::getCurrentPanel())->resources = [
-        ...invade(Filament::getCurrentPanel())->resources,
+    invade(Filament::getCurrentOrDefaultPanel())->resources = [
+        ...invade(Filament::getCurrentOrDefaultPanel())->resources,
         'App\\Filament\\Resources\\Teams\\TeamResource',
         'App\\Filament\\Resources\\Users\\UserResource',
     ];
@@ -413,8 +413,8 @@ it('can generate a manage related records page class in a resource with a genera
         ->expectsQuestion($questions['hasRelatedResource'], false)
         ->expectsQuestion($questions['hasFormSchemaClass'], false)
         ->expectsQuestion($questions['isGenerated'], true)
-        ->expectsQuestion($questions['relatedModel'], 'Filament\\Tests\\Models\\Team')
-        ->expectsQuestion($questions['relatedModel'], 'Filament\\Tests\\Models\\Team')
+        ->expectsQuestion($questions['relatedModel'], 'Filament\\Tests\\Fixtures\\Models\\Team')
+        ->expectsQuestion($questions['relatedModel'], 'Filament\\Tests\\Fixtures\\Models\\Team')
         ->expectsQuestion($questions['hasViewOperation'], false)
         ->expectsQuestion($questions['hasTableClass'], false)
         ->expectsQuestion($questions['titleAttribute'], 'name')

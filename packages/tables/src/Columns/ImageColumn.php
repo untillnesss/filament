@@ -21,7 +21,7 @@ class ImageColumn extends Column implements HasEmbeddedView
 
     protected string | Closure | null $disk = null;
 
-    protected int | string | Closure | null $height = null;
+    protected int | string | Closure | null $imageHeight = null;
 
     protected bool | Closure $isCircular = false;
 
@@ -29,7 +29,7 @@ class ImageColumn extends Column implements HasEmbeddedView
 
     protected string | Closure $visibility = 'public';
 
-    protected int | string | Closure | null $width = null;
+    protected int | string | Closure | null $imageWidth = null;
 
     /**
      * @var array<array<mixed> | Closure>
@@ -59,9 +59,19 @@ class ImageColumn extends Column implements HasEmbeddedView
         return $this;
     }
 
+    public function imageHeight(int | string | Closure | null $height): static
+    {
+        $this->imageHeight = $height;
+
+        return $this;
+    }
+
+    /**
+     * @deprecated Use `imageHeight()` instead.
+     */
     public function height(int | string | Closure | null $height): static
     {
-        $this->height = $height;
+        $this->imageHeight($height);
 
         return $this;
     }
@@ -88,10 +98,20 @@ class ImageColumn extends Column implements HasEmbeddedView
         return $this;
     }
 
+    public function imageSize(int | string | Closure $size): static
+    {
+        $this->imageWidth($size);
+        $this->imageHeight($size);
+
+        return $this;
+    }
+
+    /**
+     * @deprecated Use `imageSize()` instead.
+     */
     public function size(int | string | Closure $size): static
     {
-        $this->width($size);
-        $this->height($size);
+        $this->imageSize($size);
 
         return $this;
     }
@@ -103,9 +123,9 @@ class ImageColumn extends Column implements HasEmbeddedView
         return $this;
     }
 
-    public function width(int | string | Closure | null $width): static
+    public function imageWidth(int | string | Closure | null $width): static
     {
-        $this->width = $width;
+        $this->imageWidth = $width;
 
         return $this;
     }
@@ -120,9 +140,9 @@ class ImageColumn extends Column implements HasEmbeddedView
         return $this->evaluate($this->disk) ?? config('filament.default_filesystem_disk');
     }
 
-    public function getHeight(): ?string
+    public function getImageHeight(): ?string
     {
-        $height = $this->evaluate($this->height);
+        $height = $this->evaluate($this->imageHeight);
 
         if ($height === null) {
             return null;
@@ -133,6 +153,14 @@ class ImageColumn extends Column implements HasEmbeddedView
         }
 
         return $height;
+    }
+
+    /**
+     * @deprecated Use `getImageHeight()` instead.
+     */
+    public function getHeight(): ?string
+    {
+        return $this->getImageHeight();
     }
 
     public function defaultImageUrl(string | Closure | null $url): static
@@ -185,9 +213,9 @@ class ImageColumn extends Column implements HasEmbeddedView
         return $this->evaluate($this->visibility);
     }
 
-    public function getWidth(): ?string
+    public function getImageWidth(): ?string
     {
-        $width = $this->evaluate($this->width);
+        $width = $this->evaluate($this->imageWidth);
 
         if ($width === null) {
             return null;
@@ -240,7 +268,7 @@ class ImageColumn extends Column implements HasEmbeddedView
         $temporaryAttributeBag = new ComponentAttributeBag;
 
         foreach ($this->extraImgAttributes as $extraImgAttributes) {
-            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraImgAttributes));
+            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraImgAttributes), escape: false);
         }
 
         return $temporaryAttributeBag->getAttributes();
@@ -395,8 +423,8 @@ class ImageColumn extends Column implements HasEmbeddedView
         $isStacked = $this->isStacked();
         $hasLimitedRemainingText = $stateOverLimitCount && $this->hasLimitedRemainingText();
         $limitedRemainingTextSize = $this->getLimitedRemainingTextSize();
-        $height = $this->getHeight() ?? ($isStacked ? '2rem' : '2.5rem');
-        $width = $this->getWidth() ?? (($isCircular || $isSquare) ? $height : null);
+        $height = $this->getImageHeight() ?? ($isStacked ? '2rem' : '2.5rem');
+        $width = $this->getImageWidth() ?? (($isCircular || $isSquare) ? $height : null);
 
         $defaultImageUrl = $this->getDefaultImageUrl();
 
@@ -424,7 +452,7 @@ class ImageColumn extends Column implements HasEmbeddedView
                                     theme: $store.theme,
                                 }'
                                 : null,
-                        ])
+                        ], escape: false)
                         ->style([
                             "height: {$height}" => $height,
                             "width: {$width}" => $width,

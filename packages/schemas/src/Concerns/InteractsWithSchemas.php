@@ -3,9 +3,11 @@
 namespace Filament\Schemas\Concerns;
 
 use Closure;
-use Filament\Schemas\Components\Attributes\Exposed;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
+use Filament\Support\Components\Attributes\ExposedLivewireMethod;
 use Filament\Support\Contracts\TranslatableContentDriver;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
@@ -66,7 +68,7 @@ trait InteractsWithSchemas
 
         $methodReflection = new ReflectionMethod($component, $method);
 
-        if (! $methodReflection->getAttributes(Exposed::class)) {
+        if (! $methodReflection->getAttributes(ExposedLivewireMethod::class)) {
             return null;
         }
 
@@ -130,7 +132,7 @@ trait InteractsWithSchemas
         }
     }
 
-    public function getSchemaComponent(string $key): ?Component
+    public function getSchemaComponent(string $key, bool $withHidden = false, ?Component $skipComponentChildContainersWhileSearching = null): Component | Action | ActionGroup | null
     {
         if (! str($key)->contains('.')) {
             return null;
@@ -140,7 +142,7 @@ trait InteractsWithSchemas
 
         $schema = $this->getSchema($schemaName);
 
-        return $schema?->getComponent($key, isAbsoluteKey: true);
+        return $schema?->getComponent($key, withHidden: $withHidden, isAbsoluteKey: true, skipComponentChildContainersWhileSearching: $skipComponentChildContainersWhileSearching);
     }
 
     protected function cacheSchema(string $name, Schema | Closure | null $schema = null): ?Schema

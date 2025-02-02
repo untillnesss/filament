@@ -25,6 +25,11 @@ class StatsOverviewWidget extends Widget implements HasSchemas
     protected ?string $description = null;
 
     /**
+     * @var int | array<string, ?int> | null
+     */
+    protected int | array | null $columns = null;
+
+    /**
      * @var view-string
      */
     protected static string $view = 'filament-widgets::stats-overview-widget';
@@ -43,10 +48,14 @@ class StatsOverviewWidget extends Widget implements HasSchemas
     }
 
     /**
-     * @return array<string, int | string | null> | int | string | null
+     * @return int | array<string, ?int> | null
      */
-    protected function getColumns(): array | int | string | null
+    protected function getColumns(): int | array | null
     {
+        if ($this->columns) {
+            return $this->columns;
+        }
+
         $count = count($this->getCachedStats());
 
         if ($count < 3) {

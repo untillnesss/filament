@@ -18,6 +18,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\ChunkIterator;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Bus\PendingBatch;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Support\Htmlable;
@@ -30,7 +31,7 @@ use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\ValidationException;
-use League\Csv\ByteSequence;
+use League\Csv\Bom;
 use League\Csv\CharsetConverter;
 use League\Csv\Info;
 use League\Csv\Reader as CsvReader;
@@ -76,13 +77,13 @@ class ImportAction extends Action
 
         $this->label(fn (ImportAction $action): string => __('filament-actions::import.label', ['label' => $action->getPluralModelLabel()]));
 
-        $this->modalHeading(fn (ImportAction $action): string => __('filament-actions::import.modal.heading', ['label' => $action->getPluralModelLabel()]));
+        $this->modalHeading(fn (ImportAction $action): string => __('filament-actions::import.modal.heading', ['label' => $action->getTitleCasePluralModelLabel()]));
 
         $this->modalDescription(fn (ImportAction $action): Htmlable => $action->getModalAction('downloadExample'));
 
         $this->modalSubmitActionLabel(__('filament-actions::import.modal.actions.import.label'));
 
-        $this->groupedIcon(FilamentIcon::resolve('actions::import-action.grouped') ?? 'heroicon-m-arrow-up-tray');
+        $this->groupedIcon(FilamentIcon::resolve('actions::import-action.grouped') ?? Heroicon::ArrowUpTray);
 
         $this->form(fn (ImportAction $action): array => array_merge([
             FileUpload::make('file')
@@ -374,7 +375,7 @@ class ImportAction extends Action
                     $csv->insertAll($exampleRows);
 
                     return response()->streamDownload(function () use ($csv) {
-                        $csv->setOutputBOM(ByteSequence::BOM_UTF8);
+                        $csv->setOutputBOM(Bom::Utf8);
 
                         echo $csv->toString();
                     }, __('filament-actions::import.example_csv.file_name', ['importer' => (string) str($this->getImporter())->classBasename()->kebab()]), [

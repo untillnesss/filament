@@ -2,6 +2,7 @@
 
 namespace Filament\Actions\Testing;
 
+use BackedEnum;
 use Closure;
 use Exception;
 use Filament\Actions\Action;
@@ -80,9 +81,18 @@ class TestsActions
 
     public function assertActionDataSet(): Closure
     {
-        return function (array $data): static {
-            foreach (Arr::dot($data, prepend: 'mountedActions.' . array_key_last($this->instance()->mountedActions) . '.data.') as $key => $value) {
-                $this->assertSet($key, $value);
+        return function (array | Closure $data): static {
+            $mountedActions = $this->instance()->mountedActions;
+            $mountedActionIndex = array_key_last($mountedActions);
+
+            if ($data instanceof Closure) {
+                $data = $data($mountedActions[$mountedActionIndex]['data'] ?? []);
+            }
+
+            if (is_array($data)) {
+                foreach (Arr::dot($data, prepend: "mountedActions.{$mountedActionIndex}.data.") as $key => $value) {
+                    $this->assertSet($key, $value);
+                }
             }
 
             return $this;
@@ -280,11 +290,14 @@ class TestsActions
 
     public function assertActionHasIcon(): Closure
     {
-        return function (string | TestAction | array $actions, string $icon): static {
+        return function (string | TestAction | array $actions, string | BackedEnum $icon): static {
+
+            $iconValue = $icon instanceof BackedEnum ? $icon->value : $icon;
+
             $this->assertActionExists(
                 $actions,
                 checkActionUsing: fn (Action $action): bool => $action->getIcon() === $icon,
-                generateMessageUsing: fn (string $prettyName, string $livewireClass): string => "Failed asserting that an action with name [{$prettyName}] has icon [{$icon}] on the [{$livewireClass}] component.",
+                generateMessageUsing: fn (string $prettyName, string $livewireClass): string => "Failed asserting that an action with name [{$prettyName}] has icon [{$iconValue}] on the [{$livewireClass}] component.",
             );
 
             return $this;
@@ -293,11 +306,14 @@ class TestsActions
 
     public function assertActionDoesNotHaveIcon(): Closure
     {
-        return function (string | TestAction | array $actions, string $icon): static {
+        return function (string | TestAction | array $actions, string | BackedEnum $icon): static {
+
+            $iconValue = $icon instanceof BackedEnum ? $icon->value : $icon;
+
             $this->assertActionExists(
                 $actions,
                 checkActionUsing: fn (Action $action): bool => $action->getIcon() !== $icon,
-                generateMessageUsing: fn (string $prettyName, string $livewireClass): string => "Failed asserting that an action with name [{$prettyName}] does not have icon [{$icon}] on the [{$livewireClass}] component.",
+                generateMessageUsing: fn (string $prettyName, string $livewireClass): string => "Failed asserting that an action with name [{$prettyName}] does not have icon [{$iconValue}] on the [{$livewireClass}] component.",
             );
 
             return $this;

@@ -3,6 +3,7 @@
 namespace Filament\Upgrade\Rector;
 
 use Closure;
+use Filament\Resources\RelationManagers\RelationManager;
 use PhpParser\Node;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
@@ -25,8 +26,25 @@ class SimplePropertyChangesRector extends AbstractRector
         return [
             [
                 'changes' => [
+                    'activeNavigationIcon' => function (Property $node) {
+                        $node->type = new Name('string | \BackedEnum | null');
+                    },
+                    'navigationIcon' => function (Property $node) {
+                        $node->type = new Name('string | \BackedEnum | null');
+                    },
                     'subNavigationPosition' => function (Property $node) {
                         $node->type = new Name('?\Filament\Pages\Enums\SubNavigationPosition');
+                    },
+                ],
+            ],
+            [
+                'class' => [
+                    RelationManager::class,
+                ],
+                'classIdentifier' => 'extends',
+                'changes' => [
+                    'icon' => function (Property $node) {
+                        $node->type = new Name('string | \BackedEnum | null');
                     },
                 ],
             ],

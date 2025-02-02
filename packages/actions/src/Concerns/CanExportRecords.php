@@ -20,6 +20,7 @@ use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Split;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Bus\PendingBatch;
 use Illuminate\Foundation\Bus\PendingChain;
@@ -71,11 +72,11 @@ trait CanExportRecords
 
         $this->label(fn (ExportAction | ExportBulkAction $action): string => __('filament-actions::export.label', ['label' => $action->getPluralModelLabel()]));
 
-        $this->modalHeading(fn (ExportAction | ExportBulkAction $action): string => __('filament-actions::export.modal.heading', ['label' => $action->getPluralModelLabel()]));
+        $this->modalHeading(fn (ExportAction | ExportBulkAction $action): string => __('filament-actions::export.modal.heading', ['label' => $action->getTitleCasePluralModelLabel()]));
 
         $this->modalSubmitActionLabel(__('filament-actions::export.modal.actions.export.label'));
 
-        $this->groupedIcon(FilamentIcon::resolve('actions::export-action.grouped') ?? 'heroicon-m-arrow-down-tray');
+        $this->groupedIcon(FilamentIcon::resolve('actions::export-action.grouped') ?? Heroicon::ArrowDownTray);
 
         $this->form(fn (ExportAction | ExportBulkAction $action): array => [
             ...($action->hasColumnMapping() ? [Fieldset::make(__('filament-actions::export.modal.form.columns.label'))

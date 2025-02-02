@@ -1,9 +1,11 @@
 <?php
 
+use Filament\Actions\Action;
 use Filament\Actions\Testing\Fixtures\TestAction;
 use Filament\Notifications\Notification;
-use Filament\Tests\Actions\Fixtures\Pages\Actions;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tests\Actions\TestCase;
+use Filament\Tests\Fixtures\Pages\Actions;
 use Illuminate\Support\Str;
 
 use function Filament\Tests\livewire;
@@ -220,7 +222,11 @@ it('can call an action and halt', function () {
 it('can hide an action', function () {
     livewire(Actions::class)
         ->assertActionVisible('visible')
-        ->assertActionHidden('hidden');
+        ->assertActionHidden('hidden')
+        ->assertActionExists('visible', fn (Action $action): bool => $action->isVisible())
+        ->assertActionExists('hidden', fn (Action $action): bool => $action->isHidden())
+        ->assertActionDoesNotExist('visible', fn (Action $action): bool => $action->isHidden())
+        ->assertActionDoesNotExist('hidden', fn (Action $action): bool => $action->isVisible());
 });
 
 it('can disable an action', function () {
@@ -231,8 +237,8 @@ it('can disable an action', function () {
 
 it('can have an icon', function () {
     livewire(Actions::class)
-        ->assertActionHasIcon('hasIcon', 'heroicon-m-pencil-square')
-        ->assertActionDoesNotHaveIcon('hasIcon', 'heroicon-m-trash');
+        ->assertActionHasIcon('hasIcon', Heroicon::PencilSquare)
+        ->assertActionDoesNotHaveIcon('hasIcon', Heroicon::Trash);
 });
 
 it('can have a label', function () {

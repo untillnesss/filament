@@ -7,6 +7,7 @@ use Exception;
 use Filament\Support\Components\Contracts\HasEmbeddedView;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\ComponentAttributeBag;
 
 abstract class ViewComponent extends Component implements Htmlable
@@ -116,6 +117,17 @@ abstract class ViewComponent extends Component implements Htmlable
         }
 
         return $this->render()->render();
+    }
+
+    public function toHtmlString(): ?HtmlString
+    {
+        $html = $this->toHtml();
+
+        if (blank($html)) {
+            return null;
+        }
+
+        return new HtmlString($html);
     }
 
     public function render(): View

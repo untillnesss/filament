@@ -3,15 +3,12 @@
 namespace Filament\Actions;
 
 use Closure;
-use Filament\Notifications\Notification;
-use Filament\Schemas\Components\Actions\ActionContainer;
-use Filament\Schemas\Components\Actions\ActionContainer as InfolistActionContainer;
+use Filament\Actions\Concerns\HasTooltip;
 use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\HasBadge;
 use Filament\Support\Concerns\HasColor;
 use Filament\Support\Concerns\HasExtraAttributes;
 use Filament\Support\Concerns\HasIcon;
-use Filament\Support\Concerns\HasTooltip;
 use Filament\Support\Exceptions\Cancel;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Contracts\Support\Arrayable;
@@ -35,11 +32,13 @@ class Action extends ViewComponent implements Arrayable
     use Concerns\BelongsToSchemaComponent;
     use Concerns\BelongsToTable;
     use Concerns\CanAccessSelectedRecords;
+    use Concerns\CanBeAuthorized;
     use Concerns\CanBeDisabled;
     use Concerns\CanBeHidden;
     use Concerns\CanBeLabeledFrom;
     use Concerns\CanBeMounted;
     use Concerns\CanBeOutlined;
+    use Concerns\CanBeRateLimited;
     use Concerns\CanBeSorted;
     use Concerns\CanCallParentAction;
     use Concerns\CanClose;
@@ -67,6 +66,7 @@ class Action extends ViewComponent implements Arrayable
     use Concerns\HasParentActions;
     use Concerns\HasSchema;
     use Concerns\HasSize;
+    use Concerns\HasTableIcon;
     use Concerns\HasWizard;
     use Concerns\InteractsWithRecord;
     use HasBadge;
@@ -121,9 +121,6 @@ class Action extends ViewComponent implements Arrayable
         parent::setUp();
 
         $this->defaultView(static::BUTTON_VIEW);
-
-        $this->failureNotification(fn (Notification $notification): Notification => $notification);
-        $this->successNotification(fn (Notification $notification): Notification => $notification);
     }
 
     public function markAsRead(bool | Closure $condition = true): static
@@ -216,6 +213,18 @@ class Action extends ViewComponent implements Arrayable
     public function isBadge(): bool
     {
         return $this->getView() === static::BADGE_VIEW;
+    }
+
+    public function badge(string | int | float | Closure | null $badge = null): static
+    {
+        if (func_num_args() === 0) {
+            /** @phpstan-ignore-next-line */
+            return $this->view(static::BADGE_VIEW);
+        }
+
+        $this->badge = $badge;
+
+        return $this;
     }
 
     public function button(): static
@@ -384,8 +393,12 @@ class Action extends ViewComponent implements Arrayable
         return 'callMountedAction';
     }
 
-    protected function getJavaScriptClickHandler(): string
+    protected function getJavaScriptClickHandler(): ?string
     {
+        if ($this->shouldClose()) {
+            return null;
+        }
+
         $argumentsParameter = '';
 
         if (count($arguments = $this->getArguments())) {
@@ -399,8 +412,8 @@ class Action extends ViewComponent implements Arrayable
             $context['recordKey'] = $this->resolveRecordKey($record);
         }
 
-        if (filled($componentKey = $this->getSchemaComponent()?->getKey())) {
-            $context['schemaComponent'] = $componentKey;
+        if (filled($schemaComponentKey = ($this->getSchemaComponentContainer() ?? $this->getSchemaComponent())?->getKey())) {
+            $context['schemaComponent'] = $schemaComponentKey;
         }
 
         $table = $this->getTable();
@@ -435,14 +448,15 @@ class Action extends ViewComponent implements Arrayable
         return match ($parameterName) {
             'arguments' => [$this->getArguments()],
             'component', 'schemaComponent' => [$this->getSchemaComponent()],
-            'context', 'operation' => [$this->getSchemaComponent()->getContainer()->getOperation()],
+            'context', 'operation' => [$this->getSchemaComponentContainer()?->getOperation() ?? $this->getSchemaComponent()?->getContainer()->getOperation()],
             'data' => [$this->getFormData()],
             'get' => [$this->getSchemaComponent()->makeGetUtility()],
             'livewire' => [$this->getLivewire()],
-            'model' => [$this->getModel() ?? $this->getSchemaComponent()?->getModel()],
+            'model' => [$this->getModel() ?? $this->getSchemaComponentContainer()?->getModel() ?? $this->getSchemaComponent()?->getModel()],
             'mountedActions' => [$this->getLivewire()->getMountedActions()],
-            'record' => [$this->getRecord() ?? $this->getSchemaComponent()?->getRecord()],
+            'record' => [$this->getRecord() ?? $this->getSchemaComponentContainer()?->getRecord() ?? $this->getSchemaComponent()?->getRecord()],
             'records', 'selectedRecords' => [$this->getSelectedRecords()],
+            'schema' => [$this->getSchemaComponentContainer()],
             'set' => [$this->getSchemaComponent()->makeSetUtility()],
             'state' => [$this->getSchemaComponent()->getState()],
             'table' => [$this->getTable()],
@@ -455,7 +469,7 @@ class Action extends ViewComponent implements Arrayable
      */
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
-        $record = $this->getRecord() ?? $this->getSchemaComponent()?->getRecord();
+        $record = $this->getRecord() ?? $this->getSchemaComponentContainer()?->getRecord() ?? $this->getSchemaComponent()?->getRecord();
 
         return match ($parameterType) {
             EloquentCollection::class, Collection::class => [$this->getSelectedRecords()],
@@ -482,24 +496,6 @@ class Action extends ViewComponent implements Arrayable
         }
 
         $this->record(null);
-    }
-
-    public function toFormComponent(): ActionContainer
-    {
-        $component = ActionContainer::make($this);
-
-        $this->schemaComponent($component);
-
-        return $component;
-    }
-
-    public function toInfolistComponent(): InfolistActionContainer
-    {
-        $component = InfolistActionContainer::make($this);
-
-        $this->schemaComponent($component);
-
-        return $component;
     }
 
     /**
@@ -540,9 +536,12 @@ class Action extends ViewComponent implements Arrayable
         $this->dispatchSuccessRedirect();
     }
 
-    public function failure(): void
+    /**
+     * @param  array<string>  $messages
+     */
+    public function failure(int $successCount = 0, int $totalCount = 0, int $missingMessageCount = 0, array $messages = []): void
     {
-        $this->sendFailureNotification();
+        $this->sendFailureNotification($successCount, $totalCount, $missingMessageCount, $messages);
         $this->dispatchFailureRedirect();
     }
 
@@ -627,7 +626,7 @@ class Action extends ViewComponent implements Arrayable
                 'form' => $this->getFormToSubmit(),
                 'formId' => $this->getFormId(),
                 'href' => ($isDisabled || $shouldPostToUrl) ? null : $url,
-                'icon' => $props['icon'] ?? $this->getIcon(),
+                'icon' => $props['icon'] ?? $this->getIcon(default: $this->getTable() ? $this->getTableIcon() : null),
                 'iconSize' => $this->getIconSize(),
                 'keyBindings' => $this->getKeyBindings(),
                 'labelSrOnly' => $this->isLabelHidden(),
@@ -671,7 +670,7 @@ class Action extends ViewComponent implements Arrayable
             'badge' => $this->getBadge(),
             'badgeColor' => $this->getBadgeColor(),
             'class' => 'fi-ac-grouped-action',
-            'icon' => $this->getGroupedIcon(),
+            'icon' => $this->getIcon(default: $this->getGroupedIcon()),
             'slot' => new ComponentSlot(e($this->getLabel())),
         ]);
     }
@@ -709,5 +708,10 @@ class Action extends ViewComponent implements Arrayable
             static::LINK_VIEW => $this->renderLink(),
             default => parent::render(),
         };
+    }
+
+    public function getClone(): static
+    {
+        return clone $this;
     }
 }

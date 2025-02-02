@@ -157,9 +157,13 @@ trait EntanglesStateWithSingularRelationship
     /**
      * @param  array-key  $key
      */
-    public function getChildComponentContainer($key = null): Schema
+    public function getChildComponentContainer($key = null): ?Schema
     {
         $container = parent::getChildComponentContainer($key);
+
+        if (! $container) {
+            return null;
+        }
 
         $relationship = $this->getRelationship();
 

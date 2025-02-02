@@ -8,6 +8,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -17,8 +18,9 @@ trait CanGenerateModelForms
 {
     /**
      * @param  ?class-string<Model>  $model
+     * @param  array<string>  $exceptColumns
      */
-    public function generateFormMethodBody(?string $model = null, ?string $statePath = null, ?string $modelMethodOutput = null): string
+    public function generateFormMethodBody(?string $model = null, ?string $statePath = null, ?string $modelMethodOutput = null, array $exceptColumns = []): string
     {
         $statePathOutput = filled($statePath)
             ? PHP_EOL . new Literal('    ->statePath(?)', [$statePath])
@@ -31,16 +33,17 @@ trait CanGenerateModelForms
         return <<<PHP
             return \$schema
                 ->components([
-                    {$this->outputFormComponents($model)}
+                    {$this->outputFormComponents($model, $exceptColumns)}
                 ]){$statePathOutput}{$modelMethodOutput};
             PHP;
     }
 
     /**
      * @param  ?class-string<Model>  $model
+     * @param  array<string>  $exceptColumns
      * @return array<string>
      */
-    public function getFormComponents(?string $model = null): array
+    public function getFormComponents(?string $model = null, array $exceptColumns = []): array
     {
         if (! $this->isGenerated()) {
             return [];
@@ -66,6 +69,10 @@ trait CanGenerateModelForms
 
             $componentName = $column['name'];
 
+            if (in_array($componentName, $exceptColumns)) {
+                continue;
+            }
+
             if (str($componentName)->is([
                 app($model)->getKeyName(),
                 'created_at',
@@ -83,6 +90,7 @@ trait CanGenerateModelForms
             $componentData['type'] = match (true) {
                 $type['name'] === 'boolean' => Toggle::class,
                 $type['name'] === 'date' => DatePicker::class,
+                $type['name'] === 'time' => TimePicker::class,
                 in_array($type['name'], ['datetime', 'timestamp']) => DateTimePicker::class,
                 $type['name'] === 'text' => Textarea::class,
                 $componentName === 'image', str($componentName)->startsWith('image_'), str($componentName)->contains('_image_'), str($componentName)->endsWith('_image') => FileUpload::class,
@@ -195,10 +203,11 @@ trait CanGenerateModelForms
 
     /**
      * @param  ?class-string<Model>  $model
+     * @param  array<string>  $exceptColumns
      */
-    public function outputFormComponents(?string $model = null): string
+    public function outputFormComponents(?string $model = null, array $exceptColumns = []): string
     {
-        $components = $this->getFormComponents($model);
+        $components = $this->getFormComponents($model, $exceptColumns);
 
         if (empty($components)) {
             return '//';

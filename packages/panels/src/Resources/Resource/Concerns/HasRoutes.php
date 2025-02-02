@@ -44,7 +44,7 @@ trait HasRoutes
             return $parentResource->getParentResource()::getRouteBaseName($panel) . '.' . $parentResource->getRouteName();
         }
 
-        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentPanel();
+        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentOrDefaultPanel();
 
         $routeBaseName = (string) str(static::getSlug())
             ->replace('/', '.')

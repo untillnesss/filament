@@ -114,7 +114,7 @@
 
     &:not(.fi-bulleted li.fi-ta-text-item) {
         /* Line clamping sets the `display` property of the list item to `-webkit-box` instead of `list-item`, which hides the bullet point. */
-        @apply line-clamp-[--line-clamp,none];
+        @apply line-clamp-(--line-clamp,none);
     }
 
     &.fi-copyable {
@@ -131,18 +131,10 @@
 
     &.fi-size-md {
         @apply text-base;
-
-        & > .fi-icon {
-            @apply size-5;
-        }
     }
 
     &.fi-size-lg {
         @apply text-lg;
-
-        & > .fi-icon {
-            @apply size-6;
-        }
     }
 
     &.fi-font-thin {
@@ -193,8 +185,8 @@
         @apply font-mono;
     }
 
-    &.fi-color-custom {
-        @apply text-custom-600 dark:text-custom-400;
+    &.fi-color {
+        @apply text-(--text) dark:text-(--dark-text);
 
         &li::marker {
             @apply text-gray-950 dark:text-white;
@@ -210,15 +202,15 @@
     }
 
     & > .fi-icon {
-        @apply size-5 shrink-0 text-gray-400 dark:text-gray-500;
+        @apply shrink-0 text-gray-400 dark:text-gray-500;
 
-        &.fi-color-custom {
-            @apply text-custom-500;
+        &.fi-color {
+            @apply text-color-500;
         }
     }
 
     & > .fi-icon {
-        @apply -mt-1 inline-block size-4;
+        @apply -mt-1 inline-block;
     }
 
     &:is(.fi-ta-col-wrap-has-column-url .fi-ta-text-item) {

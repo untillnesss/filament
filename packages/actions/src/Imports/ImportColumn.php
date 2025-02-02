@@ -118,7 +118,7 @@ class ImportColumn extends Component
             ->label($this->getLabel())
             ->placeholder(__('filament-actions::import.modal.form.columns.placeholder'))
             ->required($this->isMappingRequired())
-            ->helperText($this->helperText);
+            ->belowContent($this->helperText);
     }
 
     public function name(string $name): static

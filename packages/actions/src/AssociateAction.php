@@ -6,7 +6,7 @@ use Closure;
 use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Filament\Tables\Table;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Builder;
@@ -51,11 +51,11 @@ class AssociateAction extends Action
 
         $this->label(__('filament-actions::associate.single.label'));
 
-        $this->modalHeading(fn (): string => __('filament-actions::associate.single.modal.heading', ['label' => $this->getModelLabel()]));
+        $this->modalHeading(fn (): string => __('filament-actions::associate.single.modal.heading', ['label' => $this->getTitleCaseModelLabel()]));
 
         $this->modalSubmitActionLabel(__('filament-actions::associate.single.modal.actions.associate.label'));
 
-        $this->modalWidth(MaxWidth::Large);
+        $this->modalWidth(Width::Large);
 
         $this->extraModalFooterActions(function (): array {
             return $this->canAssociateAnother ? [

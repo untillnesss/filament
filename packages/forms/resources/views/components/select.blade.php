@@ -111,13 +111,12 @@
                 }"
             ></div>
             <div
-                x-ignore
                 @if (FilamentView::hasSpaMode())
-                    {{-- format-ignore-start --}}ax-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
+                    {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
                 @else
-                    ax-load
+                    x-load
                 @endif
-                ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('select', 'filament/forms') }}"
+                x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('select', 'filament/forms') }}"
                 x-data="selectFormComponent({
                             canSelectPlaceholder: @js($canSelectPlaceholder),
                             isHtmlAllowed: @js($isHtmlAllowed()),
@@ -185,7 +184,7 @@
                                 'multiple' => $isMultiple(),
                             ], escape: false)
                             ->class([
-                                'h-9 w-full rounded-lg border-none bg-transparent !bg-none',
+                                'h-9 w-full rounded-lg border-none bg-transparent bg-none!',
                             ])
                     }}
                 ></select>

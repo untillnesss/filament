@@ -41,13 +41,12 @@
         "
     >
         <div
-            x-ignore
             @if (FilamentView::hasSpaMode())
-                {{-- format-ignore-start --}}ax-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
+                {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
             @else
-                ax-load
+                x-load
             @endif
-            ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('color-picker', 'filament/forms') }}"
+            x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('color-picker', 'filament/forms') }}"
             x-data="colorPickerFormComponent({
                         isAutofocused: @js($isAutofocused()),
                         isDisabled: @js($isDisabled),
@@ -82,7 +81,7 @@
             />
 
             <div
-                class="fi-fo-color-picker-preview my-auto me-3 size-5 shrink-0 select-none rounded-full"
+                class="fi-fo-color-picker-preview my-auto me-3 size-5 shrink-0 rounded-full select-none"
                 x-on:click="togglePanelVisibility()"
                 x-bind:class="{
                     'ring-1 ring-inset ring-gray-200 dark:ring-white/10': ! state,

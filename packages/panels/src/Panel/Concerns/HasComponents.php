@@ -3,6 +3,7 @@
 namespace Filament\Panel\Concerns;
 
 use Closure;
+use Filament\Auth\Pages\EditProfile;
 use Filament\Clusters\Cluster;
 use Filament\Livewire\DatabaseNotifications;
 use Filament\Livewire\GlobalSearch;
@@ -10,7 +11,6 @@ use Filament\Livewire\Notifications;
 use Filament\Livewire\Sidebar;
 use Filament\Livewire\SimpleUserMenu;
 use Filament\Livewire\Topbar;
-use Filament\Pages\Auth\EditProfile;
 use Filament\Pages\Page;
 use Filament\Resources\Pages\Page as ResourcePage;
 use Filament\Resources\RelationManagers\RelationGroup;
@@ -492,12 +492,16 @@ trait HasComponents
             $this->queueLivewireComponentForRegistration(SimpleUserMenu::class);
             $this->queueLivewireComponentForRegistration(Topbar::class);
 
-            if ($this->hasEmailVerification() && is_subclass_of($emailVerificationRouteAction = $this->getEmailVerificationPromptRouteAction(), Component::class)) {
-                $this->queueLivewireComponentForRegistration($emailVerificationRouteAction);
+            if ($this->hasEmailVerification() && is_subclass_of($emailVerificationPromptRouteAction = $this->getEmailVerificationPromptRouteAction(), Component::class)) {
+                $this->queueLivewireComponentForRegistration($emailVerificationPromptRouteAction);
             }
 
             if ($this->hasLogin() && is_subclass_of($loginRouteAction = $this->getLoginRouteAction(), Component::class)) {
                 $this->queueLivewireComponentForRegistration($loginRouteAction);
+            }
+
+            if ($this->isMultiFactorAuthenticationRequired() && is_subclass_of($setUpRequiredMultiFactorAuthenticationRouteAction = $this->getSetUpRequiredMultiFactorAuthenticationRouteAction(), Component::class)) {
+                $this->queueLivewireComponentForRegistration($setUpRequiredMultiFactorAuthenticationRouteAction);
             }
 
             if ($this->hasPasswordReset()) {

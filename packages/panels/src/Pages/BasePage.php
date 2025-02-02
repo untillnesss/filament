@@ -11,7 +11,7 @@ use Filament\Infolists\Concerns\InteractsWithInfolists;
 use Filament\Infolists\Contracts\HasInfolists;
 use Filament\Schemas\Contracts\HasRenderHookScopes;
 use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
@@ -36,7 +36,7 @@ abstract class BasePage extends Component implements HasActions, HasForms, HasIn
 
     public static ?Closure $reportValidationErrorUsing = null;
 
-    protected MaxWidth | string | null $maxContentWidth = null;
+    protected Width | string | null $maxContentWidth = null;
 
     /**
      * @var array<mixed>
@@ -87,7 +87,7 @@ abstract class BasePage extends Component implements HasActions, HasForms, HasIn
             ->title();
     }
 
-    public function getMaxContentWidth(): MaxWidth | string | null
+    public function getMaxContentWidth(): Width | string | null
     {
         return $this->maxContentWidth;
     }
