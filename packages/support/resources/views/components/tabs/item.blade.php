@@ -64,14 +64,18 @@
     @endif
 
     @if (filled($badge))
-        <x-filament::badge
-            :color="$badgeColor"
-            :icon="$badgeIcon"
-            :icon-position="$badgeIconPosition"
-            size="sm"
-            :tooltip="$badgeTooltip"
-        >
+        @if ($badge instanceof \Illuminate\View\ComponentSlot)
             {{ $badge }}
-        </x-filament::badge>
+        @else
+            <x-filament::badge
+                :color="$badgeColor"
+                :icon="$badgeIcon"
+                :icon-position="$badgeIconPosition"
+                size="sm"
+                :tooltip="$badgeTooltip"
+            >
+                {{ $badge }}
+            </x-filament::badge>
+        @endif
     @endif
 </{{ $tag }}>
