@@ -1,6 +1,8 @@
 @props([
     'notifications',
     'unreadNotificationsCount',
+    'clearNotificationsAction',
+    'markAllNotificationsAsReadAction',
 ])
 
 @php
@@ -33,6 +35,8 @@
                 <x-filament-notifications::database.modal.actions
                     :notifications="$notifications"
                     :unread-notifications-count="$unreadNotificationsCount"
+                    :clear-notifications-action="$clearNotificationsAction"
+                    :mark-all-notifications-as-read-action="$markAllNotificationsAsReadAction"
                 />
             </div>
         </x-slot>

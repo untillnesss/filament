@@ -5,7 +5,6 @@ namespace Filament\Panel\Concerns;
 use Closure;
 use Filament\Auth\Pages\EditProfile;
 use Filament\Clusters\Cluster;
-use Filament\Livewire\DatabaseNotifications;
 use Filament\Livewire\GlobalSearch;
 use Filament\Livewire\Notifications;
 use Filament\Livewire\Sidebar;
@@ -484,7 +483,7 @@ trait HasComponents
     protected function registerLivewireComponents(): void
     {
         if (! $this->hasCachedComponents()) {
-            $this->queueLivewireComponentForRegistration(DatabaseNotifications::class);
+            $this->queueLivewireComponentForRegistration($this->getDatabaseNotificationsLivewireComponent());
             $this->queueLivewireComponentForRegistration(EditProfile::class);
             $this->queueLivewireComponentForRegistration(GlobalSearch::class);
             $this->queueLivewireComponentForRegistration(Notifications::class);
